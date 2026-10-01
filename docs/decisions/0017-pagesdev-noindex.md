@@ -1,0 +1,1 @@
+_*X-Robots-Tag: noindex em https://:project.pages.dev/* (public/\_headers); canonical/hreflang sempre no domínio final_* — preview não concorre com o site atual no Google; reverter: remover o bloco do _headers no cutover se o pages.dev precisar indexar (não precisa).
