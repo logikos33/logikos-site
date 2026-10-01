@@ -1,0 +1,1 @@
+**Token --lk-field-border (#7A828D claro / #6B6B7A escuro) só para campos de formulário** — --lk-line-strong dava 1,6–2,2:1 e WCAG 1.4.11 pede 3:1 para o contorno do campo; reverter: trocar a borda em LeadForm.astro.
