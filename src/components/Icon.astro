@@ -1,16 +1,19 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import { ICON_PATHS, type IconName } from '../lib/icons';
 
-interface Props {
+interface Props extends Omit<HTMLAttributes<'svg'>, 'name'> {
   name: IconName;
   size?: number;
-  class?: string;
 }
 
-const { name, size = 20, class: className } = Astro.props;
+// Rest props are spread so the parent's scoped-style attribute (data-astro-cid-*) reaches the
+// <svg>; without it, parent selectors such as `.theme-toggle__sun` never match.
+const { name, size = 20, class: className, ...rest } = Astro.props;
 ---
 
 <svg
+  {...rest}
   class={className}
   width={size}
   height={size}

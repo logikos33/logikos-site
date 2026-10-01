@@ -23,7 +23,8 @@ export function posterSvg(slot: HudSlot, label: string, opts: { standalone?: boo
     `<path d="M0 0 L48 120 M-48 0 L0 120 M48 0 L96 120" stroke="#F4F6F8" stroke-opacity="0.06" stroke-width="1"/>`,
     `</pattern></defs>`,
     `<rect width="${POSTER_W}" height="${POSTER_H}" fill="#14141C"/>`,
-    `<rect width="${POSTER_W}" height="${POSTER_H}" fill="url(#${id})"/>`,
+    // The grid is decoration for covers: hidden as soon as the HUD draws verdicts (see HudVideo).
+    `<rect class="hud-poster__grid" width="${POSTER_W}" height="${POSTER_H}" fill="url(#${id})"/>`,
     `<rect x="${POSTER_W - 64 - 16}" y="${POSTER_H - 120}" width="16" height="16" fill="#00E5FF"/>`,
     `<text x="${POSTER_W - 96}" y="${POSTER_H - 104}" text-anchor="end" fill="#8A8F98" font-family="'JetBrains Mono Variable', ui-monospace, monospace" font-size="28" letter-spacing="3">${escapeXml(label.toUpperCase())}</text>`,
     ...(opts.standalone && opts.caption

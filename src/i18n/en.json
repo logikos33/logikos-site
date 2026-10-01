@@ -510,7 +510,7 @@
     "submitPartner": "Send partner request",
     "sending": "Sending…",
     "success": "Received. We'll be in touch soon.",
-    "error": "We couldn't send it right now. Try again or reach us on WhatsApp.",
+    "error": "We couldn't send it right now. Try again or write to {email}.",
     "errorVerification": "We couldn't confirm you're not a bot. Reload the page and try again.",
     "invalid": "Please check the highlighted fields.",
     "options": {
@@ -523,7 +523,12 @@
       "robotics": "Robotics",
       "partnership": "Partnership"
     },
-    "honeypot": "Leave this field empty"
+    "honeypot": "Leave this field empty",
+    "errors": {
+      "required": "Fill in this field.",
+      "email": "Enter a valid email.",
+      "consent": "Tick this box so we can reply."
+    }
   },
   "footer": {
     "company": "Logikos Soluções",

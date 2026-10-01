@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = 8788;
+const PORT = Number(process.env.PW_PORT ?? 8788);
 // Local containers may ship their own Chromium; CI uses `playwright install`.
 const executablePath = process.env.PW_CHROMIUM_PATH || undefined;
 

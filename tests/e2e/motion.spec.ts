@@ -38,6 +38,17 @@ test('glitch does not repeat on internal navigation back to home', async ({ page
   await expect(page.locator('[data-brand-box] .lk-glitch')).toHaveAttribute('data-glitch', 'off-internal-navigation');
 });
 
+test('glitch does not repeat on Back navigation to home', async ({ page }) => {
+  await page.goto('/', { referer: 'https://www.google.com/' });
+  await expect(page.locator('[data-brand-box] .lk-glitch')).toHaveAttribute('data-glitch', 'done', { timeout: 5000 });
+  await page.locator('.site-nav a[href="/sobre"]').click();
+  await expect(page).toHaveURL(/\/sobre$/);
+  await page.goBack();
+  const state = await page.locator('[data-brand-box] .lk-glitch').getAttribute('data-glitch');
+  // Restored from bfcache (no script re-run) keeps "done"; a fresh load must skip.
+  expect(['done', 'off-internal-navigation']).toContain(state);
+});
+
 test('no continuous animation anywhere on the home page after it settles', async ({ page }) => {
   await page.goto('/');
   await page.waitForTimeout(8000);

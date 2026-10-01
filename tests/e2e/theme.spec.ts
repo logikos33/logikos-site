@@ -59,3 +59,29 @@ for (const theme of ['light', 'dark'] as const) {
     expect(failing, JSON.stringify(failing, null, 2)).toEqual([]);
   });
 }
+
+test('icon swaps show exactly one icon (theme toggle, mobile menu)', async ({ page }) => {
+  await page.goto('/');
+  const visibleIcons = (sel: string) =>
+    page.locator(`${sel} svg`).evaluateAll((els) => els.filter((e) => getComputedStyle(e).display !== 'none').length);
+  expect(await visibleIcons('[data-theme-toggle]')).toBe(1);
+  await page.locator('[data-theme-toggle]').click();
+  expect(await visibleIcons('[data-theme-toggle]')).toBe(1);
+  await page.setViewportSize({ width: 390, height: 800 });
+  expect(await visibleIcons('.mobile-nav summary')).toBe(1);
+  await page.locator('.mobile-nav summary').click();
+  expect(await visibleIcons('.mobile-nav summary')).toBe(1);
+});
+
+test('header wordmark keeps at least 90 px of ink (brand minimum)', async ({ page }) => {
+  for (const width of [1440, 360]) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto('/');
+    const ink = await page.locator('.site-header__logo .lk-wordmark').evaluate((el) => {
+      const r = document.createRange();
+      r.selectNodeContents(el);
+      return r.getBoundingClientRect().width - (parseFloat(getComputedStyle(el).letterSpacing) || 0);
+    });
+    expect(ink, `width ${width}`).toBeGreaterThanOrEqual(90);
+  }
+});

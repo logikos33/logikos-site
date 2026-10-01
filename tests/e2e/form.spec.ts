@@ -40,9 +40,30 @@ test('client validation blocks an empty submit and marks fields', async ({ page 
   await page.goto('/contato');
   const form = page.locator('#formulario');
   await form.locator('button[type="submit"]').click();
-  await expect(form.locator('[data-status]')).toHaveAttribute('data-kind', 'invalid');
-  await expect(form.locator('input[name="name"]')).toHaveAttribute('aria-invalid', 'true');
+  const status = form.locator('[data-status]');
+  await expect(status).toHaveAttribute('data-kind', 'invalid');
+  // State = color + icon + word.
+  await expect(status.locator('.state.state--warn svg path').first()).toBeAttached();
+  await expect(status.locator('[data-status-text]')).not.toHaveText('');
+  const name = form.locator('input[name="name"]');
+  await expect(name).toHaveAttribute('aria-invalid', 'true');
   await expect(form.locator('input[name="consent"]')).toHaveAttribute('aria-invalid', 'true');
+  // The highlight is visible, and each invalid field has its own icon + word, linked for AT.
+  const alert = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--lk-alert').trim());
+  const border = await name.evaluate((el) => getComputedStyle(el).borderTopColor);
+  const toRgb = (hex: string) => `rgb(${[1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(', ')})`;
+  expect(border).toBe(toRgb(alert));
+  for (const field of ['name', 'company', 'email', 'consent']) {
+    const err = form.locator(`#formulario-${field}-error`);
+    await expect(err).toBeVisible();
+    await expect(err.locator('svg')).toHaveCount(1);
+    await expect(err.locator('[data-error-text]')).not.toHaveText('');
+    await expect(form.locator(`#formulario-${field}`)).toHaveAttribute('aria-describedby', new RegExp(`formulario-${field}-error`));
+  }
+  // Fixing a field clears its error.
+  await name.fill('Ana');
+  await expect(form.locator('#formulario-name-error')).toBeHidden();
+  await expect(name).not.toHaveAttribute('aria-invalid', 'true');
 });
 
 for (const [path, id, lang] of [

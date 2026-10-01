@@ -57,20 +57,22 @@ export async function renderOg(opts: { wordmark: string; label: string; tagline:
           },
           [h('div', { width: 14, height: 14, backgroundColor: '#00E5FF', marginRight: 14 }), opts.label],
         ),
-        h('div', { position: 'relative', display: 'flex', padding: '34px 52px 30px', border: '1px solid rgba(0,145,173,0.35)' }, [
+        // Protection area ≥ 1x the O height (~0.72em) on every side; the right side also
+        // compensates the -0.16em tracking removed from the last letter.
+        h('div', { position: 'relative', display: 'flex', padding: '82px 100px 82px 82px', border: '1px solid rgba(0,145,173,0.35)' }, [
           corner({ left: -1, top: -1 }, { borderLeft: line, borderTop: line }),
           corner({ right: -1, top: -1 }, { borderRight: line, borderTop: line }),
           corner({ left: -1, bottom: -1 }, { borderLeft: line, borderBottom: line }),
           corner({ right: -1, bottom: -1 }, { borderRight: line, borderBottom: line }),
           h(
             'div',
-            { fontFamily: 'Space Grotesk', fontSize: 132, letterSpacing: '0.16em', lineHeight: 1, marginRight: '-0.16em' },
+            { fontFamily: 'Space Grotesk', fontSize: 112, letterSpacing: '0.16em', lineHeight: 1, marginRight: '-0.16em' },
             opts.wordmark,
           ),
         ]),
       ]),
-      h('div', { fontFamily: 'Space Grotesk', fontSize: 58, marginTop: 56, lineHeight: 1.1 }, opts.tagline),
-      h('div', { fontFamily: 'JetBrains Mono', fontSize: 24, marginTop: 20, color: '#5C616B' }, opts.sub),
+      h('div', { fontFamily: 'Space Grotesk', fontSize: 52, marginTop: 40, lineHeight: 1.1 }, opts.tagline),
+      h('div', { fontFamily: 'JetBrains Mono', fontSize: 21, marginTop: 20, color: '#5C616B' }, opts.sub),
     ],
   );
   const svg = await satori(tree as unknown as Parameters<typeof satori>[0], {
