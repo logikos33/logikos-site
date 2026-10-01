@@ -95,8 +95,7 @@ const field = (name: string) => `${id}-${name}`;
   <label class="check check--consent">
     <input type="checkbox" name="consent" required />
     <span>
-      {f.consentBefore} <a href={pathFor('privacy', locale)}>{f.consentLink}</a>
-      {f.consentAfter}{' '}
+      {f.consentBefore} <a href={pathFor('privacy', locale)}>{f.consentLink}</a> {f.consentAfter}{' '}
       <span class="field__req" aria-hidden="true">
         *
       </span>
