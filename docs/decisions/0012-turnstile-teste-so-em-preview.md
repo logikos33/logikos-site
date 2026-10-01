@@ -1,0 +1,1 @@
+*_Sem TURNSTILE_SECRET_KEY a Function usa a chave de teste da Cloudflare só em *.pages.dev/localhost; em domínio próprio falha fechado (503)*_ — a chave de teste aceita qualquer token; reverter: isPreviewHost em functions/api/lead.ts.

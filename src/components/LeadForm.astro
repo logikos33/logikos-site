@@ -1,0 +1,395 @@
+---
+import { dict } from '../i18n';
+import { pathFor, type Locale } from '../i18n/routes';
+import { LEAD_INTERESTS, LIMITS, type LeadKind } from '../lib/lead';
+import { TURNSTILE_SITE_KEY } from '../lib/site';
+
+interface Props {
+  locale: Locale;
+  kind: LeadKind;
+  id: string;
+}
+
+const { locale, kind, id } = Astro.props;
+const t = dict(locale);
+const f = t.form;
+const defaults = kind === 'partner' ? ['partnership'] : [];
+const field = (name: string) => `${id}-${name}`;
+---
+
+<form class="lead-form" id={id} data-lead-form data-kind={kind} data-lang={locale} novalidate>
+  <div class="lead-form__grid">
+    <div class="field">
+      <label for={field('name')}>
+        {f.name}{' '}
+        <span class="field__req" aria-hidden="true">
+          *
+        </span>
+      </label>
+      <input id={field('name')} name="name" type="text" autocomplete="name" required maxlength={LIMITS.name} />
+    </div>
+    <div class="field">
+      <label for={field('company')}>
+        {f.company}{' '}
+        <span class="field__req" aria-hidden="true">
+          *
+        </span>
+      </label>
+      <input id={field('company')} name="company" type="text" autocomplete="organization" required maxlength={LIMITS.company} />
+    </div>
+    <div class="field">
+      <label for={field('role')}>{f.role}</label>
+      <input id={field('role')} name="role" type="text" autocomplete="organization-title" maxlength={LIMITS.role} />
+    </div>
+    <div class="field">
+      <label for={field('email')}>
+        {f.email}{' '}
+        <span class="field__req" aria-hidden="true">
+          *
+        </span>
+      </label>
+      <input id={field('email')} name="email" type="email" autocomplete="email" required maxlength={LIMITS.email} />
+    </div>
+    <div class="field">
+      <label for={field('whatsapp')}>{f.whatsapp}</label>
+      <input
+        id={field('whatsapp')}
+        name="whatsapp"
+        type="tel"
+        autocomplete="tel"
+        inputmode="tel"
+        maxlength={LIMITS.whatsapp}
+        aria-describedby={field('whatsapp-hint')}
+      />
+      <p class="field__hint" id={field('whatsapp-hint')}>
+        {f.whatsappHint}
+      </p>
+    </div>
+  </div>
+
+  <fieldset class="field field--group">
+    <legend>{f.interests}</legend>
+    <p class="field__hint" id={field('interests-hint')}>
+      {f.interestsHint}
+    </p>
+    <div class="checks">
+      {LEAD_INTERESTS.map((key) => (
+        <label class="check">
+          <input type="checkbox" name="interests" value={key} checked={defaults.includes(key)} aria-describedby={field('interests-hint')} />
+          <span>{f.options[key]}</span>
+        </label>
+      ))}
+    </div>
+  </fieldset>
+
+  <div class="field">
+    <label for={field('message')}>{f.message}</label>
+    <textarea id={field('message')} name="message" rows="5" maxlength={LIMITS.message}></textarea>
+  </div>
+
+  <div class="field field--honeypot" aria-hidden="true">
+    <label for={field('website')}>{f.honeypot}</label>
+    <input id={field('website')} name="website" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <label class="check check--consent">
+    <input type="checkbox" name="consent" required />
+    <span>
+      {f.consentBefore} <a href={pathFor('privacy', locale)}>{f.consentLink}</a>
+      {f.consentAfter}{' '}
+      <span class="field__req" aria-hidden="true">
+        *
+      </span>
+    </span>
+  </label>
+
+  <div class="turnstile" data-turnstile data-sitekey={TURNSTILE_SITE_KEY}></div>
+
+  <div class="lead-form__actions">
+    <button type="submit" class="btn" data-label-idle={kind === 'partner' ? f.submitPartner : f.submit} data-label-busy={f.sending}>
+      <span class="btn__mark" aria-hidden="true"></span>
+      <span data-submit-label>{kind === 'partner' ? f.submitPartner : f.submit}</span>
+    </button>
+    <p
+      class="lead-form__status"
+      role="status"
+      aria-live="polite"
+      data-status
+      data-msg-success={f.success}
+      data-msg-error={f.error}
+      data-msg-verification={f.errorVerification}
+      data-msg-invalid={f.invalid}
+    ></p>
+  </div>
+</form>
+
+<script>
+  type TurnstileApi = {
+    render: (el: HTMLElement, opts: Record<string, unknown>) => string;
+    getResponse: (id: string) => string | undefined;
+    reset: (id: string) => void;
+  };
+
+  declare global {
+    interface Window {
+      turnstile?: TurnstileApi;
+      lkTurnstileReady?: () => void;
+    }
+  }
+
+  const SCRIPT = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=lkTurnstileReady';
+  let loading: Promise<TurnstileApi> | undefined;
+
+  function loadTurnstile(): Promise<TurnstileApi> {
+    loading ??= new Promise((resolve, reject) => {
+      window.lkTurnstileReady = () => (window.turnstile ? resolve(window.turnstile) : reject(new Error('turnstile')));
+      const s = document.createElement('script');
+      s.src = SCRIPT;
+      s.async = true;
+      s.onerror = () => reject(new Error('turnstile'));
+      document.head.append(s);
+    });
+    return loading;
+  }
+
+  for (const form of document.querySelectorAll<HTMLFormElement>('[data-lead-form]')) {
+    const holder = form.querySelector<HTMLElement>('[data-turnstile]');
+    const status = form.querySelector<HTMLElement>('[data-status]');
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const label = form.querySelector<HTMLElement>('[data-submit-label]');
+    if (!holder || !status || !button || !label) continue;
+    let widgetId: string | undefined;
+
+    const mount = () => {
+      if (widgetId !== undefined) return;
+      widgetId = '';
+      loadTurnstile()
+        .then((ts) => {
+          widgetId = ts.render(holder, {
+            sitekey: holder.dataset.sitekey,
+            language: form.dataset.lang === 'en' ? 'en' : 'pt-br',
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light',
+            'response-field': false,
+          });
+        })
+        .catch(() => {
+          widgetId = undefined;
+        });
+    };
+
+    // Turnstile loads only when the form is about to be used.
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          mount();
+        }
+      },
+      { rootMargin: '300px' },
+    );
+    io.observe(form);
+    form.addEventListener('focusin', mount, { once: true });
+
+    const say = (kind: 'success' | 'error' | 'verification' | 'invalid') => {
+      status.textContent = status.dataset[`msg${kind[0]?.toUpperCase()}${kind.slice(1)}`] ?? '';
+      status.dataset.kind = kind;
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      for (const el of form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea')) {
+        el.removeAttribute('aria-invalid');
+      }
+      if (!form.checkValidity()) {
+        for (const el of form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input:invalid, textarea:invalid')) {
+          el.setAttribute('aria-invalid', 'true');
+        }
+        say('invalid');
+        form.querySelector<HTMLElement>(':invalid')?.focus();
+        return;
+      }
+      const data = new FormData(form);
+      const token = widgetId && window.turnstile ? (window.turnstile.getResponse(widgetId) ?? '') : '';
+      const payload = {
+        kind: form.dataset.kind,
+        lang: form.dataset.lang,
+        name: data.get('name'),
+        company: data.get('company'),
+        role: data.get('role'),
+        email: data.get('email'),
+        whatsapp: data.get('whatsapp'),
+        interests: data.getAll('interests'),
+        message: data.get('message'),
+        consent: data.get('consent') === 'on',
+        website: data.get('website'),
+        page: window.location.pathname,
+        turnstileToken: token,
+      };
+      button.disabled = true;
+      label.textContent = button.dataset.labelBusy ?? '';
+      try {
+        const res = await fetch('/api/lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const body = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+        if (res.ok && body.ok) {
+          form.reset();
+          say('success');
+        } else {
+          say(body.error === 'verification' ? 'verification' : body.error === 'invalid' ? 'invalid' : 'error');
+        }
+      } catch {
+        say('error');
+      } finally {
+        button.disabled = false;
+        label.textContent = button.dataset.labelIdle ?? '';
+        if (widgetId && window.turnstile) window.turnstile.reset(widgetId);
+      }
+    });
+  }
+</script>
+
+<style>
+  .lead-form {
+    display: grid;
+    gap: var(--lk-space-5);
+    background: var(--lk-surface);
+    border: 1px solid var(--lk-line);
+    border-radius: var(--lk-radius);
+    padding: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  .lead-form__grid {
+    display: grid;
+    gap: var(--lk-space-4);
+  }
+
+  @media (min-width: 40rem) {
+    .lead-form__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .field {
+    display: grid;
+    gap: var(--lk-space-1);
+    min-width: 0;
+  }
+
+  .field label,
+  .field legend {
+    font-weight: 600;
+    font-size: 0.9375rem;
+  }
+
+  .field--group {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .field__req {
+    color: var(--lk-text-2);
+  }
+
+  .field__hint {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--lk-text-2);
+  }
+
+  .field input[type='text'],
+  .field input[type='email'],
+  .field input[type='tel'],
+  .field textarea {
+    width: 100%;
+    min-height: 2.875rem;
+    padding: 0.6rem 0.75rem;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--lk-text);
+    background: var(--lk-bg);
+    border: 1px solid var(--lk-line-strong);
+    border-radius: var(--lk-radius);
+  }
+
+  .field textarea {
+    resize: vertical;
+  }
+
+  .field input:focus-visible,
+  .field textarea:focus-visible {
+    outline: 2px solid var(--lk-focus);
+    outline-offset: 1px;
+    border-color: var(--lk-focus);
+  }
+
+  .field [aria-invalid='true'] {
+    border-color: var(--lk-alert);
+    border-width: 2px;
+  }
+
+  .checks {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    gap: var(--lk-space-2) var(--lk-space-4);
+    margin-top: var(--lk-space-2);
+  }
+
+  .check {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--lk-space-2);
+    min-height: 2.25rem;
+    font-size: 0.9375rem;
+    cursor: pointer;
+  }
+
+  .check input {
+    width: 1.125rem;
+    height: 1.125rem;
+    margin: 0.2rem 0 0;
+    accent-color: var(--lk-accent-2);
+    flex: none;
+  }
+
+  .check--consent {
+    font-size: 0.875rem;
+    color: var(--lk-text);
+  }
+
+  .field--honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .turnstile:empty {
+    display: none;
+  }
+
+  .lead-form__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--lk-space-4);
+  }
+
+  .lead-form__status {
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+
+  .lead-form__status[data-kind='success'] {
+    font-weight: 600;
+  }
+
+  .lead-form button[disabled] {
+    opacity: 0.7;
+    cursor: progress;
+  }
+</style>
