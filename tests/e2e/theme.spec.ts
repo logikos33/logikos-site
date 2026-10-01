@@ -17,9 +17,12 @@ test('theme toggle persists across reload and navigation', async ({ page }) => {
   await page.goto('/');
   const toggle = page.locator('[data-theme-toggle]');
   await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+  const name = await toggle.getAttribute('aria-label');
   await toggle.click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+  // Fixed accessible name; only the pressed state changes.
+  await expect(toggle).toHaveAttribute('aria-label', name ?? '');
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await page.goto('/en/about');

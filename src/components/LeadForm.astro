@@ -2,7 +2,7 @@
 import { dict, fill } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
 import Icon from './Icon.astro';
-import { LEAD_INTERESTS, LIMITS, type LeadKind } from '../lib/lead';
+import { EMAIL_PATTERN, LEAD_INTERESTS, LIMITS, PHONE_PATTERN, type LeadKind } from '../lib/lead';
 import { CONTACT_EMAIL, TURNSTILE_SITE_KEY } from '../lib/site';
 
 interface Props {
@@ -27,6 +27,8 @@ const field = (name: string) => `${id}-${name}`;
   data-err-required={f.errors.required}
   data-err-email={f.errors.email}
   data-err-consent={f.errors.consent}
+  data-err-whatsapp={f.errors.whatsapp}
+  data-err-server={f.errors.invalidServer}
   novalidate
 >
   <div class="lead-form__grid">
@@ -67,7 +69,7 @@ const field = (name: string) => `${id}-${name}`;
           *
         </span>
       </label>
-      <input id={field('email')} name="email" type="email" autocomplete="email" required maxlength={LIMITS.email} />
+      <input id={field('email')} name="email" type="email" autocomplete="email" required maxlength={LIMITS.email} pattern={EMAIL_PATTERN} />
       <p class="field__error" id={field('email-error')} hidden>
         <Icon name="alert" size={16} />
         <span data-error-text></span>
@@ -82,10 +84,15 @@ const field = (name: string) => `${id}-${name}`;
         autocomplete="tel"
         inputmode="tel"
         maxlength={LIMITS.whatsapp}
+        pattern={PHONE_PATTERN}
         aria-describedby={field('whatsapp-hint')}
       />
       <p class="field__hint" id={field('whatsapp-hint')}>
         {f.whatsappHint}
+      </p>
+      <p class="field__error" id={field('whatsapp-error')} hidden>
+        <Icon name="alert" size={16} />
+        <span data-error-text></span>
       </p>
     </div>
   </div>
@@ -217,6 +224,8 @@ const field = (name: string) => `${id}-${name}`;
             // Must match turnstileAction() in functions/api/lead.ts.
             action: `lead-${form.dataset.kind}`,
             theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light',
+            // The normal widget is a fixed 300 px; narrower forms get the compact one.
+            size: holder.clientWidth < 300 ? 'compact' : 'normal',
             'response-field': false,
           });
         })
@@ -256,7 +265,7 @@ const field = (name: string) => `${id}-${name}`;
     const errorFor = (el: HTMLInputElement | HTMLTextAreaElement) => form.querySelector<HTMLElement>(`#${el.id}-error`);
     const markField = (el: HTMLInputElement | HTMLTextAreaElement) => {
       const box = el.id ? errorFor(el) : null;
-      if (el.validity.valid) {
+      if (el.validity.valid && !el.dataset.serverInvalid) {
         el.removeAttribute('aria-invalid');
         if (box) box.hidden = true;
         el.setAttribute('aria-describedby', (el.getAttribute('aria-describedby') ?? '').replace(`${el.id}-error`, '').trim());
@@ -268,9 +277,13 @@ const field = (name: string) => `${id}-${name}`;
       const msg =
         el instanceof HTMLInputElement && el.type === 'checkbox'
           ? form.dataset.errConsent
-          : el.validity.typeMismatch
-            ? form.dataset.errEmail
-            : form.dataset.errRequired;
+          : el.validity.valueMissing
+            ? form.dataset.errRequired
+            : el.name === 'whatsapp'
+              ? form.dataset.errWhatsapp
+              : el.name === 'email'
+                ? form.dataset.errEmail
+                : form.dataset.errServer;
       const text = box.querySelector<HTMLElement>('[data-error-text]');
       if (text) text.textContent = msg ?? '';
       box.hidden = false;
@@ -279,15 +292,34 @@ const field = (name: string) => `${id}-${name}`;
       el.setAttribute('aria-describedby', [...described].join(' '));
     };
 
-    for (const el of form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[required], textarea[required]')) {
+    // Controls the browser can validate (required or with a pattern).
+    const VALIDATED = 'input[required], input[pattern], textarea[required]';
+    for (const el of form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(VALIDATED)) {
       el.addEventListener(el instanceof HTMLInputElement && el.type === 'checkbox' ? 'change' : 'input', () => {
+        delete el.dataset.serverInvalid;
         if (el.hasAttribute('aria-invalid')) markField(el);
       });
     }
 
+    /** Marks the fields the server rejected (422) that the browser accepted. */
+    const markServerFields = (fields: unknown) => {
+      if (!Array.isArray(fields)) return;
+      let first: HTMLElement | undefined;
+      for (const name of fields) {
+        const el = form.querySelector<HTMLInputElement | HTMLTextAreaElement>(
+          `[name="${String(name)}"]:not([type="checkbox"][name="interests"])`,
+        );
+        if (!el) continue;
+        el.dataset.serverInvalid = 'true';
+        markField(el);
+        first ??= el;
+      }
+      first?.focus();
+    };
+
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
-      for (const el of form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[required], textarea[required]')) {
+      for (const el of form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(VALIDATED)) {
         markField(el);
       }
       if (!form.checkValidity()) {
@@ -312,7 +344,9 @@ const field = (name: string) => `${id}-${name}`;
         page: window.location.pathname,
         turnstileToken: token,
       };
-      button.disabled = true;
+      if (button.getAttribute('aria-disabled') === 'true') return;
+      // aria-disabled keeps keyboard focus on the button (the disabled property would drop it).
+      button.setAttribute('aria-disabled', 'true');
       label.textContent = button.dataset.labelBusy ?? '';
       try {
         const res = await fetch('/api/lead', {
@@ -320,17 +354,18 @@ const field = (name: string) => `${id}-${name}`;
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
-        const body = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+        const body = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string; fields?: unknown };
         if (res.ok && body.ok) {
           form.reset();
           say('success');
         } else {
           say(body.error === 'verification' ? 'verification' : body.error === 'invalid' ? 'invalid' : 'error');
+          if (body.error === 'invalid') markServerFields(body.fields);
         }
       } catch {
         say('error');
       } finally {
-        button.disabled = false;
+        button.removeAttribute('aria-disabled');
         label.textContent = button.dataset.labelIdle ?? '';
         if (widgetId && window.turnstile) window.turnstile.reset(widgetId);
       }
@@ -398,7 +433,7 @@ const field = (name: string) => `${id}-${name}`;
     font-size: 1rem;
     color: var(--lk-text);
     background: var(--lk-bg);
-    border: 1px solid var(--lk-line-strong);
+    border: 1px solid var(--lk-field-border);
     border-radius: var(--lk-radius);
   }
 
@@ -504,8 +539,14 @@ const field = (name: string) => `${id}-${name}`;
     font-weight: 600;
   }
 
-  .lead-form button[disabled] {
+  .lead-form button[aria-disabled='true'] {
     opacity: 0.7;
     cursor: progress;
+  }
+
+  /* Third-party content (Turnstile iframe) must never widen the layout. */
+  .lead-form > *,
+  .lead-form__grid > * {
+    min-width: 0;
   }
 </style>

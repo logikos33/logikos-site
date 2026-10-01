@@ -18,7 +18,7 @@ const p = t.contact;
 const hasWhatsapp = Boolean(whatsappHref(''));
 ---
 
-<Base locale={locale} routeKey="contact" title={p.meta.title} description={p.meta.description}>
+<Base locale={locale} routeKey="contact" title={p.meta.title} description={hasWhatsapp ? p.meta.description : p.meta.descriptionNoWhatsapp}>
   <PageHero eyebrow={p.hero.eyebrow} title={p.hero.title} text={hasWhatsapp ? p.hero.text : p.hero.textNoWhatsapp} />
 
   <section class="section section--flush" aria-label={p.hero.title}>
@@ -59,6 +59,10 @@ const hasWhatsapp = Boolean(whatsappHref(''));
   .contact-grid {
     display: grid;
     gap: var(--lk-space-7);
+  }
+
+  .contact-grid > * {
+    min-width: 0;
   }
 
   .contact-channels {

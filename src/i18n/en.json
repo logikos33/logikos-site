@@ -10,12 +10,11 @@
     "footerNav": "Footer",
     "menu": "Menu",
     "home": "Logikos Soluções — home",
-    "themeToDark": "Switch to dark theme",
-    "themeToLight": "Switch to light theme",
     "langSwitch": "Language",
     "langCurrent": "current language",
     "externalWhatsapp": "opens WhatsApp",
-    "required": "required"
+    "required": "required",
+    "themeDark": "Dark theme"
   },
   "nav": {
     "home": "Home",
@@ -101,7 +100,8 @@
       "too_far": "TOO FAR",
       "unknown": "UNDETERMINED"
     },
-    "posterLabel": "preview"
+    "posterLabel": "preview",
+    "stop": "Stop"
   },
   "home": {
     "meta": {
@@ -424,7 +424,8 @@
   "contact": {
     "meta": {
       "title": "Contact — Logikos Soluções",
-      "description": "Reach Logikos on WhatsApp or through the form."
+      "description": "Reach Logikos on WhatsApp or through the form.",
+      "descriptionNoWhatsapp": "Reach Logikos through the form. We reply by email or WhatsApp."
     },
     "hero": {
       "eyebrow": "Contact",
@@ -527,7 +528,9 @@
     "errors": {
       "required": "Fill in this field.",
       "email": "Enter a valid email.",
-      "consent": "Tick this box so we can reply."
+      "consent": "Tick this box so we can reply.",
+      "whatsapp": "Use digits, with country and area code.",
+      "invalidServer": "This field was not accepted. Please check it."
     }
   },
   "footer": {

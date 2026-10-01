@@ -61,8 +61,11 @@ test('HUD draws detection boxes in steps and rests on the last frame', async ({ 
   const hud = page.locator('[data-hud][data-slot="hero"]');
   await expect(hud).toHaveAttribute('data-state', 'playing');
   await expect(hud.locator('.hud-box').first()).toBeVisible();
-  await expect(hud).toHaveAttribute('data-state', 'ended', { timeout: 15_000 });
+  // WCAG 2.2.2: while it moves, a visible Stop control exists.
   await expect(hud.locator('[data-hud-play]')).toBeVisible();
+  await expect(hud.locator('[data-hud-play]')).toHaveAttribute('data-mode', 'stop');
+  await expect(hud).toHaveAttribute('data-state', 'ended', { timeout: 15_000 });
+  await expect(hud.locator('[data-hud-play]')).toHaveAttribute('data-mode', 'replay');
   await expect(hud.locator('.hud-box--alert')).not.toHaveCount(0);
   // State is never color alone: every state chip carries an icon and a word.
   const chips = hud.locator('.hud-chip--ok, .hud-chip--alert, .hud-chip--warn');
@@ -71,6 +74,21 @@ test('HUD draws detection boxes in steps and rests on the last frame', async ({ 
     await expect(chip.locator('.hud-chip__text')).not.toHaveText('');
   }
   await expect(hud.locator('[data-hud-badge]')).toBeVisible();
+});
+
+test('Stop ends playback at rest and keeps keyboard focus on the control', async ({ page }) => {
+  await page.goto('/');
+  const hud = page.locator('[data-hud][data-slot="hero"]');
+  const control = hud.locator('[data-hud-play]');
+  await expect(hud).toHaveAttribute('data-state', 'playing');
+  await control.focus();
+  await page.keyboard.press('Enter');
+  await expect(hud).toHaveAttribute('data-state', 'ended');
+  await expect(control).toBeFocused();
+  await expect(control).toHaveAttribute('data-mode', 'replay');
+  await page.keyboard.press('Enter');
+  await expect(hud).toHaveAttribute('data-state', 'playing');
+  await expect(control).toBeFocused();
 });
 
 test('reduced motion: HUD waits for play, then plays once', async ({ browser }) => {

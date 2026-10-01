@@ -10,12 +10,11 @@
     "footerNav": "Rodapé",
     "menu": "Menu",
     "home": "Logikos Soluções — início",
-    "themeToDark": "Mudar para tema escuro",
-    "themeToLight": "Mudar para tema claro",
     "langSwitch": "Idioma",
     "langCurrent": "idioma atual",
     "externalWhatsapp": "abre o WhatsApp",
-    "required": "obrigatório"
+    "required": "obrigatório",
+    "themeDark": "Tema escuro"
   },
   "nav": {
     "home": "Início",
@@ -101,7 +100,8 @@
       "too_far": "DISTANTE",
       "unknown": "INDETERMINADO"
     },
-    "posterLabel": "prévia"
+    "posterLabel": "prévia",
+    "stop": "Parar"
   },
   "home": {
     "meta": {
@@ -424,7 +424,8 @@
   "contact": {
     "meta": {
       "title": "Contato — Logikos Soluções",
-      "description": "Fale com a Logikos pelo WhatsApp ou pelo formulário."
+      "description": "Fale com a Logikos pelo WhatsApp ou pelo formulário.",
+      "descriptionNoWhatsapp": "Fale com a Logikos pelo formulário. Respondemos por e-mail ou WhatsApp."
     },
     "hero": {
       "eyebrow": "Contato",
@@ -527,7 +528,9 @@
     "errors": {
       "required": "Preencha este campo.",
       "email": "Informe um e-mail válido.",
-      "consent": "Marque para autorizar o retorno."
+      "consent": "Marque para autorizar o retorno.",
+      "whatsapp": "Use números, com DDD.",
+      "invalidServer": "Este campo não foi aceito. Revise."
     }
   },
   "footer": {

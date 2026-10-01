@@ -59,8 +59,17 @@ const posterFile = `/media/posters/${locale}/${slot}.svg`;
   <figcaption class="hud__caption">
     <span>{caption}</span>
     <!-- Outside the frame so it never covers detection chips. -->
-    <button type="button" class="hud__play" data-hud-play hidden data-label-play={t.hud.play} data-label-replay={t.hud.replay}>
+    <button
+      type="button"
+      class="hud__play"
+      data-hud-play
+      hidden
+      data-label-play={t.hud.play}
+      data-label-stop={t.hud.stop}
+      data-label-replay={t.hud.replay}
+    >
       <Icon name="play" class="hud__icon-play" />
+      <Icon name="stop" class="hud__icon-stop" />
       <Icon name="replay" class="hud__icon-replay" />
       <span data-hud-play-label>{t.hud.play}</span>
     </button>
@@ -156,30 +165,69 @@ const posterFile = `/media/posters/${locale}/${slot}.svg`;
       draw(svg, frame ? frameToBoxes(frame, labels) : []);
     };
 
+    const setButton = (mode: 'play' | 'stop' | 'replay') => {
+      button.dataset.mode = mode;
+      buttonLabel.textContent =
+        (mode === 'stop' ? button.dataset.labelStop : mode === 'replay' ? button.dataset.labelReplay : button.dataset.labelPlay) ?? '';
+      button.hidden = false;
+    };
+
+    let onEnded: (() => void) | undefined;
+    let onTime: (() => void) | undefined;
+    const clearPlayback = () => {
+      timers.forEach((id) => window.clearTimeout(id));
+      timers = [];
+      if (video && onEnded) video.removeEventListener('ended', onEnded);
+      if (video && onTime) video.removeEventListener('timeupdate', onTime);
+      onEnded = undefined;
+      onTime = undefined;
+    };
+
+    /** Rests on the last frame (end of clip or the user pressed Stop). */
     const finish = () => {
+      clearPlayback();
+      if (video && !video.paused) video.pause();
       if (clip) show(clip.frames.length - 1);
       fig.dataset.state = 'ended';
-      buttonLabel.textContent = button.dataset.labelReplay ?? '';
-      button.hidden = false;
+      setButton('replay');
+    };
+
+    const backToIdle = () => {
+      clearPlayback();
+      fig.dataset.state = 'idle';
+      setButton('play');
     };
 
     const play = () => {
       if (!clip) return;
       const c = clip;
-      timers.forEach((id) => window.clearTimeout(id));
-      timers = [];
+      clearPlayback();
       shown = -1;
       svg.replaceChildren();
-      button.hidden = true;
       fig.dataset.state = 'playing';
+      // The control stays visible and focused as "Stop" (WCAG 2.2.2: moving content can be stopped).
+      setButton('stop');
       if (video) {
+        const step = () => show(frameIndexAt(c.frames, video.currentTime));
+        const hasFrameCallback = 'requestVideoFrameCallback' in HTMLVideoElement.prototype;
         const onFrame = () => {
-          show(frameIndexAt(c.frames, video.currentTime));
+          step();
           if (!video.paused && !video.ended) video.requestVideoFrameCallback(onFrame);
         };
+        onEnded = finish;
+        video.addEventListener('ended', onEnded, { once: true });
+        if (!hasFrameCallback) {
+          onTime = step;
+          video.addEventListener('timeupdate', onTime);
+        }
         video.currentTime = 0;
-        video.addEventListener('ended', finish, { once: true });
-        void video.play().then(() => video.requestVideoFrameCallback(onFrame), finish);
+        video.play().then(
+          () => {
+            if (hasFrameCallback) video.requestVideoFrameCallback(onFrame);
+          },
+          // Autoplay blocked or low-power mode: wait for the user instead of faking an ending.
+          backToIdle,
+        );
         return;
       }
       // Mock clock: one step per detection frame, no interpolation, ends at rest.
@@ -187,7 +235,7 @@ const posterFile = `/media/posters/${locale}/${slot}.svg`;
       timers.push(window.setTimeout(finish, c.duration_s * 1000));
     };
 
-    button.addEventListener('click', play);
+    button.addEventListener('click', () => (fig.dataset.state === 'playing' ? finish() : play()));
 
     new ResizeObserver(() => {
       if (shown < 0) return;
@@ -207,8 +255,7 @@ const posterFile = `/media/posters/${locale}/${slot}.svg`;
       if (badge) badge.hidden = clip.source !== 'mock';
       fig.dataset.source = clip.source;
       if (reducedMotion() || handheld()) {
-        fig.dataset.state = 'idle';
-        button.hidden = false;
+        backToIdle();
       } else {
         play();
       }
@@ -357,8 +404,9 @@ const posterFile = `/media/posters/${locale}/${slot}.svg`;
     display: none;
   }
 
-  .hud:not([data-state='ended']) .hud__icon-replay,
-  .hud[data-state='ended'] .hud__icon-play {
+  .hud__play:not([data-mode='play']) .hud__icon-play,
+  .hud__play:not([data-mode='stop']) .hud__icon-stop,
+  .hud__play:not([data-mode='replay']) .hud__icon-replay {
     display: none;
   }
 
