@@ -56,14 +56,7 @@ const ctaHref = wa ?? pathFor('contact', locale);
         ))}
       </ul>
 
-      <button
-        type="button"
-        class="theme-toggle"
-        data-theme-toggle
-        data-label-dark={t.a11y.themeToDark}
-        data-label-light={t.a11y.themeToLight}
-        aria-label={t.a11y.themeToDark}
-      >
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label={t.a11y.themeDark} aria-pressed="false">
         <Icon name="moon" class="theme-toggle__moon" />
         <Icon name="sun" class="theme-toggle__sun" />
       </button>
@@ -101,15 +94,29 @@ const ctaHref = wa ?? pathFor('contact', locale);
 </header>
 
 <script>
+  // Mobile menu (<details>): close on Escape, when focus leaves it, or on a click outside.
+  for (const menu of document.querySelectorAll<HTMLDetailsElement>('.mobile-nav')) {
+    const summary = menu.querySelector('summary');
+    menu.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && menu.open) {
+        menu.open = false;
+        summary?.focus();
+      }
+    });
+    menu.addEventListener('focusout', (event) => {
+      if (menu.open && !menu.contains(event.relatedTarget as Node | null)) menu.open = false;
+    });
+    document.addEventListener('click', (event) => {
+      if (menu.open && !menu.contains(event.target as Node)) menu.open = false;
+    });
+  }
+
   const STORAGE_KEY = 'lk-theme';
   const root = document.documentElement;
 
   for (const button of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
-    const sync = () => {
-      const dark = root.getAttribute('data-theme') === 'dark';
-      button.setAttribute('aria-label', (dark ? button.dataset.labelLight : button.dataset.labelDark) ?? '');
-      button.setAttribute('aria-pressed', String(dark));
-    };
+    // Fixed name ("Dark theme") + aria-pressed: the state is announced, never contradicted.
+    const sync = () => button.setAttribute('aria-pressed', String(root.getAttribute('data-theme') === 'dark'));
     sync();
     button.addEventListener('click', () => {
       const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
@@ -284,6 +291,25 @@ const ctaHref = wa ?? pathFor('contact', locale);
     min-height: 3rem;
     padding: 0;
     font-size: 1.0625rem;
+  }
+
+  @media (max-width: 23.99rem) {
+    .site-header__bar {
+      gap: var(--lk-space-2);
+    }
+
+    .site-header__logo {
+      padding-right: 0.4em;
+    }
+
+    .site-header__tools {
+      gap: var(--lk-space-1);
+    }
+
+    .lang-switch a,
+    .lang-switch__current {
+      min-width: 2.25rem;
+    }
   }
 
   @media (min-width: 40rem) {

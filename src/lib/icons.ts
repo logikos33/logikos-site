@@ -12,6 +12,7 @@ export const ICON_PATHS = {
   chat: '<path d="M4 4h16v12H10l-4 4v-4H4z"/><path d="M8 9h8M8 12h5"/>',
   mail: '<path d="M3.5 5.5h17v13h-17z"/><path d="M3.5 6l8.5 7 8.5-7"/>',
   play: '<path d="M8 5.5v13l10-6.5z"/>',
+  stop: '<path d="M7 7h10v10H7z"/>',
   replay: '<path d="M5 12a7 7 0 1 0 2.05-4.95"/><path d="M4.5 3.5v4h4"/>',
   camera: '<path d="M3 7h13v10H3z"/><path d="M16 10.5l5-3v9l-5-3"/>',
   chip: '<path d="M7 7h10v10H7z"/><path d="M10 3.5V7M14 3.5V7M10 17v3.5M14 17v3.5M3.5 10H7M3.5 14H7M17 10h3.5M17 14h3.5"/>',

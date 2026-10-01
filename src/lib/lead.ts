@@ -57,8 +57,12 @@ export interface Lead {
 
 export type LeadField = 'kind' | 'lang' | 'name' | 'company' | 'role' | 'email' | 'whatsapp' | 'interests' | 'message' | 'consent';
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_RE = /^\+?[\d\s().-]{8,32}$/;
+/** Shared with the form's `pattern` attributes so client and server agree. */
+export const EMAIL_PATTERN = '[^\\s@]+@[^\\s@]+\\.[^\\s@]+';
+// Valid both as a JS RegExp and as an HTML `pattern` (compiled with the `v` flag).
+export const PHONE_PATTERN = '\\+?[\\d\\s\\(\\)\\.\\-]{8,32}';
+const EMAIL_RE = new RegExp(`^${EMAIL_PATTERN}$`);
+const PHONE_RE = new RegExp(`^${PHONE_PATTERN}$`);
 
 /** Bidi overrides/isolates, line/paragraph separators: never legitimate in a form field. */
 const INVISIBLE = new Set([0x2028, 0x2029, 0x202a, 0x202b, 0x202c, 0x202d, 0x202e, 0x2066, 0x2067, 0x2068, 0x2069]);

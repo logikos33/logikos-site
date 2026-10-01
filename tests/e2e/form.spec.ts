@@ -66,6 +66,52 @@ test('client validation blocks an empty submit and marks fields', async ({ page 
   await expect(name).not.toHaveAttribute('aria-invalid', 'true');
 });
 
+test('fields rejected by the server (422) are marked with icon + word and focused', async ({ page }) => {
+  await stubTurnstile(page);
+  await page.route('**/api/lead', (route) =>
+    route.fulfill({
+      status: 422,
+      contentType: 'application/json',
+      body: JSON.stringify({ ok: false, error: 'invalid', fields: ['whatsapp'] }),
+    }),
+  );
+  await page.goto('/contato');
+  const form = page.locator('#formulario');
+  await form.locator('input[name="name"]').fill('Ana');
+  await form.locator('input[name="company"]').fill('ACME');
+  await form.locator('input[name="email"]').fill('ana@acme.example');
+  await form.locator('input[name="whatsapp"]').fill('47 99999 0000');
+  await form.locator('input[name="consent"]').check();
+  await form.locator('button[type="submit"]').click();
+  const wa = form.locator('input[name="whatsapp"]');
+  await expect(wa).toHaveAttribute('aria-invalid', 'true');
+  await expect(wa).toBeFocused();
+  await expect(form.locator('#formulario-whatsapp-error')).toBeVisible();
+  await expect(form.locator('#formulario-whatsapp-error svg')).toHaveCount(1);
+  await wa.fill('47 99999 0001');
+  await expect(form.locator('#formulario-whatsapp-error')).toBeHidden();
+});
+
+test('client patterns match the server: malformed e-mail and phone are caught before sending', async ({ page }) => {
+  await stubTurnstile(page);
+  let posted = false;
+  await page.route('**/api/lead', (route) => {
+    posted = true;
+    return route.abort();
+  });
+  await page.goto('/contato');
+  const form = page.locator('#formulario');
+  await form.locator('input[name="name"]').fill('Ana');
+  await form.locator('input[name="company"]').fill('ACME');
+  await form.locator('input[name="email"]').fill('joao@empresa');
+  await form.locator('input[name="whatsapp"]').fill('ramal 12');
+  await form.locator('input[name="consent"]').check();
+  await form.locator('button[type="submit"]').click();
+  await expect(form.locator('input[name="email"]')).toHaveAttribute('aria-invalid', 'true');
+  await expect(form.locator('input[name="whatsapp"]')).toHaveAttribute('aria-invalid', 'true');
+  expect(posted).toBe(false);
+});
+
 for (const [path, id, lang] of [
   ['/contato', 'formulario', 'pt-br'],
   ['/en/partners', 'parceria', 'en'],

@@ -22,6 +22,8 @@
   --lk-focus: var(--lk-accent);
   --lk-line: #d5dae0;
   --lk-line-strong: #a9b0b9;
+  /* Form field boundary: ≥ 3:1 against --lk-surface and --lk-bg (WCAG 1.4.11). */
+  --lk-field-border: #7a828d;
   --lk-grid-line: rgb(10 10 15 / 0.045);
   --lk-inverse-bg: #0a0a0f;
   --lk-inverse-text: #f4f6f8;
@@ -45,6 +47,7 @@
   --lk-focus: var(--lk-accent);
   --lk-line: #262631;
   --lk-line-strong: #3a3a47;
+  --lk-field-border: #6b6b7a;
   --lk-grid-line: rgb(244 246 248 / 0.05);
   --lk-inverse-bg: #f4f6f8;
   --lk-inverse-text: #0a0a0f;

@@ -64,7 +64,10 @@ test('no third-party request besides Turnstile on any page', async ({ page }) =>
   for (const { path } of ALL_ROUTES) {
     await page.goto(path, { waitUntil: 'networkidle' });
   }
-  const unexpected = [...external].filter((h) => h !== 'challenges.cloudflare.com');
+  // Turnstile always may load; the Web Analytics beacon only when its token is configured.
+  const allowed = new Set(['challenges.cloudflare.com']);
+  if (process.env.PUBLIC_CF_ANALYTICS_TOKEN) ['static.cloudflareinsights.com', 'cloudflareinsights.com'].forEach((h) => allowed.add(h));
+  const unexpected = [...external].filter((h) => !allowed.has(h));
   expect(unexpected).toEqual([]);
   expect(await page.context().cookies()).toEqual([]);
 });
