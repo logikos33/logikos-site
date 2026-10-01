@@ -1,0 +1,165 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  ASTRO_TELEMETRY_DISABLED: '1'
+  WRANGLER_SEND_METRICS: 'false'
+  # Public build-time values live in repository *variables* (not secrets).
+  PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL || 'https://logikosvision.com.br' }}
+  PUBLIC_WHATSAPP_NUMBER: ${{ vars.PUBLIC_WHATSAPP_NUMBER }}
+  PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL }}
+  PUBLIC_MEDIA_BASE_URL: ${{ vars.PUBLIC_MEDIA_BASE_URL }}
+  PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
+  PUBLIC_CF_ANALYTICS_TOKEN: ${{ vars.PUBLIC_CF_ANALYTICS_TOKEN }}
+
+jobs:
+  quality:
+    name: check · lint · unit · build · license · text
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: astro check
+        run: pnpm check
+      - name: lint (ESLint + Prettier)
+        run: pnpm lint
+      - name: i18n gate (parity, documented numbers, no hard-coded text)
+        run: pnpm gate:i18n
+      - name: unit tests (Pages Function + lead contract)
+        run: pnpm test:unit
+      - name: build
+        run: pnpm build
+      - name: license gate
+        run: pnpm gate:license
+      - name: forbidden-text gate
+        run: pnpm gate:text
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 7
+
+  gitleaks:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: install gitleaks 8.30.1 (MIT, checksum-pinned)
+        run: |
+          curl -sSL -o gitleaks.tgz https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz
+          echo "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb  gitleaks.tgz" | sha256sum -c -
+          tar xzf gitleaks.tgz gitleaks
+      - name: scan full history
+        run: ./gitleaks git --redact --no-banner --exit-code 1 .
+
+  e2e:
+    name: playwright (themes, languages, reduced motion, form, axe)
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: |
+            playwright-report
+            test-results
+          retention-days: 14
+
+  lighthouse:
+    name: lighthouse (mobile, home PT + EN)
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - run: pnpm lhci
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse
+          path: .lighthouseci
+          retention-days: 14
+
+  deploy:
+    name: deploy (Cloudflare Pages — preview per PR, pages.dev production on main)
+    needs: [quality, gitleaks, e2e, lighthouse]
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: secrets present?
+        id: gate
+        run: |
+          if [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then echo "ok=true" >> "$GITHUB_OUTPUT"; else echo "ok=false" >> "$GITHUB_OUTPUT"; echo "::notice::CLOUDFLARE_API_TOKEN/CLOUDFLARE_ACCOUNT_ID not set — deploy skipped (gate: Vitor)."; fi
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.ok == 'true'
+      - uses: pnpm/action-setup@v4
+        if: steps.gate.outputs.ok == 'true'
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.ok == 'true'
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+        if: steps.gate.outputs.ok == 'true'
+      - uses: actions/download-artifact@v4
+        if: steps.gate.outputs.ok == 'true'
+        with:
+          name: dist
+          path: dist
+      - name: provision Pages project + KV "leads-site" (idempotent, no domains)
+        if: steps.gate.outputs.ok == 'true'
+        run: node scripts/cf-provision.mjs
+      - name: wrangler pages deploy (never attaches a custom domain)
+        if: steps.gate.outputs.ok == 'true'
+        run: |
+          BRANCH="${{ github.head_ref || github.ref_name }}"
+          pnpm exec wrangler pages deploy dist --project-name logikos-site --branch "$BRANCH" --commit-hash "${{ github.sha }}" --commit-dirty=true | tee deploy.log
+          grep -oE 'https://[a-z0-9.-]+\.pages\.dev' deploy.log | tail -1 | sed 's/^/Preview URL: /' >> "$GITHUB_STEP_SUMMARY"

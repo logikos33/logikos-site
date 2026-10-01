@@ -1,0 +1,1 @@
+**sharp ignorado (pnpm.ignoredOptionalDependencies) e passthroughImageService** — evita libvips LGPL no caminho do Astro e não há imagem raster para otimizar; reverter: remover a entrada e o image.service.

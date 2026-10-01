@@ -1,0 +1,1 @@
+**astro, vite e toda a cadeia de build em devDependencies; dependencies = só o que é servido (fontes)** — o gate de licença mede o que chega ao navegador/edge; reverter: mover pacotes entre blocos do package.json (o gate continua valendo sobre o bundle real).

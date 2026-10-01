@@ -1,0 +1,1 @@
+**CSP por <meta> gerado pelo Astro (hashes automáticos) + frame-ancestors em public/\_headers** — CSP estrita sem 'unsafe-inline' e sem manter hash à mão; reverter: remover security.csp do astro.config.ts.

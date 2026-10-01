@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.astro/
+.license/
+.wrangler/
+.dev.vars
+.env
+.env.*
+!.env.example
+playwright-report/
+test-results/
+.lighthouseci/
+*.log
+.DS_Store

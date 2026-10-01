@@ -1,0 +1,1 @@
+**libvips (LGPL) tolerado só como dev-only via wrangler→miniflare→sharp, documentado em scripts/license-exceptions.json** — nunca é servido; o gate falha se virar servido ou se aparecer copyleft novo; reverter: remover wrangler das devDependencies e usar pnpm dlx.

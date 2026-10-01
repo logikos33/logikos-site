@@ -1,0 +1,10 @@
+dist/
+.astro/
+node_modules/
+pnpm-lock.yaml
+public/media/hud/
+playwright-report/
+test-results/
+.lighthouseci/
+.license/
+.wrangler/

@@ -1,0 +1,1 @@
+**Astro 7.3.5 estático (output: 'static', build.format: 'preserve')** — porque é a versão estável de 01/10/2026 e 'preserve' reproduz exatamente a tabela de URLs do brief (/recognition, /en/); reverter: trocar build.format e trailingSlash em astro.config.ts.

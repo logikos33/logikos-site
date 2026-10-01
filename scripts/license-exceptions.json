@@ -1,0 +1,10 @@
+{
+  "_doc": "Copyleft packages tolerated ONLY as dev tooling that never ships to the browser or the edge. The gate still fails if any of them becomes served. Each entry needs the path that pulls it in and why.",
+  "dev_only": {
+    "@img/sharp-libvips-linux-x64": "LGPL-3.0-or-later — wrangler → miniflare → sharp (local emulation of the Images binding). Dynamic library in a local dev server; never bundled or deployed.",
+    "@img/sharp-libvips-linuxmusl-x64": "LGPL-3.0-or-later — same path as above (musl build).",
+    "@img/sharp-libvips-linux-arm64": "LGPL-3.0-or-later — same path as above (arm64 build).",
+    "@img/sharp-libvips-darwin-arm64": "LGPL-3.0-or-later — same path as above (macOS arm64 build).",
+    "@img/sharp-libvips-darwin-x64": "LGPL-3.0-or-later — same path as above (macOS x64 build)."
+  }
+}
