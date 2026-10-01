@@ -8,7 +8,8 @@ import { join } from 'node:path';
 const problems = [];
 const pt = JSON.parse(readFileSync('src/i18n/pt-br.json', 'utf8'));
 const en = JSON.parse(readFileSync('src/i18n/en.json', 'utf8'));
-const allow = JSON.parse(readFileSync('src/i18n/numbers.allow.json', 'utf8')).numbers;
+/** key path → numbers documented for that key only. */
+const allow = JSON.parse(readFileSync('src/i18n/numbers.allow.json', 'utf8')).allow;
 
 function shape(node, path, out) {
   if (Array.isArray(node)) {
@@ -43,7 +44,8 @@ for (const [file, dictObj] of [
   for (const [path, value] of strings(dictObj, '')) {
     if (value.trim() === '') problems.push(`empty: ${file} ${path}`);
     for (const n of value.match(/\d+(?:[.,]\d+)*/g) ?? []) {
-      if (!(n in allow)) problems.push(`number: ${file} ${path} contains "${n}" — not in numbers.allow.json`);
+      if (!allow[path]?.values.includes(n))
+        problems.push(`number: ${file} ${path} contains "${n}" — not documented for this key in numbers.allow.json`);
     }
   }
 }
@@ -81,7 +83,8 @@ function stripExpressions(src) {
   return out;
 }
 
-const HUMAN_ATTRS = /\s(?:aria-label|alt|title|placeholder|aria-description|label)="([^"]*)"/g;
+// Attributes people read or hear, including data-* strings that scripts render as UI text.
+const HUMAN_ATTRS = /\s(?:aria-label|alt|title|placeholder|aria-description|label|data-(?:label|msg|err)-[\w-]+)="([^"]*)"/g;
 const LETTERS = /[A-Za-zÀ-ÿ]{2,}/;
 
 for (const file of walk('src').filter((f) => f.endsWith('.astro'))) {
