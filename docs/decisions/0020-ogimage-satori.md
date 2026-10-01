@@ -1,0 +1,1 @@
+**OG por idioma gerada no build com satori + @resvg/resvg-js (MPL-2.0, não MIT como dizia o brief; ambos build-time)** — MPL-2.0 está na allowlist e o PNG não carrega código; reverter: trocar por PNG estático em public/og/.
