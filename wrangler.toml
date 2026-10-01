@@ -1,0 +1,10 @@
+# Cloudflare Pages project config (source of truth for bindings).
+# The KV id placeholder is replaced at deploy time by scripts/ensure-kv.mjs, which creates the
+# "leads-site" namespace if it does not exist. Local `wrangler pages dev` uses a local KV.
+name = "logikos-site"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-10-01"
+
+[[kv_namespaces]]
+binding = "LEADS_KV"
+id = "__LEADS_KV_ID__"

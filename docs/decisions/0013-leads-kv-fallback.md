@@ -1,0 +1,1 @@
+**Lead vai para recognition-leads só com LEADS_API_URL+LEADS_API_KEY; sem isso, ou em erro, grava em KV 'leads-site'** — o contrato do leads-collector não está em nenhum repo; reverter: configurar as duas variáveis (o fallback continua como rede de segurança).
