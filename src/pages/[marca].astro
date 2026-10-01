@@ -1,0 +1,215 @@
+---
+// Internal brand check page at /_marca — noindex and excluded from the sitemap.
+import BrandBox from '../components/BrandBox.astro';
+import HudVideo from '../components/HudVideo.astro';
+import Icon from '../components/Icon.astro';
+import Logo from '../components/Logo.astro';
+import { dict } from '../i18n';
+import Base from '../layouts/Base.astro';
+
+export function getStaticPaths() {
+  return [{ params: { marca: '_marca' } }];
+}
+
+const t = dict('pt-br');
+const m = t.marca;
+const TOKENS = [
+  '--lk-bg',
+  '--lk-surface',
+  '--lk-text',
+  '--lk-text-2',
+  '--lk-accent',
+  '--lk-accent-2',
+  '--lk-glitch-c',
+  '--lk-glitch-m',
+  '--lk-ok',
+  '--lk-alert',
+  '--lk-warn',
+];
+const STATES = ['ok', 'alert', 'warn'] as const;
+---
+
+<Base locale="pt-br" title={m.title} description={m.text} noindex>
+  <section class="section section--flush greek-grid" aria-labelledby="page-title">
+    <div class="container">
+      <h1 id="page-title">{m.title}</h1>
+      <p class="lede">{m.text}</p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="m-colors">
+    <div class="container">
+      <h2 id="m-colors">{m.colors}</h2>
+      <ul class="swatches" role="list">
+        {TOKENS.map((tok) => (
+          <li>
+            <span class="swatch" data-token={tok} />
+            <code>{tok}</code>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="m-type">
+    <div class="container type-specimen">
+      <h2 id="m-type">{m.type}</h2>
+      <p class="sample-display">{m.displaySample}</p>
+      <p class="sample-body">{m.bodySample}</p>
+      <p class="sample-mono mono">{m.monoSample}</p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="m-logo">
+    <div class="container logo-row">
+      <h2 id="m-logo">{m.logo}</h2>
+      <div class="logo-specimens">
+        <Logo locale="pt-br" size={64} />
+        <Logo locale="pt-br" size={20} />
+        <Logo locale="pt-br" variant="monogram" size={48} />
+        <Logo locale="pt-br" variant="monogram" size={20} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section greek-grid" aria-labelledby="m-glitch">
+    <div class="container">
+      <h2 id="m-glitch">
+        {m.glitch} · {m.grid}
+      </h2>
+      <BrandBox locale="pt-br" glitch />
+      <p>
+        <button type="button" class="btn btn--ghost" data-glitch-replay>
+          {m.glitchReplay}
+        </button>
+      </p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="m-states">
+    <div class="container">
+      <h2 id="m-states">
+        {m.states} · {m.buttons}
+      </h2>
+      <ul class="state-row" role="list">
+        {STATES.map((s) => (
+          <li class:list={['state', `state--${s}`]}>
+            <Icon name={s} />
+            {t.states[s]}
+          </li>
+        ))}
+      </ul>
+      <div class="btn-row">
+        <a class="btn" href="#m-states">
+          <span class="btn__mark" aria-hidden="true"></span>
+          {t.cta.whatsapp}
+        </a>
+        <a class="btn btn--ghost" href="#m-states">
+          {t.cta.howItWorks}
+        </a>
+        <span class="chip">{t.products.robotics.chip}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="m-hud">
+    <div class="container">
+      <h2 id="m-hud">{m.hud}</h2>
+      <HudVideo locale="pt-br" slot="epi" />
+    </div>
+  </section>
+</Base>
+
+<script>
+  document.querySelector('[data-glitch-replay]')?.addEventListener('click', () => {
+    const node = document.querySelector<HTMLElement>('[data-brand-box] .lk-glitch');
+    if (!node || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    node.classList.remove('is-glitching');
+    void node.offsetWidth;
+    node.classList.add('is-glitching');
+    node.addEventListener('animationend', () => node.classList.remove('is-glitching'), { once: true });
+  });
+</script>
+
+<style>
+  .swatches {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    gap: var(--lk-space-4);
+  }
+
+  .swatches li {
+    display: grid;
+    gap: var(--lk-space-2);
+  }
+
+  .swatch {
+    display: block;
+    height: 4rem;
+    border: 1px solid var(--lk-line);
+  }
+
+  .swatch[data-token='--lk-bg'] {
+    background: var(--lk-bg);
+  }
+  .swatch[data-token='--lk-surface'] {
+    background: var(--lk-surface);
+  }
+  .swatch[data-token='--lk-text'] {
+    background: var(--lk-text);
+  }
+  .swatch[data-token='--lk-text-2'] {
+    background: var(--lk-text-2);
+  }
+  .swatch[data-token='--lk-accent'] {
+    background: var(--lk-accent);
+  }
+  .swatch[data-token='--lk-accent-2'] {
+    background: var(--lk-accent-2);
+  }
+  .swatch[data-token='--lk-glitch-c'] {
+    background: var(--lk-glitch-c);
+  }
+  .swatch[data-token='--lk-glitch-m'] {
+    background: var(--lk-glitch-m);
+  }
+  .swatch[data-token='--lk-ok'] {
+    background: var(--lk-ok);
+  }
+  .swatch[data-token='--lk-alert'] {
+    background: var(--lk-alert);
+  }
+  .swatch[data-token='--lk-warn'] {
+    background: var(--lk-warn);
+  }
+
+  .sample-display {
+    font-family: var(--lk-font-display);
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .sample-body {
+    font-size: 1.125rem;
+  }
+
+  .logo-specimens {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--lk-space-7);
+  }
+
+  .state-row {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--lk-space-5);
+    padding: 0;
+    margin: 0 0 var(--lk-space-5);
+  }
+</style>

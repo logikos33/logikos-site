@@ -1,0 +1,1 @@
+**Glitch em CSS puro (::before/::after com clip-path, steps(1), 0,5 s) disparado só em carga sem referrer interno e sem reduced-motion** — sem JS de animação, termina em repouso, fatias não cruzam as letras O; reverter: remover a classe lk-glitch no BrandBox.

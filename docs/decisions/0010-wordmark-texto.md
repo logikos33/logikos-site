@@ -1,0 +1,1 @@
+**Wordmark provisório = texto 'LOGIKOS' em Space Grotesk 700, tracking .16em (igual ao Recognition develop/Marca.tsx); monograma = Λ vazado no círculo (lk-loader.js)** — não existe SVG do wordmark em nenhum repo e o board do Miro é um embed HTML opaco; reverter: substituir Logo.astro pelo SVG oficial quando chegar (issue brand).
