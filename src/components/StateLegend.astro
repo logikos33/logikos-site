@@ -1,0 +1,47 @@
+---
+// The three PPE verdicts: always color + icon + word.
+import { dict } from '../i18n';
+import type { Locale } from '../i18n/routes';
+import Icon from './Icon.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dict(locale);
+const STATES = ['ok', 'alert', 'warn'] as const;
+---
+
+<ul class="state-legend" role="list">
+  {STATES.map((s) => (
+    <li class="card">
+      <span class:list={['state', `state--${s}`]}>
+        <Icon name={s} />
+        {t.states[s]}
+      </span>
+      <p>{t.recognition.epi.states[s]}</p>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .state-legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--lk-space-4);
+  }
+
+  .state-legend .state {
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  @media (min-width: 48rem) {
+    .state-legend {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

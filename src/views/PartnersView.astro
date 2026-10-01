@@ -1,0 +1,50 @@
+---
+import LeadForm from '../components/LeadForm.astro';
+import PageHero from '../components/PageHero.astro';
+import PartnerBlock from '../components/PartnerBlock.astro';
+import SectionHead from '../components/SectionHead.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import { dict } from '../i18n';
+import type { Locale } from '../i18n/routes';
+import Base from '../layouts/Base.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dict(locale);
+const p = t.partners;
+---
+
+<Base locale={locale} routeKey="partners" title={p.meta.title} description={p.meta.description}>
+  <PageHero eyebrow={p.hero.eyebrow} title={p.hero.title} text={p.hero.text}>
+    <div class="btn-row">
+      <a class="btn" href="#parceria">
+        <span class="btn__mark" aria-hidden="true"></span>
+        {t.cta.partner}
+      </a>
+      <WhatsAppButton locale={locale} variant="ghost" message={t.cta.whatsappPartnerMessage} />
+    </div>
+  </PageHero>
+
+  <section class="section" aria-labelledby="model-title">
+    <div class="container">
+      <SectionHead title={p.model.title} text={p.model.text} id="model-title" />
+      <PartnerBlock locale={locale} />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="partner-form-title">
+    <div class="container form-wrap">
+      <SectionHead title={p.form.title} text={p.form.text} id="partner-form-title" />
+      <LeadForm locale={locale} kind="partner" id="parceria" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .form-wrap {
+    max-width: 52rem;
+  }
+</style>

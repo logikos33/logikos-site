@@ -1,0 +1,304 @@
+---
+import { dict } from '../i18n';
+import { HTML_LANG, LOCALES, pathFor, type Locale, type RouteKey } from '../i18n/routes';
+import { whatsappHref } from '../lib/site';
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+
+interface Props {
+  locale: Locale;
+  routeKey?: RouteKey;
+}
+
+const { locale, routeKey } = Astro.props;
+const t = dict(locale);
+const NAV: RouteKey[] = ['recognition', 'howItWorks', 'partners', 'twins', 'robotics', 'about'];
+const wa = whatsappHref(t.cta.whatsappMessage);
+const ctaHref = wa ?? pathFor('contact', locale);
+---
+
+<header class="site-header">
+  <div class="container site-header__bar">
+    <a class="site-header__logo" href={pathFor('home', locale)} aria-label={t.a11y.home}>
+      <Logo locale={locale} size={18} />
+    </a>
+
+    <nav class="site-nav" aria-label={t.a11y.mainNav}>
+      <ul>
+        {NAV.map((key) => (
+          <li>
+            <a href={pathFor(key, locale)} aria-current={key === routeKey ? 'page' : undefined}>
+              {t.nav[key]}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="site-header__tools">
+      <ul class="lang-switch" aria-label={t.a11y.langSwitch}>
+        {LOCALES.map((l) => (
+          <li>
+            {l === locale ? (
+              <span class="lang-switch__current" aria-current="true" lang={HTML_LANG[l]}>
+                <span class="visually-hidden">
+                  {l === 'pt-br' ? t.lang['pt-brName'] : t.lang.enName} — {t.a11y.langCurrent}
+                </span>
+                <span aria-hidden="true">{t.lang[l]}</span>
+              </span>
+            ) : (
+              <a href={pathFor(routeKey ?? 'home', l)} hreflang={HTML_LANG[l]} lang={HTML_LANG[l]} data-lang-link>
+                <span class="visually-hidden">{l === 'pt-br' ? t.lang['pt-brName'] : t.lang.enName}</span>
+                <span aria-hidden="true">{t.lang[l]}</span>
+              </a>
+            )}
+          </li>
+        ))}
+      </ul>
+
+      <button
+        type="button"
+        class="theme-toggle"
+        data-theme-toggle
+        data-label-dark={t.a11y.themeToDark}
+        data-label-light={t.a11y.themeToLight}
+        aria-label={t.a11y.themeToDark}
+      >
+        <Icon name="moon" class="theme-toggle__moon" />
+        <Icon name="sun" class="theme-toggle__sun" />
+      </button>
+
+      <a class="btn site-header__cta" href={ctaHref} {...(wa ? { rel: 'noopener', target: '_blank' } : {})} data-cta="whatsapp">
+        <span class="btn__mark" aria-hidden="true"></span>
+        {t.cta.whatsapp}
+        {wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
+      </a>
+
+      <details class="mobile-nav">
+        <summary aria-label={t.a11y.menu}>
+          <Icon name="menu" class="mobile-nav__open" />
+          <Icon name="close" class="mobile-nav__close" />
+        </summary>
+        <div class="mobile-nav__panel">
+          <ul>
+            {NAV.map((key) => (
+              <li>
+                <a href={pathFor(key, locale)} aria-current={key === routeKey ? 'page' : undefined}>
+                  {t.nav[key]}
+                </a>
+              </li>
+            ))}
+            <li>
+              <a href={pathFor('contact', locale)} aria-current={routeKey === 'contact' ? 'page' : undefined}>
+                {t.nav.contact}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<script>
+  const STORAGE_KEY = 'lk-theme';
+  const root = document.documentElement;
+
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
+    const sync = () => {
+      const dark = root.getAttribute('data-theme') === 'dark';
+      button.setAttribute('aria-label', (dark ? button.dataset.labelLight : button.dataset.labelDark) ?? '');
+      button.setAttribute('aria-pressed', String(dark));
+    };
+    sync();
+    button.addEventListener('click', () => {
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem(STORAGE_KEY, next);
+      } catch {
+        // Storage blocked: the choice lasts for this page view only.
+      }
+      sync();
+    });
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--lk-bg);
+    border-bottom: 1px solid var(--lk-line);
+  }
+
+  .site-header__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--lk-space-4);
+    min-height: 4rem;
+  }
+
+  .site-header__logo {
+    display: inline-flex;
+    align-items: center;
+    /* Protection area: 1x (x ≈ cap height of the wordmark). */
+    padding: 0.7em 0.7em 0.7em 0;
+    font-size: 18px;
+    text-decoration: none;
+    color: var(--lk-text);
+  }
+
+  .site-nav {
+    display: none;
+    margin-right: auto;
+  }
+
+  .site-nav ul,
+  .lang-switch,
+  .mobile-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-nav ul {
+    display: flex;
+    gap: 0;
+  }
+
+  .site-nav a,
+  .mobile-nav a {
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    padding: 0 var(--lk-space-3);
+    color: var(--lk-text);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .site-nav a:hover,
+  .mobile-nav a:hover {
+    text-decoration: underline;
+  }
+
+  .site-nav a[aria-current='page'],
+  .mobile-nav a[aria-current='page'] {
+    color: var(--lk-link);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+
+  .site-header__tools {
+    display: flex;
+    align-items: center;
+    gap: var(--lk-space-2);
+    margin-left: auto;
+  }
+
+  .lang-switch {
+    display: flex;
+    font: 500 0.8125rem/1 var(--lk-font-mono);
+  }
+
+  .lang-switch a,
+  .lang-switch__current {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+    color: var(--lk-text-2);
+    text-decoration: none;
+  }
+
+  .lang-switch a {
+    color: var(--lk-link);
+  }
+
+  .lang-switch a:hover {
+    text-decoration: underline;
+  }
+
+  .lang-switch__current {
+    color: var(--lk-text);
+    font-weight: 700;
+  }
+
+  .theme-toggle,
+  .mobile-nav summary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--lk-line);
+    border-radius: var(--lk-radius);
+    background: transparent;
+    color: var(--lk-text);
+    cursor: pointer;
+  }
+
+  .theme-toggle:hover,
+  .mobile-nav summary:hover {
+    border-color: var(--lk-line-strong);
+  }
+
+  :global([data-theme='light']) .theme-toggle__sun,
+  :global([data-theme='dark']) .theme-toggle__moon {
+    display: none;
+  }
+
+  .site-header__cta {
+    display: none;
+    white-space: nowrap;
+  }
+
+  .mobile-nav summary {
+    list-style: none;
+  }
+
+  .mobile-nav summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .mobile-nav[open] .mobile-nav__open,
+  .mobile-nav:not([open]) .mobile-nav__close {
+    display: none;
+  }
+
+  .mobile-nav__panel {
+    position: absolute;
+    inset: 4rem 0 auto 0;
+    background: var(--lk-bg);
+    border-bottom: 1px solid var(--lk-line);
+    padding: var(--lk-space-3) var(--lk-gutter) var(--lk-space-5);
+  }
+
+  .mobile-nav__panel a {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0;
+    font-size: 1.0625rem;
+  }
+
+  @media (min-width: 40rem) {
+    .site-header__cta {
+      display: inline-flex;
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .site-nav {
+      display: block;
+    }
+
+    .mobile-nav {
+      display: none;
+    }
+  }
+</style>

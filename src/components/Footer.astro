@@ -1,0 +1,105 @@
+---
+import { dict } from '../i18n';
+import { pathFor, type Locale, type RouteKey } from '../i18n/routes';
+import { COMPANY, CONTACT_EMAIL } from '../lib/site';
+import Logo from './Logo.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dict(locale);
+const year = new Date().getFullYear();
+const LINKS: RouteKey[] = ['recognition', 'howItWorks', 'partners', 'twins', 'robotics', 'compliance', 'about', 'contact'];
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <Logo locale={locale} variant="monogram" size={32} />
+      <p class="site-footer__tagline">{t.brand.tagline}</p>
+    </div>
+
+    <nav aria-label={t.a11y.footerNav}>
+      <ul class="site-footer__links">
+        {LINKS.map((key) => (
+          <li>
+            <a href={pathFor(key, locale)}>{t.nav[key]}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <address class="site-footer__legal">
+      <span>{t.footer.company}</span>
+      <span class="mono">
+        {t.footer.cnpjLabel} {COMPANY.cnpj}
+      </span>
+      <span>{t.footer.city}</span>
+      {CONTACT_EMAIL && <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>}
+      <a href={pathFor('privacy', locale)}>{t.nav.privacy}</a>
+      <span class="mono">
+        © {year} {t.footer.company}. {t.footer.rights}
+      </span>
+    </address>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--lk-line);
+    padding-block: var(--lk-space-7) var(--lk-space-6);
+    font-size: 0.9375rem;
+  }
+
+  .site-footer__grid {
+    display: grid;
+    gap: var(--lk-space-6);
+  }
+
+  .site-footer__tagline {
+    margin: var(--lk-space-3) 0 0;
+    font-family: var(--lk-font-display);
+    font-weight: 500;
+  }
+
+  .site-footer__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--lk-space-1) var(--lk-space-5);
+  }
+
+  .site-footer__links a {
+    display: inline-flex;
+    min-height: 2.25rem;
+    align-items: center;
+    color: var(--lk-text);
+    text-decoration: none;
+  }
+
+  .site-footer__links a:hover {
+    text-decoration: underline;
+  }
+
+  .site-footer__legal {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lk-space-1);
+    font-style: normal;
+    color: var(--lk-text-2);
+  }
+
+  .site-footer__legal .mono {
+    font-size: 0.8125rem;
+  }
+
+  @media (min-width: 48rem) {
+    .site-footer__grid {
+      grid-template-columns: 1fr 1.4fr 1.2fr;
+    }
+  }
+</style>
