@@ -120,6 +120,7 @@ jobs:
         with:
           name: lighthouse
           path: .lighthouseci
+          include-hidden-files: true
           retention-days: 14
 
   deploy:
@@ -165,8 +166,14 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          BRANCH: ${{ github.head_ref || github.ref_name }}
+          # Only a push to main can deploy to production; PRs deploy to a "pr-N" preview branch,
+          # whatever their head branch is called.
+          BRANCH: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') && 'main' || (github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number)) || format('dispatch-{0}', github.run_number) }}
           COMMIT: ${{ github.sha }}
+        shell: bash
         run: |
+          set -euo pipefail
           pnpm exec wrangler pages deploy dist --project-name logikos-site --branch "$BRANCH" --commit-hash "$COMMIT" --commit-dirty=true | tee deploy.log
-          grep -oE 'https://[a-z0-9.-]+\.pages\.dev' deploy.log | tail -1 | sed 's/^/Preview URL: /' >> "$GITHUB_STEP_SUMMARY"
+          url=$(grep -oE 'https://[a-z0-9.-]+\.pages\.dev' deploy.log | tail -1 || true)
+          if [ -z "$url" ]; then echo "::error::wrangler printed no pages.dev URL"; exit 1; fi
+          echo "Deploy ($BRANCH): $url" >> "$GITHUB_STEP_SUMMARY"

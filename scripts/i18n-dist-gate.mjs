@@ -21,7 +21,15 @@ for (const d of dicts) {
     for (const part of s.split(/\{\w+\}/)) if (/[A-Za-zÀ-ÿΑ-ω]/.test(part)) fragments.add(part.trim().toLocaleLowerCase('pt-BR'));
   }
 }
-const ordered = [...fragments].sort((a, b) => b.length - a.length);
+const escapeRe = (x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+// Longest first; fragments only match whole words, so "en" never eats "Enviando".
+const ordered = [...fragments]
+  .sort((a, b) => b.length - a.length)
+  .map((f) => {
+    const word = /^[\p{L}\p{N}]/u.test(f) ? '(?<![\\p{L}\\p{N}])' : '';
+    const end = /[\p{L}\p{N}]$/u.test(f) ? '(?![\\p{L}\\p{N}])' : '';
+    return new RegExp(`${word}${escapeRe(f)}${end}`, 'gu');
+  });
 
 const ENTITIES = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'", '&apos;': "'", '&nbsp;': ' ' };
 const decode = (s) =>
@@ -33,7 +41,7 @@ function leftover(text) {
   if (!t) return '';
   t = t.replace(/[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g, ' '); // e-mail addresses (data)
   t = t.replace(/(^|\s)--[a-z0-9-]+(?=\s|$)/g, ' '); // CSS token names shown on /_marca (code identifiers)
-  for (const f of ordered) if (t.includes(f)) t = t.split(f).join(' ');
+  for (const re of ordered) t = t.replace(re, ' ');
   return LETTERS.test(t) ? t.trim() : '';
 }
 
@@ -47,7 +55,22 @@ function walk(dir) {
 const problems = [];
 let nodes = 0;
 for (const file of walk(ROOT).filter((f) => f.endsWith('.html'))) {
-  const html = readFileSync(file, 'utf8')
+  const raw = readFileSync(file, 'utf8');
+  // Strings that scripts render (data-label-*, data-msg-*, data-err-*, the HUD label JSON)
+  // and what search engines/social cards show (meta description, og:*).
+  const scripted = [
+    ...[...raw.matchAll(/\sdata-(?:label|msg|err)-[\w-]+="([^"]*)"/g)].map((m) => m[1] ?? ''),
+    ...[...raw.matchAll(/\sdata-labels="([^"]*)"/g)].flatMap((m) => strings(JSON.parse(decode(m[1] ?? '{}')), [])),
+    ...[...raw.matchAll(/<meta\s+(?:name="description"|property="og:(?:title|description|image:alt|site_name)")\s+content="([^"]*)"/g)].map(
+      (m) => m[1] ?? '',
+    ),
+  ];
+  for (const value of scripted) {
+    nodes++;
+    const rest = leftover(value);
+    if (rest) problems.push(`${file}: scripted/meta string "${value.slice(0, 80)}" → "${rest}"`);
+  }
+  const html = raw
     .replace(/<script[\s\S]*?<\/script>/gi, '')
     .replace(/<style[\s\S]*?<\/style>/gi, '')
     .replace(/<!--[\s\S]*?-->/g, '')

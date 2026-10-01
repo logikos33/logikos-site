@@ -3,6 +3,16 @@ import { defineConfig, passthroughImageService } from 'astro/config';
 import { servedPackages } from './scripts/lib/served-packages';
 import { alternatesFor, DEFAULT_LOCALE, INTERNAL_PATHS, LOCALES, normalizePath, routeKeyForPath } from './src/i18n/routes';
 
+// Load .env files the same way pages do (import.meta.env), so CSP and canonical URLs agree with
+// what the pages render. Existing environment variables win.
+for (const file of ['.env', `.env.${process.env.NODE_ENV === 'development' ? 'development' : 'production'}`]) {
+  try {
+    process.loadEnvFile(file);
+  } catch {
+    // No such file: nothing to load.
+  }
+}
+
 const SITE = process.env.PUBLIC_SITE_URL ?? 'https://logikosvision.com.br';
 const MEDIA_BASE = process.env.PUBLIC_MEDIA_BASE_URL ?? '';
 const ANALYTICS = Boolean(process.env.PUBLIC_CF_ANALYTICS_TOKEN);
@@ -48,7 +58,8 @@ export default defineConfig({
         "font-src 'self'",
         `media-src 'self'${mediaOrigin ? ` ${mediaOrigin}` : ''}`,
         `frame-src ${TURNSTILE}`,
-        `connect-src 'self'${ANALYTICS ? ' https://cloudflareinsights.com' : ''}`,
+        // HUD JSON is fetched from the media origin when PUBLIC_MEDIA_BASE_URL is set.
+        `connect-src 'self'${mediaOrigin ? ` ${mediaOrigin}` : ''}${ANALYTICS ? ' https://cloudflareinsights.com' : ''}`,
       ],
       scriptDirective: { resources: scriptSources },
     },

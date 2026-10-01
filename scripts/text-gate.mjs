@@ -14,6 +14,13 @@ const RULES = [
   ['câmeras em operação', /\bcameras?\s+em\s+operacao\b/],
   ['identificação de pessoas', /\bidentificacao\s+de\s+pessoas?\b/],
   ['identificação facial', /\bidentificacao\s+facial\b/],
+  ['reconhecimento facial', /\breconhecimento\s+facial\b/],
+  ['base instalada', /\bbase\s+instalada\b/],
+  // English equivalents (EN is own writing, the same commercial/LGPD rules apply).
+  ['person/facial identification', /\b(?:person|people|facial|face)\s+identification\b/],
+  ['facial recognition', /\bfac(?:e|ial)\s+recognition\b/],
+  ['cameras in operation', /\bcameras?\s+in\s+operation\b/],
+  ['installed base', /\binstalled\s+base\b/],
   ['Ultralytics', /\bultralytics\b/],
   ['R$', /r\$/],
   ['lorem', /\blorem\b/],
@@ -35,8 +42,18 @@ function walk(dir) {
   });
 }
 
+const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
+
+/** Decodes entities, folds NBSP and other spaces, strips accents, lower-cases. */
 function normalize(s) {
-  return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  return s
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+    .replace(/&(amp|lt|gt|quot|apos|nbsp);/g, (_, e) => ENTITIES[e])
+    .replace(/[\u00a0\u2000-\u200b\u202f\u205f\u3000]/g, ' ')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
 }
 
 /** Remove machine-generated noise that can contain arbitrary letter runs (hashes, base64). */
