@@ -167,6 +167,8 @@ const field = (name: string) => `${id}-${name}`;
           widgetId = ts.render(holder, {
             sitekey: holder.dataset.sitekey,
             language: form.dataset.lang === 'en' ? 'en' : 'pt-br',
+            // Must match turnstileAction() in functions/api/lead.ts.
+            action: `lead-${form.dataset.kind}`,
             theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light',
             'response-field': false,
           });

@@ -1,10 +1,21 @@
 # Cloudflare Pages project config (source of truth for bindings).
-# The KV id placeholder is replaced at deploy time by scripts/ensure-kv.mjs, which creates the
-# "leads-site" namespace if it does not exist. Local `wrangler pages dev` uses a local KV.
+# KV id placeholders are replaced at deploy time by scripts/cf-provision.mjs, which creates the
+# namespaces if missing. Local `wrangler pages dev` uses a local KV.
 name = "logikos-site"
 pages_build_output_dir = "dist"
 compatibility_date = "2026-10-01"
 
+# Production: real lead store. TURNSTILE_SECRET_KEY must be set as a Pages secret, or the
+# form endpoint fails closed (503).
 [[kv_namespaces]]
 binding = "LEADS_KV"
 id = "__LEADS_KV_ID__"
+
+# Previews (every PR/branch deploy): separate lead store and Cloudflare's public always-pass
+# Turnstile TEST secret, so previews work without real keys and can never write production leads.
+[env.preview.vars]
+TURNSTILE_SECRET_KEY = "1x0000000000000000000000000000000AA"
+
+[[env.preview.kv_namespaces]]
+binding = "LEADS_KV"
+id = "__LEADS_KV_PREVIEW_ID__"

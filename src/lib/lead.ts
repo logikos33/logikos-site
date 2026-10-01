@@ -60,22 +60,28 @@ export type LeadField = 'kind' | 'lang' | 'name' | 'company' | 'role' | 'email' 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_RE = /^\+?[\d\s().-]{8,32}$/;
 
-/** Drops C0 control characters (except tab/newline/CR) and DEL. */
-function stripControls(s: string): string {
+/** Bidi overrides/isolates, line/paragraph separators: never legitimate in a form field. */
+const INVISIBLE = new Set([0x2028, 0x2029, 0x202a, 0x202b, 0x202c, 0x202d, 0x202e, 0x2066, 0x2067, 0x2068, 0x2069]);
+
+/** Drops C0/C1 controls, DEL and bidi controls. Multi-line fields keep tab, LF and CR. */
+function stripControls(s: string, multiline: boolean): string {
   return [...s]
     .filter((ch) => {
-      const c = ch.charCodeAt(0);
-      return c === 9 || c === 10 || c === 13 || (c >= 32 && c !== 127);
+      const c = ch.codePointAt(0) ?? 0;
+      if (multiline && (c === 9 || c === 10 || c === 13)) return true;
+      return c >= 32 && c !== 127 && !(c >= 0x80 && c <= 0x9f) && !INVISIBLE.has(c);
     })
     .join('');
 }
 
-function text(v: unknown, max: number): string | undefined {
+function text(v: unknown, max: number, multiline = false): string | undefined {
   if (v === undefined || v === null) return '';
   if (typeof v !== 'string') return undefined;
-  const s = stripControls(v).trim();
+  const s = stripControls(v, multiline).trim();
   return s.length > max ? undefined : s;
 }
+
+const PAGE_RE = /^\/(?!\/)[\w\-./]{0,199}$/;
 
 function oneOf<T extends string>(v: unknown, allowed: readonly T[]): T | undefined {
   return typeof v === 'string' && (allowed as readonly string[]).includes(v) ? (v as T) : undefined;
@@ -90,7 +96,7 @@ export function validateLead(input: LeadInput, now: Date): { ok: true; lead: Lea
   const role = text(input.role, LIMITS.role);
   const email = text(input.email, LIMITS.email);
   const whatsapp = text(input.whatsapp, LIMITS.whatsapp);
-  const message = text(input.message, LIMITS.message);
+  const message = text(input.message, LIMITS.message, true);
   const rawInterests: unknown[] = Array.isArray(input.interests) ? input.interests : [];
   const interests = [...new Set(rawInterests.map((i) => oneOf(i, LEAD_INTERESTS)))];
 
@@ -122,7 +128,7 @@ export function validateLead(input: LeadInput, now: Date): { ok: true; lead: Lea
     return { ok: false, errors };
   }
 
-  const page = typeof input.page === 'string' && input.page.startsWith('/') && input.page.length <= 200 ? input.page : '';
+  const page = typeof input.page === 'string' && PAGE_RE.test(input.page) ? input.page : '';
   const at = now.toISOString();
   return {
     ok: true,
