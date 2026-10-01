@@ -45,15 +45,17 @@ export type HudState = 'ok' | 'alert' | 'warn';
 
 export interface HudLabels {
   person: string;
-  helmet: string;
-  vest: string;
   smoke: string;
   flame: string;
   ppeOk: string;
-  ppeMissing: string;
-  ppeUnknown: string;
   fireAlert: string;
   states: Record<HudState, string>;
+  /** PPE item names, keyed by the edge's `item` (open vocabulary). */
+  items: Record<string, string>;
+  /** "Without <item>" verdicts, keyed by `item`. */
+  missing: Record<string, string>;
+  /** Operator wording for `reason` when status is indeterminate. */
+  reasons: Record<string, string>;
 }
 
 export interface HudBox {
@@ -90,17 +92,24 @@ export function personState(p: Person): HudState {
   return 'ok';
 }
 
+/** Verdict wording for one PPE entry. Unknown vocabulary falls back to the state word, never a raw key. */
+function entryText(e: PpeEntry, state: HudState, labels: HudLabels): string {
+  if (state === 'alert') return labels.missing[e.item] ?? labels.states.alert;
+  if (state === 'warn') return labels.reasons[e.reason ?? 'unknown'] ?? labels.states.warn;
+  return labels.states.ok;
+}
+
 export function frameToBoxes(frame: HudFrame, labels: HudLabels): HudBox[] {
   const boxes: HudBox[] = [];
   for (const p of frame.people) {
     const state = personState(p);
-    const text = state === 'ok' ? labels.ppeOk : state === 'alert' ? labels.ppeMissing : labels.ppeUnknown;
+    const decisive = p.ppe.find((e) => (PPE_STATE[e.status] ?? 'warn') === state);
+    const text = state === 'ok' || !decisive ? labels.ppeOk : entryText(decisive, state, labels);
     boxes.push({ ...toBox(p.bbox), label: `${labels.person} ${trackNumber(p.track_id)}`, state, text });
     for (const e of p.ppe) {
       if (!e.bbox) continue;
       const s = PPE_STATE[e.status] ?? 'warn';
-      const name = e.item === 'helmet' ? labels.helmet : e.item === 'vest' ? labels.vest : e.item.toUpperCase();
-      boxes.push({ ...toBox(e.bbox), label: name, state: s, text: labels.states[s] });
+      boxes.push({ ...toBox(e.bbox), label: labels.items[e.item] ?? labels.states[s], state: s, text: entryText(e, s, labels) });
     }
   }
   for (const h of frame.hazards) {

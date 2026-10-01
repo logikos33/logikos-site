@@ -40,12 +40,12 @@ jobs:
         run: pnpm check
       - name: lint (ESLint + Prettier)
         run: pnpm lint
-      - name: i18n gate (parity, documented numbers, no hard-coded text)
-        run: pnpm gate:i18n
       - name: unit tests (Pages Function + lead contract)
         run: pnpm test:unit
       - name: build
         run: pnpm build
+      - name: i18n gate (parity, documented numbers, no hard-coded text in source or built HTML)
+        run: pnpm gate:i18n
       - name: license gate
         run: pnpm gate:license
       - name: forbidden-text gate

@@ -70,7 +70,7 @@ const ctaHref = wa ?? pathFor('contact', locale);
 
       <a class="btn site-header__cta" href={ctaHref} {...(wa ? { rel: 'noopener', target: '_blank' } : {})} data-cta="whatsapp">
         <span class="btn__mark" aria-hidden="true"></span>
-        {t.cta.whatsapp}
+        {wa ? t.cta.whatsapp : t.cta.contactFallback}
         {wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
       </a>
 

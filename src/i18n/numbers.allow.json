@@ -2,6 +2,9 @@
   "_doc": "Every digit sequence in src/i18n/*.json must be listed here with its source. scripts/i18n-gate.mjs enforces it.",
   "numbers": {
     "24": "Prazo da licença (24 meses) — brief do site, 01/10/2026.",
-    "2.0": "Nome da licença Apache 2.0 — política de licenças da Logikos."
+    "2.0": "Nome da licença Apache 2.0 — política de licenças da Logikos.",
+    "7": "LGPD, art. 7º (bases legais) — Lei 13.709/2018.",
+    "18": "LGPD, art. 18 (direitos do titular) — Lei 13.709/2018.",
+    "33": "LGPD, art. 33 (transferência internacional) — Lei 13.709/2018."
   }
 }

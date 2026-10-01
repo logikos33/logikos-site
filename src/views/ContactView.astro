@@ -6,7 +6,7 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
-import { CONTACT_EMAIL } from '../lib/site';
+import { CONTACT_EMAIL, whatsappHref } from '../lib/site';
 
 interface Props {
   locale: Locale;
@@ -15,23 +15,26 @@ interface Props {
 const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.contact;
+const hasWhatsapp = Boolean(whatsappHref(''));
 ---
 
 <Base locale={locale} routeKey="contact" title={p.meta.title} description={p.meta.description}>
-  <PageHero eyebrow={p.hero.eyebrow} title={p.hero.title} text={p.hero.text} />
+  <PageHero eyebrow={p.hero.eyebrow} title={p.hero.title} text={hasWhatsapp ? p.hero.text : p.hero.textNoWhatsapp} />
 
   <section class="section section--flush" aria-label={p.hero.title}>
     <div class="container contact-grid">
       <div class="contact-channels">
-        <article class="card">
-          <h2 class="contact-channels__title">
-            <Icon name="chat" /> {p.whatsapp.title}
-          </h2>
-          <p>{p.whatsapp.text}</p>
-          <div class="card__foot">
-            <WhatsAppButton locale={locale} />
-          </div>
-        </article>
+        {hasWhatsapp && (
+          <article class="card">
+            <h2 class="contact-channels__title">
+              <Icon name="chat" /> {p.whatsapp.title}
+            </h2>
+            <p>{p.whatsapp.text}</p>
+            <div class="card__foot">
+              <WhatsAppButton locale={locale} />
+            </div>
+          </article>
+        )}
         {CONTACT_EMAIL && (
           <article class="card">
             <h2 class="contact-channels__title">

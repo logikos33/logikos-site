@@ -42,7 +42,8 @@
     "partner": "Quero ser parceiro",
     "contactForm": "Enviar mensagem",
     "learnMore": "Ver detalhes",
-    "howItWorks": "Ver como funciona"
+    "howItWorks": "Ver como funciona",
+    "contactFallback": "Falar com a equipe"
   },
   "brand": {
     "wordmark": "LOGIKOS",
@@ -69,20 +70,38 @@
     },
     "labels": {
       "person": "PESSOA",
-      "helmet": "CAPACETE",
-      "vest": "COLETE",
       "smoke": "FUMAÇA",
       "flame": "CHAMA",
-      "zone": "ZONA",
-      "posture": "POSTURA",
       "ppeOk": "EPI OK",
-      "ppeMissing": "SEM CAPACETE",
-      "ppeUnknown": "OCLUSÃO",
-      "fireAlert": "ALERTA",
-      "zoneEnter": "ENTROU",
-      "postureRisk": "FLEXÃO",
-      "counter": "CONTAGEM"
-    }
+      "fireAlert": "ALERTA"
+    },
+    "items": {
+      "helmet": "CAPACETE",
+      "vest": "COLETE",
+      "gloves": "LUVAS",
+      "goggles": "ÓCULOS",
+      "mask": "MÁSCARA",
+      "ear_muffs": "PROTETOR AURICULAR",
+      "boots": "CALÇADO"
+    },
+    "missing": {
+      "helmet": "SEM CAPACETE",
+      "vest": "SEM COLETE",
+      "gloves": "SEM LUVAS",
+      "goggles": "SEM ÓCULOS",
+      "mask": "SEM MÁSCARA",
+      "ear_muffs": "SEM PROTETOR",
+      "boots": "SEM CALÇADO"
+    },
+    "reasons": {
+      "occluded": "ENCOBERTO",
+      "out_of_frame": "FORA DO QUADRO",
+      "facing_away": "DE COSTAS",
+      "low_light": "POUCA LUZ",
+      "too_far": "DISTANTE",
+      "unknown": "INDETERMINADO"
+    },
+    "posterLabel": "prévia"
   },
   "home": {
     "meta": {
@@ -99,8 +118,8 @@
       "plant": {
         "eyebrow": "Para a sua planta",
         "title": "Segurança visível, sem trocar câmera.",
-        "text": "Conte o que precisa monitorar. Respondemos pelo WhatsApp com o próximo passo.",
-        "cta": "Falar no WhatsApp"
+        "text": "Conte o que precisa monitorar. Respondemos com o próximo passo.",
+        "cta": "Falar com a equipe"
       },
       "partner": {
         "eyebrow": "Para integradores",
@@ -133,8 +152,8 @@
       "eyebrow": "LGPD",
       "title": "Privacidade desde o projeto.",
       "lines": [
-        "Monitora a condição, não a pessoa: presença e EPI, nunca identidade.",
-        "Vídeo processado na planta; nada sobe para a nuvem por padrão.",
+        "Monitora a condição; não identifica quem é a pessoa.",
+        "O vídeo contínuo fica na planta por padrão; saem só o alerta e a evidência do evento.",
         "Retenção de evidência definida em contrato."
       ],
       "cta": "Ver como tratamos dados"
@@ -183,7 +202,7 @@
     },
     "device": {
       "title": "Dispositivo na planta",
-      "text": "Um NVIDIA Jetson processa o vídeo no local. Funciona sem internet; o vídeo não vai para a nuvem por padrão."
+      "text": "Um NVIDIA Jetson processa o vídeo no local. Funciona sem internet; o vídeo contínuo não vai para a nuvem por padrão."
     },
     "verdict": {
       "title": "Veredito, evidência e alerta",
@@ -251,7 +270,7 @@
     "hero": {
       "eyebrow": "Como funciona",
       "title": "Câmera, dispositivo, veredito.",
-      "text": "O processamento acontece dentro da planta. A nuvem é opcional."
+      "text": "O processamento acontece dentro da planta. O vídeo contínuo fica lá por padrão."
     },
     "offline": {
       "title": "Offline-first",
@@ -355,7 +374,7 @@
     "hero": {
       "eyebrow": "Conformidade",
       "title": "Privacidade desde o projeto.",
-      "text": "O Recognition foi desenhado para cumprir a LGPD dentro da planta."
+      "text": "O Recognition foi projetado para apoiar a conformidade com a LGPD dentro da planta."
     },
     "items": {
       "signage": {
@@ -368,7 +387,7 @@
       },
       "presence": {
         "title": "Detecção por presença",
-        "text": "O sistema reconhece presença, postura e EPI. Monitora a condição, não a pessoa."
+        "text": "O sistema detecta presença, postura e EPI. Monitora a condição; não identifica quem é a pessoa."
       },
       "retention": {
         "title": "Retenção definida",
@@ -384,8 +403,8 @@
     },
     "hero": {
       "eyebrow": "Sobre",
-      "title": "Lógica e visão.",
-      "text": "ΛΟΓΙΚΟΣ: lógica, em grego. A Logikos Soluções faz visão computacional para a indústria, com engenharia que prova antes de prometer."
+      "title": "Razão e visão.",
+      "text": "ΛΟΓΙΚΟΣ: racional, em grego. A Logikos Soluções faz visão computacional para a indústria, com engenharia que prova antes de prometer."
     },
     "facts": {
       "place": {
@@ -398,7 +417,7 @@
       },
       "licenses": {
         "title": "Licenças permissivas",
-        "text": "Modelos e bibliotecas de terceiros sob licenças permissivas, como Apache 2.0, MIT e BSD."
+        "text": "Modelos de terceiros sob licenças permissivas, como Apache 2.0, MIT e BSD."
       }
     }
   },
@@ -410,7 +429,8 @@
     "hero": {
       "eyebrow": "Contato",
       "title": "Fale com a gente.",
-      "text": "O WhatsApp é o caminho mais rápido. Se preferir, use o formulário."
+      "text": "O WhatsApp é o caminho mais rápido. Se preferir, use o formulário.",
+      "textNoWhatsapp": "Use o formulário. Respondemos por e-mail ou WhatsApp."
     },
     "whatsapp": {
       "title": "WhatsApp",
@@ -421,7 +441,7 @@
     },
     "form": {
       "title": "Formulário",
-      "text": "Respondemos pelo canal que você indicar."
+      "text": "Respondemos por e-mail ou WhatsApp."
     }
   },
   "privacy": {
@@ -441,7 +461,7 @@
       },
       "data": {
         "title": "Quais dados coletamos",
-        "text": "Nome, empresa, cargo, e-mail, WhatsApp, interesses e a mensagem que você escreve no formulário. Este site não usa cookies de rastreamento."
+        "text": "Nome, empresa, cargo, e-mail, WhatsApp, interesses e a mensagem que você escreve no formulário, além de dados técnicos do envio: endereço IP (só para a verificação antiabuso), página, idioma, data e hora. Este site não usa cookies de rastreamento nem de publicidade."
       },
       "purpose": {
         "title": "Para que usamos",
@@ -449,15 +469,15 @@
       },
       "legalBasis": {
         "title": "Base legal",
-        "text": "Consentimento, registrado no envio do formulário, e procedimentos preliminares a contrato a pedido do titular."
+        "text": "Consentimento, registrado no envio do formulário (LGPD, art. 7º, I). Base final em validação jurídica."
       },
       "sharing": {
         "title": "Com quem compartilhamos",
-        "text": "Com provedores de infraestrutura que hospedam este site e armazenam os contatos, como operadores. Não vendemos dados."
+        "text": "Com a Cloudflare, que hospeda este site, armazena os contatos e faz a verificação antiabuso, como operadora. Os dados podem ser tratados fora do Brasil, com as garantias do art. 33 da LGPD. Não vendemos dados."
       },
       "antiAbuse": {
         "title": "Proteção contra abuso",
-        "text": "O formulário usa o Cloudflare Turnstile para separar pessoas de robôs, sem cookies de rastreamento."
+        "text": "O formulário usa o Cloudflare Turnstile para separar pessoas de robôs. O Turnstile recebe sinais técnicos do navegador e o IP, só para essa verificação."
       },
       "retention": {
         "title": "Por quanto tempo",
@@ -465,11 +485,11 @@
       },
       "rights": {
         "title": "Seus direitos",
-        "text": "Você pode pedir acesso, correção, portabilidade ou exclusão dos seus dados e revogar o consentimento a qualquer momento."
+        "text": "Você pode pedir confirmação do tratamento, acesso, correção, anonimização, bloqueio ou eliminação, portabilidade e informação sobre compartilhamento, e revogar o consentimento a qualquer momento (LGPD, art. 18). Também pode peticionar à ANPD."
       },
       "contact": {
         "title": "Como falar com a gente",
-        "text": "Pelo e-mail {email}."
+        "text": "Pelo e-mail {email}. Encarregado (DPO): a definir."
       }
     }
   },
@@ -480,7 +500,7 @@
     "email": "E-mail",
     "whatsapp": "WhatsApp",
     "whatsappHint": "Com DDD.",
-    "interests": "Interesse",
+    "interests": "Interesses",
     "interestsHint": "Marque um ou mais.",
     "message": "Mensagem",
     "consentBefore": "Li a",

@@ -20,18 +20,13 @@ const t = dict(locale);
 const media = MEDIA[slot];
 const caption = t.hud.slots[slot];
 const labels: HudLabels = {
-  person: t.hud.labels.person,
-  helmet: t.hud.labels.helmet,
-  vest: t.hud.labels.vest,
-  smoke: t.hud.labels.smoke,
-  flame: t.hud.labels.flame,
-  ppeOk: t.hud.labels.ppeOk,
-  ppeMissing: t.hud.labels.ppeMissing,
-  ppeUnknown: t.hud.labels.ppeUnknown,
-  fireAlert: t.hud.labels.fireAlert,
+  ...t.hud.labels,
   states: t.states,
+  items: t.hud.items,
+  missing: t.hud.missing,
+  reasons: t.hud.reasons,
 };
-const posterFile = `/media/posters/${slot}.svg`;
+const posterFile = `/media/posters/${locale}/${slot}.svg`;
 ---
 
 <figure
@@ -48,7 +43,7 @@ const posterFile = `/media/posters/${slot}.svg`;
         <source src={mediaUrl(media.video)} type="video/mp4" />
       </video>
     ) : (
-      <div class="hud__media hud__poster" set:html={posterSvg(slot, caption)} />
+      <div class="hud__media hud__poster" set:html={posterSvg(slot, t.hud.posterLabel)} />
     )}
     <svg
       class="hud__overlay"
