@@ -1,0 +1,175 @@
+---
+// The cover composition: wordmark inside a detection box (bracket corners, thin outline)
+// with a mono label in a dark chip with a cyan square. No score, no accuracy.
+// With `glitch`, the wordmark runs the signature glitch once (see script below).
+import { dict } from '../i18n';
+import type { Locale } from '../i18n/routes';
+import Logo from './Logo.astro';
+
+interface Props {
+  locale: Locale;
+  glitch?: boolean;
+}
+
+const { locale, glitch = false } = Astro.props;
+const t = dict(locale);
+---
+
+<div class="brand-box" data-brand-box>
+  <span class="brand-box__label">
+    <span class="brand-box__mark" aria-hidden="true"></span>
+    {t.brand.label}
+  </span>
+  <Logo locale={locale} size={64} glitch={glitch} />
+</div>
+
+{glitch && <script>
+  // Once per home load; never on internal navigation; never under reduced motion.
+  const node = document.querySelector<HTMLElement>('[data-brand-box] .lk-glitch');
+  const internal = (() => {
+    try {
+      return document.referrer !== '' && new URL(document.referrer).origin === window.location.origin;
+    } catch {
+      return false;
+    }
+  })();
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (node) {
+    node.dataset.glitch = reduce ? 'off-reduced-motion' : internal ? 'off-internal-navigation' : 'run';
+    if (!reduce && !internal) {
+      node.classList.add('is-glitching');
+      node.addEventListener(
+        'animationend',
+        () => {
+          node.classList.remove('is-glitching');
+          node.dataset.glitch = 'done';
+        },
+        { once: true },
+      );
+    }
+  }
+</script>}
+
+<style>
+  .brand-box {
+    position: relative;
+    display: inline-block;
+    padding: 0.62em 0.75em 0.5em;
+    font-size: clamp(36px, 9vw, 64px);
+    margin-top: 1.9rem;
+    /* Corner brackets + a hairline contour, both in the interactive accent. */
+    --c: var(--lk-accent);
+    --len: 0.42em;
+    background:
+      linear-gradient(var(--c), var(--c)) top left / var(--len) 2px,
+      linear-gradient(var(--c), var(--c)) top left / 2px var(--len),
+      linear-gradient(var(--c), var(--c)) top right / var(--len) 2px,
+      linear-gradient(var(--c), var(--c)) top right / 2px var(--len),
+      linear-gradient(var(--c), var(--c)) bottom left / var(--len) 2px,
+      linear-gradient(var(--c), var(--c)) bottom left / 2px var(--len),
+      linear-gradient(var(--c), var(--c)) bottom right / var(--len) 2px,
+      linear-gradient(var(--c), var(--c)) bottom right / 2px var(--len);
+    background-repeat: no-repeat;
+    outline: 1px solid color-mix(in srgb, var(--lk-accent) 30%, transparent);
+    outline-offset: -1px;
+  }
+
+  .brand-box__label {
+    position: absolute;
+    left: -1px;
+    bottom: calc(100% + 6px);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.42rem 0.6rem;
+    background: #0a0a0f;
+    color: #f4f6f8;
+    border: 1px solid #0a0a0f;
+    font: 500 0.8125rem/1 var(--lk-font-mono);
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+
+  :global([data-theme='dark']) .brand-box__label {
+    background: var(--lk-surface);
+    border-color: var(--lk-line-strong);
+  }
+
+  .brand-box__mark {
+    width: 0.5rem;
+    height: 0.5rem;
+    background: #00e5ff;
+  }
+
+  /* ---- Glitch: 2–3 partial horizontal slices, 2–4 px, cyan/magenta fringes, steps, ends clean.
+     Slices span L, G-I-K and S only, so the two O letters (the keyhole) are never cut. ---- */
+  .brand-box :global(.lk-glitch.is-glitching)::before,
+  .brand-box :global(.lk-glitch.is-glitching)::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    color: var(--lk-text);
+    background: var(--lk-bg);
+    pointer-events: none;
+  }
+
+  .brand-box :global(.lk-glitch.is-glitching)::before {
+    text-shadow:
+      -2px 0 var(--lk-glitch-c),
+      2px 0 var(--lk-glitch-m);
+    animation: lk-glitch-a 0.5s steps(1, end) 1 both;
+  }
+
+  .brand-box :global(.lk-glitch.is-glitching)::after {
+    text-shadow:
+      2px 0 var(--lk-glitch-c),
+      -2px 0 var(--lk-glitch-m);
+    animation: lk-glitch-b 0.5s steps(1, end) 1 both;
+  }
+
+  @keyframes lk-glitch-a {
+    0% {
+      clip-path: inset(18% 33% 60% 30%);
+      transform: translateX(3px);
+    }
+    30% {
+      clip-path: inset(58% 88% 22% 0);
+      transform: translateX(-4px);
+    }
+    60% {
+      clip-path: inset(40% 0 45% 87%);
+      transform: translateX(2px);
+    }
+    85%,
+    100% {
+      clip-path: inset(50% 50% 50% 50%);
+      transform: none;
+      opacity: 0;
+    }
+  }
+
+  @keyframes lk-glitch-b {
+    0% {
+      clip-path: inset(62% 0 20% 87%);
+      transform: translateX(-2px);
+    }
+    40% {
+      clip-path: inset(25% 33% 55% 30%);
+      transform: translateX(4px);
+    }
+    75%,
+    100% {
+      clip-path: inset(50% 50% 50% 50%);
+      transform: none;
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .brand-box :global(.lk-glitch.is-glitching)::before,
+    .brand-box :global(.lk-glitch.is-glitching)::after {
+      content: none;
+      animation: none;
+    }
+  }
+</style>

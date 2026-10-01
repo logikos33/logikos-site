@@ -1,0 +1,1 @@
+**Tema claro por padrão mesmo com SO em modo escuro; só o toggle muda (localStorage lk-theme)** — o brief define claro como padrão; reverter: no script inline do Base.astro, ler matchMedia('(prefers-color-scheme: dark)') quando não houver preferência salva.

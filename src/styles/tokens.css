@@ -1,0 +1,83 @@
+/* Brand tokens — Logikos "Visão" palette, light theme by default.
+   Rules: cyan is interactive only (links, focus, selection, data highlight);
+   magenta exists only inside the glitch; state = color + icon + word. */
+
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+  --lk-bg: #f4f6f8;
+  --lk-surface: #ffffff;
+  --lk-text: #0a0a0f;
+  --lk-text-2: #5c616b;
+  --lk-accent: #0091ad;
+  --lk-accent-2: #006b80;
+  --lk-glitch-c: #00e5ff;
+  --lk-glitch-m: #ff2e63;
+  --lk-ok: #1e8e4a;
+  --lk-alert: #c9361b;
+  --lk-warn: #9a6a00;
+
+  /* Derived (AA-checked): link text uses the deeper cyan on light surfaces. */
+  --lk-link: var(--lk-accent-2);
+  --lk-focus: var(--lk-accent);
+  --lk-line: #d5dae0;
+  --lk-line-strong: #a9b0b9;
+  --lk-grid-line: rgb(10 10 15 / 0.045);
+  --lk-inverse-bg: #0a0a0f;
+  --lk-inverse-text: #f4f6f8;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --lk-bg: #0a0a0f;
+  --lk-surface: #14141c;
+  --lk-text: #f4f6f8;
+  --lk-text-2: #8a8f98;
+  --lk-accent: #00e5ff;
+  --lk-accent-2: #0091ad;
+  --lk-glitch-c: #00e5ff;
+  --lk-glitch-m: #ff2e63;
+  --lk-ok: #3ddc84;
+  --lk-alert: #ff5a36;
+  --lk-warn: #ffb020;
+
+  --lk-link: var(--lk-accent);
+  --lk-focus: var(--lk-accent);
+  --lk-line: #262631;
+  --lk-line-strong: #3a3a47;
+  --lk-grid-line: rgb(244 246 248 / 0.05);
+  --lk-inverse-bg: #f4f6f8;
+  --lk-inverse-text: #0a0a0f;
+}
+
+/* HUD sits on video in both themes, so it always uses the dark state ramp. */
+.lk-hud-scope {
+  --hud-chip: #0a0a0f;
+  --hud-text: #f4f6f8;
+  --hud-stroke: #00e5ff;
+  --hud-ok: #3ddc84;
+  --hud-alert: #ff5a36;
+  --hud-warn: #ffb020;
+}
+
+:root {
+  --lk-font-display: 'Space Grotesk Variable', system-ui, sans-serif;
+  --lk-font-body: 'Inter Variable', system-ui, sans-serif;
+  --lk-font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+
+  --lk-space-1: 0.25rem;
+  --lk-space-2: 0.5rem;
+  --lk-space-3: 0.75rem;
+  --lk-space-4: 1rem;
+  --lk-space-5: 1.5rem;
+  --lk-space-6: 2rem;
+  --lk-space-7: 3rem;
+  --lk-space-8: 4rem;
+  --lk-space-9: 6rem;
+
+  --lk-radius: 2px;
+  --lk-max: 72rem;
+  --lk-gutter: clamp(1rem, 4vw, 2rem);
+  --lk-steps: steps(4, end);
+  --lk-motion-fast: 160ms;
+}

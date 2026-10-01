@@ -1,0 +1,1 @@
+**Texto de link no tema claro usa --lk-accent-2 (#006B80); --lk-accent (#0091AD) fica para foco, HUD e marcas** — #0091AD sobre #F4F6F8 dá 3,4:1 (abaixo de AA para texto); reverter: --lk-link: var(--lk-accent) em tokens.css (quebra AA).
