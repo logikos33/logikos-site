@@ -115,19 +115,21 @@ const field = (name: string) => `${id}-${name}`;
     <input id={field('website')} name="website" type="text" tabindex="-1" autocomplete="off" />
   </div>
 
-  <label class="check check--consent">
-    <input id={field('consent')} type="checkbox" name="consent" required />
-    <span>
-      {f.consentBefore} <a href={pathFor('privacy', locale)}>{f.consentLink}</a> {f.consentAfter}{' '}
-      <span class="field__req" aria-hidden="true">
-        *
+  <div class="field field--consent">
+    <label class="check check--consent">
+      <input id={field('consent')} type="checkbox" name="consent" required />
+      <span>
+        {f.consentBefore} <a href={pathFor('privacy', locale)}>{f.consentLink}</a> {f.consentAfter}{' '}
+        <span class="field__req" aria-hidden="true">
+          *
+        </span>
       </span>
-    </span>
-  </label>
-  <p class="field__error" id={field('consent-error')} hidden>
-    <Icon name="alert" size={16} />
-    <span data-error-text></span>
-  </p>
+    </label>
+    <p class="field__error" id={field('consent-error')} hidden>
+      <Icon name="alert" size={16} />
+      <span data-error-text></span>
+    </p>
+  </div>
 
   <div class="turnstile" data-turnstile data-sitekey={TURNSTILE_SITE_KEY}></div>
 
@@ -468,6 +470,10 @@ const field = (name: string) => `${id}-${name}`;
   .check--consent {
     font-size: 0.875rem;
     color: var(--lk-text);
+  }
+
+  .field--consent {
+    gap: 0;
   }
 
   .field--honeypot {
