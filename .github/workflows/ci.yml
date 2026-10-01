@@ -130,12 +130,12 @@ jobs:
     permissions:
       contents: read
       deployments: write
-    env:
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
     steps:
       - name: secrets present?
         id: gate
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           if [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then echo "ok=true" >> "$GITHUB_OUTPUT"; else echo "ok=false" >> "$GITHUB_OUTPUT"; echo "::notice::CLOUDFLARE_API_TOKEN/CLOUDFLARE_ACCOUNT_ID not set — deploy skipped (gate: Vitor)."; fi
       - uses: actions/checkout@v4
@@ -154,12 +154,19 @@ jobs:
         with:
           name: dist
           path: dist
-      - name: provision Pages project + KV "leads-site" (idempotent, no domains)
+      - name: provision Pages project + KV namespaces (idempotent, no domains)
         if: steps.gate.outputs.ok == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: node scripts/cf-provision.mjs
       - name: wrangler pages deploy (never attaches a custom domain)
         if: steps.gate.outputs.ok == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+          COMMIT: ${{ github.sha }}
         run: |
-          BRANCH="${{ github.head_ref || github.ref_name }}"
-          pnpm exec wrangler pages deploy dist --project-name logikos-site --branch "$BRANCH" --commit-hash "${{ github.sha }}" --commit-dirty=true | tee deploy.log
+          pnpm exec wrangler pages deploy dist --project-name logikos-site --branch "$BRANCH" --commit-hash "$COMMIT" --commit-dirty=true | tee deploy.log
           grep -oE 'https://[a-z0-9.-]+\.pages\.dev' deploy.log | tail -1 | sed 's/^/Preview URL: /' >> "$GITHUB_STEP_SUMMARY"
