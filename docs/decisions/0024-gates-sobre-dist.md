@@ -1,0 +1,1 @@
+**Gate de i18n também sobre o HTML construído (texto, aria/alt/title, data-label/msg/err, JSON do HUD, meta description e og:\*)** — pega texto gerado fora de componentes .astro; reverter: tirar scripts/i18n-dist-gate.mjs do script gate:i18n.

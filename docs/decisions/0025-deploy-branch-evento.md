@@ -1,0 +1,1 @@
+**Branch de deploy derivada do evento: só push em main publica produção; PR publica em pr-<n>** — um PR cujo head se chame main não pode ir para produção; reverter: BRANCH em .github/workflows/ci.yml.

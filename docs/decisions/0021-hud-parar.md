@@ -1,0 +1,1 @@
+**HUD com controle sempre visível durante a reprodução (Parar → repousa no último quadro; Reproduzir de novo)** — WCAG 2.2.2: conteúdo em movimento iniciado sozinho por mais de 5 s precisa poder ser parado; reverter: limitar clipes automáticos a ≤ 5 s em scripts/gen-mock-hud.mjs.

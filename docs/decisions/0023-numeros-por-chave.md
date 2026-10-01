@@ -1,0 +1,1 @@
+**Números do i18n documentados por chave (src/i18n/numbers.allow.json)** — um número permitido num lugar (ex.: art. 18 da LGPD) não pode reaparecer como contagem inventada em outro; reverter: voltar o gate para lista global.
