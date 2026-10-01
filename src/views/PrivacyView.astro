@@ -1,0 +1,33 @@
+---
+import PageHero from '../components/PageHero.astro';
+import { dict, fill } from '../i18n';
+import type { Locale } from '../i18n/routes';
+import Base from '../layouts/Base.astro';
+import { COMPANY, CONTACT_EMAIL } from '../lib/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dict(locale);
+const p = t.privacy;
+const s = p.sections;
+const values = { cnpj: COMPANY.cnpj, email: CONTACT_EMAIL || '—' };
+const SECTIONS = [s.controller, s.data, s.purpose, s.legalBasis, s.sharing, s.antiAbuse, s.retention, s.rights, s.contact];
+---
+
+<Base locale={locale} routeKey="privacy" title={p.meta.title} description={p.meta.description}>
+  <PageHero eyebrow={p.hero.eyebrow} title={p.hero.title} text={p.hero.text} />
+
+  <section class="section section--flush" aria-label={p.hero.title}>
+    <div class="container prose">
+      {SECTIONS.map((sec) => (
+        <>
+          <h2>{sec.title}</h2>
+          <p>{fill(sec.text, values)}</p>
+        </>
+      ))}
+    </div>
+  </section>
+</Base>

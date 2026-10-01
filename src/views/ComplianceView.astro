@@ -1,0 +1,39 @@
+---
+import FeatureList from '../components/FeatureList.astro';
+import PageHero from '../components/PageHero.astro';
+import { dict } from '../i18n';
+import { pathFor, type Locale } from '../i18n/routes';
+import Base from '../layouts/Base.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dict(locale);
+const p = t.compliance;
+const i = p.items;
+---
+
+<Base locale={locale} routeKey="compliance" title={p.meta.title} description={p.meta.description}>
+  <PageHero eyebrow={p.hero.eyebrow} title={p.hero.title} text={p.hero.text} />
+
+  <section class="section" aria-label={p.hero.title}>
+    <div class="container">
+      <FeatureList items={[i.signage, i.roles, i.presence, i.retention]} columns={2} />
+      <p class="note compliance-note">{p.note}</p>
+      <p>
+        <a class="link-arrow" href={pathFor('privacy', locale)}>
+          {t.nav.privacy}
+        </a>
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .compliance-note {
+    margin-top: var(--lk-space-7);
+    max-width: 44rem;
+  }
+</style>

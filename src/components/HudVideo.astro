@@ -1,0 +1,368 @@
+---
+import { MEDIA } from '../data/media';
+import { dict } from '../i18n';
+import type { Locale } from '../i18n/routes';
+import type { HudLabels } from '../lib/hud';
+import { posterSvg, POSTER_H, POSTER_W, type HudSlot } from '../lib/poster';
+import { mediaUrl } from '../lib/site';
+import Icon from './Icon.astro';
+
+interface Props {
+  locale: Locale;
+  slot: HudSlot;
+  /** Hero starts as soon as it is visible; others wait for the viewport too. */
+  priority?: boolean;
+  class?: string;
+}
+
+const { locale, slot, priority = false, class: className } = Astro.props;
+const t = dict(locale);
+const media = MEDIA[slot];
+const caption = t.hud.slots[slot];
+const labels: HudLabels = {
+  person: t.hud.labels.person,
+  helmet: t.hud.labels.helmet,
+  vest: t.hud.labels.vest,
+  smoke: t.hud.labels.smoke,
+  flame: t.hud.labels.flame,
+  ppeOk: t.hud.labels.ppeOk,
+  ppeMissing: t.hud.labels.ppeMissing,
+  ppeUnknown: t.hud.labels.ppeUnknown,
+  fireAlert: t.hud.labels.fireAlert,
+  states: t.states,
+};
+const posterFile = `/media/posters/${slot}.svg`;
+---
+
+<figure
+  class:list={['hud', 'lk-hud-scope', className]}
+  data-hud
+  data-slot={slot}
+  data-src={mediaUrl(media.hud)}
+  data-priority={priority ? 'true' : 'false'}
+  data-labels={JSON.stringify(labels)}
+>
+  <div class="hud__stage">
+    {media.video ? (
+      <video class="hud__media" muted playsinline preload="metadata" poster={posterFile} width={POSTER_W} height={POSTER_H}>
+        <source src={mediaUrl(media.video)} type="video/mp4" />
+      </video>
+    ) : (
+      <div class="hud__media hud__poster" set:html={posterSvg(slot, caption)} />
+    )}
+    <svg
+      class="hud__overlay"
+      viewBox={`0 0 ${POSTER_W} ${POSTER_H}`}
+      preserveAspectRatio="xMidYMid slice"
+      aria-hidden="true"
+      focusable="false"
+    ></svg>
+    <span class="hud__badge" data-hud-badge hidden>
+      {t.hud.mock}
+    </span>
+    <button type="button" class="hud__play" data-hud-play hidden data-label-play={t.hud.play} data-label-replay={t.hud.replay}>
+      <Icon name="play" class="hud__icon-play" />
+      <Icon name="replay" class="hud__icon-replay" />
+      <span data-hud-play-label>{t.hud.play}</span>
+    </button>
+  </div>
+  <figcaption class="hud__caption">{caption}</figcaption>
+</figure>
+
+<script>
+  import { frameIndexAt, frameToBoxes, type HudBox, type HudClip, type HudLabels } from '../lib/hud';
+  import { ICON_PATHS } from '../lib/icons';
+  import { POSTER_H, POSTER_W } from '../lib/poster';
+
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  // Chip metrics in CSS px; converted to viewBox units so labels stay legible at any size.
+  const CHIP_PX = 22;
+  const FONT_PX = 12;
+
+  function el<K extends keyof SVGElementTagNameMap>(name: K, attrs: Record<string, string | number>): SVGElementTagNameMap[K] {
+    const node = document.createElementNS(SVG_NS, name);
+    for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, String(v));
+    return node;
+  }
+
+  function bracketPath(x: number, y: number, w: number, h: number): string {
+    const c = Math.max(12, Math.min(36, Math.min(w, h) * 0.22));
+    return [
+      `M${x} ${y + c}V${y}H${x + c}`,
+      `M${x + w - c} ${y}H${x + w}V${y + c}`,
+      `M${x + w} ${y + h - c}V${y + h}H${x + w - c}`,
+      `M${x + c} ${y + h}H${x}V${y + h - c}`,
+    ].join('');
+  }
+
+  function chip(x: number, y: number, k: number, text: string, opts: { mark?: boolean; state?: HudBox['state'] }): SVGGElement {
+    const g = el('g', { class: `hud-chip${opts.state ? ` hud-chip--${opts.state}` : ''}`, transform: `translate(${x} ${y}) scale(${k})` });
+    const lead = opts.mark ? 18 : opts.state ? 22 : 6;
+    const width = lead + text.length * FONT_PX * 0.6 + 7;
+    g.append(el('rect', { class: 'hud-chip__bg', width, height: CHIP_PX }));
+    if (opts.state) {
+      const icon = el('g', { class: 'hud-chip__icon', transform: 'translate(4 4) scale(0.58)' });
+      icon.innerHTML = ICON_PATHS[opts.state];
+      g.append(icon);
+    } else if (opts.mark) {
+      g.append(el('rect', { class: 'hud-chip__mark', x: 6, y: 8, width: 6, height: 6 }));
+    }
+    const label = el('text', { class: 'hud-chip__text', x: lead, y: 15.5 });
+    label.textContent = text;
+    g.append(label);
+    return g;
+  }
+
+  function draw(svg: SVGSVGElement, boxes: HudBox[]): void {
+    svg.replaceChildren();
+    const width = svg.getBoundingClientRect().width;
+    const k = width > 0 ? POSTER_W / width : 1;
+    const chipH = CHIP_PX * k;
+    for (const b of boxes) {
+      const x = b.x * POSTER_W;
+      const y = b.y * POSTER_H;
+      const w = b.w * POSTER_W;
+      const h = b.h * POSTER_H;
+      const g = el('g', { class: `hud-box hud-box--${b.state}` });
+      g.append(el('rect', { class: 'hud-box__area', x, y, width: w, height: h }));
+      g.append(el('path', { class: 'hud-box__bracket', d: bracketPath(x, y, w, h) }));
+      const gap = 3 * k;
+      const labelY = y - chipH - gap >= 0 ? y - chipH - gap : y + gap;
+      g.append(chip(x, labelY, k, b.label, { mark: true }));
+      const stateY = Math.min(y + h + gap, POSTER_H - chipH);
+      g.append(chip(x, stateY, k, b.text, { state: b.state }));
+      svg.append(g);
+    }
+  }
+
+  const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const handheld = () => window.matchMedia('(max-width: 47.99rem), (pointer: coarse)').matches;
+
+  for (const fig of document.querySelectorAll<HTMLElement>('[data-hud]')) {
+    const svg = fig.querySelector<SVGSVGElement>('.hud__overlay');
+    const video = fig.querySelector<HTMLVideoElement>('video');
+    const button = fig.querySelector<HTMLButtonElement>('[data-hud-play]');
+    const buttonLabel = fig.querySelector<HTMLElement>('[data-hud-play-label]');
+    const badge = fig.querySelector<HTMLElement>('[data-hud-badge]');
+    if (!svg || !button || !buttonLabel) continue;
+
+    const labels = JSON.parse(fig.dataset.labels ?? '{}') as HudLabels;
+    let clip: HudClip | undefined;
+    let shown = -1;
+    let timers: number[] = [];
+
+    const show = (index: number) => {
+      if (!clip || index === shown) return;
+      shown = index;
+      const frame = clip.frames[index];
+      draw(svg, frame ? frameToBoxes(frame, labels) : []);
+    };
+
+    const finish = () => {
+      if (clip) show(clip.frames.length - 1);
+      fig.dataset.state = 'ended';
+      buttonLabel.textContent = button.dataset.labelReplay ?? '';
+      button.hidden = false;
+    };
+
+    const play = () => {
+      if (!clip) return;
+      const c = clip;
+      timers.forEach((id) => window.clearTimeout(id));
+      timers = [];
+      shown = -1;
+      svg.replaceChildren();
+      button.hidden = true;
+      fig.dataset.state = 'playing';
+      if (video) {
+        const onFrame = () => {
+          show(frameIndexAt(c.frames, video.currentTime));
+          if (!video.paused && !video.ended) video.requestVideoFrameCallback(onFrame);
+        };
+        video.currentTime = 0;
+        video.addEventListener('ended', finish, { once: true });
+        void video.play().then(() => video.requestVideoFrameCallback(onFrame), finish);
+        return;
+      }
+      // Mock clock: one step per detection frame, no interpolation, ends at rest.
+      c.frames.forEach((f, i) => timers.push(window.setTimeout(() => show(i), f.t * 1000)));
+      timers.push(window.setTimeout(finish, c.duration_s * 1000));
+    };
+
+    button.addEventListener('click', play);
+
+    new ResizeObserver(() => {
+      if (shown < 0) return;
+      const index = shown;
+      shown = -1;
+      show(index);
+    }).observe(svg);
+
+    const start = async () => {
+      try {
+        const res = await fetch(fig.dataset.src ?? '');
+        if (!res.ok) return;
+        clip = (await res.json()) as HudClip;
+      } catch {
+        return;
+      }
+      if (badge) badge.hidden = clip.source !== 'mock';
+      fig.dataset.source = clip.source;
+      if (reducedMotion() || handheld()) {
+        fig.dataset.state = 'idle';
+        button.hidden = false;
+      } else {
+        play();
+      }
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          void start();
+        }
+      },
+      { rootMargin: fig.dataset.priority === 'true' ? '0px' : '200px' },
+    );
+    io.observe(fig);
+  }
+</script>
+
+<style>
+  .hud {
+    margin: 0;
+  }
+
+  .hud__stage {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #14141c;
+    border: 1px solid var(--lk-line);
+    border-radius: var(--lk-radius);
+  }
+
+  .hud__media,
+  .hud__overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hud__media :global(svg),
+  video.hud__media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hud__overlay :global(.hud-box__area) {
+    fill: none;
+    stroke: var(--lk-accent);
+    stroke-opacity: 0.35;
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .hud__overlay :global(.hud-box__bracket) {
+    fill: none;
+    stroke: var(--lk-accent);
+    stroke-width: 2;
+    stroke-linecap: square;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .hud__overlay :global(.hud-chip__bg) {
+    fill: var(--hud-chip);
+  }
+
+  .hud__overlay :global(.hud-chip__mark) {
+    fill: var(--hud-stroke);
+  }
+
+  .hud__overlay :global(.hud-chip__text) {
+    fill: var(--hud-text);
+    font: 500 12px var(--lk-font-mono);
+    letter-spacing: 0;
+  }
+
+  .hud__overlay :global(.hud-chip__icon) {
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: square;
+  }
+
+  .hud__overlay :global(.hud-chip--ok .hud-chip__icon) {
+    stroke: var(--hud-ok);
+  }
+
+  .hud__overlay :global(.hud-chip--alert .hud-chip__icon) {
+    stroke: var(--hud-alert);
+  }
+
+  .hud__overlay :global(.hud-chip--warn .hud-chip__icon) {
+    stroke: var(--hud-warn);
+  }
+
+  .hud__overlay :global(.hud-chip--ok .hud-chip__text) {
+    fill: var(--hud-ok);
+  }
+
+  .hud__overlay :global(.hud-chip--alert .hud-chip__text) {
+    fill: var(--hud-alert);
+  }
+
+  .hud__overlay :global(.hud-chip--warn .hud-chip__text) {
+    fill: var(--hud-warn);
+  }
+
+  .hud__badge {
+    position: absolute;
+    top: var(--lk-space-3);
+    right: var(--lk-space-3);
+    font: 500 0.75rem/1 var(--lk-font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--hud-text);
+    background: var(--hud-chip);
+    padding: 0.4rem 0.55rem;
+  }
+
+  .hud__play {
+    position: absolute;
+    left: var(--lk-space-3);
+    top: var(--lk-space-3);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--lk-space-2);
+    min-height: 2.75rem;
+    padding: 0 var(--lk-space-4);
+    border: 1px solid var(--hud-text);
+    border-radius: var(--lk-radius);
+    background: var(--hud-chip);
+    color: var(--hud-text);
+    font: 600 0.9375rem/1 var(--lk-font-body);
+    cursor: pointer;
+  }
+
+  .hud__play[hidden] {
+    display: none;
+  }
+
+  .hud__play:focus-visible {
+    outline-color: var(--hud-stroke);
+  }
+
+  .hud:not([data-state='ended']) .hud__icon-replay,
+  .hud[data-state='ended'] .hud__icon-play {
+    display: none;
+  }
+
+  .hud__caption {
+    margin-top: var(--lk-space-2);
+    font: 500 0.8125rem/1.4 var(--lk-font-mono);
+    color: var(--lk-text-2);
+  }
+</style>

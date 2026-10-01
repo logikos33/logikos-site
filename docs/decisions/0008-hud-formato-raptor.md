@@ -1,0 +1,1 @@
+**HUD lê logikos.vision.frame/1 do raptor (+ campo t) em vez do formato sugerido no brief** — mapeamento: bbox [x0,y0,x1,y1] → x,y,w,h; status compliant/non_compliant/indeterminate → ok/alert/warn; rótulo montado no site via i18n (o edge nunca manda rótulo); pessoa herda o pior estado das regiões; reverter: trocar frameToBoxes em src/lib/hud.ts.

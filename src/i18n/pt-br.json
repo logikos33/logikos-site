@@ -1,0 +1,535 @@
+{
+  "meta": {
+    "siteName": "Logikos Soluções",
+    "titleSeparator": " · ",
+    "ogAlt": "Logikos Soluções — wordmark dentro de uma caixa de detecção"
+  },
+  "a11y": {
+    "skip": "Pular para o conteúdo",
+    "mainNav": "Navegação principal",
+    "footerNav": "Rodapé",
+    "menu": "Menu",
+    "home": "Logikos Soluções — início",
+    "themeToDark": "Mudar para tema escuro",
+    "themeToLight": "Mudar para tema claro",
+    "langSwitch": "Idioma",
+    "langCurrent": "idioma atual",
+    "externalWhatsapp": "abre o WhatsApp",
+    "required": "obrigatório"
+  },
+  "nav": {
+    "home": "Início",
+    "recognition": "Recognition",
+    "howItWorks": "Como funciona",
+    "partners": "Integradores",
+    "twins": "Twins",
+    "robotics": "Robótica",
+    "compliance": "LGPD",
+    "about": "Sobre",
+    "contact": "Contato",
+    "privacy": "Política de privacidade"
+  },
+  "lang": {
+    "pt-br": "PT",
+    "en": "EN",
+    "pt-brName": "Português",
+    "enName": "English"
+  },
+  "cta": {
+    "whatsapp": "Falar no WhatsApp",
+    "whatsappMessage": "Olá. Quero falar sobre o Recognition na minha planta.",
+    "whatsappPartnerMessage": "Olá. Sou integrador e quero conhecer o programa de parceiros.",
+    "partner": "Quero ser parceiro",
+    "contactForm": "Enviar mensagem",
+    "learnMore": "Ver detalhes",
+    "howItWorks": "Ver como funciona"
+  },
+  "brand": {
+    "wordmark": "LOGIKOS",
+    "label": "soluções",
+    "tagline": "A razão que enxerga."
+  },
+  "states": {
+    "ok": "conforme",
+    "alert": "não conforme",
+    "warn": "indeterminado"
+  },
+  "hud": {
+    "mock": "simulação",
+    "play": "Reproduzir",
+    "replay": "Reproduzir de novo",
+    "posterAlt": "Quadro de referência do vídeo",
+    "overlayLabel": "Caixas de detecção sobre o vídeo",
+    "slots": {
+      "hero": "Fogo, EPI e ergonomia na mesma câmera",
+      "epi": "EPI por região do corpo",
+      "fire": "Fogo e fumaça",
+      "twins": "Nuvem de pontos a partir de vídeo",
+      "robotics": "Reconhecimento embarcado"
+    },
+    "labels": {
+      "person": "PESSOA",
+      "helmet": "CAPACETE",
+      "vest": "COLETE",
+      "smoke": "FUMAÇA",
+      "flame": "CHAMA",
+      "zone": "ZONA",
+      "posture": "POSTURA",
+      "ppeOk": "EPI OK",
+      "ppeMissing": "SEM CAPACETE",
+      "ppeUnknown": "OCLUSÃO",
+      "fireAlert": "ALERTA",
+      "zoneEnter": "ENTROU",
+      "postureRisk": "FLEXÃO",
+      "counter": "CONTAGEM"
+    }
+  },
+  "home": {
+    "meta": {
+      "title": "Logikos Soluções — A razão que enxerga",
+      "description": "Fogo, EPI e ergonomia pela mesma câmera, dentro da planta. Visão computacional na borda para indústria, com evidência em clipe e alerta no WhatsApp."
+    },
+    "hero": {
+      "title": "A razão que enxerga.",
+      "sub": "Fogo, EPI e ergonomia pela mesma câmera, dentro da planta.",
+      "proof": ["inferência na borda", "NVIDIA Jetson", "evidência em clipe", "alerta no WhatsApp"]
+    },
+    "doors": {
+      "title": "Por onde você entra",
+      "plant": {
+        "eyebrow": "Para a sua planta",
+        "title": "Segurança visível, sem trocar câmera.",
+        "text": "Conte o que precisa monitorar. Respondemos pelo WhatsApp com o próximo passo.",
+        "cta": "Falar no WhatsApp"
+      },
+      "partner": {
+        "eyebrow": "Para integradores",
+        "title": "Leve o Recognition aos seus clientes.",
+        "text": "Painel na sua marca, piloto acompanhado e suporte técnico.",
+        "cta": "Conhecer o programa"
+      }
+    },
+    "scenarios": {
+      "eyebrow": "Mesma câmera",
+      "title": "Cinco leituras do mesmo vídeo.",
+      "text": "Cada câmera pode rodar mais de um cenário ao mesmo tempo."
+    },
+    "how": {
+      "eyebrow": "Como funciona",
+      "title": "Da câmera ao alerta, dentro da planta.",
+      "cta": "Ver a arquitetura"
+    },
+    "partner": {
+      "eyebrow": "Para o parceiro",
+      "title": "Um produto pronto para revender.",
+      "text": "Você cuida do cliente. A plataforma e o suporte ficam com a gente.",
+      "cta": "Ver o programa de parceiros"
+    },
+    "products": {
+      "eyebrow": "Também da Logikos",
+      "title": "O mesmo olhar em outros formatos."
+    },
+    "lgpd": {
+      "eyebrow": "LGPD",
+      "title": "Privacidade desde o projeto.",
+      "lines": [
+        "Monitora a condição, não a pessoa: presença e EPI, nunca identidade.",
+        "Vídeo processado na planta; nada sobe para a nuvem por padrão.",
+        "Retenção de evidência definida em contrato."
+      ],
+      "cta": "Ver como tratamos dados"
+    },
+    "contact": {
+      "eyebrow": "Contato",
+      "title": "Dois caminhos, uma conversa.",
+      "plant": {
+        "title": "Tenho uma planta",
+        "text": "Fale direto com a equipe técnica.",
+        "secondary": "Prefere e-mail? Use o formulário."
+      },
+      "partner": {
+        "title": "Sou integrador",
+        "text": "Conte sobre sua carteira e sua região.",
+        "cta": "Quero ser parceiro"
+      }
+    }
+  },
+  "scenarios": {
+    "fire": {
+      "title": "Fogo e fumaça",
+      "text": "Fumaça e chama reconhecidas no vídeo, com clipe do momento."
+    },
+    "epi": {
+      "title": "EPI por região do corpo",
+      "text": "Cada região recebe um veredito: conforme, não conforme ou indeterminado."
+    },
+    "ergonomics": {
+      "title": "Ergonomia",
+      "text": "Posturas de risco e tempo em cada posição."
+    },
+    "zones": {
+      "title": "Zonas de risco",
+      "text": "Entrada em área demarcada e tempo de permanência."
+    },
+    "counting": {
+      "title": "Contagem",
+      "text": "Passagens por linha ou por área."
+    }
+  },
+  "steps": {
+    "camera": {
+      "title": "Câmera existente",
+      "text": "Usa as câmeras IP que a planta já tem."
+    },
+    "device": {
+      "title": "Dispositivo na planta",
+      "text": "Um NVIDIA Jetson processa o vídeo no local. Funciona sem internet; o vídeo não vai para a nuvem por padrão."
+    },
+    "verdict": {
+      "title": "Veredito, evidência e alerta",
+      "text": "Cada evento gera um veredito, um clipe de evidência e um alerta para quem precisa agir."
+    }
+  },
+  "partnerPoints": {
+    "brand": {
+      "title": "Painel na sua marca",
+      "text": "Seu logo e suas cores no painel que o cliente usa."
+    },
+    "license": {
+      "title": "Licença por prazo",
+      "text": "Licença por prazo de 24 meses."
+    },
+    "pilot": {
+      "title": "Piloto acompanhado",
+      "text": "Piloto na planta do cliente antes da implantação."
+    },
+    "support": {
+      "title": "Suporte e treinamento",
+      "text": "Treinamento da sua equipe e suporte técnico da Logikos."
+    }
+  },
+  "products": {
+    "twins": {
+      "title": "Twins",
+      "text": "Gêmeo digital pelo celular: o vídeo vira uma nuvem de pontos navegável."
+    },
+    "robotics": {
+      "title": "Robótica",
+      "text": "O mesmo reconhecimento embarcado em drones e robôs quadrúpedes.",
+      "chip": "Sob projeto"
+    }
+  },
+  "recognition": {
+    "meta": {
+      "title": "Recognition — visão computacional na borda para indústria",
+      "description": "Fogo e fumaça, EPI por região do corpo, ergonomia, zonas de risco e contagem na mesma câmera. Processamento dentro da planta."
+    },
+    "hero": {
+      "eyebrow": "Recognition",
+      "title": "Tudo na mesma câmera.",
+      "text": "O Recognition lê o vídeo das câmeras que a planta já tem e entrega um veredito por evento, com evidência."
+    },
+    "epi": {
+      "title": "EPI com três estados",
+      "text": "Quando a câmera não vê a região do corpo, o veredito é indeterminado. Sem palpite.",
+      "states": {
+        "ok": "O EPI está presente na região verificada.",
+        "alert": "O EPI está ausente na região verificada.",
+        "warn": "A região não está visível o bastante para decidir."
+      }
+    },
+    "evidence": {
+      "title": "Evidência, não suposição",
+      "text": "Todo alerta traz o clipe do momento e o quadro com a marcação. Quem recebe vê o que o sistema viu."
+    }
+  },
+  "howItWorks": {
+    "meta": {
+      "title": "Como funciona — câmera, dispositivo na planta, alerta",
+      "description": "Câmera existente, processamento offline-first em NVIDIA Jetson dentro da planta, veredito com evidência e integração por contato seco, MQTT ou webhook assinado."
+    },
+    "hero": {
+      "eyebrow": "Como funciona",
+      "title": "Câmera, dispositivo, veredito.",
+      "text": "O processamento acontece dentro da planta. A nuvem é opcional."
+    },
+    "offline": {
+      "title": "Offline-first",
+      "text": "O dispositivo segue analisando e registrando mesmo sem internet. Quando a conexão volta, os eventos são sincronizados."
+    },
+    "integrations": {
+      "title": "Integrações",
+      "alarm": {
+        "title": "Central de alarme",
+        "text": "Saída por contato seco para sirene, sinaleiro ou central existente."
+      },
+      "mqtt": {
+        "title": "ERP e IoT por MQTT",
+        "text": "Eventos publicados em tópicos para o seu sistema consumir."
+      },
+      "webhook": {
+        "title": "Webhook assinado",
+        "text": "Cada evento enviado por HTTP com assinatura verificável."
+      }
+    },
+    "license": {
+      "title": "Licença por prazo",
+      "text": "Licença por prazo de 24 meses."
+    }
+  },
+  "partners": {
+    "meta": {
+      "title": "Integradores — programa de parceiros Logikos",
+      "description": "Painel na marca do parceiro, piloto acompanhado, suporte e treinamento para integradores de segurança e automação."
+    },
+    "hero": {
+      "eyebrow": "Integradores",
+      "title": "Seu cliente, sua marca, nosso reconhecimento.",
+      "text": "Para integradores de segurança eletrônica, automação e TI industrial."
+    },
+    "model": {
+      "title": "Modelo de canal",
+      "text": "O parceiro vende e instala. A Logikos fornece a plataforma e o suporte."
+    },
+    "form": {
+      "title": "Quero ser parceiro",
+      "text": "Conte sobre sua empresa. Retornamos com os próximos passos."
+    }
+  },
+  "twins": {
+    "meta": {
+      "title": "Twins — gêmeo digital pelo celular",
+      "description": "Grave um vídeo com o celular e navegue pela nuvem de pontos do ambiente, com medição e anotação."
+    },
+    "hero": {
+      "eyebrow": "Twins",
+      "title": "O ambiente, navegável.",
+      "text": "Grave um vídeo com o celular. O Twins transforma o vídeo em uma nuvem de pontos que você navega, mede e anota."
+    },
+    "features": {
+      "capture": {
+        "title": "Captura pelo celular",
+        "text": "Sem scanner dedicado. Um vídeo percorrendo o ambiente."
+      },
+      "measure": {
+        "title": "Medição",
+        "text": "Distâncias tiradas direto da nuvem de pontos."
+      },
+      "annotate": {
+        "title": "Anotação",
+        "text": "Marque pontos de atenção direto na nuvem de pontos."
+      }
+    }
+  },
+  "robotics": {
+    "meta": {
+      "title": "Robótica — reconhecimento em drones e quadrúpedes",
+      "description": "O reconhecimento do Recognition embarcado em drones e robôs quadrúpedes, sob projeto."
+    },
+    "hero": {
+      "eyebrow": "Robótica",
+      "title": "O mesmo reconhecimento, em movimento.",
+      "text": "Drones e robôs quadrúpedes levam a câmera até onde a câmera fixa não chega."
+    },
+    "chip": "Sob projeto",
+    "points": {
+      "drones": {
+        "title": "Drones",
+        "text": "Inspeção de áreas amplas e de difícil acesso."
+      },
+      "quadrupeds": {
+        "title": "Robôs quadrúpedes",
+        "text": "Rondas em áreas de risco, com o mesmo veredito da câmera fixa."
+      },
+      "project": {
+        "title": "Sob projeto",
+        "text": "Cada aplicação é dimensionada caso a caso, a partir do seu cenário."
+      }
+    }
+  },
+  "compliance": {
+    "meta": {
+      "title": "LGPD — como o Recognition trata dados pessoais",
+      "description": "Sinalização física, papéis de controlador e operador em contrato, detecção por presença e retenção de evidência definida."
+    },
+    "hero": {
+      "eyebrow": "Conformidade",
+      "title": "Privacidade desde o projeto.",
+      "text": "O Recognition foi desenhado para cumprir a LGPD dentro da planta."
+    },
+    "items": {
+      "signage": {
+        "title": "Sinalização física",
+        "text": "Placas informam que a área é monitorada e para qual finalidade."
+      },
+      "roles": {
+        "title": "Papéis em contrato",
+        "text": "O cliente é o controlador. A Logikos atua como operadora, nos limites do contrato."
+      },
+      "presence": {
+        "title": "Detecção por presença",
+        "text": "O sistema reconhece presença, postura e EPI. Monitora a condição, não a pessoa."
+      },
+      "retention": {
+        "title": "Retenção definida",
+        "text": "O prazo de guarda das evidências é definido em contrato. Depois dele, o clipe é apagado."
+      }
+    },
+    "note": "Este resumo não substitui o contrato nem a avaliação jurídica de cada instalação."
+  },
+  "about": {
+    "meta": {
+      "title": "Sobre a Logikos Soluções",
+      "description": "Logikos Soluções, de Indaial/SC. Visão computacional na borda com NVIDIA Jetson e modelos de licença permissiva."
+    },
+    "hero": {
+      "eyebrow": "Sobre",
+      "title": "Lógica e visão.",
+      "text": "ΛΟΓΙΚΟΣ: lógica, em grego. A Logikos Soluções faz visão computacional para a indústria, com engenharia que prova antes de prometer."
+    },
+    "facts": {
+      "place": {
+        "title": "Indaial/SC",
+        "text": "Engenharia e suporte no Vale do Itajaí."
+      },
+      "nvidia": {
+        "title": "NVIDIA Jetson",
+        "text": "Processamento na borda sobre a plataforma Jetson."
+      },
+      "licenses": {
+        "title": "Licenças permissivas",
+        "text": "Modelos e bibliotecas de terceiros sob licenças permissivas, como Apache 2.0, MIT e BSD."
+      }
+    }
+  },
+  "contact": {
+    "meta": {
+      "title": "Contato — Logikos Soluções",
+      "description": "Fale com a Logikos pelo WhatsApp ou pelo formulário."
+    },
+    "hero": {
+      "eyebrow": "Contato",
+      "title": "Fale com a gente.",
+      "text": "O WhatsApp é o caminho mais rápido. Se preferir, use o formulário."
+    },
+    "whatsapp": {
+      "title": "WhatsApp",
+      "text": "Conversa direta com a equipe."
+    },
+    "email": {
+      "title": "E-mail"
+    },
+    "form": {
+      "title": "Formulário",
+      "text": "Respondemos pelo canal que você indicar."
+    }
+  },
+  "privacy": {
+    "meta": {
+      "title": "Política de privacidade",
+      "description": "Como a Logikos Soluções trata os dados pessoais enviados por este site."
+    },
+    "hero": {
+      "eyebrow": "Privacidade",
+      "title": "Política de privacidade",
+      "text": "Versão provisória. Texto final em revisão jurídica."
+    },
+    "sections": {
+      "controller": {
+        "title": "Quem trata os dados",
+        "text": "Logikos Soluções, CNPJ {cnpj}, com sede em Indaial/SC, é a controladora dos dados enviados por este site."
+      },
+      "data": {
+        "title": "Quais dados coletamos",
+        "text": "Nome, empresa, cargo, e-mail, WhatsApp, interesses e a mensagem que você escreve no formulário. Este site não usa cookies de rastreamento."
+      },
+      "purpose": {
+        "title": "Para que usamos",
+        "text": "Para responder ao seu contato e dar andamento à conversa comercial que você pediu."
+      },
+      "legalBasis": {
+        "title": "Base legal",
+        "text": "Consentimento, registrado no envio do formulário, e procedimentos preliminares a contrato a pedido do titular."
+      },
+      "sharing": {
+        "title": "Com quem compartilhamos",
+        "text": "Com provedores de infraestrutura que hospedam este site e armazenam os contatos, como operadores. Não vendemos dados."
+      },
+      "antiAbuse": {
+        "title": "Proteção contra abuso",
+        "text": "O formulário usa o Cloudflare Turnstile para separar pessoas de robôs, sem cookies de rastreamento."
+      },
+      "retention": {
+        "title": "Por quanto tempo",
+        "text": "Enquanto durar a conversa comercial e pelo prazo exigido por lei. Prazo final a definir."
+      },
+      "rights": {
+        "title": "Seus direitos",
+        "text": "Você pode pedir acesso, correção, portabilidade ou exclusão dos seus dados e revogar o consentimento a qualquer momento."
+      },
+      "contact": {
+        "title": "Como falar com a gente",
+        "text": "Pelo e-mail {email}."
+      }
+    }
+  },
+  "form": {
+    "name": "Nome",
+    "company": "Empresa",
+    "role": "Cargo",
+    "email": "E-mail",
+    "whatsapp": "WhatsApp",
+    "whatsappHint": "Com DDD.",
+    "interests": "Interesse",
+    "interestsHint": "Marque um ou mais.",
+    "message": "Mensagem",
+    "consentBefore": "Li a",
+    "consentLink": "política de privacidade",
+    "consentAfter": "e autorizo o uso destes dados para retorno do contato.",
+    "submit": "Enviar",
+    "submitPartner": "Enviar pedido de parceria",
+    "sending": "Enviando…",
+    "success": "Recebido. Retornamos em breve.",
+    "error": "Não foi possível enviar agora. Tente de novo ou fale pelo WhatsApp.",
+    "errorVerification": "Não foi possível confirmar que você não é um robô. Recarregue a página e tente de novo.",
+    "invalid": "Revise os campos marcados.",
+    "options": {
+      "fire": "Fogo e fumaça",
+      "epi": "EPI",
+      "ergonomics": "Ergonomia",
+      "zones": "Zonas de risco",
+      "counting": "Contagem",
+      "twins": "Twins",
+      "robotics": "Robótica",
+      "partnership": "Parceria"
+    },
+    "honeypot": "Não preencha este campo"
+  },
+  "footer": {
+    "company": "Logikos Soluções",
+    "cnpjLabel": "CNPJ",
+    "city": "Indaial/SC",
+    "rights": "Todos os direitos reservados."
+  },
+  "notFound": {
+    "title": "Página não encontrada",
+    "text": "O endereço não existe ou mudou.",
+    "cta": "Voltar ao início"
+  },
+  "marca": {
+    "title": "Marca — conferência interna",
+    "text": "Página interna para conferência visual de tokens, tipografia, logo, glitch e grid. Fora do sitemap.",
+    "colors": "Cores",
+    "type": "Tipografia",
+    "logo": "Logo",
+    "glitch": "Glitch",
+    "glitchReplay": "Rodar glitch de novo",
+    "grid": "Grid grego",
+    "hud": "HUD",
+    "states": "Estados",
+    "buttons": "Botões",
+    "displaySample": "A razão que enxerga.",
+    "bodySample": "Veredito, evidência e alerta dentro da planta.",
+    "monoSample": "EVT · EPI · CONFORME"
+  }
+}

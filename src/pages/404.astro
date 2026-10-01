@@ -1,0 +1,48 @@
+---
+import { dict } from '../i18n';
+import { pathFor } from '../i18n/routes';
+import Base from '../layouts/Base.astro';
+
+const pt = dict('pt-br');
+const en = dict('en');
+---
+
+<Base locale="pt-br" title={pt.notFound.title} description={pt.notFound.text} noindex>
+  <section class="section section--flush not-found greek-grid" aria-labelledby="page-title">
+    <div class="container">
+      <p class="eyebrow">404</p>
+      <h1 id="page-title">{pt.notFound.title}</h1>
+      <p class="lede">{pt.notFound.text}</p>
+      <p>
+        <a class="link-arrow" href={pathFor('home', 'pt-br')}>
+          {pt.notFound.cta}
+        </a>
+      </p>
+      <div lang="en" class="not-found__en">
+        <h2>{en.notFound.title}</h2>
+        <p>{en.notFound.text}</p>
+        <p>
+          <a class="link-arrow" href={pathFor('home', 'en')}>
+            {en.notFound.cta}
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .not-found {
+    padding-block: clamp(4rem, 12vw, 8rem);
+  }
+
+  .not-found__en {
+    margin-top: var(--lk-space-7);
+    padding-top: var(--lk-space-5);
+    border-top: 1px solid var(--lk-line);
+  }
+
+  .not-found__en h2 {
+    font-size: 1.5rem;
+  }
+</style>

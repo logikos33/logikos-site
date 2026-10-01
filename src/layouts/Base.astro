@@ -1,0 +1,103 @@
+---
+import '../styles/global.css';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { dict } from '../i18n';
+import { alternatesFor, HTML_LANG, OG_LOCALE, pathFor, type Locale, type RouteKey } from '../i18n/routes';
+import { CF_ANALYTICS_TOKEN, COMPANY, CONTACT_EMAIL } from '../lib/site';
+
+interface Props {
+  locale: Locale;
+  routeKey?: RouteKey;
+  title: string;
+  description: string;
+  noindex?: boolean;
+}
+
+const { locale, routeKey, title, description, noindex = false } = Astro.props;
+const t = dict(locale);
+const site = Astro.site ?? new URL('https://logikosvision.com.br');
+const canonical = routeKey ? new URL(pathFor(routeKey, locale), site).href : undefined;
+const alternates = routeKey ? alternatesFor(routeKey, site) : [];
+const ogImage = new URL(`/og/${locale}.png`, site).href;
+const otherLocale: Locale = locale === 'pt-br' ? 'en' : 'pt-br';
+
+const organization = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: COMPANY.legalName,
+  legalName: COMPANY.legalName,
+  url: new URL('/', site).href,
+  logo: new URL('/favicon.svg', site).href,
+  taxID: COMPANY.cnpj,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: COMPANY.locality,
+    addressRegion: COMPANY.region,
+    addressCountry: COMPANY.country,
+  },
+  ...(CONTACT_EMAIL ? { email: CONTACT_EMAIL } : {}),
+};
+---
+
+<!doctype html>
+<html lang={HTML_LANG[locale]} data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline>
+      (() => {
+        let theme = 'light';
+        try {
+          if (localStorage.getItem('lk-theme') === 'dark') theme = 'dark';
+        } catch {
+          // Storage blocked: stay on the default light theme.
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {canonical && <link rel="canonical" href={canonical} />}
+    {alternates.map((a) => (
+      <link rel="alternate" hreflang={a.hreflang} href={a.href} />
+    ))}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#F4F6F8" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={t.meta.siteName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={t.meta.ogAlt} />
+    <meta property="og:locale" content={OG_LOCALE[locale]} />
+    <meta property="og:locale:alternate" content={OG_LOCALE[otherLocale]} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(organization)} />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      {t.a11y.skip}
+    </a>
+    <Header locale={locale} {...(routeKey ? { routeKey } : {})} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer locale={locale} />
+    {CF_ANALYTICS_TOKEN && (
+      <script
+        is:inline
+        defer
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon={JSON.stringify({ token: CF_ANALYTICS_TOKEN })}
+      />
+    )}
+  </body>
+</html>

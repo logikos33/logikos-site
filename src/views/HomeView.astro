@@ -1,0 +1,135 @@
+---
+import BrandBox from '../components/BrandBox.astro';
+import ContactDual from '../components/ContactDual.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import HudVideo from '../components/HudVideo.astro';
+import LgpdStrip from '../components/LgpdStrip.astro';
+import PartnerBlock from '../components/PartnerBlock.astro';
+import ProductCards from '../components/ProductCards.astro';
+import ScenarioCards from '../components/ScenarioCards.astro';
+import SectionHead from '../components/SectionHead.astro';
+import TwoDoors from '../components/TwoDoors.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import { dict } from '../i18n';
+import { pathFor, type Locale } from '../i18n/routes';
+import Base from '../layouts/Base.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dict(locale);
+const h = t.home;
+---
+
+<Base locale={locale} routeKey="home" title={h.meta.title} description={h.meta.description}>
+  <section class="hero greek-grid" aria-labelledby="hero-title">
+    <div class="container hero__grid">
+      <div class="hero__copy">
+        <BrandBox locale={locale} glitch />
+        <h1 id="hero-title">{h.hero.title}</h1>
+        <p class="lede">{h.hero.sub}</p>
+        <ul class="proof-line" role="list">
+          {h.hero.proof.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+        <div class="btn-row hero__cta">
+          <WhatsAppButton locale={locale} />
+          <a class="btn btn--ghost" href={pathFor('howItWorks', locale)}>
+            {t.cta.howItWorks}
+          </a>
+        </div>
+      </div>
+      <HudVideo locale={locale} slot="hero" priority class="hero__video" />
+    </div>
+  </section>
+
+  <TwoDoors locale={locale} />
+
+  <section class="section" aria-labelledby="scenarios-title">
+    <div class="container">
+      <SectionHead eyebrow={h.scenarios.eyebrow} title={h.scenarios.title} text={h.scenarios.text} id="scenarios-title" />
+      <ScenarioCards locale={locale} />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="how-title">
+    <div class="container">
+      <SectionHead eyebrow={h.how.eyebrow} title={h.how.title} id="how-title" />
+      <HowItWorks locale={locale} />
+      <p class="section-link">
+        <a class="link-arrow" href={pathFor('howItWorks', locale)}>
+          {h.how.cta}
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="partner-title">
+    <div class="container">
+      <SectionHead eyebrow={h.partner.eyebrow} title={h.partner.title} text={h.partner.text} id="partner-title" />
+      <PartnerBlock locale={locale} />
+      <p class="section-link">
+        <a class="link-arrow" href={pathFor('partners', locale)}>
+          {h.partner.cta}
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="products-title">
+    <div class="container">
+      <SectionHead eyebrow={h.products.eyebrow} title={h.products.title} id="products-title" />
+      <ProductCards locale={locale} />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="lgpd-title">
+    <div class="container">
+      <LgpdStrip locale={locale} />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="contact-title">
+    <div class="container">
+      <SectionHead eyebrow={h.contact.eyebrow} title={h.contact.title} id="contact-title" />
+      <ContactDual locale={locale} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    padding-block: clamp(2.5rem, 7vw, 5.5rem) clamp(3rem, 7vw, 5rem);
+  }
+
+  .hero__grid {
+    display: grid;
+    gap: var(--lk-space-7);
+    align-items: center;
+  }
+
+  .hero__copy h1 {
+    margin-top: var(--lk-space-6);
+  }
+
+  .hero__copy .proof-line {
+    margin-block: var(--lk-space-5);
+  }
+
+  .hero__cta {
+    margin-top: var(--lk-space-5);
+  }
+
+  .section-link {
+    margin: var(--lk-space-6) 0 0;
+  }
+
+  @media (min-width: 64rem) {
+    .hero__grid {
+      grid-template-columns: 1.05fr 1fr;
+    }
+  }
+</style>

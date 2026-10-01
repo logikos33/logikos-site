@@ -1,0 +1,43 @@
+---
+import { dict } from '../i18n';
+import type { Locale } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dict(locale);
+const KEYS = ['brand', 'license', 'pilot', 'support'] as const;
+---
+
+<ul class="grid grid--2 partner-points" role="list">
+  {KEYS.map((key) => (
+    <li class="partner-point">
+      <h3>{t.partnerPoints[key].title}</h3>
+      <p>{t.partnerPoints[key].text}</p>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .partner-points {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .partner-point {
+    border-left: 2px solid var(--lk-text);
+    padding: var(--lk-space-1) 0 var(--lk-space-1) var(--lk-space-4);
+  }
+
+  .partner-point h3 {
+    margin-bottom: var(--lk-space-2);
+  }
+
+  .partner-point p {
+    margin: 0;
+    color: var(--lk-text-2);
+  }
+</style>

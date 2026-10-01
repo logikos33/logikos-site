@@ -1,0 +1,77 @@
+---
+import FeatureList from '../components/FeatureList.astro';
+import HudVideo from '../components/HudVideo.astro';
+import PageHero from '../components/PageHero.astro';
+import ScenarioCards from '../components/ScenarioCards.astro';
+import SectionHead from '../components/SectionHead.astro';
+import StateLegend from '../components/StateLegend.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import { dict } from '../i18n';
+import { pathFor, type Locale } from '../i18n/routes';
+import Base from '../layouts/Base.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dict(locale);
+const p = t.recognition;
+---
+
+<Base locale={locale} routeKey="recognition" title={p.meta.title} description={p.meta.description}>
+  <PageHero eyebrow={p.hero.eyebrow} title={p.hero.title} text={p.hero.text}>
+    <div class="btn-row">
+      <WhatsAppButton locale={locale} />
+      <a class="btn btn--ghost" href={pathFor('howItWorks', locale)}>
+        {t.cta.howItWorks}
+      </a>
+    </div>
+  </PageHero>
+
+  <section class="section" aria-labelledby="scenarios-title">
+    <div class="container">
+      <SectionHead eyebrow={t.home.scenarios.eyebrow} title={t.home.scenarios.title} text={t.home.scenarios.text} id="scenarios-title" />
+      <ScenarioCards locale={locale} />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="epi-title">
+    <div class="container split">
+      <div>
+        <SectionHead title={p.epi.title} text={p.epi.text} id="epi-title" />
+        <StateLegend locale={locale} />
+      </div>
+      <HudVideo locale={locale} slot="epi" />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="evidence-title">
+    <div class="container split">
+      <SectionHead title={p.evidence.title} text={p.evidence.text} id="evidence-title" />
+      <HudVideo locale={locale} slot="fire" />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="steps-title">
+    <div class="container">
+      <SectionHead eyebrow={t.home.how.eyebrow} title={t.home.how.title} id="steps-title" />
+      <FeatureList items={[t.steps.camera, t.steps.device, t.steps.verdict]} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .split {
+    display: grid;
+    gap: var(--lk-space-6);
+    align-items: start;
+  }
+
+  @media (min-width: 64rem) {
+    .split {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--lk-space-7);
+    }
+  }
+</style>

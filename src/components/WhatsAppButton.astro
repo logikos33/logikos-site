@@ -1,0 +1,28 @@
+---
+// Primary CTA. Falls back to the contact page while PUBLIC_WHATSAPP_NUMBER is unset.
+import { dict } from '../i18n';
+import { pathFor, type Locale } from '../i18n/routes';
+import { whatsappHref } from '../lib/site';
+
+interface Props {
+  locale: Locale;
+  label?: string;
+  message?: string;
+  variant?: 'solid' | 'ghost';
+}
+
+const { locale, label, message, variant = 'solid' } = Astro.props;
+const t = dict(locale);
+const href = whatsappHref(message ?? t.cta.whatsappMessage);
+---
+
+<a
+  class:list={['btn', { 'btn--ghost': variant === 'ghost' }]}
+  href={href ?? pathFor('contact', locale)}
+  data-cta="whatsapp"
+  {...(href ? { rel: 'noopener', target: '_blank' } : {})}
+>
+  <span class="btn__mark" aria-hidden="true"></span>
+  {label ?? t.cta.whatsapp}
+  {href && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
+</a>

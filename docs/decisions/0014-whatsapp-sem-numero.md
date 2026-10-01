@@ -1,0 +1,1 @@
+**Sem número oficial de WhatsApp no código: CTAs caem em /contato até PUBLIC_WHATSAPP_NUMBER existir** — o único número achado é pessoal e o material do estande diz 'contato comercial a confirmar'; reverter: definir a variável no GitHub (vars) e no Pages.

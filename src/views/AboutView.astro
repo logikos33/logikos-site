@@ -1,0 +1,35 @@
+---
+import FeatureList from '../components/FeatureList.astro';
+import PageHero from '../components/PageHero.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import { dict } from '../i18n';
+import type { Locale } from '../i18n/routes';
+import Base from '../layouts/Base.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dict(locale);
+const p = t.about;
+---
+
+<Base locale={locale} routeKey="about" title={p.meta.title} description={p.meta.description}>
+  <PageHero eyebrow={p.hero.eyebrow} title={p.hero.title} text={p.hero.text} />
+
+  <section class="section" aria-label={p.hero.title}>
+    <div class="container">
+      <FeatureList items={[p.facts.place, p.facts.nvidia, p.facts.licenses]} />
+      <div class="btn-row about-cta">
+        <WhatsAppButton locale={locale} />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about-cta {
+    margin-top: var(--lk-space-7);
+  }
+</style>

@@ -1,0 +1,45 @@
+---
+// Plain list of titled points (title + text), used by inner pages.
+interface Item {
+  title: string;
+  text: string;
+}
+
+interface Props {
+  items: Item[];
+  columns?: 2 | 3;
+}
+
+const { items, columns = 3 } = Astro.props;
+---
+
+<ul class:list={['grid', columns === 3 ? 'grid--3' : 'grid--2', 'features']} role="list">
+  {items.map((item) => (
+    <li class="feature">
+      <h3>{item.title}</h3>
+      <p>{item.text}</p>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .feature {
+    border-top: 2px solid var(--lk-text);
+    padding-top: var(--lk-space-4);
+  }
+
+  .feature h3 {
+    margin-bottom: var(--lk-space-2);
+  }
+
+  .feature p {
+    margin: 0;
+    color: var(--lk-text-2);
+  }
+</style>

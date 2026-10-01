@@ -1,0 +1,46 @@
+---
+import { dict } from '../i18n';
+import { pathFor, type Locale } from '../i18n/routes';
+import WhatsAppButton from './WhatsAppButton.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dict(locale);
+const c = t.home.contact;
+---
+
+<div class="grid grid--2 contact-dual">
+  <article class="card">
+    <h3>{c.plant.title}</h3>
+    <p>{c.plant.text}</p>
+    <div class="card__foot btn-row">
+      <WhatsAppButton locale={locale} />
+    </div>
+    <p class="contact-dual__secondary">
+      <a href={pathFor('contact', locale)}>{c.plant.secondary}</a>
+    </p>
+  </article>
+  <article class="card">
+    <h3>{c.partner.title}</h3>
+    <p>{c.partner.text}</p>
+    <div class="card__foot btn-row">
+      <a class="btn" href={`${pathFor('partners', locale)}#parceria`}>
+        <span class="btn__mark" aria-hidden="true"></span>
+        {c.partner.cta}
+      </a>
+    </div>
+  </article>
+</div>
+
+<style>
+  .contact-dual .card {
+    padding: var(--lk-space-6);
+  }
+
+  .contact-dual__secondary {
+    font-size: 0.9375rem;
+  }
+</style>
