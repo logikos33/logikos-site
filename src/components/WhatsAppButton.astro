@@ -1,5 +1,6 @@
 ---
-// Primary CTA. Falls back to the contact page while PUBLIC_WHATSAPP_NUMBER is unset.
+// Primary CTA. While PUBLIC_WHATSAPP_NUMBER is unset it becomes "talk to the team" → contact page,
+// so no button ever promises a WhatsApp channel that does not exist.
 import { dict } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
 import { whatsappHref } from '../lib/site';
@@ -23,6 +24,6 @@ const href = whatsappHref(message ?? t.cta.whatsappMessage);
   {...(href ? { rel: 'noopener', target: '_blank' } : {})}
 >
   <span class="btn__mark" aria-hidden="true"></span>
-  {label ?? t.cta.whatsapp}
+  {href ? (label ?? t.cta.whatsapp) : t.cta.contactFallback}
   {href && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
 </a>

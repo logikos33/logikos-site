@@ -42,7 +42,8 @@
     "partner": "Become a partner",
     "contactForm": "Send a message",
     "learnMore": "See details",
-    "howItWorks": "See how it works"
+    "howItWorks": "See how it works",
+    "contactFallback": "Talk to the team"
   },
   "brand": {
     "wordmark": "LOGIKOS",
@@ -69,20 +70,38 @@
     },
     "labels": {
       "person": "PERSON",
-      "helmet": "HARD HAT",
-      "vest": "VEST",
       "smoke": "SMOKE",
       "flame": "FLAME",
-      "zone": "ZONE",
-      "posture": "POSTURE",
       "ppeOk": "PPE OK",
-      "ppeMissing": "NO HARD HAT",
-      "ppeUnknown": "OCCLUDED",
-      "fireAlert": "ALERT",
-      "zoneEnter": "ENTERED",
-      "postureRisk": "BENT",
-      "counter": "COUNT"
-    }
+      "fireAlert": "ALERT"
+    },
+    "items": {
+      "helmet": "HARD HAT",
+      "vest": "VEST",
+      "gloves": "GLOVES",
+      "goggles": "GOGGLES",
+      "mask": "MASK",
+      "ear_muffs": "EAR MUFFS",
+      "boots": "SAFETY BOOTS"
+    },
+    "missing": {
+      "helmet": "NO HARD HAT",
+      "vest": "NO VEST",
+      "gloves": "NO GLOVES",
+      "goggles": "NO GOGGLES",
+      "mask": "NO MASK",
+      "ear_muffs": "NO EAR MUFFS",
+      "boots": "NO SAFETY BOOTS"
+    },
+    "reasons": {
+      "occluded": "OCCLUDED",
+      "out_of_frame": "OUT OF FRAME",
+      "facing_away": "FACING AWAY",
+      "low_light": "LOW LIGHT",
+      "too_far": "TOO FAR",
+      "unknown": "UNDETERMINED"
+    },
+    "posterLabel": "preview"
   },
   "home": {
     "meta": {
@@ -92,15 +111,15 @@
     "hero": {
       "title": "Reason that sees.",
       "sub": "Fire, PPE and ergonomics from the same camera, inside the plant.",
-      "proof": ["edge inference", "NVIDIA Jetson", "evidence clip", "WhatsApp alert"]
+      "proof": ["edge processing", "NVIDIA Jetson", "evidence clip", "WhatsApp alert"]
     },
     "doors": {
       "title": "Where you come in",
       "plant": {
         "eyebrow": "For your plant",
         "title": "Safety you can see, on the cameras you already have.",
-        "text": "Tell us what you need to watch. We reply on WhatsApp with the next step.",
-        "cta": "Talk on WhatsApp"
+        "text": "Tell us what you need to watch. We reply with the next step.",
+        "cta": "Talk to the team"
       },
       "partner": {
         "eyebrow": "For integrators",
@@ -122,7 +141,7 @@
     "partner": {
       "eyebrow": "For partners",
       "title": "A product ready to resell.",
-      "text": "You own the customer relationship. We run the platform and the models.",
+      "text": "You own the customer. We handle the platform and the support.",
       "cta": "See the partner program"
     },
     "products": {
@@ -133,8 +152,8 @@
       "eyebrow": "Privacy",
       "title": "Privacy by design.",
       "lines": [
-        "Watches the condition, not the person: presence and PPE, never identity.",
-        "Video is processed on site; nothing goes to the cloud by default.",
+        "Watches the condition; never identifies who the person is.",
+        "Continuous video stays on site by default; only the alert and the event evidence leave.",
         "Evidence retention is set by contract."
       ],
       "cta": "How we handle data"
@@ -183,7 +202,7 @@
     },
     "device": {
       "title": "Edge device in the plant",
-      "text": "An NVIDIA Jetson runs the analysis on site. It keeps working offline; video stays out of the cloud by default."
+      "text": "An NVIDIA Jetson runs the analysis on site. It keeps working offline; continuous video stays out of the cloud by default."
     },
     "verdict": {
       "title": "Verdict, evidence, alert",
@@ -251,7 +270,7 @@
     "hero": {
       "eyebrow": "How it works",
       "title": "Camera, device, verdict.",
-      "text": "Processing happens inside the plant. The cloud is optional."
+      "text": "Processing happens inside the plant. Continuous video stays there by default."
     },
     "offline": {
       "title": "Offline-first",
@@ -303,7 +322,7 @@
     },
     "hero": {
       "eyebrow": "Twins",
-      "title": "Walk the space from anywhere.",
+      "title": "The space, navigable.",
       "text": "Record a video on your phone. Twins turns it into a point cloud you can navigate, measure and annotate."
     },
     "features": {
@@ -355,7 +374,7 @@
     "hero": {
       "eyebrow": "Compliance",
       "title": "Privacy by design.",
-      "text": "Recognition is built to comply with Brazil's LGPD inside the plant."
+      "text": "Recognition is built to support compliance with Brazil's LGPD inside the plant."
     },
     "items": {
       "signage": {
@@ -368,7 +387,7 @@
       },
       "presence": {
         "title": "Presence, not identity",
-        "text": "The system recognizes presence, posture and PPE. It watches the condition, not the person."
+        "text": "The system detects presence, posture and PPE. It watches the condition; it does not identify who the person is."
       },
       "retention": {
         "title": "Defined retention",
@@ -384,8 +403,8 @@
     },
     "hero": {
       "eyebrow": "About",
-      "title": "Logic and sight.",
-      "text": "ΛΟΓΙΚΟΣ is Greek for logic. Logikos Soluções builds computer vision for industry, with engineering that proves before it promises."
+      "title": "Reason and sight.",
+      "text": "ΛΟΓΙΚΟΣ is Greek for rational. Logikos Soluções builds computer vision for industry, with engineering that proves before it promises."
     },
     "facts": {
       "place": {
@@ -398,7 +417,7 @@
       },
       "licenses": {
         "title": "Permissive licenses",
-        "text": "Third-party models and libraries under permissive licenses such as Apache 2.0, MIT and BSD."
+        "text": "Third-party models under permissive licenses such as Apache 2.0, MIT and BSD."
       }
     }
   },
@@ -410,7 +429,8 @@
     "hero": {
       "eyebrow": "Contact",
       "title": "Talk to us.",
-      "text": "WhatsApp is the fastest way. The form works too."
+      "text": "WhatsApp is the fastest way. The form works too.",
+      "textNoWhatsapp": "Use the form. We reply by email or WhatsApp."
     },
     "whatsapp": {
       "title": "WhatsApp",
@@ -421,7 +441,7 @@
     },
     "form": {
       "title": "Form",
-      "text": "We reply on the channel you choose."
+      "text": "We reply by email or WhatsApp."
     }
   },
   "privacy": {
@@ -441,7 +461,7 @@
       },
       "data": {
         "title": "What we collect",
-        "text": "Name, company, role, email, WhatsApp number, interests and the message you write in the form. This website uses no tracking cookies."
+        "text": "Name, company, role, email, WhatsApp number, interests and the message you write in the form, plus technical data about the submission: IP address (used only for the anti-abuse check), page, language, date and time. This website uses no tracking or advertising cookies."
       },
       "purpose": {
         "title": "Why we use it",
@@ -449,15 +469,15 @@
       },
       "legalBasis": {
         "title": "Legal basis",
-        "text": "Consent, recorded when you send the form, and pre-contractual steps taken at your request, under Brazil's LGPD."
+        "text": "Consent, recorded when you send the form (Brazil's LGPD, art. 7, I). Final basis under legal review."
       },
       "sharing": {
         "title": "Who we share it with",
-        "text": "Infrastructure providers that host this website and store inquiries, acting as processors. We do not sell data."
+        "text": "With Cloudflare, which hosts this website, stores inquiries and runs the anti-abuse check, acting as processor. Data may be processed outside Brazil, with the safeguards of LGPD art. 33. We do not sell data."
       },
       "antiAbuse": {
         "title": "Abuse protection",
-        "text": "The form uses Cloudflare Turnstile to tell people from bots, without tracking cookies."
+        "text": "The form uses Cloudflare Turnstile to tell people from bots. Turnstile receives technical browser signals and your IP address, only for that check."
       },
       "retention": {
         "title": "How long we keep it",
@@ -465,11 +485,11 @@
       },
       "rights": {
         "title": "Your rights",
-        "text": "You can ask to access, correct, port or delete your data, and withdraw consent at any time."
+        "text": "You can ask for confirmation of processing, access, correction, anonymization, blocking or deletion, portability and information about sharing, and withdraw consent at any time (LGPD, art. 18). You can also petition Brazil's data protection authority (ANPD)."
       },
       "contact": {
         "title": "How to reach us",
-        "text": "By email at {email}."
+        "text": "By email at {email}. Data protection officer: to be appointed."
       }
     }
   },

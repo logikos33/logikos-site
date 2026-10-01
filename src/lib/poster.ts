@@ -11,7 +11,8 @@ function escapeXml(s: string): string {
   return s.replace(/[<>&"']/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&apos;' })[c] ?? c);
 }
 
-export function posterSvg(slot: HudSlot, caption: string, opts: { standalone?: boolean } = {}): string {
+/** `label` and `caption` come from i18n; the caption is only drawn in standalone files (video posters). */
+export function posterSvg(slot: HudSlot, label: string, opts: { standalone?: boolean; caption?: string } = {}): string {
   const id = `lk-grid-${slot}`;
   // Λ legs lean ~22° off vertical; the pattern is a 48px lattice of both diagonals.
   const ns = opts.standalone ? ' xmlns="http://www.w3.org/2000/svg"' : '';
@@ -24,10 +25,10 @@ export function posterSvg(slot: HudSlot, caption: string, opts: { standalone?: b
     `<rect width="${POSTER_W}" height="${POSTER_H}" fill="#14141C"/>`,
     `<rect width="${POSTER_W}" height="${POSTER_H}" fill="url(#${id})"/>`,
     `<rect x="${POSTER_W - 64 - 16}" y="${POSTER_H - 120}" width="16" height="16" fill="#00E5FF"/>`,
-    `<text x="${POSTER_W - 96}" y="${POSTER_H - 104}" text-anchor="end" fill="#8A8F98" font-family="'JetBrains Mono Variable', ui-monospace, monospace" font-size="28" letter-spacing="3">${escapeXml(`SLOT · ${slot.toUpperCase()}`)}</text>`,
-    ...(opts.standalone
+    `<text x="${POSTER_W - 96}" y="${POSTER_H - 104}" text-anchor="end" fill="#8A8F98" font-family="'JetBrains Mono Variable', ui-monospace, monospace" font-size="28" letter-spacing="3">${escapeXml(label.toUpperCase())}</text>`,
+    ...(opts.standalone && opts.caption
       ? [
-          `<text x="${POSTER_W - 64}" y="${POSTER_H - 56}" text-anchor="end" fill="#F4F6F8" font-family="'JetBrains Mono Variable', ui-monospace, monospace" font-size="30">${escapeXml(caption)}</text>`,
+          `<text x="${POSTER_W - 64}" y="${POSTER_H - 56}" text-anchor="end" fill="#F4F6F8" font-family="'JetBrains Mono Variable', ui-monospace, monospace" font-size="30">${escapeXml(opts.caption)}</text>`,
         ]
       : []),
     `</svg>`,
