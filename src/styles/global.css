@@ -151,7 +151,7 @@ kbd {
   margin-bottom: var(--lk-space-7);
 }
 
-.section-head p {
+.section-head p:not(.eyebrow) {
   color: var(--lk-text-2);
   font-size: 1.125rem;
 }
@@ -173,7 +173,8 @@ kbd {
   content: '';
   width: 0.5rem;
   height: 0.5rem;
-  background: var(--lk-accent);
+  /* Neutral: cyan is reserved for interactive elements and the detection label. */
+  background: var(--lk-line-strong);
 }
 
 .lede {

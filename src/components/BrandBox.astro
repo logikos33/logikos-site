@@ -24,9 +24,12 @@ const t = dict(locale);
 </div>
 
 {glitch && <script>
-  // Once per home load; never on internal navigation; never under reduced motion.
+  // Once per home load; never on internal or back/forward navigation; never under reduced
+  // motion; and only once the wordmark font is ready (the slices are fitted to its letters).
   const node = document.querySelector<HTMLElement>('[data-brand-box] .lk-glitch');
+  const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
   const internal = (() => {
+    if (nav?.type === 'back_forward') return true;
     try {
       return document.referrer !== '' && new URL(document.referrer).origin === window.location.origin;
     } catch {
@@ -35,17 +38,31 @@ const t = dict(locale);
   })();
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (node) {
-    node.dataset.glitch = reduce ? 'off-reduced-motion' : internal ? 'off-internal-navigation' : 'run';
-    if (!reduce && !internal) {
-      node.classList.add('is-glitching');
-      node.addEventListener(
-        'animationend',
-        () => {
-          node.classList.remove('is-glitching');
-          node.dataset.glitch = 'done';
-        },
-        { once: true },
+    if (reduce) node.dataset.glitch = 'off-reduced-motion';
+    else if (internal) node.dataset.glitch = 'off-internal-navigation';
+    else {
+      node.dataset.glitch = 'waiting-font';
+      const timeout = new Promise<boolean>((resolve) => window.setTimeout(() => resolve(false), 800));
+      const loaded = document.fonts.load('700 1em "Space Grotesk Variable"').then(
+        (faces) => faces.length > 0,
+        () => false,
       );
+      void Promise.race([loaded, timeout]).then((ok) => {
+        if (!ok) {
+          node.dataset.glitch = 'off-font-timeout';
+          return;
+        }
+        node.dataset.glitch = 'run';
+        node.classList.add('is-glitching');
+        node.addEventListener(
+          'animationend',
+          () => {
+            node.classList.remove('is-glitching');
+            node.dataset.glitch = 'done';
+          },
+          { once: true },
+        );
+      });
     }
   }
 </script>}

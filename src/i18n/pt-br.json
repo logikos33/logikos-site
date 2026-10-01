@@ -510,7 +510,7 @@
     "submitPartner": "Enviar pedido de parceria",
     "sending": "Enviando…",
     "success": "Recebido. Retornamos em breve.",
-    "error": "Não foi possível enviar agora. Tente de novo ou fale pelo WhatsApp.",
+    "error": "Não foi possível enviar agora. Tente de novo ou escreva para {email}.",
     "errorVerification": "Não foi possível confirmar que você não é um robô. Recarregue a página e tente de novo.",
     "invalid": "Revise os campos marcados.",
     "options": {
@@ -523,7 +523,12 @@
       "robotics": "Robótica",
       "partnership": "Parceria"
     },
-    "honeypot": "Não preencha este campo"
+    "honeypot": "Não preencha este campo",
+    "errors": {
+      "required": "Preencha este campo.",
+      "email": "Informe um e-mail válido.",
+      "consent": "Marque para autorizar o retorno."
+    }
   },
   "footer": {
     "company": "Logikos Soluções",

@@ -55,13 +55,16 @@ const posterFile = `/media/posters/${locale}/${slot}.svg`;
     <span class="hud__badge" data-hud-badge hidden>
       {t.hud.mock}
     </span>
+  </div>
+  <figcaption class="hud__caption">
+    <span>{caption}</span>
+    <!-- Outside the frame so it never covers detection chips. -->
     <button type="button" class="hud__play" data-hud-play hidden data-label-play={t.hud.play} data-label-replay={t.hud.replay}>
       <Icon name="play" class="hud__icon-play" />
       <Icon name="replay" class="hud__icon-replay" />
       <span data-hud-play-label>{t.hud.play}</span>
     </button>
-  </div>
-  <figcaption class="hud__caption">{caption}</figcaption>
+  </figcaption>
 </figure>
 
 <script>
@@ -326,28 +329,32 @@ const posterFile = `/media/posters/${locale}/${slot}.svg`;
   }
 
   .hud__play {
-    position: absolute;
-    left: var(--lk-space-3);
-    top: var(--lk-space-3);
     display: inline-flex;
     align-items: center;
     gap: var(--lk-space-2);
     min-height: 2.75rem;
     padding: 0 var(--lk-space-4);
-    border: 1px solid var(--hud-text);
+    border: 1px solid var(--lk-line-strong);
     border-radius: var(--lk-radius);
-    background: var(--hud-chip);
-    color: var(--hud-text);
+    background: var(--lk-surface);
+    color: var(--lk-text);
     font: 600 0.9375rem/1 var(--lk-font-body);
     cursor: pointer;
+    flex: none;
+  }
+
+  .hud__play:hover {
+    border-color: var(--lk-text);
   }
 
   .hud__play[hidden] {
     display: none;
   }
 
-  .hud__play:focus-visible {
-    outline-color: var(--hud-stroke);
+  /* The grid grego is cover decoration: it disappears as soon as verdicts are drawn. */
+  .hud[data-state='playing'] :global(.hud-poster__grid),
+  .hud[data-state='ended'] :global(.hud-poster__grid) {
+    display: none;
   }
 
   .hud:not([data-state='ended']) .hud__icon-replay,
@@ -356,6 +363,11 @@ const posterFile = `/media/posters/${locale}/${slot}.svg`;
   }
 
   .hud__caption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--lk-space-2) var(--lk-space-4);
     margin-top: var(--lk-space-2);
     font: 500 0.8125rem/1.4 var(--lk-font-mono);
     color: var(--lk-text-2);
