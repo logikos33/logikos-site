@@ -74,3 +74,63 @@ test('reduced motion: HUD waits for play, then plays once', async ({ browser }) 
   await expect(hud.locator('.hud-box').first()).toBeVisible();
   await ctx.close();
 });
+
+test('glitch slices never cross the two O letters (keyhole), at desktop and phone widths', async ({ browser }) => {
+  for (const width of [1440, 360]) {
+    const ctx = await browser.newContext({ viewport: { width, height: 800 }, reducedMotion: 'reduce' });
+    const page = await ctx.newPage();
+    await page.goto('/');
+    const { problems: overlaps, checked } = await page.evaluate(() => {
+      const el = document.querySelector<HTMLElement>('[data-brand-box] .lk-glitch');
+      if (!el?.firstChild) return { problems: ['wordmark not found'], checked: 0 };
+      const box = el.getBoundingClientRect();
+      const spacing = parseFloat(getComputedStyle(el).letterSpacing) || 0;
+      const text = el.firstChild.textContent ?? '';
+      const oRanges: [number, number][] = [];
+      for (let i = 0; i < text.length; i++) {
+        if (text[i] !== 'O') continue;
+        const r = document.createRange();
+        r.setStart(el.firstChild, i);
+        r.setEnd(el.firstChild, i + 1);
+        const rect = r.getBoundingClientRect();
+        oRanges.push([rect.left - box.left, rect.right - box.left - spacing]);
+      }
+      const problems: string[] = [];
+      let checked = 0;
+      for (const sheet of [...document.styleSheets]) {
+        let rules: CSSRuleList;
+        try {
+          rules = sheet.cssRules;
+        } catch {
+          continue;
+        }
+        for (const rule of [...rules]) {
+          if (!(rule instanceof CSSKeyframesRule) || !rule.name.includes('lk-glitch')) continue;
+          for (const frame of [...rule.cssRules] as CSSKeyframeRule[]) {
+            const inset = /inset\(([^)]+)\)/.exec(frame.style.clipPath)?.[1]?.split(/\s+/).map(parseFloat);
+            if (!inset || inset.length < 4) continue;
+            const [top, right, bottom, left] = inset as [number, number, number, number];
+            if (top + bottom >= 100 || left + right >= 100) continue; // empty slice (rest state)
+            checked++;
+            const tx = parseFloat(/translateX\((-?[\d.]+)px\)/.exec(frame.style.transform)?.[1] ?? '0');
+            const x0 = (box.width * left) / 100 + tx;
+            const x1 = box.width * (1 - right / 100) + tx;
+            // Content shown inside the slice comes from [x0 - tx, x1 - tx] of the original text.
+            for (const [o0, o1] of oRanges) {
+              const hitsClip = x0 < o1 && x1 > o0;
+              const hitsSource = x0 - tx < o1 && x1 - tx > o0;
+              if (hitsClip || hitsSource)
+                problems.push(
+                  `${rule.name} ${frame.keyText}: slice ${x0.toFixed(1)}–${x1.toFixed(1)} vs O ${o0.toFixed(1)}–${o1.toFixed(1)}`,
+                );
+            }
+          }
+        }
+      }
+      return { problems, checked };
+    });
+    expect(checked, 'glitch keyframes found').toBeGreaterThanOrEqual(5);
+    expect(overlaps, `width ${width}`).toEqual([]);
+    await ctx.close();
+  }
+});
