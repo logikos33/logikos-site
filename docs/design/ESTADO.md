@@ -42,24 +42,24 @@ Atualizado em 03/10/2026, fim da rodada v2. **O prompt de continuação lê este
 | Chip "ok" com texto claro                            | 4,1:1 (reprova)                                                                                                  | Tinta escura sobre ok/warn; `--lk-warn` claro escurecido; teste de contraste por script |
 | Lighthouse das 4 páginas                             | `lighthouserc` só media a home; servidor do LHCI dava 404 em `/recognition`                                      | `scripts/serve-dist.mjs` + rc com 12 URLs e piso 0,95                                   |
 
-## Lighthouse mobile — antes → depois (mediana de 3 runs, servidor estático local)
+## Lighthouse mobile — antes → depois (mediana de 3 runs; antes = local, depois = **GitHub Actions**, run do PR-6)
 
 | Página             | Perf antes → depois | A11y          | Best          | SEO           | Peso         |
 | ------------------ | ------------------- | ------------- | ------------- | ------------- | ------------ |
-| `/`                | 97 → **95**         | 100 → **100** | 100 → **100** | 100 → **100** | 177 → 213 KB |
-| `/en/`             | 95 → **95**         | 100 → **100** | 100 → **100** | 100 → **100** | 177 → 212 KB |
-| `/recognition`     | 97 → **95**         | 100 → **100** | 100 → **100** | 100 → **100** | 165 → 219 KB |
-| `/en/recognition`  | 92 → **95**         | 100 → **100** | 100 → **100** | 100 → **100** | 165 → 219 KB |
-| `/como-funciona`   | 98 → **98**         | 98 → **100**  | 100 → **100** | 100 → **100** | 144 → 149 KB |
-| `/en/how-it-works` | 98 → **98**         | 98 → **100**  | 100 → **100** | 100 → **100** | 144 → 149 KB |
-| `/integradores`    | 98 → **98**         | 100 → **100** | 100 → **100** | 100 → **100** | 159 → 161 KB |
-| `/en/partners`     | 98 → **98**         | 100 → **100** | 100 → **100** | 100 → **100** | 159 → 161 KB |
-| `/demos`           | — → **97**          | — → **100**   | — → **100**   | — → **100**   | — → 178 KB   |
-| `/en/demos`        | — → **98**          | — → **100**   | — → **100**   | — → **100**   | — → 177 KB   |
-| `/plataforma`      | — → **98**          | — → **100**   | — → **100**   | — → **100**   | — → 164 KB   |
-| `/en/platform`     | — → **98**          | — → **100**   | — → **100**   | — → **100**   | — → 164 KB   |
+| `/`                | 97 → **98**         | 100 → **100** | 100 → **100** | 100 → **100** | 177 → 213 KB |
+| `/en/`             | 95 → **98**         | 100 → **100** | 100 → **100** | 100 → **100** | 177 → 213 KB |
+| `/recognition`     | 97 → **98**         | 100 → **100** | 100 → **100** | 100 → **100** | 165 → 220 KB |
+| `/en/recognition`  | 92 → **98**         | 100 → **100** | 100 → **100** | 100 → **100** | 165 → 220 KB |
+| `/como-funciona`   | 98 → **99**         | 98 → **100**  | 100 → **100** | 100 → **100** | 144 → 151 KB |
+| `/en/how-it-works` | 98 → **99**         | 98 → **100**  | 100 → **100** | 100 → **100** | 144 → 151 KB |
+| `/integradores`    | 98 → **99**         | 100 → **100** | 100 → **100** | 100 → **100** | 159 → 163 KB |
+| `/en/partners`     | 98 → **99**         | 100 → **100** | 100 → **100** | 100 → **100** | 159 → 163 KB |
+| `/demos`           | — → **99**          | — → **100**   | — → **100**   | — → **100**   | — → 179 KB   |
+| `/en/demos`        | — → **99**          | — → **100**   | — → **100**   | — → **100**   | — → 179 KB   |
+| `/plataforma`      | — → **99**          | — → **100**   | — → **100**   | — → **100**   | — → 165 KB   |
+| `/en/platform`     | — → **99**          | — → **100**   | — → **100**   | — → **100**   | — → 165 KB   |
 
-Regra do brief: regressão > 3 pontos é bug. A home perdeu ~2 pontos de performance (estágio + cinco cards de alerta); as outras páginas mantiveram ou subiram.
+Regra do brief: regressão > 3 pontos é bug. Nenhuma; o primeiro run do CI deu 90–92 em `/` e `/recognition` (CSS bloqueante + deslocamento do botão do HUD e da troca de fonte) e foi corrigido no mesmo PR (CSS inline por página, botão reservado, fallbacks de fonte com métricas compatíveis, preload das três fontes). O job de Lighthouse do CI agora cobre as 12 páginas com piso 0,95 e falha o PR abaixo disso.
 
 ## Aceite (numerado) — onde está a prova
 
