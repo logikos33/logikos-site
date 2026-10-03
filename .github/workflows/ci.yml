@@ -99,7 +99,7 @@ jobs:
           retention-days: 14
 
   lighthouse:
-    name: lighthouse (mobile, home PT + EN)
+    name: lighthouse (mobile, 6 páginas × 2 idiomas)
     needs: quality
     runs-on: ubuntu-latest
     steps:

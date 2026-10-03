@@ -33,6 +33,13 @@ async function file(p) {
 
 createServer(async (req, res) => {
   const path = decodeURIComponent(new URL(req.url ?? '/', 'http://x').pathname);
+  // The Pages Function is not here; answer "unknown" so the demo chips stay "verificando" and
+  // no 404 reaches the console (Lighthouse best-practices counts console errors).
+  if (path === '/api/status') {
+    res.setHeader('content-type', 'application/json');
+    res.end(JSON.stringify({ epi: 'unknown', fire: 'unknown', checked_at: new Date().toISOString() }));
+    return;
+  }
   const candidates = path.endsWith('/') ? [`${path}index.html`] : [path, `${path}.html`, `${path}/index.html`];
   for (const c of candidates) {
     const hit = await file(join('dist', c));
