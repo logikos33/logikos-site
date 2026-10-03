@@ -268,8 +268,8 @@
     },
     "hero": {
       "question": "o que é?",
-      "title": "Fogo, EPI, ergonomia, zonas e contagem na câmera que já existe.",
-      "text": "Um veredito por evento, com o clipe de evidência. Escolha uma leitura: o mesmo vídeo, outro veredito."
+      "title": "Cinco leituras na câmera que já existe.",
+      "text": "Fogo e fumaça, EPI por região do corpo, ergonomia, zonas de risco e contagem: um veredito por evento, com o clipe de evidência. Escolha uma leitura."
     },
     "epi": {
       "title": "EPI com três estados",
@@ -395,8 +395,8 @@
     },
     "hero": {
       "question": "para quem?",
-      "title": "Venda o Recognition com a sua marca. A plataforma e o suporte são da Logikos.",
-      "text": "Para integradores de segurança eletrônica, automação e TI industrial: painel com o seu logo, piloto acompanhado na planta do cliente, licença por prazo."
+      "title": "Venda o Recognition com a sua marca.",
+      "text": "A plataforma e o suporte são da Logikos. Para integradores de segurança eletrônica, automação e TI industrial: painel com o seu logo, piloto acompanhado na planta do cliente, licença por prazo."
     },
     "model": {
       "title": "Modelo de canal",
@@ -661,7 +661,8 @@
     },
     "offline": {
       "title": "O formulário ainda está em configuração.",
-      "text": "Escreva para {email} ou chame no WhatsApp. Respondemos em horário comercial."
+      "text": "Escreva para {email} ou chame no WhatsApp. Respondemos em horário comercial.",
+      "textNoWhatsapp": "Escreva para {email}. Respondemos em horário comercial."
     }
   },
   "footer": {
@@ -799,11 +800,11 @@
     "hero": {
       "question": "edge ou nuvem?",
       "title": "Na planta ou na nuvem. O mesmo veredito, com evidência.",
-      "text": "Edge: um dispositivo no rack, funciona sem internet, licença por prazo. Nuvem: painel pelo navegador, mensalidade. A conversa define qual serve à sua planta."
+      "text": "Edge: um dispositivo no rack, funciona sem internet, licença por prazo. Nuvem: painel pelo navegador, mensalidade."
     },
     "questions": {
       "account": "como entro?",
-      "compare": "edge ou nuvem?"
+      "compare": "lado a lado?"
     },
     "account": {
       "title": "Criar conta",

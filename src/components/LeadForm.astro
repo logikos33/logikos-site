@@ -27,222 +27,242 @@ const testKey = TURNSTILE_SITE_KEY === TURNSTILE_TEST_SITE_KEY;
 const wa = whatsappHref(t.cta.whatsappMessage);
 ---
 
-{testKey && (
-  <div class="lead-form__offline" data-lead-offline={id} hidden>
-    <p class="lead-form__offline-title">{f.offline.title}</p>
-    <p set:html={fill(f.offline.text, { email: `<a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>` })} />
-    {wa && (
-      <div class="btn-row">
-        <WhatsAppButton locale={locale} />
-      </div>
-    )}
-  </div>
-)}
-
-<form
-  class="lead-form"
-  id={id}
-  data-lead-form
-  data-kind={kind}
-  data-lang={locale}
-  data-err-required={f.errors.required}
-  data-err-email={f.errors.email}
-  data-err-consent={f.errors.consent}
-  data-err-whatsapp={f.errors.whatsapp}
-  data-err-cameras={f.errors.cameras}
-  data-err-mode={f.errors.mode}
-  data-err-server={f.errors.invalidServer}
-  novalidate
->
-  <div class="lead-form__grid">
-    <div class="field">
-      <label for={field('name')}>
-        {f.name}{' '}
-        <span class="field__req" aria-hidden="true">
-          *
-        </span>
-      </label>
-      <input id={field('name')} name="name" type="text" autocomplete="name" required maxlength={LIMITS.name} />
-      <p class="field__error" id={field('name-error')} hidden>
-        <Icon name="alert" size={16} />
-        <span data-error-text></span>
-      </p>
-    </div>
-    <div class="field">
-      <label for={field('company')}>
-        {f.company}{' '}
-        <span class="field__req" aria-hidden="true">
-          *
-        </span>
-      </label>
-      <input id={field('company')} name="company" type="text" autocomplete="organization" required maxlength={LIMITS.company} />
-      <p class="field__error" id={field('company-error')} hidden>
-        <Icon name="alert" size={16} />
-        <span data-error-text></span>
-      </p>
-    </div>
-    <div class="field">
-      <label for={field('role')}>{f.role}</label>
-      <input id={field('role')} name="role" type="text" autocomplete="organization-title" maxlength={LIMITS.role} />
-    </div>
-    <div class="field">
-      <label for={field('email')}>
-        {f.email}{' '}
-        <span class="field__req" aria-hidden="true">
-          *
-        </span>
-      </label>
-      <input id={field('email')} name="email" type="email" autocomplete="email" required maxlength={LIMITS.email} pattern={EMAIL_PATTERN} />
-      <p class="field__error" id={field('email-error')} hidden>
-        <Icon name="alert" size={16} />
-        <span data-error-text></span>
-      </p>
-    </div>
-    <div class="field">
-      <label for={field('whatsapp')}>{f.whatsapp}</label>
-      <input
-        id={field('whatsapp')}
-        name="whatsapp"
-        type="tel"
-        autocomplete="tel"
-        inputmode="tel"
-        maxlength={LIMITS.whatsapp}
-        pattern={PHONE_PATTERN}
-        aria-describedby={field('whatsapp-hint')}
+<!-- The anchor (#conta, #parceria) is this wrapper, which never hides — so the CTAs still scroll
+     to it when the form is swapped for the notice (re-auditoria A1·T1). -->
+<div class="lead-wrap" id={id}>
+  {testKey && (
+    <div class="lead-form__offline" data-lead-offline={`${id}-form`} hidden>
+      <p class="lead-form__offline-title">{f.offline.title}</p>
+      <p
+        set:html={fill(wa ? f.offline.text : f.offline.textNoWhatsapp, { email: `<a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>` })}
       />
-      <p class="field__hint" id={field('whatsapp-hint')}>
-        {f.whatsappHint}
-      </p>
-      <p class="field__error" id={field('whatsapp-error')} hidden>
-        <Icon name="alert" size={16} />
-        <span data-error-text></span>
-      </p>
+      {wa && (
+        <div class="btn-row">
+          <WhatsAppButton locale={locale} />
+        </div>
+      )}
     </div>
-  </div>
+  )}
 
-  {kind === 'account' && (
+  <form
+    class="lead-form"
+    id={`${id}-form`}
+    data-lead-form
+    data-kind={kind}
+    data-lang={locale}
+    data-err-required={f.errors.required}
+    data-err-email={f.errors.email}
+    data-err-consent={f.errors.consent}
+    data-err-whatsapp={f.errors.whatsapp}
+    data-err-cameras={f.errors.cameras}
+    data-err-mode={f.errors.mode}
+    data-err-server={f.errors.invalidServer}
+    novalidate
+  >
     <div class="lead-form__grid">
       <div class="field">
-        <label for={field('cameras')}>
-          {f.cameras}{' '}
+        <label for={field('name')}>
+          {f.name}{' '}
+          <span class="field__req" aria-hidden="true">
+            *
+          </span>
+        </label>
+        <input id={field('name')} name="name" type="text" autocomplete="name" required maxlength={LIMITS.name} />
+        <p class="field__error" id={field('name-error')} hidden>
+          <Icon name="alert" size={16} />
+          <span data-error-text></span>
+        </p>
+      </div>
+      <div class="field">
+        <label for={field('company')}>
+          {f.company}{' '}
+          <span class="field__req" aria-hidden="true">
+            *
+          </span>
+        </label>
+        <input id={field('company')} name="company" type="text" autocomplete="organization" required maxlength={LIMITS.company} />
+        <p class="field__error" id={field('company-error')} hidden>
+          <Icon name="alert" size={16} />
+          <span data-error-text></span>
+        </p>
+      </div>
+      <div class="field">
+        <label for={field('role')}>{f.role}</label>
+        <input id={field('role')} name="role" type="text" autocomplete="organization-title" maxlength={LIMITS.role} />
+      </div>
+      <div class="field">
+        <label for={field('email')}>
+          {f.email}{' '}
           <span class="field__req" aria-hidden="true">
             *
           </span>
         </label>
         <input
-          id={field('cameras')}
-          name="cameras"
-          type="number"
-          inputmode="numeric"
+          id={field('email')}
+          name="email"
+          type="email"
+          autocomplete="email"
           required
-          min="1"
-          max={MAX_CAMERAS}
-          step="1"
-          aria-describedby={field('cameras-hint')}
+          maxlength={LIMITS.email}
+          pattern={EMAIL_PATTERN}
         />
-        <p class="field__hint" id={field('cameras-hint')}>
-          {f.camerasHint}
-        </p>
-        <p class="field__error" id={field('cameras-error')} hidden>
+        <p class="field__error" id={field('email-error')} hidden>
           <Icon name="alert" size={16} />
           <span data-error-text></span>
         </p>
       </div>
-      <fieldset class="field field--group">
-        <legend>
-          {f.mode}{' '}
+      <div class="field">
+        <label for={field('whatsapp')}>{f.whatsapp}</label>
+        <input
+          id={field('whatsapp')}
+          name="whatsapp"
+          type="tel"
+          autocomplete="tel"
+          inputmode="tel"
+          maxlength={LIMITS.whatsapp}
+          pattern={PHONE_PATTERN}
+          aria-describedby={field('whatsapp-hint')}
+        />
+        <p class="field__hint" id={field('whatsapp-hint')}>
+          {f.whatsappHint}
+        </p>
+        <p class="field__error" id={field('whatsapp-error')} hidden>
+          <Icon name="alert" size={16} />
+          <span data-error-text></span>
+        </p>
+      </div>
+    </div>
+
+    {kind === 'account' && (
+      <div class="lead-form__grid">
+        <div class="field">
+          <label for={field('cameras')}>
+            {f.cameras}{' '}
+            <span class="field__req" aria-hidden="true">
+              *
+            </span>
+          </label>
+          <input
+            id={field('cameras')}
+            name="cameras"
+            type="number"
+            inputmode="numeric"
+            required
+            min="1"
+            max={MAX_CAMERAS}
+            step="1"
+            aria-describedby={field('cameras-hint')}
+          />
+          <p class="field__hint" id={field('cameras-hint')}>
+            {f.camerasHint}
+          </p>
+          <p class="field__error" id={field('cameras-error')} hidden>
+            <Icon name="alert" size={16} />
+            <span data-error-text></span>
+          </p>
+        </div>
+        <fieldset class="field field--group">
+          <legend>
+            {f.mode}{' '}
+            <span class="field__req" aria-hidden="true">
+              *
+            </span>
+          </legend>
+          <div class="checks">
+            {LEAD_MODES.map((m, i) => (
+              <label class="check">
+                <input type="radio" name="mode" value={m} required={i === 0} />
+                <span>{m === 'edge' ? f.modeEdge : f.modeCloud}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      </div>
+    )}
+
+    <fieldset class="field field--group">
+      <legend>{f.interests}</legend>
+      <p class="field__hint" id={field('interests-hint')}>
+        {f.interestsHint}
+      </p>
+      <div class="checks">
+        {LEAD_INTERESTS.map((key) => (
+          <label class="check">
+            <input
+              type="checkbox"
+              name="interests"
+              value={key}
+              checked={defaults.includes(key)}
+              aria-describedby={field('interests-hint')}
+            />
+            <span>{f.options[key]}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+
+    <div class="field">
+      <label for={field('message')}>{f.message}</label>
+      <textarea id={field('message')} name="message" rows="5" maxlength={LIMITS.message}></textarea>
+    </div>
+
+    <div class="field field--honeypot" aria-hidden="true">
+      <label for={field('website')}>{f.honeypot}</label>
+      <input id={field('website')} name="website" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="field field--consent">
+      <label class="check check--consent">
+        <input id={field('consent')} type="checkbox" name="consent" required />
+        <span>
+          {f.consentBefore} <a href={pathFor('privacy', locale)}>{f.consentLink}</a> {f.consentAfter}{' '}
           <span class="field__req" aria-hidden="true">
             *
           </span>
-        </legend>
-        <div class="checks">
-          {LEAD_MODES.map((m, i) => (
-            <label class="check">
-              <input type="radio" name="mode" value={m} required={i === 0} />
-              <span>{m === 'edge' ? f.modeEdge : f.modeCloud}</span>
-            </label>
-          ))}
-        </div>
-      </fieldset>
-    </div>
-  )}
-
-  <fieldset class="field field--group">
-    <legend>{f.interests}</legend>
-    <p class="field__hint" id={field('interests-hint')}>
-      {f.interestsHint}
-    </p>
-    <div class="checks">
-      {LEAD_INTERESTS.map((key) => (
-        <label class="check">
-          <input type="checkbox" name="interests" value={key} checked={defaults.includes(key)} aria-describedby={field('interests-hint')} />
-          <span>{f.options[key]}</span>
-        </label>
-      ))}
-    </div>
-  </fieldset>
-
-  <div class="field">
-    <label for={field('message')}>{f.message}</label>
-    <textarea id={field('message')} name="message" rows="5" maxlength={LIMITS.message}></textarea>
-  </div>
-
-  <div class="field field--honeypot" aria-hidden="true">
-    <label for={field('website')}>{f.honeypot}</label>
-    <input id={field('website')} name="website" type="text" tabindex="-1" autocomplete="off" />
-  </div>
-
-  <div class="field field--consent">
-    <label class="check check--consent">
-      <input id={field('consent')} type="checkbox" name="consent" required />
-      <span>
-        {f.consentBefore} <a href={pathFor('privacy', locale)}>{f.consentLink}</a> {f.consentAfter}{' '}
-        <span class="field__req" aria-hidden="true">
-          *
         </span>
-      </span>
-    </label>
-    <p class="field__error" id={field('consent-error')} hidden>
-      <Icon name="alert" size={16} />
-      <span data-error-text></span>
-    </p>
-  </div>
+      </label>
+      <p class="field__error" id={field('consent-error')} hidden>
+        <Icon name="alert" size={16} />
+        <span data-error-text></span>
+      </p>
+    </div>
 
-  <div class="turnstile" data-turnstile data-sitekey={TURNSTILE_SITE_KEY}></div>
+    <div class="turnstile" data-turnstile data-sitekey={TURNSTILE_SITE_KEY}></div>
 
-  <div class="lead-form__actions">
-    <button type="submit" class="btn" data-label-idle={submitLabel} data-label-busy={f.sending}>
-      <span class="btn__mark" aria-hidden="true"></span>
-      <span data-submit-label>{submitLabel}</span>
-    </button>
-    <p
-      class="lead-form__status"
-      role="status"
-      aria-live="polite"
-      data-status
-      data-msg-success={successMsg}
-      data-msg-error={fill(f.error, { email: CONTACT_EMAIL })}
-      data-msg-verification={f.errorVerification}
-      data-msg-invalid={f.invalid}
-    >
-      <span class="state" data-status-state hidden>
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
-          stroke-linecap="square"
-          aria-hidden="true"
-          focusable="false"
-          data-status-icon
-        ></svg>
-        <span data-status-text></span>
-      </span>
-    </p>
-  </div>
-</form>
+    <div class="lead-form__actions">
+      <button type="submit" class="btn" data-label-idle={submitLabel} data-label-busy={f.sending}>
+        <span class="btn__mark" aria-hidden="true"></span>
+        <span data-submit-label>{submitLabel}</span>
+      </button>
+      <p
+        class="lead-form__status"
+        role="status"
+        aria-live="polite"
+        data-status
+        data-msg-success={successMsg}
+        data-msg-error={fill(f.error, { email: CONTACT_EMAIL })}
+        data-msg-verification={f.errorVerification}
+        data-msg-invalid={f.invalid}
+      >
+        <span class="state" data-status-state hidden>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="square"
+            aria-hidden="true"
+            focusable="false"
+            data-status-icon
+          ></svg>
+          <span data-status-text></span>
+        </span>
+      </p>
+    </div>
+  </form>
+</div>
 
 <script>
   import { ICON_PATHS } from '../lib/icons';
@@ -511,6 +531,7 @@ const wa = whatsappHref(t.cta.whatsappMessage);
   .field input[type='text'],
   .field input[type='email'],
   .field input[type='tel'],
+  .field input[type='number'],
   .field textarea {
     width: 100%;
     min-height: 2.875rem;
