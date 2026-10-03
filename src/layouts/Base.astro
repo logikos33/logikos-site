@@ -59,7 +59,7 @@ const organization = {
       })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Display and body only: the mono is font-display: optional and must not be fetched early. -->
+    <!-- Display and body only: the mono swaps in later, off the critical path (captions and chips). -->
     <link rel="preload" href={spaceGrotesk} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={inter} as="font" type="font/woff2" crossorigin />
     <title>{title}</title>
