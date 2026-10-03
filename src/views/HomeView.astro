@@ -3,10 +3,10 @@
 // by hand: the verdict figure first (it leads on phones), the buyer's gain beside it from
 // 64rem. The name is in the header; it is not repeated here (AUDITORIA-V2 F-02).
 import AlertCard from '../components/AlertCard.astro';
-import DefList from '../components/DefList.astro';
 import DemoStatus from '../components/DemoStatus.astro';
 import HudVideo from '../components/HudVideo.astro';
 import Pipeline from '../components/Pipeline.astro';
+import PointList from '../components/PointList.astro';
 import Section from '../components/Section.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { LOGIN_URL } from '../config/links';
@@ -34,16 +34,13 @@ const dataRows = h.data.leavesRows.map((leaves, i) => ({ leaves, stays: h.data.s
       <div class="q-body q-body--wide hero">
         <HudVideo locale={locale} clip="hero" priority class="hero__video" />
         <div class="hero__copy">
-          <h1 id="hero-title">
-            <span class="visually-hidden">{h.questions.what} </span>
-            {h.hero.title}
-          </h1>
+          <p class="visually-hidden q-sr">{h.questions.what}</p>
+          <h1 id="hero-title">{h.hero.title}</h1>
           <p class="lede">{h.hero.sub}</p>
           <div class="btn-row">
             <WhatsAppButton locale={locale} />
-            <a class="btn btn--ghost" href={pathFor('demos', locale)}>
-              {t.cta.demo}
-            </a>
+            <!-- The live demo, straight from the hero, with its state (AUDITORIA-V2 F-14). -->
+            <DemoStatus locale={locale} demo="epi" button label={t.cta.demo} />
           </div>
         </div>
       </div>
@@ -55,7 +52,7 @@ const dataRows = h.data.leavesRows.map((leaves, i) => ({ leaves, stays: h.data.s
       <div class="door">
         <p class="eyebrow">{h.doors.plant.eyebrow}</p>
         <h3>{h.doors.plant.title}</h3>
-        <DefList rows={h.doors.plant.rows} />
+        <PointList rows={h.doors.plant.rows} />
         <div class="btn-row">
           <WhatsAppButton locale={locale} label={h.doors.plant.cta} />
         </div>
@@ -63,7 +60,7 @@ const dataRows = h.data.leavesRows.map((leaves, i) => ({ leaves, stays: h.data.s
       <div class="door">
         <p class="eyebrow">{h.doors.partner.eyebrow}</p>
         <h3>{h.doors.partner.title}</h3>
-        <DefList rows={h.doors.partner.rows} />
+        <PointList rows={h.doors.partner.rows} />
         <div class="btn-row">
           <a class="btn" href={pathFor('partners', locale)}>
             <span class="btn__mark" aria-hidden="true"></span>

@@ -11,16 +11,19 @@ interface Props {
   demo: keyof typeof DEMOS;
   /** Button instead of a text link. */
   button?: boolean;
+  /** Filled (primary) button; `button` implied. */
+  primary?: boolean;
   label?: string;
 }
 
-const { locale, demo, button = false, label } = Astro.props;
+const { locale, demo, button = false, primary = false, label } = Astro.props;
 const t = dict(locale);
 const text = label ?? (demo === 'epi' ? t.demos.epi.title : t.demos.fire.title);
 ---
 
 <span class="demo-status" data-demo={demo}>
-  <a class:list={button ? ['btn', 'btn--ghost'] : []} href={DEMOS[demo]} rel="noopener" target="_blank">
+  <a class:list={primary ? ['btn'] : button ? ['btn', 'btn--ghost'] : []} href={DEMOS[demo]} rel="noopener" target="_blank">
+    {primary && <span class="btn__mark" aria-hidden="true" />}
     {text}
     <span class="visually-hidden"> ({t.a11y.external})</span>
   </a>

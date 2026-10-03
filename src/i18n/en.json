@@ -137,7 +137,7 @@
       "sub": "The verdict arrives with its evidence clip, on WhatsApp or the panel. The continuous video never leaves the plant."
     },
     "doors": {
-      "title": "Where you come in",
+      "title": "What you gain",
       "plant": {
         "eyebrow": "For your plant",
         "title": "Safety you can see, on the cameras you already have.",
@@ -268,8 +268,8 @@
     },
     "hero": {
       "question": "what is it?",
-      "title": "Five readings on the camera you already have.",
-      "text": "Recognition reads the video from the cameras your plant already has and returns a verdict for each event, with evidence."
+      "title": "Fire, PPE, ergonomics, zones and counting on the cameras you already have.",
+      "text": "One verdict per event, with its evidence clip. Pick a reading: same video, another verdict."
     },
     "epi": {
       "title": "PPE with three states",
@@ -296,7 +296,6 @@
       "legend": "Pick a pose to watch each region leave the frame."
     },
     "questions": {
-      "readings": "what does it read?",
       "epi": "how does it read PPE?",
       "alert": "what reaches the decision-maker?",
       "where": "where does it run?",
@@ -338,7 +337,7 @@
     },
     "where": {
       "title": "Inside the plant.",
-      "text": "The existing IP cameras, an NVIDIA Jetson in the rack and a dashboard. Works without internet.",
+      "text": "The existing IP cameras, an NVIDIA Jetson in the rack and a panel. Works without internet; only the alert and the clip cross the wall.",
       "cta": "See how it works"
     },
     "partners": {
@@ -357,8 +356,8 @@
     },
     "hero": {
       "question": "how does it work?",
-      "title": "Camera, device, verdict.",
-      "text": "Processing happens inside the plant. Continuous video stays there by default."
+      "title": "From the cameras you already have to an alert with evidence, without the video leaving the plant.",
+      "text": "A device in the rack reads the cameras, decides and keeps the evidence. Only the alert and the clip cross the plant wall."
     },
     "offline": {
       "title": "Offline-first",
@@ -384,7 +383,6 @@
       "text": "A 24-month term license."
     },
     "questions": {
-      "pipeline": "what is the path?",
       "offline": "and without internet?",
       "integrations": "how does it integrate?",
       "license": "how is it licensed?"
@@ -397,8 +395,8 @@
     },
     "hero": {
       "question": "for whom?",
-      "title": "Your customer, your brand, our recognition.",
-      "text": "For security, automation and industrial IT integrators."
+      "title": "Sell Recognition under your brand. Logikos runs the platform and the support.",
+      "text": "For electronic security, automation and industrial IT integrators: a panel with your logo, a guided pilot at the client’s plant, a term licence."
     },
     "model": {
       "title": "Channel model",
@@ -660,6 +658,10 @@
       "invalidServer": "This field was not accepted. Please check it.",
       "cameras": "Enter a number of cameras.",
       "mode": "Pick a mode."
+    },
+    "offline": {
+      "title": "The form is still being set up.",
+      "text": "Write to {email} or message us on WhatsApp. We answer during business hours."
     }
   },
   "footer": {
@@ -757,12 +759,12 @@
     },
     "hero": {
       "question": "what will you see?",
-      "title": "Two demos, in your browser.",
-      "text": "Point your device camera. The model runs locally and draws the verdict on the spot."
+      "title": "Try the model now, in your browser.",
+      "text": "Point your device camera. The model runs locally and draws the verdict on the spot; nothing is sent."
     },
     "questions": {
-      "epi": "PPE",
-      "fire": "fire and smoke",
+      "epi": "what does the PPE demo show?",
+      "fire": "and the fire and smoke one?",
       "note": "what is it not?"
     },
     "epi": {
@@ -781,7 +783,7 @@
       "checking": "checking",
       "up": "live",
       "down": "down right now",
-      "downHint": "watch the recorded clip"
+      "downHint": "try again shortly"
     },
     "clip": "Recorded clip",
     "browser": "The model runs in your browser. Nothing is sent.",
@@ -797,59 +799,13 @@
     },
     "hero": {
       "question": "edge or cloud?",
-      "title": "Two modes. The conversation decides which fits.",
-      "text": "In the plant, like a sensor. Or in the cloud, like a service."
+      "title": "In the plant or in the cloud. The same verdict, with evidence.",
+      "text": "Edge: a device in the rack, works without internet, term licence. Cloud: a panel in the browser, monthly fee. The conversation decides which one fits your plant."
     },
     "questions": {
-      "edge": "edge",
-      "cloud": "cloud",
-      "account": "how do I get in?"
+      "account": "how do I get in?",
+      "compare": "edge or cloud?"
     },
-    "edge": {
-      "title": "Edge",
-      "lede": "Pay once, like a sensor.",
-      "rows": [
-        {
-          "term": "In the plant",
-          "text": "A device in the rack reads the existing cameras."
-        },
-        {
-          "term": "No internet needed",
-          "text": "Works offline. Continuous video never leaves."
-        },
-        {
-          "term": "Term license",
-          "text": "A 24-month term license."
-        },
-        {
-          "term": "Local evidence",
-          "text": "Clips and marked frames stay in the plant."
-        }
-      ]
-    },
-    "cloud": {
-      "title": "Cloud",
-      "lede": "Monthly plan, like a service.",
-      "rows": [
-        {
-          "term": "Access from anywhere",
-          "text": "Dashboard in the browser, on any device."
-        },
-        {
-          "term": "Evidence in the cloud",
-          "text": "Clips and marked frames with defined retention."
-        },
-        {
-          "term": "Dashboard",
-          "text": "Events, filters and history per camera."
-        },
-        {
-          "term": "Monthly plan",
-          "text": "No public pricing. The proposal comes from the conversation."
-        }
-      ]
-    },
-    "both": "Both modes exist. The conversation decides which one fits your plant.",
     "account": {
       "title": "Create an account",
       "text": "Accounts are created by the Logikos team. Tell us how many cameras and which mode you prefer.",
@@ -860,6 +816,39 @@
       "title": "Already have an account?",
       "text": "Sign in to the Recognition dashboard.",
       "cta": "Sign in"
+    },
+    "compare": {
+      "title": "Side by side",
+      "aspect": "Aspect",
+      "edge": "Edge",
+      "cloud": "Cloud",
+      "rows": [
+        {
+          "term": "Where it runs",
+          "edge": "A device in the rack reads the existing cameras.",
+          "cloud": "In Logikos' cloud; the cameras send the video."
+        },
+        {
+          "term": "Internet",
+          "edge": "Works offline. The continuous video never leaves.",
+          "cloud": "Needs a connection. Panel from anywhere."
+        },
+        {
+          "term": "Evidence",
+          "edge": "Clips and marked frames stay in the plant.",
+          "cloud": "Clips and marked frames in the cloud, with a defined retention."
+        },
+        {
+          "term": "Panel",
+          "edge": "Local, on the plant network.",
+          "cloud": "In the browser, on any device; events, filters and history per camera."
+        },
+        {
+          "term": "Contract",
+          "edge": "24-month term licence.",
+          "cloud": "Monthly fee. No public price: the proposal comes from the conversation."
+        }
+      ]
     }
   }
 }

@@ -200,11 +200,9 @@ kbd {
   display: inline-flex;
   align-items: center;
   gap: var(--lk-space-2);
-  font-family: var(--lk-font-mono);
-  font-size: 0.78rem;
+  /* Sentence case in the body face: a label, not a stamp (AUDITORIA-V2 F-12). */
+  font-size: 0.875rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--lk-text-2);
   margin: 0 0 var(--lk-space-4);
 }

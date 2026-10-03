@@ -1,6 +1,5 @@
 ---
 import DemoStatus from '../components/DemoStatus.astro';
-import HudVideo from '../components/HudVideo.astro';
 import Section from '../components/Section.astro';
 import { DEMOS } from '../config/links';
 import { dict } from '../i18n';
@@ -18,32 +17,26 @@ const demos = ['epi', 'fire'] as const;
 ---
 
 <Base locale={locale} routeKey="demos" title={p.meta.title} description={p.meta.description}>
-  <Section as="h1" cover question={p.hero.question} title={p.hero.title} text={p.hero.text} id="demos-title" />
+  <Section as="h1" cover question={p.hero.question} title={p.hero.title} text={p.hero.text} id="demos-title">
+    <!-- The real thing first, with its live state; the mock stage is gone (AUDITORIA-V2 F-14). -->
+    <div class="btn-row hero-actions">
+      {demos.map((k) => (
+        <DemoStatus locale={locale} demo={k} button primary />
+      ))}
+    </div>
+    <p class="note">{p.browser}</p>
+  </Section>
 
   {demos.map((k) => (
-    <Section question={p.questions[k]} title={p[k].title} text={p[k].see} id={`demo-${k}`} wide>
-      <div class="split">
-        <HudVideo locale={locale} clip={k} />
-        <div class="demo-body">
-          <p class="demo-live">
-            <DemoStatus locale={locale} demo={k} label={p[k].title} />
-            <span class="demo-live__note">{p.browser}</span>
-          </p>
-          <dl class="defs">
-            <div class="defs__row">
-              <dt>{p[k].title}</dt>
-              <dd>{p[k].verdict}</dd>
-            </div>
-          </dl>
-          <p class="note">{p[k].note}</p>
-          <div class="btn-row">
-            <a class="btn" href={DEMOS[k]} rel="noopener" target="_blank">
-              <span class="btn__mark" aria-hidden="true" />
-              {t.cta.openDemo}
-              <span class="visually-hidden"> ({t.a11y.external})</span>
-            </a>
-          </div>
-        </div>
+    <Section question={p.questions[k]} title={p[k].title} text={p[k].see} id={`demo-${k}`}>
+      <p>{p[k].verdict}</p>
+      <p class="note">{p[k].note}</p>
+      <div class="btn-row">
+        <a class="btn" href={DEMOS[k]} rel="noopener" target="_blank">
+          <span class="btn__mark" aria-hidden="true" />
+          {t.cta.openDemo}
+          <span class="visually-hidden"> ({t.a11y.external})</span>
+        </a>
       </div>
     </Section>
   ))}
@@ -56,34 +49,13 @@ const demos = ['epi', 'fire'] as const;
 </Base>
 
 <style>
-  .split {
-    display: grid;
-    gap: var(--lk-space-6);
-    align-items: start;
+  .hero-actions {
     margin-top: var(--lk-space-5);
   }
 
-  .demo-body {
-    display: grid;
-    gap: var(--lk-space-5);
-    min-width: 0;
-  }
-
-  @media (min-width: 64rem) {
-    .split {
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-      gap: var(--lk-space-7);
-    }
-  }
-
-  .demo-live {
-    display: grid;
-    gap: var(--lk-space-2);
-    margin: 0 0 var(--lk-space-4);
-  }
-
-  .demo-live__note {
+  .note {
     color: var(--lk-text-2);
     font-size: 0.9375rem;
+    max-width: var(--lk-measure);
   }
 </style>
