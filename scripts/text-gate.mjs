@@ -24,6 +24,8 @@ const RULES = [
   ['Ultralytics', /\bultralytics\b/],
   ['R$', /r\$/],
   ['lorem', /\blorem\b/],
+  // Unfilled template placeholders must never ship.
+  ['{{ placeholder', /\{\{/],
   // Same pattern, found in the inventory: client and legacy brand names must never ship.
   ['Brandschutz', /\bbrandschutz\b/],
   ['TBJ', /\btbj\b/],

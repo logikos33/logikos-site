@@ -72,10 +72,40 @@
   --hud-indet: #a9b0b9;
 }
 
+/* Metric-compatible fallbacks (size-adjust + ascent/descent overrides measured from the woff2
+   files over a Latin sample): the swap to the web font does not move a single line, so the
+   fold has no layout shift while the fonts arrive. */
+@font-face {
+  font-family: 'Space Grotesk Fallback';
+  src: local('Arial');
+  size-adjust: 99.67%;
+  ascent-override: 98.72%;
+  descent-override: 29.3%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  size-adjust: 103.59%;
+  ascent-override: 93.51%;
+  descent-override: 23.28%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono Fallback';
+  src: local('Courier New');
+  size-adjust: 99.98%;
+  ascent-override: 102.02%;
+  descent-override: 30%;
+  line-gap-override: 0%;
+}
+
 :root {
-  --lk-font-display: 'Space Grotesk Variable', system-ui, sans-serif;
-  --lk-font-body: 'Inter Variable', system-ui, sans-serif;
-  --lk-font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+  --lk-font-display: 'Space Grotesk Variable', 'Space Grotesk Fallback', system-ui, sans-serif;
+  --lk-font-body: 'Inter Variable', 'Inter Fallback', system-ui, sans-serif;
+  --lk-font-mono: 'JetBrains Mono Variable', 'JetBrains Mono Fallback', ui-monospace, monospace;
 
   --lk-space-1: 0.25rem;
   --lk-space-2: 0.5rem;

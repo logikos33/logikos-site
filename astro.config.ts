@@ -29,7 +29,9 @@ export default defineConfig({
   build: {
     // `preserve` keeps the URL table from the brief: /recognition (file) and /en/ (directory index).
     format: 'preserve',
-    inlineStylesheets: 'auto',
+    // Every page inlines its CSS (~35 KB): no render-blocking stylesheet requests on a throttled
+    // mobile connection. Astro's CSP hashes each <style>, so no 'unsafe-inline' is needed.
+    inlineStylesheets: 'always',
   },
   image: {
     // No raster pipeline: posters and marks are SVG. Keeps sharp/libvips (LGPL) out of the tree.
