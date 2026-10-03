@@ -137,7 +137,7 @@
       "sub": "O veredito chega com o clipe de evidência, no WhatsApp ou no painel. O vídeo contínuo não sai da planta."
     },
     "doors": {
-      "title": "Por onde você entra",
+      "title": "O que você ganha",
       "plant": {
         "eyebrow": "Para a sua planta",
         "title": "Segurança visível, sem trocar câmera.",
@@ -195,8 +195,8 @@
       "title": "Cinco leituras na mesma câmera.",
       "text": "Escolha uma leitura. O mesmo vídeo, outro veredito.",
       "demosLine": "Rode no seu navegador:",
-      "demoEpi": "Demo EPI",
-      "demoFire": "Demo fogo"
+      "demoEpi": "Demo de EPI",
+      "demoFire": "Demo de fogo"
     },
     "data": {
       "title": "O vídeo contínuo nunca sai da planta.",
@@ -269,7 +269,7 @@
     "hero": {
       "question": "o que é?",
       "title": "Cinco leituras na câmera que já existe.",
-      "text": "O Recognition lê o vídeo das câmeras que a planta já tem e entrega um veredito por evento, com evidência."
+      "text": "Fogo e fumaça, EPI por região do corpo, ergonomia, zonas de risco e contagem: um veredito por evento, com o clipe de evidência. Escolha uma leitura."
     },
     "epi": {
       "title": "EPI com três estados",
@@ -296,7 +296,6 @@
       "legend": "Escolha a pose para ver cada região sair do quadro."
     },
     "questions": {
-      "readings": "o que ele lê?",
       "epi": "como lê EPI?",
       "alert": "o que chega a quem decide?",
       "where": "onde roda?",
@@ -338,7 +337,7 @@
     },
     "where": {
       "title": "Dentro da planta.",
-      "text": "As câmeras IP existentes, um NVIDIA Jetson no rack e um painel. Funciona sem internet.",
+      "text": "As câmeras IP existentes, um NVIDIA Jetson no rack e um painel. Funciona sem internet; só o alerta e o clipe atravessam o muro.",
       "cta": "Ver como funciona"
     },
     "partners": {
@@ -357,8 +356,8 @@
     },
     "hero": {
       "question": "como funciona?",
-      "title": "Câmera, dispositivo, veredito.",
-      "text": "O processamento acontece dentro da planta. O vídeo contínuo fica lá por padrão."
+      "title": "Da câmera que já existe ao alerta com evidência, sem o vídeo sair da planta.",
+      "text": "Um dispositivo no rack lê as câmeras, decide e guarda a evidência. Só o alerta e o clipe atravessam o muro da planta."
     },
     "offline": {
       "title": "Offline-first",
@@ -384,7 +383,6 @@
       "text": "Licença por prazo de 24 meses."
     },
     "questions": {
-      "pipeline": "qual é o caminho?",
       "offline": "e sem internet?",
       "integrations": "como integra?",
       "license": "como se contrata?"
@@ -397,8 +395,8 @@
     },
     "hero": {
       "question": "para quem?",
-      "title": "Seu cliente, sua marca, nosso reconhecimento.",
-      "text": "Para integradores de segurança eletrônica, automação e TI industrial."
+      "title": "Venda o Recognition com a sua marca.",
+      "text": "A plataforma e o suporte são da Logikos. Para integradores de segurança eletrônica, automação e TI industrial: painel com o seu logo, piloto acompanhado na planta do cliente, licença por prazo."
     },
     "model": {
       "title": "Modelo de canal",
@@ -660,6 +658,11 @@
       "invalidServer": "Este campo não foi aceito. Revise.",
       "cameras": "Informe um número de câmeras.",
       "mode": "Escolha um modo."
+    },
+    "offline": {
+      "title": "O formulário ainda está em configuração.",
+      "text": "Escreva para {email} ou chame no WhatsApp. Respondemos em horário comercial.",
+      "textNoWhatsapp": "Escreva para {email}. Respondemos em horário comercial."
     }
   },
   "footer": {
@@ -757,12 +760,12 @@
     },
     "hero": {
       "question": "o que você vai ver?",
-      "title": "Duas demos, no seu navegador.",
-      "text": "Aponte a câmera do seu aparelho. O modelo roda localmente e desenha o veredito na hora."
+      "title": "Teste o modelo agora, no seu navegador.",
+      "text": "Aponte a câmera do seu aparelho. O modelo roda localmente e desenha o veredito na hora; nada é enviado."
     },
     "questions": {
-      "epi": "EPI",
-      "fire": "fogo e fumaça",
+      "epi": "o que a demo de EPI mostra?",
+      "fire": "e a de fogo e fumaça?",
       "note": "o que não é?"
     },
     "epi": {
@@ -780,8 +783,7 @@
     "status": {
       "checking": "verificando",
       "up": "no ar",
-      "down": "fora do ar agora",
-      "downHint": "veja o clipe gravado"
+      "down": "fora do ar agora"
     },
     "clip": "Clipe gravado",
     "browser": "O modelo roda no seu navegador. Nada é enviado.",
@@ -797,59 +799,13 @@
     },
     "hero": {
       "question": "edge ou nuvem?",
-      "title": "Dois modos. A conversa define qual serve.",
-      "text": "Na planta, como um sensor. Ou na nuvem, como um serviço."
+      "title": "Na planta ou na nuvem. O mesmo veredito, com evidência.",
+      "text": "Edge: um dispositivo no rack, funciona sem internet, licença por prazo. Nuvem: painel pelo navegador, mensalidade."
     },
     "questions": {
-      "edge": "edge",
-      "cloud": "nuvem",
-      "account": "como entro?"
+      "account": "como entro?",
+      "compare": "lado a lado?"
     },
-    "edge": {
-      "title": "Edge",
-      "lede": "Paga uma vez, como um sensor.",
-      "rows": [
-        {
-          "term": "Na planta",
-          "text": "Um dispositivo no rack lê as câmeras existentes."
-        },
-        {
-          "term": "Sem internet",
-          "text": "Funciona offline. O vídeo contínuo não sai."
-        },
-        {
-          "term": "Licença por prazo",
-          "text": "Licença por prazo de 24 meses."
-        },
-        {
-          "term": "Evidência local",
-          "text": "Clipes e quadros marcados ficam na planta."
-        }
-      ]
-    },
-    "cloud": {
-      "title": "Nuvem",
-      "lede": "Mensalidade, como um serviço.",
-      "rows": [
-        {
-          "term": "Acesso de qualquer lugar",
-          "text": "Painel pelo navegador, em qualquer dispositivo."
-        },
-        {
-          "term": "Evidências na nuvem",
-          "text": "Clipes e quadros marcados com retenção definida."
-        },
-        {
-          "term": "Painel",
-          "text": "Eventos, filtros e histórico por câmera."
-        },
-        {
-          "term": "Mensalidade",
-          "text": "Sem preço público. A proposta vem da conversa."
-        }
-      ]
-    },
-    "both": "Os dois modos existem. A conversa define qual serve à sua planta.",
     "account": {
       "title": "Criar conta",
       "text": "A conta é criada pela equipe da Logikos. Conte quantas câmeras e qual modo prefere.",
@@ -860,6 +816,39 @@
       "title": "Já tem conta?",
       "text": "Entre no painel do Recognition.",
       "cta": "Entrar"
+    },
+    "compare": {
+      "title": "Lado a lado",
+      "aspect": "Aspecto",
+      "edge": "Edge",
+      "cloud": "Nuvem",
+      "rows": [
+        {
+          "term": "Onde roda",
+          "edge": "Um dispositivo no rack lê as câmeras existentes.",
+          "cloud": "Na nuvem da Logikos; as câmeras enviam o vídeo."
+        },
+        {
+          "term": "Internet",
+          "edge": "Funciona offline. O vídeo contínuo não sai.",
+          "cloud": "Precisa de conexão. Painel de qualquer lugar."
+        },
+        {
+          "term": "Evidência",
+          "edge": "Clipes e quadros marcados ficam na planta.",
+          "cloud": "Clipes e quadros marcados na nuvem, com retenção definida."
+        },
+        {
+          "term": "Painel",
+          "edge": "Local, na rede da planta.",
+          "cloud": "Pelo navegador, em qualquer dispositivo; eventos, filtros e histórico por câmera."
+        },
+        {
+          "term": "Contrato",
+          "edge": "Licença por prazo de 24 meses.",
+          "cloud": "Mensalidade. Sem preço público: a proposta vem da conversa."
+        }
+      ]
     }
   }
 }

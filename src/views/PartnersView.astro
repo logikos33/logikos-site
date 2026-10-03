@@ -1,6 +1,6 @@
 ---
-import DefList from '../components/DefList.astro';
 import LeadForm from '../components/LeadForm.astro';
+import PointList from '../components/PointList.astro';
 import Section from '../components/Section.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { dict } from '../i18n';
@@ -30,7 +30,7 @@ const points = [pp.brand, pp.license, pp.pilot, pp.support].map((x) => ({ term: 
   </Section>
 
   <Section id="model-title" question={p.questions.model} title={p.model.title} text={p.model.text}>
-    <DefList rows={points} class="after" />
+    <PointList rows={points} class="after" />
   </Section>
 
   <Section id="partner-form-title" question={p.questions.form} title={p.form.title} text={p.form.text}>

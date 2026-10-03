@@ -1,7 +1,7 @@
 ---
-import DefList from '../components/DefList.astro';
 import LeadForm from '../components/LeadForm.astro';
 import Section from '../components/Section.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { LOGIN_URL } from '../config/links';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
@@ -17,15 +17,37 @@ const p = t.platform;
 ---
 
 <Base locale={locale} routeKey="platform" title={p.meta.title} description={p.meta.description}>
-  <Section as="h1" cover question={p.hero.question} title={p.hero.title} text={p.hero.text} id="platform-title" />
-
-  <Section question={p.questions.edge} title={p.edge.title} text={p.edge.lede} id="edge-title">
-    <DefList rows={p.edge.rows} />
+  <Section as="h1" cover question={p.hero.question} title={p.hero.title} text={p.hero.text} id="platform-title">
+    <div class="btn-row hero-actions">
+      <WhatsAppButton locale={locale} label={t.cta.pilot} />
+      <a class="btn btn--ghost" href={LOGIN_URL} rel="noopener" target="_blank">
+        {p.login.cta}
+        <span class="visually-hidden"> ({t.a11y.external})</span>
+      </a>
+    </div>
   </Section>
 
-  <Section question={p.questions.cloud} title={p.cloud.title} text={p.cloud.lede} id="cloud-title">
-    <DefList rows={p.cloud.rows} />
-    <p class="lede both">{p.both}</p>
+  <Section question={p.questions.compare} title={p.compare.title} id="compare-title" wide>
+    <!-- The one place a table is the content: the two modes, aspect by aspect. -->
+    <table class="compare">
+      <caption class="visually-hidden">{p.compare.title}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{p.compare.aspect}</th>
+          <th scope="col">{p.compare.edge}</th>
+          <th scope="col">{p.compare.cloud}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {p.compare.rows.map((r) => (
+          <tr>
+            <th scope="row">{r.term}</th>
+            <td data-edge={p.compare.edge}>{r.edge}</td>
+            <td data-cloud={p.compare.cloud}>{r.cloud}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   </Section>
 
   <Section question={p.questions.account} title={p.account.title} text={p.account.text} id="account-title">
@@ -47,8 +69,77 @@ const p = t.platform;
 </Base>
 
 <style>
-  .both {
+  .hero-actions {
     margin-top: var(--lk-space-5);
+  }
+
+  .compare {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--lk-space-5);
+  }
+
+  .compare th,
+  .compare td {
+    text-align: left;
+    vertical-align: top;
+    padding: var(--lk-space-3) var(--lk-space-4) var(--lk-space-3) 0;
+    border-bottom: 1px solid var(--lk-line);
+  }
+
+  .compare thead th {
+    font-family: var(--lk-font-display);
+    font-weight: 500;
+    border-bottom: var(--lk-rule);
+  }
+
+  .compare tbody th {
+    font-weight: 500;
+    width: 9rem;
+  }
+
+  .compare td {
+    color: var(--lk-text-2);
+  }
+
+  @media (max-width: 47.99rem) {
+    /* Phone: each aspect becomes a block with the two modes stacked. */
+    .compare thead {
+      display: none;
+    }
+
+    .compare tr,
+    .compare th,
+    .compare td {
+      display: block;
+      width: auto;
+      padding-right: 0;
+    }
+
+    .compare tr {
+      border-bottom: var(--lk-rule);
+      padding-block: var(--lk-space-3);
+    }
+
+    .compare th,
+    .compare td {
+      border: 0;
+      padding-block: var(--lk-space-1);
+    }
+
+    .compare td::before {
+      display: block;
+      font-weight: 500;
+      color: var(--lk-text);
+    }
+
+    .compare td:nth-child(2)::before {
+      content: attr(data-edge);
+    }
+
+    .compare td:nth-child(3)::before {
+      content: attr(data-cloud);
+    }
   }
 
   .login {

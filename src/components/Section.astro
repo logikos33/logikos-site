@@ -29,10 +29,9 @@ const { question, title, text, id, as: Tag = 'h2', cover = false, flush = false,
       {question}
     </p>
     <div class:list={['q-body', { 'q-body--wide': wide }]}>
-      <Tag id={id}>
-        <span class="visually-hidden">{question} </span>
-        {title}
-      </Tag>
+      <!-- Readable by screen readers at every width, but never part of the heading's name. -->
+      <p class="visually-hidden q-sr">{question}</p>
+      <Tag id={id}>{title}</Tag>
       {text && <p class="lede">{text}</p>}
       <slot />
     </div>

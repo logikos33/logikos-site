@@ -3,7 +3,8 @@ import { dict, fill } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
 import Icon from './Icon.astro';
 import { EMAIL_PATTERN, LEAD_INTERESTS, LEAD_MODES, LIMITS, MAX_CAMERAS, PHONE_PATTERN, type LeadKind } from '../lib/lead';
-import { CONTACT_EMAIL, TURNSTILE_SITE_KEY } from '../lib/site';
+import { CONTACT_EMAIL, TURNSTILE_SITE_KEY, TURNSTILE_TEST_SITE_KEY, whatsappHref } from '../lib/site';
+import WhatsAppButton from './WhatsAppButton.astro';
 
 interface Props {
   locale: Locale;
@@ -18,212 +19,250 @@ const defaults = kind === 'partner' ? ['partnership'] : [];
 const submitLabel = kind === 'partner' ? f.submitPartner : kind === 'account' ? f.submitAccount : f.submit;
 const successMsg = kind === 'account' ? f.successAccount : f.success;
 const field = (name: string) => `${id}-${name}`;
+// Built with Cloudflare's always-pass test key: fine on previews and localhost, but on a
+// public host the API answers 503 — so the page says so up front instead of letting people
+// fill eight fields first (AUDITORIA-V2 F-06). The script decides by hostname at runtime
+// because preview and production share one build.
+const testKey = TURNSTILE_SITE_KEY === TURNSTILE_TEST_SITE_KEY;
+const wa = whatsappHref(t.cta.whatsappMessage);
 ---
 
-<form
-  class="lead-form"
-  id={id}
-  data-lead-form
-  data-kind={kind}
-  data-lang={locale}
-  data-err-required={f.errors.required}
-  data-err-email={f.errors.email}
-  data-err-consent={f.errors.consent}
-  data-err-whatsapp={f.errors.whatsapp}
-  data-err-cameras={f.errors.cameras}
-  data-err-mode={f.errors.mode}
-  data-err-server={f.errors.invalidServer}
-  novalidate
->
-  <div class="lead-form__grid">
-    <div class="field">
-      <label for={field('name')}>
-        {f.name}{' '}
-        <span class="field__req" aria-hidden="true">
-          *
-        </span>
-      </label>
-      <input id={field('name')} name="name" type="text" autocomplete="name" required maxlength={LIMITS.name} />
-      <p class="field__error" id={field('name-error')} hidden>
-        <Icon name="alert" size={16} />
-        <span data-error-text></span>
-      </p>
-    </div>
-    <div class="field">
-      <label for={field('company')}>
-        {f.company}{' '}
-        <span class="field__req" aria-hidden="true">
-          *
-        </span>
-      </label>
-      <input id={field('company')} name="company" type="text" autocomplete="organization" required maxlength={LIMITS.company} />
-      <p class="field__error" id={field('company-error')} hidden>
-        <Icon name="alert" size={16} />
-        <span data-error-text></span>
-      </p>
-    </div>
-    <div class="field">
-      <label for={field('role')}>{f.role}</label>
-      <input id={field('role')} name="role" type="text" autocomplete="organization-title" maxlength={LIMITS.role} />
-    </div>
-    <div class="field">
-      <label for={field('email')}>
-        {f.email}{' '}
-        <span class="field__req" aria-hidden="true">
-          *
-        </span>
-      </label>
-      <input id={field('email')} name="email" type="email" autocomplete="email" required maxlength={LIMITS.email} pattern={EMAIL_PATTERN} />
-      <p class="field__error" id={field('email-error')} hidden>
-        <Icon name="alert" size={16} />
-        <span data-error-text></span>
-      </p>
-    </div>
-    <div class="field">
-      <label for={field('whatsapp')}>{f.whatsapp}</label>
-      <input
-        id={field('whatsapp')}
-        name="whatsapp"
-        type="tel"
-        autocomplete="tel"
-        inputmode="tel"
-        maxlength={LIMITS.whatsapp}
-        pattern={PHONE_PATTERN}
-        aria-describedby={field('whatsapp-hint')}
+<!-- The anchor (#conta, #parceria) is this wrapper, which never hides — so the CTAs still scroll
+     to it when the form is swapped for the notice (re-auditoria A1·T1). -->
+<div class="lead-wrap" id={id}>
+  {testKey && (
+    <div class="lead-form__offline" data-lead-offline={`${id}-form`} hidden>
+      <p class="lead-form__offline-title">{f.offline.title}</p>
+      <p
+        set:html={fill(wa ? f.offline.text : f.offline.textNoWhatsapp, { email: `<a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>` })}
       />
-      <p class="field__hint" id={field('whatsapp-hint')}>
-        {f.whatsappHint}
-      </p>
-      <p class="field__error" id={field('whatsapp-error')} hidden>
-        <Icon name="alert" size={16} />
-        <span data-error-text></span>
-      </p>
+      {wa && (
+        <div class="btn-row">
+          <WhatsAppButton locale={locale} />
+        </div>
+      )}
     </div>
-  </div>
+  )}
 
-  {kind === 'account' && (
+  <form
+    class="lead-form"
+    id={`${id}-form`}
+    data-lead-form
+    data-kind={kind}
+    data-lang={locale}
+    data-err-required={f.errors.required}
+    data-err-email={f.errors.email}
+    data-err-consent={f.errors.consent}
+    data-err-whatsapp={f.errors.whatsapp}
+    data-err-cameras={f.errors.cameras}
+    data-err-mode={f.errors.mode}
+    data-err-server={f.errors.invalidServer}
+    novalidate
+  >
     <div class="lead-form__grid">
       <div class="field">
-        <label for={field('cameras')}>
-          {f.cameras}{' '}
+        <label for={field('name')}>
+          {f.name}{' '}
+          <span class="field__req" aria-hidden="true">
+            *
+          </span>
+        </label>
+        <input id={field('name')} name="name" type="text" autocomplete="name" required maxlength={LIMITS.name} />
+        <p class="field__error" id={field('name-error')} hidden>
+          <Icon name="alert" size={16} />
+          <span data-error-text></span>
+        </p>
+      </div>
+      <div class="field">
+        <label for={field('company')}>
+          {f.company}{' '}
+          <span class="field__req" aria-hidden="true">
+            *
+          </span>
+        </label>
+        <input id={field('company')} name="company" type="text" autocomplete="organization" required maxlength={LIMITS.company} />
+        <p class="field__error" id={field('company-error')} hidden>
+          <Icon name="alert" size={16} />
+          <span data-error-text></span>
+        </p>
+      </div>
+      <div class="field">
+        <label for={field('role')}>{f.role}</label>
+        <input id={field('role')} name="role" type="text" autocomplete="organization-title" maxlength={LIMITS.role} />
+      </div>
+      <div class="field">
+        <label for={field('email')}>
+          {f.email}{' '}
           <span class="field__req" aria-hidden="true">
             *
           </span>
         </label>
         <input
-          id={field('cameras')}
-          name="cameras"
-          type="number"
-          inputmode="numeric"
+          id={field('email')}
+          name="email"
+          type="email"
+          autocomplete="email"
           required
-          min="1"
-          max={MAX_CAMERAS}
-          step="1"
-          aria-describedby={field('cameras-hint')}
+          maxlength={LIMITS.email}
+          pattern={EMAIL_PATTERN}
         />
-        <p class="field__hint" id={field('cameras-hint')}>
-          {f.camerasHint}
-        </p>
-        <p class="field__error" id={field('cameras-error')} hidden>
+        <p class="field__error" id={field('email-error')} hidden>
           <Icon name="alert" size={16} />
           <span data-error-text></span>
         </p>
       </div>
-      <fieldset class="field field--group">
-        <legend>
-          {f.mode}{' '}
+      <div class="field">
+        <label for={field('whatsapp')}>{f.whatsapp}</label>
+        <input
+          id={field('whatsapp')}
+          name="whatsapp"
+          type="tel"
+          autocomplete="tel"
+          inputmode="tel"
+          maxlength={LIMITS.whatsapp}
+          pattern={PHONE_PATTERN}
+          aria-describedby={field('whatsapp-hint')}
+        />
+        <p class="field__hint" id={field('whatsapp-hint')}>
+          {f.whatsappHint}
+        </p>
+        <p class="field__error" id={field('whatsapp-error')} hidden>
+          <Icon name="alert" size={16} />
+          <span data-error-text></span>
+        </p>
+      </div>
+    </div>
+
+    {kind === 'account' && (
+      <div class="lead-form__grid">
+        <div class="field">
+          <label for={field('cameras')}>
+            {f.cameras}{' '}
+            <span class="field__req" aria-hidden="true">
+              *
+            </span>
+          </label>
+          <input
+            id={field('cameras')}
+            name="cameras"
+            type="number"
+            inputmode="numeric"
+            required
+            min="1"
+            max={MAX_CAMERAS}
+            step="1"
+            aria-describedby={field('cameras-hint')}
+          />
+          <p class="field__hint" id={field('cameras-hint')}>
+            {f.camerasHint}
+          </p>
+          <p class="field__error" id={field('cameras-error')} hidden>
+            <Icon name="alert" size={16} />
+            <span data-error-text></span>
+          </p>
+        </div>
+        <fieldset class="field field--group">
+          <legend>
+            {f.mode}{' '}
+            <span class="field__req" aria-hidden="true">
+              *
+            </span>
+          </legend>
+          <div class="checks">
+            {LEAD_MODES.map((m, i) => (
+              <label class="check">
+                <input type="radio" name="mode" value={m} required={i === 0} />
+                <span>{m === 'edge' ? f.modeEdge : f.modeCloud}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      </div>
+    )}
+
+    <fieldset class="field field--group">
+      <legend>{f.interests}</legend>
+      <p class="field__hint" id={field('interests-hint')}>
+        {f.interestsHint}
+      </p>
+      <div class="checks">
+        {LEAD_INTERESTS.map((key) => (
+          <label class="check">
+            <input
+              type="checkbox"
+              name="interests"
+              value={key}
+              checked={defaults.includes(key)}
+              aria-describedby={field('interests-hint')}
+            />
+            <span>{f.options[key]}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+
+    <div class="field">
+      <label for={field('message')}>{f.message}</label>
+      <textarea id={field('message')} name="message" rows="5" maxlength={LIMITS.message}></textarea>
+    </div>
+
+    <div class="field field--honeypot" aria-hidden="true">
+      <label for={field('website')}>{f.honeypot}</label>
+      <input id={field('website')} name="website" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="field field--consent">
+      <label class="check check--consent">
+        <input id={field('consent')} type="checkbox" name="consent" required />
+        <span>
+          {f.consentBefore} <a href={pathFor('privacy', locale)}>{f.consentLink}</a> {f.consentAfter}{' '}
           <span class="field__req" aria-hidden="true">
             *
           </span>
-        </legend>
-        <div class="checks">
-          {LEAD_MODES.map((m, i) => (
-            <label class="check">
-              <input type="radio" name="mode" value={m} required={i === 0} />
-              <span>{m === 'edge' ? f.modeEdge : f.modeCloud}</span>
-            </label>
-          ))}
-        </div>
-      </fieldset>
-    </div>
-  )}
-
-  <fieldset class="field field--group">
-    <legend>{f.interests}</legend>
-    <p class="field__hint" id={field('interests-hint')}>
-      {f.interestsHint}
-    </p>
-    <div class="checks">
-      {LEAD_INTERESTS.map((key) => (
-        <label class="check">
-          <input type="checkbox" name="interests" value={key} checked={defaults.includes(key)} aria-describedby={field('interests-hint')} />
-          <span>{f.options[key]}</span>
-        </label>
-      ))}
-    </div>
-  </fieldset>
-
-  <div class="field">
-    <label for={field('message')}>{f.message}</label>
-    <textarea id={field('message')} name="message" rows="5" maxlength={LIMITS.message}></textarea>
-  </div>
-
-  <div class="field field--honeypot" aria-hidden="true">
-    <label for={field('website')}>{f.honeypot}</label>
-    <input id={field('website')} name="website" type="text" tabindex="-1" autocomplete="off" />
-  </div>
-
-  <div class="field field--consent">
-    <label class="check check--consent">
-      <input id={field('consent')} type="checkbox" name="consent" required />
-      <span>
-        {f.consentBefore} <a href={pathFor('privacy', locale)}>{f.consentLink}</a> {f.consentAfter}{' '}
-        <span class="field__req" aria-hidden="true">
-          *
         </span>
-      </span>
-    </label>
-    <p class="field__error" id={field('consent-error')} hidden>
-      <Icon name="alert" size={16} />
-      <span data-error-text></span>
-    </p>
-  </div>
+      </label>
+      <p class="field__error" id={field('consent-error')} hidden>
+        <Icon name="alert" size={16} />
+        <span data-error-text></span>
+      </p>
+    </div>
 
-  <div class="turnstile" data-turnstile data-sitekey={TURNSTILE_SITE_KEY}></div>
+    <div class="turnstile" data-turnstile data-sitekey={TURNSTILE_SITE_KEY}></div>
 
-  <div class="lead-form__actions">
-    <button type="submit" class="btn" data-label-idle={submitLabel} data-label-busy={f.sending}>
-      <span class="btn__mark" aria-hidden="true"></span>
-      <span data-submit-label>{submitLabel}</span>
-    </button>
-    <p
-      class="lead-form__status"
-      role="status"
-      aria-live="polite"
-      data-status
-      data-msg-success={successMsg}
-      data-msg-error={fill(f.error, { email: CONTACT_EMAIL })}
-      data-msg-verification={f.errorVerification}
-      data-msg-invalid={f.invalid}
-    >
-      <span class="state" data-status-state hidden>
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
-          stroke-linecap="square"
-          aria-hidden="true"
-          focusable="false"
-          data-status-icon
-        ></svg>
-        <span data-status-text></span>
-      </span>
-    </p>
-  </div>
-</form>
+    <div class="lead-form__actions">
+      <button type="submit" class="btn" data-label-idle={submitLabel} data-label-busy={f.sending}>
+        <span class="btn__mark" aria-hidden="true"></span>
+        <span data-submit-label>{submitLabel}</span>
+      </button>
+      <p
+        class="lead-form__status"
+        role="status"
+        aria-live="polite"
+        data-status
+        data-msg-success={successMsg}
+        data-msg-error={fill(f.error, { email: CONTACT_EMAIL })}
+        data-msg-verification={f.errorVerification}
+        data-msg-invalid={f.invalid}
+      >
+        <span class="state" data-status-state hidden>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="square"
+            aria-hidden="true"
+            focusable="false"
+            data-status-icon
+          ></svg>
+          <span data-status-text></span>
+        </span>
+      </p>
+    </div>
+  </form>
+</div>
 
 <script>
   import { ICON_PATHS } from '../lib/icons';
@@ -254,6 +293,17 @@ const field = (name: string) => `${id}-${name}`;
       document.head.append(s);
     });
     return loading;
+  }
+
+  // A test site key on a public host (not localhost, not a pr-N preview) cannot verify anyone:
+  // show the notice and hide the form rather than a captcha that leads to a 503.
+  const host = window.location.hostname;
+  const previewHost = host === 'localhost' || host === '127.0.0.1' || host.endsWith('.localhost') || /^pr-\d+\./.test(host);
+  for (const notice of document.querySelectorAll<HTMLElement>('[data-lead-offline]')) {
+    const form = document.getElementById(notice.dataset.leadOffline ?? '');
+    if (!form || previewHost) continue;
+    notice.hidden = false;
+    form.hidden = true;
   }
 
   for (const form of document.querySelectorAll<HTMLFormElement>('[data-lead-form]')) {
@@ -481,6 +531,7 @@ const field = (name: string) => `${id}-${name}`;
   .field input[type='text'],
   .field input[type='email'],
   .field input[type='tel'],
+  .field input[type='number'],
   .field textarea {
     width: 100%;
     min-height: 2.875rem;
@@ -542,21 +593,45 @@ const field = (name: string) => `${id}-${name}`;
     margin-top: var(--lk-space-2);
   }
 
+  /* The whole row is the target (≥ 44 px tall) and the box itself is 24 px (WCAG 2.5.8). */
   .check {
     display: flex;
     align-items: flex-start;
-    gap: var(--lk-space-2);
-    min-height: 2.25rem;
+    gap: var(--lk-space-3);
+    min-height: 2.75rem;
+    padding-block: var(--lk-space-1);
     font-size: 0.9375rem;
     cursor: pointer;
   }
 
   .check input {
-    width: 1.125rem;
-    height: 1.125rem;
-    margin: 0.2rem 0 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: 0;
     accent-color: var(--lk-accent-2);
     flex: none;
+  }
+
+  .lead-form__offline {
+    max-width: var(--lk-measure);
+    padding: var(--lk-space-4) var(--lk-space-5);
+    border: 1px solid var(--lk-line-strong);
+    border-radius: var(--lk-radius);
+    background: var(--lk-surface);
+  }
+
+  .lead-form__offline-title {
+    margin: 0 0 var(--lk-space-2);
+    font-family: var(--lk-font-display);
+    font-weight: 500;
+  }
+
+  .lead-form__offline p {
+    margin: 0;
+  }
+
+  .lead-form__offline .btn-row {
+    margin-top: var(--lk-space-4);
   }
 
   .check--consent {

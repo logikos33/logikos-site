@@ -1,0 +1,278 @@
+{
+  "home-390": {
+    "dom": 657,
+    "img": 0,
+    "video": 0,
+    "h1": "Fogo, EPI e ergonomia na câmera que a planta já tem.",
+    "huds": [
+      {
+        "slot": "hero",
+        "state": "idle",
+        "topPx": 113,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "fire",
+        "state": null,
+        "topPx": 3101,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": [],
+    "firstHudTop": 113,
+    "kb": {
+      "total": 220,
+      "font": 108,
+      "css": 0,
+      "js": 10,
+      "html": 96,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "recognition-390": {
+    "dom": 714,
+    "img": 0,
+    "video": 0,
+    "h1": "Fogo, EPI, ergonomia, zonas e contagem na câmera que já existe.",
+    "huds": [
+      {
+        "slot": "fire",
+        "state": "idle",
+        "topPx": 506,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "epi",
+        "state": null,
+        "topPx": 2675,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": [],
+    "firstHudTop": 506,
+    "kb": {
+      "total": 217,
+      "font": 108,
+      "css": 0,
+      "js": 9,
+      "html": 98,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "como-funciona-390": {
+    "dom": 212,
+    "img": 0,
+    "video": 0,
+    "h1": "Da câmera que já existe ao alerta com evidência, sem o vídeo sair da planta.",
+    "huds": [],
+    "uppercaseTracked": [],
+    "firstHudTop": null,
+    "kb": {
+      "total": 154,
+      "font": 108,
+      "css": 0,
+      "js": 1,
+      "html": 45,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "demos-390": {
+    "dom": 207,
+    "img": 0,
+    "video": 0,
+    "h1": "Teste o modelo agora, no seu navegador.",
+    "huds": [],
+    "uppercaseTracked": [],
+    "firstHudTop": null,
+    "kb": {
+      "total": 151,
+      "font": 108,
+      "css": 0,
+      "js": 1,
+      "html": 41,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "plataforma-390": {
+    "dom": 338,
+    "img": 0,
+    "video": 0,
+    "h1": "Na planta ou na nuvem. O mesmo veredito, com evidência.",
+    "huds": [],
+    "uppercaseTracked": [],
+    "firstHudTop": null,
+    "kb": {
+      "total": 172,
+      "font": 108,
+      "css": 0,
+      "js": 7,
+      "html": 57,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "integradores-390": {
+    "dom": 293,
+    "img": 0,
+    "video": 0,
+    "h1": "Venda o Recognition com a sua marca. A plataforma e o suporte são da Logikos.",
+    "huds": [],
+    "uppercaseTracked": [],
+    "firstHudTop": null,
+    "kb": {
+      "total": 168,
+      "font": 108,
+      "css": 0,
+      "js": 7,
+      "html": 53,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "home-1440": {
+    "dom": 657,
+    "img": 0,
+    "video": 0,
+    "h1": "Fogo, EPI e ergonomia na câmera que a planta já tem.",
+    "huds": [
+      {
+        "slot": "hero",
+        "state": "idle",
+        "topPx": 161,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "fire",
+        "state": null,
+        "topPx": 2394,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": [],
+    "firstHudTop": 161,
+    "kb": {
+      "total": 220,
+      "font": 108,
+      "css": 0,
+      "js": 10,
+      "html": 96,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "recognition-1440": {
+    "dom": 714,
+    "img": 0,
+    "video": 0,
+    "h1": "Fogo, EPI, ergonomia, zonas e contagem na câmera que já existe.",
+    "huds": [
+      {
+        "slot": "fire",
+        "state": "idle",
+        "topPx": 488,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "epi",
+        "state": null,
+        "topPx": 2268,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": [],
+    "firstHudTop": 488,
+    "kb": {
+      "total": 217,
+      "font": 108,
+      "css": 0,
+      "js": 9,
+      "html": 98,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "como-funciona-1440": {
+    "dom": 212,
+    "img": 0,
+    "video": 0,
+    "h1": "Da câmera que já existe ao alerta com evidência, sem o vídeo sair da planta.",
+    "huds": [],
+    "uppercaseTracked": [],
+    "firstHudTop": null,
+    "kb": {
+      "total": 154,
+      "font": 108,
+      "css": 0,
+      "js": 1,
+      "html": 45,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "demos-1440": {
+    "dom": 207,
+    "img": 0,
+    "video": 0,
+    "h1": "Teste o modelo agora, no seu navegador.",
+    "huds": [],
+    "uppercaseTracked": [],
+    "firstHudTop": null,
+    "kb": {
+      "total": 151,
+      "font": 108,
+      "css": 0,
+      "js": 1,
+      "html": 41,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "plataforma-1440": {
+    "dom": 338,
+    "img": 0,
+    "video": 0,
+    "h1": "Na planta ou na nuvem. O mesmo veredito, com evidência.",
+    "huds": [],
+    "uppercaseTracked": [],
+    "firstHudTop": null,
+    "kb": {
+      "total": 172,
+      "font": 108,
+      "css": 0,
+      "js": 7,
+      "html": 57,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "integradores-1440": {
+    "dom": 293,
+    "img": 0,
+    "video": 0,
+    "h1": "Venda o Recognition com a sua marca. A plataforma e o suporte são da Logikos.",
+    "huds": [],
+    "uppercaseTracked": [],
+    "firstHudTop": null,
+    "kb": {
+      "total": 168,
+      "font": 108,
+      "css": 0,
+      "js": 7,
+      "html": 53,
+      "img": 0,
+      "media": 0
+    }
+  }
+}

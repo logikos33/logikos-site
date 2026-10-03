@@ -1,6 +1,6 @@
 ---
-import DefList from '../components/DefList.astro';
 import Pipeline from '../components/Pipeline.astro';
+import PointList from '../components/PointList.astro';
 import Section from '../components/Section.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { dict } from '../i18n';
@@ -19,16 +19,15 @@ const integrations = [i.alarm, i.mqtt, i.webhook].map((x) => ({ term: x.title, t
 ---
 
 <Base locale={locale} routeKey="howItWorks" title={p.meta.title} description={p.meta.description}>
-  <Section as="h1" cover id="hero-title" question={p.hero.question} title={p.hero.title} text={p.hero.text} />
-
-  <Section id="pipeline-title" question={p.questions.pipeline} title={t.home.pipeline.title} wide>
+  <Section as="h1" cover id="hero-title" question={p.hero.question} title={p.hero.title} text={p.hero.text} wide>
+    <!-- The figure this page exists for, in its hero (AUDITORIA-V2 F-10). -->
     <Pipeline locale={locale} long class="after" />
   </Section>
 
   <Section id="offline-title" question={p.questions.offline} title={p.offline.title} text={p.offline.text} />
 
   <Section id="integrations-title" question={p.questions.integrations} title={p.integrations.title}>
-    <DefList rows={integrations} class="after" />
+    <PointList rows={integrations} class="after" />
   </Section>
 
   <Section id="license-title" question={p.questions.license} title={p.license.title} text={p.license.text}>

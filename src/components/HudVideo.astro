@@ -576,12 +576,19 @@ const listId = `${id}-readings`;
   /* Reading list: Inter, never mono (navigation is not data); the active item gets the 2px bar. */
   .readings {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: var(--lk-space-1) var(--lk-space-3);
     margin: 0;
-    padding: 0;
+    padding: 0 0 var(--lk-space-1);
     border: 0;
     min-width: 0;
+    /* One row that scrolls sideways on phones; a column from 64rem (below). */
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .readings__item {
+    flex: none;
   }
 
   .readings__item {

@@ -25,7 +25,7 @@
       "values": ["18"],
       "source": "LGPD (Lei 13.709/2018), art. 18 — direitos do titular."
     },
-    "platform.edge.rows[2].text": {
+    "platform.compare.rows[4].edge": {
       "values": ["24"],
       "source": "Prazo da licença (24 meses) — brief do site, 01/10/2026."
     }

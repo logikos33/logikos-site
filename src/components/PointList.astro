@@ -1,0 +1,65 @@
+---
+// Benefit rows: a short term in the display face and the proof beside it. For lists that
+// are not comparisons (doors, programme points, integrations); DefList stays for term →
+// definition content (the anatomy of an alert, a reading's three answers).
+interface Row {
+  term: string;
+  text: string;
+}
+
+interface Props {
+  rows: Row[];
+  class?: string;
+}
+
+const { rows, class: className } = Astro.props;
+---
+
+<ul class:list={['points', className]} role="list">
+  {rows.map((r) => (
+    <li class="points__row">
+      <strong class="points__term">{r.term}</strong>
+      {r.text}
+    </li>
+  ))}
+</ul>
+
+<style>
+  .points {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--lk-space-3);
+    max-width: var(--lk-measure);
+    color: var(--lk-text-2);
+  }
+
+  .points__row {
+    position: relative;
+    padding-left: calc(0.5rem + var(--lk-space-3));
+  }
+
+  /* The neutral square of the brand grid, never cyan (cyan is interactive only). */
+  .points__row::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.45em;
+    width: 0.5rem;
+    height: 0.5rem;
+    background: var(--lk-line-strong);
+  }
+
+  .points__term {
+    color: var(--lk-text);
+    font-family: var(--lk-font-display);
+    font-weight: 500;
+  }
+
+  .points__term::after {
+    content: ' — ';
+    color: var(--lk-text-2);
+    font-weight: 400;
+  }
+</style>

@@ -26,7 +26,7 @@ test('the margin question is visible on desktop and hidden (but readable) on nar
   const n = await narrow.newPage();
   await n.goto('/');
   await expect(n.locator('main > section .q').first()).toBeHidden();
-  await expect(n.locator('main > section h2 .visually-hidden').first()).toHaveText(/\?/);
+  await expect(n.locator('main > section .q-sr').first()).toHaveText(/\?/);
   await narrow.close();
 });
 

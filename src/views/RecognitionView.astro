@@ -6,9 +6,9 @@ import AlertCard from '../components/AlertCard.astro';
 import Avatar from '../components/Avatar.astro';
 import DefList from '../components/DefList.astro';
 import DemoStatus from '../components/DemoStatus.astro';
+import PointList from '../components/PointList.astro';
 import HudVideo from '../components/HudVideo.astro';
 import Icon from '../components/Icon.astro';
-import Pipeline from '../components/Pipeline.astro';
 import Section from '../components/Section.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { dict } from '../i18n';
@@ -30,17 +30,9 @@ const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoin
 ---
 
 <Base locale={locale} routeKey="recognition" title={p.meta.title} description={p.meta.description}>
-  <Section cover as="h1" question={p.hero.question} title={p.hero.title} text={p.hero.text} id="page-title">
-    <div class="btn-row">
-      <WhatsAppButton locale={locale} label={t.cta.pilot} />
-      <a class="btn btn--ghost" href={pathFor('demos', locale)}>
-        {t.cta.demo}
-      </a>
-    </div>
-  </Section>
-
-  <Section question={q.readings} title={p.readings.title} id="readings-title" wide>
-    <HudVideo locale={locale} clip="fire" readings id="rec-stage" />
+  <Section cover as="h1" question={p.hero.question} title={p.hero.title} text={p.hero.text} id="page-title" wide>
+    <!-- The page's proof is its hero: the stage with the five readings (AUDITORIA-V2 F-10, F-15). -->
+    <HudVideo locale={locale} clip="fire" readings id="rec-stage" class="hero-stage" />
     <div class="reading-texts">
       {READINGS.map((k) => (
         <div data-reading-text data-slot={k} hidden={k !== 'fire'}>
@@ -60,6 +52,10 @@ const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoin
           </dl>
         </div>
       ))}
+    </div>
+    <div class="btn-row hero-actions">
+      <WhatsAppButton locale={locale} label={t.cta.pilot} />
+      <DemoStatus locale={locale} demo="epi" button label={t.cta.demo} />
     </div>
   </Section>
 
@@ -88,15 +84,14 @@ const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoin
     </div>
   </Section>
 
-  <Section question={q.where} title={p.where.title} text={p.where.text} id="where-title" wide>
-    <Pipeline locale={locale} />
+  <Section question={q.where} title={p.where.title} text={p.where.text} id="where-title">
     <p>
       <a href={pathFor('howItWorks', locale)}>{p.where.cta}</a>
     </p>
   </Section>
 
   <Section question={q.partners} title={p.partners.title} id="partners-title">
-    <DefList rows={partnerRows} />
+    <PointList rows={partnerRows} />
     <p>
       <a href={pathFor('partners', locale)}>{p.partners.cta}</a>
     </p>
@@ -132,6 +127,14 @@ const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoin
 </script>
 
 <style>
+  .hero-stage {
+    margin-top: var(--lk-space-5);
+  }
+
+  .hero-actions {
+    margin-top: var(--lk-space-5);
+  }
+
   .reading-texts {
     margin-top: var(--lk-space-5);
   }

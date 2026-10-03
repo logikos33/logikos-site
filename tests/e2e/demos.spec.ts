@@ -29,11 +29,10 @@ test('M7: the demo chips flip once, in place, to the server state; the link neve
   await expect(epi).toHaveText(/no ar|live/);
   await expect(fire).toHaveAttribute('data-state', 'down');
   await expect(fire).toHaveText(/fora do ar agora|down right now/);
-  await expect(fire).toHaveText(/clipe|clip/);
-  // Down keeps its link and its recorded-clip figure.
+  // Down keeps its link; no mock stage stands in for the real demo any more (AUDITORIA-V2 F-14).
   const fireBlock = page.locator('[data-demo="fire"]').first();
   await expect(fireBlock.locator('a')).toHaveAttribute('href', /fire-demo-production/);
-  await expect(page.locator('[data-hud][data-slot="fire"]')).toBeVisible();
+  await expect(page.locator('[data-hud]')).toHaveCount(0);
   // Nothing keeps moving once the state landed.
   await page.waitForTimeout(600);
   expect(await page.evaluate(() => document.getAnimations().filter((a) => a.playState === 'running').length)).toBe(0);
