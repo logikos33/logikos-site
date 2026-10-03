@@ -1,17 +1,18 @@
 // Generates public/favicon.svg, favicon.ico (32 px PNG inside ICO) and apple-touch-icon.png
-// from the solid Λ monogram (official geometry: Recognition docs/design/handoff-f5/lk-loader.js).
+// from the official symbol — the O-keyhole (src/lib/brand.ts, copied from Marca/oficial/).
+// The README of the brand lists the symbol for favicons; its 20 px minimum holds at 32 px.
 // Run: node scripts/gen-icons.mjs
 import { writeFileSync } from 'node:fs';
 import { Resvg } from '@resvg/resvg-js';
+import { SYMBOL_INNER, SYMBOL_VIEWBOX } from '../src/lib/brand.ts';
 
-const mark = (fill) =>
-  `<mask id="m"><rect x="-20" y="-20" width="140" height="140" fill="#fff"/><polyline points="27,79 50,27 73,79" fill="none" stroke="#000" stroke-width="10" stroke-linejoin="miter" stroke-miterlimit="8"/></mask><circle cx="50" cy="50" r="46" fill="${fill}" mask="url(#m)"/>`;
+const mark = (fill) => `<g class="m" fill="${fill}">${SYMBOL_INNER}</g>`;
 
-const favicon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><style>circle{fill:#0A0A0F}@media (prefers-color-scheme:dark){circle{fill:#F4F6F8}}</style>${mark('#0A0A0F')}</svg>\n`;
+const favicon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${SYMBOL_VIEWBOX}"><style>.m{fill:#0A0A0F}@media (prefers-color-scheme:dark){.m{fill:#F4F6F8}}</style>${mark('#0A0A0F')}</svg>\n`;
 writeFileSync('public/favicon.svg', favicon);
 
 const png = (size, bg) => {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="${size}" height="${size}">${bg ? `<rect width="100" height="100" fill="${bg}"/>` : ''}<g transform="translate(${bg ? 14 : 0} ${bg ? 14 : 0}) scale(${bg ? 0.72 : 1})">${mark('#0A0A0F')}</g></svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${SYMBOL_VIEWBOX}" width="${size}" height="${size}">${bg ? `<rect width="100" height="100" fill="${bg}"/>` : ''}<g transform="translate(${bg ? 14 : 0} ${bg ? 14 : 0}) scale(${bg ? 0.72 : 1})">${mark('#0A0A0F')}</g></svg>`;
   return new Resvg(svg, { fitTo: { mode: 'width', value: size } }).render().asPng();
 };
 

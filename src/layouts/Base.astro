@@ -93,7 +93,7 @@ const organization = {
     <a class="skip-link" href="#main">
       {t.a11y.skip}
     </a>
-    <Header locale={locale} {...(routeKey ? { routeKey } : {})} />
+    <Header locale={locale} {...(routeKey ? { routeKey } : {})} glitch={routeKey === 'home'} />
     <main id="main" tabindex="-1">
       <slot />
     </main>

@@ -29,7 +29,6 @@ export const GET: APIRoute = async ({ params }) => {
   const locale = params.lang as Locale;
   const t = dict(locale);
   const png = await renderOg({
-    wordmark: t.brand.wordmark,
     label: t.brand.label,
     tagline: t.brand.tagline,
     sub: titleFor(locale, params.route as RouteKey),

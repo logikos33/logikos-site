@@ -1,9 +1,12 @@
-// Build-time Open Graph card: plain light background, wordmark inside the detection box with
-// the mono label, tagline below. No glitch. Rendered with satori -> resvg (dev-only deps).
+// Build-time Open Graph card: plain light background, the official wordmark (src/lib/brand.ts)
+// inside the detection box with the mono label, the slogan below. No glitch. Rendered with
+// satori -> resvg (dev-only deps); the lockup goes in as an SVG data URI so no font can
+// approximate it.
 import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { Resvg } from '@resvg/resvg-js';
 import satori from 'satori';
+import { WORDMARK_INNER, WORDMARK_RATIO, WORDMARK_VIEWBOX } from './brand';
 
 const require = createRequire(import.meta.url);
 
@@ -18,12 +21,21 @@ const h = (type: string, style: Record<string, unknown>, children?: unknown): No
 });
 
 const ACCENT = '#0091AD';
+const INK = '#0A0A0F';
+
+/** Lockup width on the card; its cap height (100 units of 115.22) is the protection area. */
+const MARK_W = 720;
+const MARK_H = Math.round(MARK_W / WORDMARK_RATIO);
+const PROTECT = Math.round((MARK_H * 100) / 115.22);
+const markUri = `data:image/svg+xml;base64,${Buffer.from(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${WORDMARK_VIEWBOX}" width="${MARK_W}" height="${MARK_H}" fill="${INK}">${WORDMARK_INNER}</svg>`,
+).toString('base64')}`;
 
 function corner(pos: Record<string, number>, borders: Record<string, string>): Node {
   return h('div', { position: 'absolute', width: 34, height: 34, ...pos, ...borders });
 }
 
-export async function renderOg(opts: { wordmark: string; label: string; tagline: string; sub: string }): Promise<Buffer> {
+export async function renderOg(opts: { label: string; tagline: string; sub: string }): Promise<Buffer> {
   const [display, mono] = await Promise.all([
     font('@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff'),
     font('@fontsource/jetbrains-mono/files/jetbrains-mono-latin-500-normal.woff'),
@@ -39,7 +51,7 @@ export async function renderOg(opts: { wordmark: string; label: string; tagline:
       justifyContent: 'center',
       padding: '0 96px',
       backgroundColor: '#F4F6F8',
-      color: '#0A0A0F',
+      color: INK,
     },
     [
       h('div', { display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }, [
@@ -57,21 +69,16 @@ export async function renderOg(opts: { wordmark: string; label: string; tagline:
           },
           [h('div', { width: 14, height: 14, backgroundColor: '#00E5FF', marginRight: 14 }), opts.label],
         ),
-        // Protection area ≥ 1x the O height (~0.72em) on every side; the right side also
-        // compensates the -0.16em tracking removed from the last letter.
-        h('div', { position: 'relative', display: 'flex', padding: '82px 100px 82px 82px', border: '1px solid rgba(0,145,173,0.35)' }, [
+        // Protection area = 1x (the cap height) on every side of the lockup.
+        h('div', { position: 'relative', display: 'flex', padding: `${PROTECT}px`, border: '1px solid rgba(0,145,173,0.35)' }, [
           corner({ left: -1, top: -1 }, { borderLeft: line, borderTop: line }),
           corner({ right: -1, top: -1 }, { borderRight: line, borderTop: line }),
           corner({ left: -1, bottom: -1 }, { borderLeft: line, borderBottom: line }),
           corner({ right: -1, bottom: -1 }, { borderRight: line, borderBottom: line }),
-          h(
-            'div',
-            { fontFamily: 'Space Grotesk', fontSize: 112, letterSpacing: '0.16em', lineHeight: 1, marginRight: '-0.16em' },
-            opts.wordmark,
-          ),
+          { type: 'img', props: { src: markUri, width: MARK_W, height: MARK_H, style: { width: MARK_W, height: MARK_H } } },
         ]),
       ]),
-      h('div', { fontFamily: 'Space Grotesk', fontSize: 52, marginTop: 40, lineHeight: 1.1 }, opts.tagline),
+      h('div', { fontFamily: 'Space Grotesk', fontSize: 52, marginTop: 36, lineHeight: 1.1 }, opts.tagline),
       h('div', { fontFamily: 'JetBrains Mono', fontSize: 21, marginTop: 20, color: '#5C616B' }, opts.sub),
     ],
   );

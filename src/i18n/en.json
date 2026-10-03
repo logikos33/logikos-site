@@ -61,7 +61,7 @@
   "brand": {
     "wordmark": "LOGIKOS",
     "label": "solutions",
-    "tagline": "Reason that sees."
+    "tagline": "Where logic meets vision."
   },
   "states": {
     "ok": "compliant",
@@ -111,7 +111,6 @@
       "too_far": "too far",
       "unknown": "not visible"
     },
-    "posterLabel": "preview",
     "stop": "Stop",
     "cam": "CAM",
     "person": {
@@ -130,12 +129,12 @@
   },
   "home": {
     "meta": {
-      "title": "Logikos Soluções — Reason that sees",
+      "title": "Logikos Soluções — Industrial computer vision",
       "description": "Fire, PPE and ergonomics from the same camera, inside the plant. Edge computer vision for industry, with evidence clips and WhatsApp alerts."
     },
     "hero": {
-      "title": "Reason that sees.",
-      "sub": "Fire, PPE and ergonomics from the same camera, inside the plant."
+      "title": "Fire, PPE and ergonomics on the cameras your plant already has.",
+      "sub": "The verdict arrives with its evidence clip, on WhatsApp or the panel. The continuous video never leaves the plant."
     },
     "doors": {
       "title": "Where you come in",
@@ -687,7 +686,7 @@
     "hud": "HUD",
     "states": "States",
     "buttons": "Buttons",
-    "displaySample": "Reason that sees.",
+    "displaySample": "Industrial computer vision.",
     "bodySample": "Verdict, evidence and alert inside the plant.",
     "monoSample": "EVT · PPE · COMPLIANT"
   },

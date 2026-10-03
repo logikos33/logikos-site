@@ -2,7 +2,10 @@ import { chromium, devices } from '@playwright/test';
 import { writeFileSync } from 'node:fs';
 const OUT = process.argv[2],
   BASE = process.argv[3] ?? 'https://logikos-site.pages.dev';
-const PAGES = {
+// WIDTHS=360,768 PAGES=home,404 narrow the run (defaults: 390 + 1440, every page below).
+const WIDTHS = (process.env.WIDTHS ?? '390,1440').split(',').map(Number);
+const ONLY = process.env.PAGES?.split(',');
+const ALL_PAGES = {
   home: '/',
   recognition: '/recognition',
   'como-funciona': '/como-funciona',
@@ -14,13 +17,17 @@ const PAGES = {
   'en-recognition': '/en/recognition',
   'en-demos': '/en/demos',
 };
+const PAGES = Object.fromEntries(Object.entries(ALL_PAGES).filter(([k]) => !ONLY || ONLY.includes(k)));
+const VIEWPORTS = {
+  360: [360, 780, devices['Pixel 7']],
+  390: [390, 844, devices['Pixel 7']],
+  768: [768, 1024, devices['iPad Mini']],
+  1440: [1440, 900, {}],
+};
 const browser = await chromium.launch();
 const metrics = {};
 for (const theme of ['light', 'dark'])
-  for (const [w, h, dev] of [
-    [390, 844, devices['Pixel 7']],
-    [1440, 900, {}],
-  ]) {
+  for (const [w, h, dev] of WIDTHS.map((x) => VIEWPORTS[x])) {
     const ctx = await browser.newContext({ ...dev, viewport: { width: w, height: h }, reducedMotion: 'reduce' });
     await ctx.addInitScript((t) => {
       try {
@@ -61,7 +68,11 @@ for (const theme of ['light', 'dark'])
           const huds = [...document.querySelectorAll('[data-hud]')].map((f) => {
             const r = f.getBoundingClientRect();
             const stage = f.querySelector('.hud__stage').getBoundingClientRect();
-            const chips = [...f.querySelectorAll('.hud__overlay .hud-chip, .hud-pbox rect')].map((c) => c.getBoundingClientRect());
+            // Hidden poster chips (display: none once the script owns the figure) report a 0×0 rect at
+            // the origin; without the width filter they would count as "left of the stage".
+            const chips = [...f.querySelectorAll('.hud__overlay .hud-chip, .hud-pbox rect')]
+              .map((c) => c.getBoundingClientRect())
+              .filter((c) => c.width > 0);
             return {
               slot: f.dataset.slot,
               state: f.dataset.state ?? null,

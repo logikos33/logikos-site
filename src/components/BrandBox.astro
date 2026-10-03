@@ -1,9 +1,10 @@
 ---
-// The cover composition: wordmark inside a detection box (bracket corners, thin outline)
-// with a mono label in a dark chip with a cyan square. No score, no accuracy.
-// With `glitch`, the wordmark runs the signature glitch once (see script below).
+// The cover composition (brand page, OG card): the official wordmark inside a detection box
+// (bracket corners, thin outline) with a mono label in a dark chip with a cyan square.
+// No score, no accuracy. With `glitch`, the wordmark can run the signature glitch (replay).
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
+import Glitch from './Glitch.astro';
 import Logo from './Logo.astro';
 
 interface Props {
@@ -20,72 +21,8 @@ const t = dict(locale);
     <span class="brand-box__mark" aria-hidden="true"></span>
     {t.brand.label}
   </span>
-  <Logo locale={locale} size={64} glitch={glitch} />
+  {glitch ? <Glitch locale={locale} size={64} /> : <Logo locale={locale} size={64} />}
 </div>
-
-{glitch && <script>
-  // Once per session; never on internal or back/forward navigation; never under reduced
-  // motion; and only once the wordmark font is ready (the slices are fitted to its letters).
-  // Whatever happens, `lk:entrance` is dispatched so the hero HUD knows it may start.
-  const node = document.querySelector<HTMLElement>('[data-brand-box] .lk-glitch');
-  const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
-  const internal = (() => {
-    if (nav?.type === 'back_forward') return true;
-    try {
-      return document.referrer !== '' && new URL(document.referrer).origin === window.location.origin;
-    } catch {
-      return false;
-    }
-  })();
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // The one orchestrated entrance happens once per session; after it the HUD starts (M1).
-  const SESSION_KEY = 'lk-glitch';
-  const seen = (() => {
-    try {
-      return sessionStorage.getItem(SESSION_KEY) === 'done';
-    } catch {
-      return false;
-    }
-  })();
-  const handOver = () => document.dispatchEvent(new CustomEvent('lk:entrance'));
-  if (node) {
-    if (reduce) node.dataset.glitch = 'off-reduced-motion';
-    else if (seen) node.dataset.glitch = 'off-session';
-    else if (internal) node.dataset.glitch = 'off-internal-navigation';
-    if (node.dataset.glitch) handOver();
-    else {
-      node.dataset.glitch = 'waiting-font';
-      const timeout = new Promise<boolean>((resolve) => window.setTimeout(() => resolve(false), 800));
-      const loaded = document.fonts.load('700 1em "Space Grotesk Variable"').then(
-        (faces) => faces.length > 0,
-        () => false,
-      );
-      void Promise.race([loaded, timeout]).then((ok) => {
-        if (!ok) {
-          node.dataset.glitch = 'off-font-timeout';
-          handOver();
-          return;
-        }
-        node.dataset.glitch = 'run';
-        node.classList.add('is-glitching');
-        node.addEventListener(
-          'animationend',
-          () => {
-            node.classList.remove('is-glitching');
-            node.dataset.glitch = 'done';
-            try {
-              sessionStorage.setItem(SESSION_KEY, 'done');
-            } catch {
-              // Storage blocked: the glitch may run again on the next load.
-            }
-            handOver();
-          },
-          { once: true },
-        );
-      });
-    }
-  }
-</script>}
 
 <style>
   .brand-box {
@@ -136,77 +73,5 @@ const t = dict(locale);
     width: 0.5rem;
     height: 0.5rem;
     background: #00e5ff;
-  }
-
-  /* ---- Glitch: 2–3 partial horizontal slices, 2–4 px, cyan/magenta fringes, steps, ends clean.
-     Slices span L, G-I-K and S only, so the two O letters (the keyhole) are never cut. ---- */
-  .brand-box :global(.lk-glitch.is-glitching)::before,
-  .brand-box :global(.lk-glitch.is-glitching)::after {
-    content: attr(data-text);
-    position: absolute;
-    inset: 0;
-    color: var(--lk-text);
-    background: var(--lk-bg);
-    pointer-events: none;
-  }
-
-  .brand-box :global(.lk-glitch.is-glitching)::before {
-    text-shadow:
-      -2px 0 var(--lk-glitch-c),
-      2px 0 var(--lk-glitch-m);
-    animation: lk-glitch-a 0.5s steps(1, end) 1 both;
-  }
-
-  .brand-box :global(.lk-glitch.is-glitching)::after {
-    text-shadow:
-      2px 0 var(--lk-glitch-c),
-      -2px 0 var(--lk-glitch-m);
-    animation: lk-glitch-b 0.5s steps(1, end) 1 both;
-  }
-
-  @keyframes lk-glitch-a {
-    0% {
-      clip-path: inset(18% 35% 60% 31%);
-      transform: translateX(3px);
-    }
-    30% {
-      clip-path: inset(58% 88% 22% 0);
-      transform: translateX(-4px);
-    }
-    60% {
-      clip-path: inset(40% 0 45% 87%);
-      transform: translateX(2px);
-    }
-    85%,
-    100% {
-      clip-path: inset(50% 50% 50% 50%);
-      transform: none;
-      opacity: 0;
-    }
-  }
-
-  @keyframes lk-glitch-b {
-    0% {
-      clip-path: inset(62% 0 20% 87%);
-      transform: translateX(-2px);
-    }
-    40% {
-      clip-path: inset(25% 35% 55% 31%);
-      transform: translateX(4px);
-    }
-    75%,
-    100% {
-      clip-path: inset(50% 50% 50% 50%);
-      transform: none;
-      opacity: 0;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .brand-box :global(.lk-glitch.is-glitching)::before,
-    .brand-box :global(.lk-glitch.is-glitching)::after {
-      content: none;
-      animation: none;
-    }
   }
 </style>

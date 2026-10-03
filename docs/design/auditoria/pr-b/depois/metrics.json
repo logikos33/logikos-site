@@ -1,0 +1,470 @@
+{
+  "404-360": {
+    "dom": 175,
+    "img": 0,
+    "video": 0,
+    "h1": "Página não encontrada",
+    "huds": [],
+    "uppercaseTracked": [],
+    "firstHudTop": null,
+    "kb": {
+      "total": 149,
+      "font": 108,
+      "css": 0,
+      "js": 1,
+      "html": 40,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "home-360": {
+    "dom": 660,
+    "img": 0,
+    "video": 0,
+    "h1": "o que é?\nFogo, EPI e ergonomia na câmera que a planta já tem.",
+    "huds": [
+      {
+        "slot": "hero",
+        "state": "idle",
+        "topPx": 113,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "fire",
+        "state": null,
+        "topPx": 3514,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": ["Para a sua planta", "Para integradores"],
+    "firstHudTop": 113,
+    "kb": {
+      "total": 218,
+      "font": 108,
+      "css": 0,
+      "js": 10,
+      "html": 94,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "recognition-360": {
+    "dom": 743,
+    "img": 0,
+    "video": 0,
+    "h1": "o que é?\nCinco leituras na câmera que já existe.",
+    "huds": [
+      {
+        "slot": "fire",
+        "state": "idle",
+        "topPx": 784,
+        "inFold": false,
+        "overflow": 0
+      },
+      {
+        "slot": "epi",
+        "state": null,
+        "topPx": 2779,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": [],
+    "firstHudTop": 784,
+    "kb": {
+      "total": 221,
+      "font": 108,
+      "css": 0,
+      "js": 10,
+      "html": 101,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "demos-360": {
+    "dom": 344,
+    "img": 0,
+    "video": 0,
+    "h1": "o que você vai ver?\nDuas demos, no seu navegador.",
+    "huds": [
+      {
+        "slot": "epi",
+        "state": "idle",
+        "topPx": 543,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "fire",
+        "state": null,
+        "topPx": 1658,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": [],
+    "firstHudTop": 543,
+    "kb": {
+      "total": 181,
+      "font": 108,
+      "css": 0,
+      "js": 9,
+      "html": 59,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "404-390": {
+    "dom": 175,
+    "img": 0,
+    "video": 0,
+    "h1": "Página não encontrada",
+    "huds": [],
+    "uppercaseTracked": [],
+    "firstHudTop": null,
+    "kb": {
+      "total": 149,
+      "font": 108,
+      "css": 0,
+      "js": 1,
+      "html": 40,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "home-390": {
+    "dom": 660,
+    "img": 0,
+    "video": 0,
+    "h1": "o que é?\nFogo, EPI e ergonomia na câmera que a planta já tem.",
+    "huds": [
+      {
+        "slot": "hero",
+        "state": "idle",
+        "topPx": 113,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "fire",
+        "state": null,
+        "topPx": 3367,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": ["Para a sua planta", "Para integradores"],
+    "firstHudTop": 113,
+    "kb": {
+      "total": 218,
+      "font": 108,
+      "css": 0,
+      "js": 10,
+      "html": 94,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "recognition-390": {
+    "dom": 743,
+    "img": 0,
+    "video": 0,
+    "h1": "o que é?\nCinco leituras na câmera que já existe.",
+    "huds": [
+      {
+        "slot": "fire",
+        "state": "idle",
+        "topPx": 740,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "epi",
+        "state": null,
+        "topPx": 2769,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": [],
+    "firstHudTop": 740,
+    "kb": {
+      "total": 221,
+      "font": 108,
+      "css": 0,
+      "js": 10,
+      "html": 101,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "demos-390": {
+    "dom": 344,
+    "img": 0,
+    "video": 0,
+    "h1": "o que você vai ver?\nDuas demos, no seu navegador.",
+    "huds": [
+      {
+        "slot": "epi",
+        "state": "idle",
+        "topPx": 543,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "fire",
+        "state": null,
+        "topPx": 1675,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": [],
+    "firstHudTop": 543,
+    "kb": {
+      "total": 181,
+      "font": 108,
+      "css": 0,
+      "js": 9,
+      "html": 59,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "404-768": {
+    "dom": 175,
+    "img": 0,
+    "video": 0,
+    "h1": "Página não encontrada",
+    "huds": [],
+    "uppercaseTracked": [],
+    "firstHudTop": null,
+    "kb": {
+      "total": 149,
+      "font": 108,
+      "css": 0,
+      "js": 1,
+      "html": 40,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "home-768": {
+    "dom": 660,
+    "img": 0,
+    "video": 0,
+    "h1": "o que é?\nFogo, EPI e ergonomia na câmera que a planta já tem.",
+    "huds": [
+      {
+        "slot": "hero",
+        "state": "idle",
+        "topPx": 126,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "fire",
+        "state": null,
+        "topPx": 2762,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": ["Para a sua planta", "Para integradores"],
+    "firstHudTop": 126,
+    "kb": {
+      "total": 218,
+      "font": 108,
+      "css": 0,
+      "js": 10,
+      "html": 94,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "recognition-768": {
+    "dom": 743,
+    "img": 0,
+    "video": 0,
+    "h1": "o que é?\nCinco leituras na câmera que já existe.",
+    "huds": [
+      {
+        "slot": "fire",
+        "state": "idle",
+        "topPx": 606,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "epi",
+        "state": null,
+        "topPx": 2696,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": [],
+    "firstHudTop": 606,
+    "kb": {
+      "total": 221,
+      "font": 108,
+      "css": 0,
+      "js": 10,
+      "html": 101,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "demos-768": {
+    "dom": 344,
+    "img": 0,
+    "video": 0,
+    "h1": "o que você vai ver?\nDuas demos, no seu navegador.",
+    "huds": [
+      {
+        "slot": "epi",
+        "state": "idle",
+        "topPx": 557,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "fire",
+        "state": null,
+        "topPx": 1722,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": [],
+    "firstHudTop": 557,
+    "kb": {
+      "total": 181,
+      "font": 108,
+      "css": 0,
+      "js": 9,
+      "html": 59,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "404-1440": {
+    "dom": 175,
+    "img": 0,
+    "video": 0,
+    "h1": "Página não encontrada",
+    "huds": [],
+    "uppercaseTracked": [],
+    "firstHudTop": null,
+    "kb": {
+      "total": 149,
+      "font": 108,
+      "css": 0,
+      "js": 1,
+      "html": 40,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "home-1440": {
+    "dom": 660,
+    "img": 0,
+    "video": 0,
+    "h1": "o que é?\nFogo, EPI e ergonomia na câmera que a planta já tem.",
+    "huds": [
+      {
+        "slot": "hero",
+        "state": "idle",
+        "topPx": 161,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "fire",
+        "state": null,
+        "topPx": 2523,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": ["Para a sua planta", "Para integradores"],
+    "firstHudTop": 161,
+    "kb": {
+      "total": 218,
+      "font": 108,
+      "css": 0,
+      "js": 10,
+      "html": 94,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "recognition-1440": {
+    "dom": 743,
+    "img": 0,
+    "video": 0,
+    "h1": "o que é?\nCinco leituras na câmera que já existe.",
+    "huds": [
+      {
+        "slot": "fire",
+        "state": "idle",
+        "topPx": 723,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "epi",
+        "state": null,
+        "topPx": 2456,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": [],
+    "firstHudTop": 723,
+    "kb": {
+      "total": 221,
+      "font": 108,
+      "css": 0,
+      "js": 10,
+      "html": 101,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "demos-1440": {
+    "dom": 344,
+    "img": 0,
+    "video": 0,
+    "h1": "o que você vai ver?\nDuas demos, no seu navegador.",
+    "huds": [
+      {
+        "slot": "epi",
+        "state": "idle",
+        "topPx": 734,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "fire",
+        "state": null,
+        "topPx": 1583,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": [],
+    "firstHudTop": 734,
+    "kb": {
+      "total": 181,
+      "font": 108,
+      "css": 0,
+      "js": 9,
+      "html": 59,
+      "img": 0,
+      "media": 0
+    }
+  }
+}

@@ -99,7 +99,7 @@ const listId = `${id}-readings`;
             class="hud__media hud__poster"
             data-for={d.slot}
             hidden={i !== 0}
-            set:html={posterSvg(d.slot, t.hud.posterLabel, { clip: CLIPS[d.slot], labels })}
+            set:html={posterSvg(d.slot, { clip: CLIPS[d.slot], labels })}
           />
         ),
       )}
@@ -110,13 +110,14 @@ const listId = `${id}-readings`;
         aria-hidden="true"
         focusable="false"
       ></svg>
-      <span class="hud__badge" data-hud-badge hidden>
-        {t.hud.mock}
-      </span>
     </div>
     <figcaption class="figcap">
       <span class="figcap__machine" data-hud-machine>
         <span class="visually-hidden">{t.a11y.captionMachine}: </span>
+        <!-- In the caption, never over the frame: it cannot cover a chip. -->
+        <span class="hud__badge" data-hud-badge hidden>
+          {t.hud.mock}
+        </span>
         {first?.machine}
       </span>
       <span class="figcap__person" data-hud-person aria-live="polite">
@@ -148,9 +149,9 @@ const listId = `${id}-readings`;
 </div>
 
 <script>
-  import { frameIndexAt, frameToBoxes, type HudBox, type HudClip, type HudLabels } from '../lib/hud';
+  import { frameIndexAt, frameToBoxes, placeChips, type HudBox, type HudClip, type HudLabels, type Rect } from '../lib/hud';
   import { ICON_PATHS } from '../lib/icons';
-  import { bracketPath, POSTER_H, POSTER_W } from '../lib/poster';
+  import { boxRect, bracketPath, POSTER_H, POSTER_W } from '../lib/poster';
 
   const SVG_NS = 'http://www.w3.org/2000/svg';
 
@@ -163,23 +164,21 @@ const listId = `${id}-readings`;
   // Chip metrics in CSS px, converted to viewBox units with `k` so chips stay legible at any size.
   const CHIP = { h: 24, pad: 8, font: 13, gap: 4, icon: 12 };
 
-  /** One box = base stroke + state stroke (dashed for indeterminate) + a docked chip outside the box. */
-  function drawBox(svg: SVGSVGElement, b: HudBox, k: number): void {
-    const x = b.x * POSTER_W;
-    const y = b.y * POSTER_H;
-    const w = b.w * POSTER_W;
-    const h = b.h * POSTER_H;
+  /** Chip width in CSS px (icon lead for state chips, text estimate, padding). */
+  const chipWidth = (b: HudBox): number => (b.outlined ? 0 : CHIP.icon + 6) + b.text.length * CHIP.font * 0.6 + CHIP.pad * 2;
+
+  /** One box = base stroke + state stroke (dashed for indeterminate) + its chip at the place given. */
+  function drawBox(svg: SVGSVGElement, b: HudBox, chipAt: Rect, k: number): void {
+    const { x, y, w, h } = boxRect(b);
     const g = el('g', { class: `hud-box hud-box--${b.state}${b.outlined ? ' hud-box--outlined' : ''}` });
     const d = bracketPath(x, y, w, h);
     g.append(el('path', { class: 'hud-box__base', d }));
     g.append(el('path', { class: 'hud-box__bracket', d }));
     const lead = b.outlined ? 0 : CHIP.icon + 6;
-    const chipW = lead + b.text.length * CHIP.font * 0.6 + CHIP.pad * 2;
-    const chipH = CHIP.h * k;
-    const chipY = y - chipH - CHIP.gap * k >= 0 ? y - chipH - CHIP.gap * k : y + CHIP.gap * k;
+    const chipW = chipAt.w / k;
     const chip = el('g', {
       class: `hud-chip hud-chip--${b.state}${b.outlined ? ' hud-chip--outlined' : ''}`,
-      transform: `translate(${x} ${chipY}) scale(${k})`,
+      transform: `translate(${chipAt.x} ${chipAt.y}) scale(${k})`,
     });
     chip.append(el('rect', { class: 'hud-chip__bg', width: chipW, height: CHIP.h, rx: 2 }));
     if (!b.outlined) {
@@ -194,11 +193,16 @@ const listId = `${id}-readings`;
     svg.append(g);
   }
 
+  /** Chips are sized in CSS px and scaled by `k`; placement runs in stage units so it matches the poster. */
   function draw(svg: SVGSVGElement, boxes: HudBox[]): void {
     svg.replaceChildren();
     const width = svg.getBoundingClientRect().width;
     const k = width > 0 ? POSTER_W / width : 1;
-    for (const b of boxes) drawBox(svg, b, k);
+    const chips = placeChips(
+      boxes.map((b) => ({ box: boxRect(b), w: chipWidth(b) * k, h: CHIP.h * k, gap: CHIP.gap * k })),
+      { w: POSTER_W, h: POSTER_H },
+    );
+    boxes.forEach((b, i) => drawBox(svg, b, chips[i] as Rect, k));
   }
 
   const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -329,7 +333,7 @@ const listId = `${id}-readings`;
     /** M1: the hero figure starts after the wordmark's entrance (or at once when there is none). */
     const entrance = (): Promise<void> =>
       new Promise((resolve) => {
-        const mark = document.querySelector<HTMLElement>('[data-brand-box] .lk-glitch');
+        const mark = document.querySelector<HTMLElement>('.lk-glitch--armed');
         if (
           fig.dataset.priority !== 'true' ||
           !mark ||
@@ -414,6 +418,11 @@ const listId = `${id}-readings`;
     background: #14141c;
     border: 1px solid var(--lk-line);
     border-radius: var(--lk-radius);
+  }
+
+  /* On the dark theme the frame would vanish into the page (1.3:1); keep it ≥ 3:1. */
+  :global([data-theme='dark']) .hud__stage {
+    border-color: color-mix(in srgb, var(--lk-text) 42%, var(--lk-bg));
   }
 
   .hud__media,
@@ -510,22 +519,22 @@ const listId = `${id}-readings`;
   }
 
   .hud__badge {
-    position: absolute;
-    top: var(--lk-space-3);
-    right: var(--lk-space-3);
+    display: inline-block;
+    margin-right: var(--lk-space-2);
+    padding: 0.2rem 0.4rem;
+    border: 1px solid var(--lk-line-strong);
+    border-radius: var(--lk-radius);
     font: 500 0.75rem/1 var(--lk-font-mono);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--hud-text);
-    background: var(--hud-base);
-    padding: 0.4rem 0.55rem;
+    color: var(--lk-text-2);
+    vertical-align: 0.1em;
   }
 
   .hud__play {
     display: inline-flex;
     align-items: center;
     gap: var(--lk-space-2);
-    min-height: 2.5rem;
+    /* 44 px: the smallest target a finger hits reliably (WCAG 2.5.5). */
+    min-height: 2.75rem;
     padding: 0 var(--lk-space-3);
     border: 1px solid var(--lk-line-strong);
     border-radius: var(--lk-radius);

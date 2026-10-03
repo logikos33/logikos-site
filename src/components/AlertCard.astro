@@ -1,7 +1,8 @@
 ---
 // The person half, expanded: what reaches whoever decides. The header reuses the verdict chip
-// verbatim (the card is the verdict's receipt); the decision row is always at rest — the
-// options are shown, never pre-pressed. Illustrative: generic camera ids, no names.
+// verbatim (the card is the verdict's receipt) and says it is illustrative; the decision row
+// names the options as text — nothing here looks like a control, because nothing here is one
+// (AUDITORIA-V2 F-13). Generic camera ids, no names.
 import { CLIPS } from '../data/media';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
@@ -39,7 +40,7 @@ const a = t.alert;
       {object && ` · ${object}`}
     </span>
     <span class="alert__stamp mono">
-      {t.hud.cam} {clip.meta.camera} · {clip.meta.time}
+      {t.hud.cam} {clip.meta.camera} · {clip.meta.time} · {t.hud.illustrative}
     </span>
   </div>
   <dl class="alert__rows">
@@ -60,10 +61,10 @@ const a = t.alert;
       <dd class="alert__options">
         {sent ? (
           <>
-            <span class="alert__option">{a.confirm}</span>
-            <span class="alert__option">{a.dismiss}</span>
-            <span class="alert__option">{a.correct}</span>
-            <span class="alert__waiting">{a.waiting}</span>
+            <span>
+              {a.confirm} · {a.dismiss} · {a.correct}
+            </span>
+            <span class="alert__waiting">— {a.waiting}</span>
           </>
         ) : (
           <span class="alert__waiting">{a.nothing}</span>
@@ -122,22 +123,12 @@ const a = t.alert;
     min-width: 0;
   }
 
+  /* Named, never drawn as buttons: the decision belongs to the person, on their own screen. */
   .alert__options {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: baseline;
     gap: var(--lk-space-2);
-  }
-
-  /* Shown, never pressed: the decision belongs to the person. */
-  .alert__option {
-    display: inline-flex;
-    align-items: center;
-    min-height: 2rem;
-    padding: 0 var(--lk-space-3);
-    border: 1px solid var(--lk-line-strong);
-    border-radius: var(--lk-radius);
-    font-weight: 500;
   }
 
   .alert__waiting {

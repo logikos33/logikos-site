@@ -1,5 +1,5 @@
 ---
-import BrandBox from '../components/BrandBox.astro';
+import Logo from '../components/Logo.astro';
 import { dict } from '../i18n';
 import { pathFor } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
@@ -11,7 +11,9 @@ const en = dict('en');
 <Base locale="pt-br" title={pt.notFound.title} description={pt.notFound.text} noindex>
   <section class="section section--flush not-found greek-grid" aria-labelledby="page-title">
     <div class="container">
-      <BrandBox locale="pt-br" />
+      <div class="not-found__mark">
+        <Logo locale="pt-br" size={64} />
+      </div>
       <p class="eyebrow">404</p>
       <h1 id="page-title">{pt.notFound.title}</h1>
       <p class="lede">{pt.notFound.text}</p>
@@ -32,6 +34,10 @@ const en = dict('en');
 <style>
   .not-found {
     padding-block: clamp(4rem, 12vw, 8rem);
+  }
+
+  .not-found__mark {
+    line-height: 0;
   }
 
   .not-found .eyebrow {
