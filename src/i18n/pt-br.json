@@ -782,8 +782,7 @@
     "status": {
       "checking": "verificando",
       "up": "no ar",
-      "down": "fora do ar agora",
-      "downHint": "tente de novo em instantes"
+      "down": "fora do ar agora"
     },
     "clip": "Clipe gravado",
     "browser": "O modelo roda no seu navegador. Nada é enviado.",

@@ -32,7 +32,6 @@ const text = label ?? (demo === 'epi' ? t.demos.epi.title : t.demos.fire.title);
     data-demo-status={demo}
     data-label-up={t.demos.status.up}
     data-label-down={t.demos.status.down}
-    data-label-hint={t.demos.status.downHint}
     role="status"
   >
     {t.demos.status.checking}
@@ -52,8 +51,8 @@ const text = label ?? (demo === 'epi' ? t.demos.epi.title : t.demos.fire.title);
           const state = s[key];
           if (!state) continue;
           chip.dataset.state = state;
-          chip.textContent =
-            state === 'up' ? (chip.dataset.labelUp ?? '') : `${chip.dataset.labelDown ?? ''} — ${chip.dataset.labelHint ?? ''}`;
+          // Short words only: the chip sits on a reserved one-line row (no wrap, no shift).
+          chip.textContent = (state === 'up' ? chip.dataset.labelUp : chip.dataset.labelDown) ?? '';
         }
       })
       .catch(() => {
@@ -63,16 +62,19 @@ const text = label ?? (demo === 'epi' ? t.demos.epi.title : t.demos.fire.title);
 </script>
 
 <style>
+  /* Link above, state below on a row of fixed height: a longer state never moves what follows (CLS 0). */
   .demo-status {
-    display: inline-flex;
-    flex-wrap: wrap;
+    display: inline-grid;
+    grid-template-rows: auto 1.75rem;
     align-items: center;
-    gap: var(--lk-space-2);
+    justify-items: start;
+    gap: var(--lk-space-1);
   }
 
   .demo-status__chip {
-    white-space: normal;
+    white-space: nowrap;
     text-align: left;
+    align-self: center;
     transition:
       color var(--lk-motion-fast) var(--lk-steps-1),
       border-color var(--lk-motion-fast) var(--lk-steps-1);

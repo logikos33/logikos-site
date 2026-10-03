@@ -782,8 +782,7 @@
     "status": {
       "checking": "checking",
       "up": "live",
-      "down": "down right now",
-      "downHint": "try again shortly"
+      "down": "down right now"
     },
     "clip": "Recorded clip",
     "browser": "The model runs in your browser. Nothing is sent.",

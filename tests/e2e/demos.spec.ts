@@ -29,7 +29,6 @@ test('M7: the demo chips flip once, in place, to the server state; the link neve
   await expect(epi).toHaveText(/no ar|live/);
   await expect(fire).toHaveAttribute('data-state', 'down');
   await expect(fire).toHaveText(/fora do ar agora|down right now/);
-  await expect(fire).toHaveText(/instantes|shortly/);
   // Down keeps its link; no mock stage stands in for the real demo any more (AUDITORIA-V2 F-14).
   const fireBlock = page.locator('[data-demo="fire"]').first();
   await expect(fireBlock.locator('a')).toHaveAttribute('href', /fire-demo-production/);
