@@ -1,4 +1,5 @@
 ---
+import DemoStatus from '../components/DemoStatus.astro';
 import HudVideo from '../components/HudVideo.astro';
 import Section from '../components/Section.astro';
 import { DEMOS } from '../config/links';
@@ -24,21 +25,11 @@ const demos = ['epi', 'fire'] as const;
       <div class="split">
         <HudVideo locale={locale} clip={k} />
         <div class="demo-body">
+          <p class="demo-live">
+            <DemoStatus locale={locale} demo={k} label={p[k].title} />
+            <span class="demo-live__note">{p.browser}</span>
+          </p>
           <dl class="defs">
-            <div class="defs__row">
-              <dt>
-                <span
-                  class="verdict verdict--outline"
-                  data-demo-status={k}
-                  data-label-up={p.status.up}
-                  data-label-down={p.status.down}
-                  data-demo-down-hint={p.status.downHint}
-                >
-                  {p.status.checking}
-                </span>
-              </dt>
-              <dd>{p.browser}</dd>
-            </div>
             <div class="defs__row">
               <dt>{p[k].title}</dt>
               <dd>{p[k].verdict}</dd>
@@ -83,5 +74,16 @@ const demos = ['epi', 'fire'] as const;
       grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
       gap: var(--lk-space-7);
     }
+  }
+
+  .demo-live {
+    display: grid;
+    gap: var(--lk-space-2);
+    margin: 0 0 var(--lk-space-4);
+  }
+
+  .demo-live__note {
+    color: var(--lk-text-2);
+    font-size: 0.9375rem;
   }
 </style>

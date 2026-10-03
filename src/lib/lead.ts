@@ -1,10 +1,14 @@
 // Lead contract shared by the form (client) and the Pages Function (server).
 // Pure module: no DOM, no Node, no Workers APIs.
 
-export const LEAD_KINDS = ['contact', 'partner'] as const;
+export const LEAD_KINDS = ['contact', 'partner', 'account'] as const;
 export type LeadKind = (typeof LEAD_KINDS)[number];
 
 export const LEAD_LANGS = ['pt-br', 'en'] as const;
+/** Platform mode asked on the account request; stored in Portuguese like the other fields. */
+export const LEAD_MODES = ['edge', 'cloud'] as const;
+export type LeadMode = (typeof LEAD_MODES)[number];
+export const MAX_CAMERAS = 999;
 export type LeadLang = (typeof LEAD_LANGS)[number];
 
 export const LEAD_INTERESTS = ['fire', 'epi', 'ergonomics', 'zones', 'counting', 'twins', 'robotics', 'partnership'] as const;
@@ -33,6 +37,9 @@ export interface LeadInput {
   interests?: unknown;
   message?: unknown;
   consent?: unknown;
+  /** Account requests only. */
+  cameras?: unknown;
+  mode?: unknown;
   page?: unknown;
   website?: unknown;
   turnstileToken?: unknown;
@@ -50,12 +57,16 @@ export interface Lead {
   whatsapp: string;
   interesses: LeadInterest[];
   mensagem: string;
+  /** Account requests: how many cameras and which mode; null on the other kinds. */
+  cameras: number | null;
+  modo: 'edge' | 'nuvem' | null;
   consentimento: { aceito: true; versao_politica: string; em: string };
   pagina: string;
   recebido_em: string;
 }
 
-export type LeadField = 'kind' | 'lang' | 'name' | 'company' | 'role' | 'email' | 'whatsapp' | 'interests' | 'message' | 'consent';
+export type LeadField =
+  'kind' | 'lang' | 'name' | 'company' | 'role' | 'email' | 'whatsapp' | 'interests' | 'message' | 'consent' | 'cameras' | 'mode';
 
 /** Shared with the form's `pattern` attributes so client and server agree. */
 export const EMAIL_PATTERN = '[^\\s@]+@[^\\s@]+\\.[^\\s@]+';
@@ -117,6 +128,23 @@ export function validateLead(input: LeadInput, now: Date): { ok: true; lead: Lea
   }
   if (message === undefined) errors.push('message');
   if (input.consent !== true) errors.push('consent');
+  // Account requests carry two more answers; other kinds must not send them.
+  let cameras: number | null = null;
+  let mode: LeadMode | undefined;
+  if (kind === 'account') {
+    const n =
+      typeof input.cameras === 'number'
+        ? input.cameras
+        : typeof input.cameras === 'string' && /^\d{1,3}$/.test(input.cameras.trim())
+          ? Number(input.cameras)
+          : NaN;
+    if (!Number.isInteger(n) || n < 1 || n > MAX_CAMERAS) errors.push('cameras');
+    else cameras = n;
+    mode = oneOf(input.mode, LEAD_MODES);
+    if (!mode) errors.push('mode');
+  } else if (input.cameras !== undefined || input.mode !== undefined) {
+    errors.push(input.cameras !== undefined ? 'cameras' : 'mode');
+  }
 
   if (
     errors.length > 0 ||
@@ -147,6 +175,8 @@ export function validateLead(input: LeadInput, now: Date): { ok: true; lead: Lea
       whatsapp,
       interesses: interests.filter((i): i is LeadInterest => i !== undefined),
       mensagem: message,
+      cameras,
+      modo: mode === 'edge' ? 'edge' : mode === 'cloud' ? 'nuvem' : null,
       consentimento: { aceito: true, versao_politica: PRIVACY_VERSION, em: at },
       pagina: page,
       recebido_em: at,

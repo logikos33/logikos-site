@@ -622,6 +622,11 @@
     "email": "E-mail",
     "whatsapp": "WhatsApp",
     "whatsappHint": "Com DDD.",
+    "cameras": "Quantas câmeras",
+    "camerasHint": "Uma estimativa basta.",
+    "mode": "Modo",
+    "modeEdge": "Edge (dispositivo na planta)",
+    "modeCloud": "Nuvem (plataforma por mensalidade)",
     "interests": "Interesses",
     "interestsHint": "Marque um ou mais.",
     "message": "Mensagem",
@@ -630,8 +635,10 @@
     "consentAfter": "e autorizo o uso destes dados para retorno do contato.",
     "submit": "Enviar",
     "submitPartner": "Enviar pedido de parceria",
+    "submitAccount": "Pedir acesso",
     "sending": "Enviando…",
     "success": "Recebido. Retornamos em breve.",
+    "successAccount": "Recebido. Você recebe o acesso por e-mail.",
     "error": "Não foi possível enviar agora. Tente de novo ou escreva para {email}.",
     "errorVerification": "Não foi possível confirmar que você não é um robô. Recarregue a página e tente de novo.",
     "invalid": "Revise os campos marcados.",
@@ -651,7 +658,9 @@
       "email": "Informe um e-mail válido.",
       "consent": "Marque para autorizar o retorno.",
       "whatsapp": "Use números, com DDD.",
-      "invalidServer": "Este campo não foi aceito. Revise."
+      "invalidServer": "Este campo não foi aceito. Revise.",
+      "cameras": "Informe um número de câmeras.",
+      "mode": "Escolha um modo."
     }
   },
   "footer": {
