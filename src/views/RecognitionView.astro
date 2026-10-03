@@ -26,7 +26,7 @@ const q = p.questions;
 const READINGS = ['fire', 'epi', 'ergonomics', 'zones', 'counting'] as const;
 const REGIONS = ['head', 'eyes', 'ears', 'hands', 'torso', 'feet'] as const;
 const STATES = ['ok', 'alert', 'warn'] as const;
-/** Rest case of the avatar: hands covered → indeterminate (M3 keeps this as the default). */
+/** Rest case of the avatar: hands covered -> indeterminate (M3 keeps this as the default). */
 const regionState = (r: (typeof REGIONS)[number]) => (r === 'hands' ? 'warn' : 'ok');
 const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoints.license].map((x) => ({ term: x.title, text: x.text }));
 ---

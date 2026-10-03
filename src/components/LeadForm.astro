@@ -247,7 +247,7 @@ const field = (name: string) => `${id}-${name}`;
     io.observe(form);
     form.addEventListener('focusin', mount, { once: true });
 
-    // State is always color + icon + word (success → ok, problems → alert, fix fields → warn).
+    // State is always color + icon + word (success -> ok, problems -> alert, fix fields -> warn).
     const STATE = { success: 'ok', error: 'alert', verification: 'alert', invalid: 'warn' } as const;
     const stateEl = status.querySelector<HTMLElement>('[data-status-state]');
     const iconEl = status.querySelector<SVGElement>('[data-status-icon]');
@@ -451,7 +451,8 @@ const field = (name: string) => `${id}-${name}`;
   .lead-form .field input[aria-invalid='true'],
   .lead-form .field textarea[aria-invalid='true'] {
     border-color: var(--lk-alert);
-    box-shadow: inset 0 0 0 1px var(--lk-alert);
+    outline: 1px solid var(--lk-alert);
+    outline-offset: -1px;
   }
 
   .lead-form .check input[aria-invalid='true'] {
