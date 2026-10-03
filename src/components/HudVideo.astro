@@ -132,9 +132,8 @@ const listId = `${id}-readings`;
       <!-- Outside the frame so it never covers detection chips. -->
       <button
         type="button"
-        class="hud__play"
+        class="hud__play is-pending"
         data-hud-play
-        hidden
         data-label-play={t.hud.play}
         data-label-stop={t.hud.stop}
         data-label-replay={t.hud.replay}
@@ -242,7 +241,7 @@ const listId = `${id}-readings`;
       button.dataset.mode = mode;
       buttonLabel.textContent =
         (mode === 'stop' ? button.dataset.labelStop : mode === 'replay' ? button.dataset.labelReplay : button.dataset.labelPlay) ?? '';
-      button.hidden = false;
+      button.classList.remove('is-pending');
     };
 
     let onEnded: (() => void) | undefined;
@@ -546,8 +545,9 @@ const listId = `${id}-readings`;
     border-color: var(--lk-text);
   }
 
-  .hud__play[hidden] {
-    display: none;
+  /* Rendered from the start so the caption never shifts (CLS 0); invisible until the clip is ready. */
+  .hud__play.is-pending {
+    visibility: hidden;
   }
 
   /* The poster's verdict is the no-JS fallback: once the script owns the state the overlay draws it
