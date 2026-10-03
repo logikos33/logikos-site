@@ -24,14 +24,14 @@ export const MEDIA: Record<HudSlot, { video?: string; hud: string }> = {
 
 /** Build-time copy of each clip (same files the browser fetches) for posters and captions. */
 export const CLIPS: Record<HudSlot, HudClip> = {
-  hero: hero as HudClip,
-  epi: epi as HudClip,
-  fire: fire as HudClip,
-  ergonomics: ergonomics as HudClip,
-  zones: zones as HudClip,
-  counting: counting as HudClip,
-  twins: twins as HudClip,
-  robotics: robotics as HudClip,
+  hero: hero as unknown as HudClip,
+  epi: epi as unknown as HudClip,
+  fire: fire as unknown as HudClip,
+  ergonomics: ergonomics as unknown as HudClip,
+  zones: zones as unknown as HudClip,
+  counting: counting as unknown as HudClip,
+  twins: twins as unknown as HudClip,
+  robotics: robotics as unknown as HudClip,
 };
 
 /** The five readings of the stage, in display order. */

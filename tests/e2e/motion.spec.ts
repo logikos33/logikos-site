@@ -97,8 +97,14 @@ test('reduced motion: HUD waits for play, then plays once', async ({ browser }) 
   await page.goto('/');
   const hud = page.locator('[data-hud][data-slot="hero"]');
   await expect(hud).toHaveAttribute('data-state', 'idle');
-  await expect(hud.locator('.hud-box')).toHaveCount(0);
+  // At rest the verdict is already there (last frame), nothing moves until the user plays.
+  const atRest = await hud.locator('.hud__overlay .hud-box').count();
+  expect(atRest).toBeGreaterThan(0);
+  await page.waitForTimeout(1200);
+  await expect(hud).toHaveAttribute('data-state', 'idle');
+  expect(await hud.locator('.hud__overlay .hud-box').count()).toBe(atRest);
   await hud.locator('[data-hud-play]').click();
+  await expect(hud).toHaveAttribute('data-state', 'playing');
   await expect(hud).toHaveAttribute('data-state', 'ended', { timeout: 15_000 });
   await expect(hud.locator('.hud-box').first()).toBeVisible();
   await ctx.close();

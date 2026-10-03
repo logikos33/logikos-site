@@ -20,9 +20,14 @@ interface Props {
 const { question, title, text, id, as: Tag = 'h2', cover = false, flush = false, wide = false, class: className } = Astro.props;
 ---
 
-<section class:list={['section', 'q-section', { 'greek-grid': cover, 'section--cover': cover, 'section--flush': flush || cover }, className]} aria-labelledby={id}>
+<section
+  class:list={['section', 'q-section', { 'greek-grid': cover, 'section--cover': cover, 'section--flush': flush || cover }, className]}
+  aria-labelledby={id}
+>
   <div class="container q-grid">
-    <p class="q" aria-hidden="true">{question}</p>
+    <p class="q" aria-hidden="true">
+      {question}
+    </p>
     <div class:list={['q-body', { 'q-body--wide': wide }]}>
       <Tag id={id}>
         <span class="visually-hidden">{question} </span>

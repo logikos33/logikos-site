@@ -99,7 +99,11 @@ const ergonomics = clip(
   { camera: '05', time: '11:08:52', clip_s: 6, channel: 'panel' },
   steps(11, 0.5).map((t, i) => ({
     t,
-    people: [person('p-2', 0.4, 0.3 + Math.min(i, 5) * 0.03, 0.2, 0.62 - Math.min(i, 5) * 0.03, [['back', 'posture', i >= 7 ? 'non_compliant' : 'compliant']])],
+    people: [
+      person('p-2', 0.4, 0.3 + Math.min(i, 5) * 0.03, 0.2, 0.62 - Math.min(i, 5) * 0.03, [
+        ['back', 'posture', i >= 7 ? 'non_compliant' : 'compliant'],
+      ]),
+    ],
   })),
   5.5,
 );

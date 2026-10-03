@@ -65,7 +65,10 @@ const ctaHref = wa ?? pathFor('contact', locale);
 
       <a class="site-header__login" href={LOGIN_URL} rel="noopener" target="_blank" data-login>
         {t.nav.login}
-        <span class="visually-hidden"> — {t.a11y.login} ({t.a11y.external})</span>
+        <span class="visually-hidden">
+          {' '}
+          — {t.a11y.login} ({t.a11y.external})
+        </span>
       </a>
 
       <a class="btn site-header__cta" href={ctaHref} {...(wa ? { rel: 'noopener', target: '_blank' } : {})} data-cta="whatsapp">
@@ -96,7 +99,10 @@ const ctaHref = wa ?? pathFor('contact', locale);
             <li>
               <a href={LOGIN_URL} rel="noopener" target="_blank">
                 {t.nav.login}
-                <span class="visually-hidden"> — {t.a11y.login} ({t.a11y.external})</span>
+                <span class="visually-hidden">
+                  {' '}
+                  — {t.a11y.login} ({t.a11y.external})
+                </span>
               </a>
             </li>
           </ul>

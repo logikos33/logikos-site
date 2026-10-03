@@ -1,4 +1,5 @@
 ---
+import BrandBox from '../components/BrandBox.astro';
 import { dict } from '../i18n';
 import { pathFor } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
@@ -10,21 +11,18 @@ const en = dict('en');
 <Base locale="pt-br" title={pt.notFound.title} description={pt.notFound.text} noindex>
   <section class="section section--flush not-found greek-grid" aria-labelledby="page-title">
     <div class="container">
+      <BrandBox locale="pt-br" />
       <p class="eyebrow">404</p>
       <h1 id="page-title">{pt.notFound.title}</h1>
       <p class="lede">{pt.notFound.text}</p>
       <p>
-        <a class="link-arrow" href={pathFor('home', 'pt-br')}>
-          {pt.notFound.cta}
-        </a>
+        <a href={pathFor('home', 'pt-br')}>{pt.notFound.cta}</a>
       </p>
       <div lang="en" class="not-found__en">
         <h2>{en.notFound.title}</h2>
         <p>{en.notFound.text}</p>
         <p>
-          <a class="link-arrow" href={pathFor('home', 'en')}>
-            {en.notFound.cta}
-          </a>
+          <a href={pathFor('home', 'en')}>{en.notFound.cta}</a>
         </p>
       </div>
     </div>
@@ -34,6 +32,10 @@ const en = dict('en');
 <style>
   .not-found {
     padding-block: clamp(4rem, 12vw, 8rem);
+  }
+
+  .not-found .eyebrow {
+    margin-top: var(--lk-space-6);
   }
 
   .not-found__en {

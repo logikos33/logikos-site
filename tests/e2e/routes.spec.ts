@@ -5,8 +5,8 @@ import { ALL_ROUTES, SITE, expectNoConsoleErrors, stubTurnstile, trackConsole } 
 // Deterministic: Turnstile's real widget is exercised only by the form tests.
 test.beforeEach(async ({ page }) => stubTurnstile(page));
 
-test('the route map has 10 pages per language', () => {
-  expect(ALL_ROUTES).toHaveLength(20);
+test('the route map has 12 pages per language', () => {
+  expect(ALL_ROUTES).toHaveLength(24);
 });
 
 for (const { key, locale, path } of ALL_ROUTES) {
@@ -32,7 +32,7 @@ for (const { key, locale, path } of ALL_ROUTES) {
     expect((await request.get(ROUTES[key][other])).status()).toBe(200);
 
     await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /.{40,}/);
-    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', new URL(`/og/${locale}.png`, SITE).href);
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', new URL(`/og/${locale}/${key}.png`, SITE).href);
     await expectNoConsoleErrors(errors);
   });
 }
@@ -49,10 +49,10 @@ test('every internal link resolves (no broken links)', async ({ page, request })
   }
 });
 
-test('OG images exist for both languages', async ({ request }) => {
-  for (const l of LOCALES) {
-    const res = await request.get(`/og/${l}.png`);
-    expect(res.status()).toBe(200);
+test('one OG image per page and language', async ({ request }) => {
+  for (const { key, locale } of ALL_ROUTES) {
+    const res = await request.get(`/og/${locale}/${key}.png`);
+    expect(res.status(), `${locale}/${key}`).toBe(200);
     expect(res.headers()['content-type']).toContain('image/png');
   }
 });

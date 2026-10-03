@@ -15,7 +15,7 @@
   --lk-glitch-m: #ff2e63;
   --lk-ok: #1e8e4a;
   --lk-alert: #c9361b;
-  --lk-warn: #9a6a00;
+  --lk-warn: #855b00;
   /* Ink on a filled state chip (AA ≥ 4.5:1 at 13px/600, checked in tests/unit/contrast.test.ts). */
   --lk-ok-ink: #0a0a0f;
   --lk-alert-ink: #f4f6f8;

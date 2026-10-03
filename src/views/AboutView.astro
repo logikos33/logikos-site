@@ -1,6 +1,6 @@
 ---
-import FeatureList from '../components/FeatureList.astro';
-import PageHero from '../components/PageHero.astro';
+import DefList from '../components/DefList.astro';
+import Section from '../components/Section.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
@@ -13,23 +13,23 @@ interface Props {
 const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.about;
+const f = p.facts;
+const facts = [f.nvidia, f.licenses].map((x) => ({ term: x.title, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="about" title={p.meta.title} description={p.meta.description}>
-  <PageHero eyebrow={p.hero.eyebrow} title={p.hero.title} text={p.hero.text} />
+  <Section as="h1" cover id="hero-title" question={p.hero.question} title={p.hero.title} text={p.hero.text} />
 
-  <section class="section" aria-label={p.hero.title}>
-    <div class="container">
-      <FeatureList items={[p.facts.place, p.facts.nvidia, p.facts.licenses]} />
-      <div class="btn-row about-cta">
-        <WhatsAppButton locale={locale} />
-      </div>
+  <Section id="who-title" question={p.questions.who} title={f.place.title} text={f.place.text}>
+    <DefList rows={facts} class="after" />
+    <div class="btn-row after">
+      <WhatsAppButton locale={locale} />
     </div>
-  </section>
+  </Section>
 </Base>
 
 <style>
-  .about-cta {
-    margin-top: var(--lk-space-7);
+  .after {
+    margin-top: var(--lk-space-6);
   }
 </style>

@@ -1,11 +1,15 @@
 ---
-import FeatureList from '../components/FeatureList.astro';
+// /recognition — PLANO-V2 §5: cover · five readings (stage) · EPI in three states · the alert,
+// inside · where it runs · partners · demos · next step. The region avatar (M3) and the live
+// demo chips (M7) arrive in the motion round; the structure they hook into is built here.
+import AlertCard from '../components/AlertCard.astro';
+import DefList from '../components/DefList.astro';
 import HudVideo from '../components/HudVideo.astro';
-import PageHero from '../components/PageHero.astro';
-import ScenarioCards from '../components/ScenarioCards.astro';
-import SectionHead from '../components/SectionHead.astro';
-import StateLegend from '../components/StateLegend.astro';
+import Icon from '../components/Icon.astro';
+import Pipeline from '../components/Pipeline.astro';
+import Section from '../components/Section.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
+import { DEMOS } from '../config/links';
 import { dict } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
@@ -17,61 +21,179 @@ interface Props {
 const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.recognition;
+const q = p.questions;
+
+const READINGS = ['fire', 'epi', 'ergonomics', 'zones', 'counting'] as const;
+const REGIONS = ['head', 'eyes', 'ears', 'hands', 'torso', 'feet'] as const;
+const STATES = ['ok', 'alert', 'warn'] as const;
+/** Rest case of the avatar: hands covered → indeterminate (M3 keeps this as the default). */
+const regionState = (r: (typeof REGIONS)[number]) => (r === 'hands' ? 'warn' : 'ok');
+const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoints.license].map((x) => ({ term: x.title, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="recognition" title={p.meta.title} description={p.meta.description}>
-  <PageHero eyebrow={p.hero.eyebrow} title={p.hero.title} text={p.hero.text}>
+  <Section cover as="h1" question={p.hero.question} title={p.hero.title} text={p.hero.text} id="page-title">
     <div class="btn-row">
-      <WhatsAppButton locale={locale} />
-      <a class="btn btn--ghost" href={pathFor('howItWorks', locale)}>
-        {t.cta.howItWorks}
+      <WhatsAppButton locale={locale} label={t.cta.pilot} />
+      <a class="btn btn--ghost" href={pathFor('demos', locale)}>
+        {t.cta.demo}
       </a>
     </div>
-  </PageHero>
+  </Section>
 
-  <section class="section" aria-labelledby="scenarios-title">
-    <div class="container">
-      <SectionHead eyebrow={t.home.scenarios.eyebrow} title={t.home.scenarios.title} text={t.home.scenarios.text} id="scenarios-title" />
-      <ScenarioCards locale={locale} />
+  <Section question={q.readings} title={p.readings.title} id="readings-title" wide>
+    <HudVideo locale={locale} clip="fire" readings id="rec-stage" />
+    <div class="reading-texts">
+      {READINGS.map((k) => (
+        <div data-reading-text data-slot={k} hidden={k !== 'fire'}>
+          <dl class="defs">
+            <div class="defs__row">
+              <dt>{p.readings.fires}</dt>
+              <dd>{t.readings[k].fires}</dd>
+            </div>
+            <div class="defs__row">
+              <dt>{p.readings.receives}</dt>
+              <dd>{t.readings[k].receives}</dd>
+            </div>
+            <div class="defs__row">
+              <dt>{p.readings.not}</dt>
+              <dd>{t.readings[k].not}</dd>
+            </div>
+          </dl>
+        </div>
+      ))}
     </div>
-  </section>
+  </Section>
 
-  <section class="section" aria-labelledby="epi-title">
-    <div class="container split">
-      <div>
-        <SectionHead title={p.epi.title} text={p.epi.text} id="epi-title" />
-        <StateLegend locale={locale} />
-      </div>
-      <HudVideo locale={locale} slot="epi" />
+  <Section question={q.epi} title={p.epi.title} text={p.epi.text} id="epi-title" wide>
+    <div class="split">
+      <ul class="regions" data-avatar>
+        {REGIONS.map((r) => (
+          <li class="regions__row">
+            <span>{p.epi.regions[r]}</span>
+            <span class:list={['verdict', `verdict--${regionState(r)}`]}>
+              <Icon name={regionState(r)} size={12} />
+              {t.states[regionState(r)]}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <dl class="defs">
+        {STATES.map((s) => (
+          <div class="defs__row">
+            <dt>
+              <span class:list={['verdict', `verdict--${s}`]}>
+                <Icon name={s} size={12} />
+                {t.states[s]}
+              </span>
+            </dt>
+            <dd>{p.epi.states[s]}</dd>
+          </div>
+        ))}
+      </dl>
     </div>
-  </section>
+    <p class="explain">{p.epi.explain}</p>
+    <HudVideo locale={locale} clip="epi" />
+  </Section>
 
-  <section class="section" aria-labelledby="evidence-title">
-    <div class="container split">
-      <SectionHead title={p.evidence.title} text={p.evidence.text} id="evidence-title" />
-      <HudVideo locale={locale} slot="fire" />
+  <Section question={q.alert} title={p.alertAnatomy.title} text={p.alertAnatomy.text} id="alert-title" wide>
+    <div class="split">
+      <AlertCard locale={locale} clip="hero" />
+      <DefList rows={p.alertAnatomy.rows} />
     </div>
-  </section>
+  </Section>
 
-  <section class="section" aria-labelledby="steps-title">
-    <div class="container">
-      <SectionHead eyebrow={t.home.how.eyebrow} title={t.home.how.title} id="steps-title" />
-      <FeatureList items={[t.steps.camera, t.steps.device, t.steps.verdict]} />
+  <Section question={q.where} title={p.where.title} text={p.where.text} id="where-title" wide>
+    <Pipeline locale={locale} />
+    <p>
+      <a href={pathFor('howItWorks', locale)}>{p.where.cta}</a>
+    </p>
+  </Section>
+
+  <Section question={q.partners} title={p.partners.title} id="partners-title">
+    <DefList rows={partnerRows} />
+    <p>
+      <a href={pathFor('partners', locale)}>{p.partners.cta}</a>
+    </p>
+  </Section>
+
+  <Section question={q.demo} title={p.demo.title} text={p.demo.text} id="demo-title">
+    <div class="btn-row">
+      <a class="btn btn--ghost" href={DEMOS.epi} rel="noopener" target="_blank">
+        {t.demos.epi.title}
+        <span class="visually-hidden"> ({t.a11y.external})</span>
+      </a>
+      <a class="btn btn--ghost" href={DEMOS.fire} rel="noopener" target="_blank">
+        {t.demos.fire.title}
+        <span class="visually-hidden"> ({t.a11y.external})</span>
+      </a>
     </div>
-  </section>
+    <p>
+      <a href={pathFor('demos', locale)}>{t.cta.seeDemos}</a>
+    </p>
+  </Section>
+
+  <Section question={q.next} title={t.home.next.title} id="next-title">
+    <div class="btn-row">
+      <WhatsAppButton locale={locale} label={t.cta.pilot} />
+      <a class="btn btn--ghost" href={pathFor('partners', locale)}>
+        {t.cta.partner}
+      </a>
+    </div>
+  </Section>
 </Base>
 
+<script>
+  // Stage: the reading list on the HUD drives which trio of definition rows is shown.
+  const list = document.querySelector<HTMLFieldSetElement>('[data-hud-readings="rec-stage"]');
+  list?.addEventListener('change', () => {
+    const slot = list.querySelector<HTMLInputElement>('input:checked')?.value;
+    for (const el of document.querySelectorAll<HTMLElement>('[data-reading-text]')) el.hidden = el.dataset.slot !== slot;
+  });
+</script>
+
 <style>
+  .reading-texts {
+    margin-top: var(--lk-space-5);
+  }
+
+  .reading-texts [hidden] {
+    display: none;
+  }
+
   .split {
     display: grid;
     gap: var(--lk-space-6);
     align-items: start;
   }
 
+  .regions {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .regions__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--lk-space-3);
+    padding: var(--lk-space-3) 0;
+    border-top: 1px solid var(--lk-line);
+  }
+
+  .regions__row:last-child {
+    border-bottom: 1px solid var(--lk-line);
+  }
+
+  .explain {
+    max-width: var(--lk-measure);
+    margin: var(--lk-space-5) 0;
+  }
+
   @media (min-width: 64rem) {
     .split {
       grid-template-columns: 1fr 1fr;
-      gap: var(--lk-space-7);
     }
   }
 </style>

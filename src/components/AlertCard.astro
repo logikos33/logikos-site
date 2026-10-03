@@ -11,20 +11,22 @@ import Icon from './Icon.astro';
 
 interface Props {
   locale: Locale;
-  slot: HudSlot;
+  clip: HudSlot;
   class?: string;
 }
 
-const { locale, slot, class: className } = Astro.props;
+const { locale, clip: slot, class: className } = Astro.props;
 const t = dict(locale);
 const clip = CLIPS[slot];
 const labels: HudLabels = { states: t.states, labels: t.hud.labels, items: t.hud.items };
+const words: Record<string, string> = labels.labels;
+const items: Record<string, string> = labels.items;
 const last = clip.frames[clip.frames.length - 1];
 const verdict = clipVerdict(clip, labels);
 const hazard = last?.hazards.find((h) => h.status === 'detected');
 const decisive = last?.people.flatMap((p) => p.ppe).find((e) => e.status === 'non_compliant' || e.status === 'indeterminate');
 const word = hazard ? t.hud.labels.alert : t.states[verdict];
-const object = hazard ? t.hud.labels[hazard.type === 'fire' ? 'flame' : hazard.type] : decisive ? t.hud.items[decisive.item] : undefined;
+const object = hazard ? words[hazard.type === 'fire' ? 'flame' : hazard.type] : decisive ? items[decisive.item] : undefined;
 const sent = verdict === 'alert' && clip.meta.clip_s > 0 && clip.meta.channel;
 const a = t.alert;
 ---
@@ -33,7 +35,8 @@ const a = t.alert;
   <div class="alert__head">
     <span class:list={['verdict', `verdict--${verdict}`]}>
       <Icon name={verdict} size={12} />
-      {word}{object && ` · ${object}`}
+      {word}
+      {object && ` · ${object}`}
     </span>
     <span class="alert__stamp mono">
       {t.hud.cam} {clip.meta.camera} · {clip.meta.time}

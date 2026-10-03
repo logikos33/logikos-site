@@ -5,12 +5,12 @@ import { ALL_ROUTES, SITE, stubTurnstile } from './helpers.ts';
 // Deterministic: Turnstile's real widget is exercised only by the form tests.
 test.beforeEach(async ({ page }) => stubTurnstile(page));
 
-test('sitemap lists all 20 pages, each with pt-BR, en and x-default alternates', async ({ request }) => {
+test('sitemap lists all 24 pages, each with pt-BR, en and x-default alternates', async ({ request }) => {
   const index = await (await request.get('/sitemap-index.xml')).text();
   expect(index).toContain(new URL('/sitemap-0.xml', SITE).href);
   const xml = await (await request.get('/sitemap-0.xml')).text();
   const urls = [...xml.matchAll(/<url>([\s\S]*?)<\/url>/g)].map((m) => m[1] ?? '');
-  expect(urls).toHaveLength(20);
+  expect(urls).toHaveLength(24);
   for (const { key, path } of ALL_ROUTES) {
     const entry = urls.find((u) => u.includes(`<loc>${new URL(path, SITE).href}</loc>`));
     expect(entry, path).toBeTruthy();

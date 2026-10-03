@@ -13,9 +13,9 @@ export type HudSlot = (typeof HUD_SLOTS)[number];
 
 /** Bracket + chip geometry in viewBox units (POSTER_W × POSTER_H ≈ 2× CSS px at 800 px wide). */
 export const HUD_GEOMETRY = {
-  chipH: 48,
-  chipPad: 16,
-  chipFont: 26,
+  chipH: 56,
+  chipPad: 18,
+  chipFont: 30,
   chipGap: 8,
   stroke: 4,
   baseStroke: 8,
@@ -33,7 +33,12 @@ function escapeXml(s: string): string {
 /** Four L-shaped corners; legs are 8% of the short side, clamped. */
 export function bracketPath(x: number, y: number, w: number, h: number): string {
   const c = Math.max(HUD_GEOMETRY.minLeg, Math.min(HUD_GEOMETRY.maxLeg, Math.min(w, h) * 0.16));
-  return [`M${x} ${y + c}V${y}H${x + c}`, `M${x + w - c} ${y}H${x + w}V${y + c}`, `M${x + w} ${y + h - c}V${y + h}H${x + w - c}`, `M${x + c} ${y + h}H${x}V${y + h - c}`].join('');
+  return [
+    `M${x} ${y + c}V${y}H${x + c}`,
+    `M${x + w - c} ${y}H${x + w}V${y + c}`,
+    `M${x + w} ${y + h - c}V${y + h}H${x + w - c}`,
+    `M${x + c} ${y + h}H${x}V${y + h - c}`,
+  ].join('');
 }
 
 const ICON: Record<HudState, string> = {
@@ -61,7 +66,7 @@ export function boxSvg(b: HudBox): string {
       `<text x="${x + g.chipPad + g.chipH * 0.6}" y="${chipY + g.chipH * 0.68}" fill="#0A0A0F" font-family="'Inter Variable', system-ui, sans-serif" font-size="${g.chipFont}" font-weight="600">${escapeXml(b.text)}</text>`;
   const path = bracketPath(x, y, w, h);
   return (
-    `<g class="hud-box hud-box--${b.state}">` +
+    `<g class="hud-pbox hud-pbox--${b.state}">` +
     `<path d="${path}" fill="none" stroke="#0A0A0F" stroke-width="${g.baseStroke}" stroke-linecap="square"/>` +
     `<path d="${path}" fill="none" stroke="${color}" stroke-width="${g.stroke}" stroke-linecap="square"${dash}/>` +
     chip +

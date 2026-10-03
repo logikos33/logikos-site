@@ -1,7 +1,7 @@
 ---
-import FeatureList from '../components/FeatureList.astro';
+import DefList from '../components/DefList.astro';
 import HudVideo from '../components/HudVideo.astro';
-import PageHero from '../components/PageHero.astro';
+import Section from '../components/Section.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
@@ -14,26 +14,31 @@ interface Props {
 const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.twins;
+const f = p.features;
+const uses = [f.measure, f.annotate].map((x) => ({ term: x.title, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="twins" title={p.meta.title} description={p.meta.description}>
-  <PageHero eyebrow={p.hero.eyebrow} title={p.hero.title} text={p.hero.text}>
-    <div class="btn-row">
+  <Section as="h1" cover id="hero-title" question={p.questions.what} title={p.hero.title} text={p.hero.text}>
+    <div class="btn-row after">
       <WhatsAppButton locale={locale} />
     </div>
-  </PageHero>
+  </Section>
 
-  <section class="section" aria-label={p.hero.title}>
-    <div class="container stack">
-      <HudVideo locale={locale} slot="twins" />
-      <FeatureList items={[p.features.capture, p.features.measure, p.features.annotate]} />
+  <Section id="how-title" question={p.questions.how} title={f.capture.title} text={f.capture.text} wide>
+    <HudVideo locale={locale} clip="twins" class="after" />
+    <DefList rows={uses} class="after" />
+  </Section>
+
+  <Section id="buy-title" question={p.questions.buy} title={p.buy.title} text={p.buy.text}>
+    <div class="btn-row after">
+      <WhatsAppButton locale={locale} />
     </div>
-  </section>
+  </Section>
 </Base>
 
 <style>
-  .stack {
-    display: grid;
-    gap: var(--lk-space-7);
+  .after {
+    margin-top: var(--lk-space-6);
   }
 </style>

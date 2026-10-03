@@ -19,10 +19,14 @@ const INSIDE = ['camera', 'device', 'verdict'] as const;
 
 <div class:list={['pipeline', { 'pipeline--long': long }, className]} data-pipeline>
   <ol class="pipeline__wall" aria-label={t.home.pipeline.wall}>
-    <span class="pipeline__wall-label mono" aria-hidden="true">{t.home.pipeline.wall}</span>
+    <span class="pipeline__wall-label mono" aria-hidden="true">
+      {t.home.pipeline.wall}
+    </span>
     {INSIDE.map((key, i) => (
       <li class="pipeline__node">
-        <span class="pipeline__n" aria-hidden="true">{i + 1}</span>
+        <span class="pipeline__n" aria-hidden="true">
+          {i + 1}
+        </span>
         <h3>{t.steps[key].title}</h3>
         <p>{t.steps[key].text}</p>
       </li>
@@ -31,7 +35,9 @@ const INSIDE = ['camera', 'device', 'verdict'] as const;
   <div class="pipeline__cross" aria-hidden="true"></div>
   <ol class="pipeline__outside" start="4">
     <li class="pipeline__node pipeline__node--person">
-      <span class="pipeline__n" aria-hidden="true">4</span>
+      <span class="pipeline__n" aria-hidden="true">
+        4
+      </span>
       <h3>{t.steps.person.title}</h3>
       <p>{t.steps.person.text}</p>
     </li>

@@ -1,15 +1,15 @@
 ---
+// Home: six sections, six margin questions (PLANO-V2 §4). The hero is the only section built
+// by hand (BrandBox sits above the h1, two columns from 64rem); everything else is <Section>.
+import AlertCard from '../components/AlertCard.astro';
 import BrandBox from '../components/BrandBox.astro';
-import ContactDual from '../components/ContactDual.astro';
-import HowItWorks from '../components/HowItWorks.astro';
+import DefList from '../components/DefList.astro';
 import HudVideo from '../components/HudVideo.astro';
-import LgpdStrip from '../components/LgpdStrip.astro';
-import PartnerBlock from '../components/PartnerBlock.astro';
-import ProductCards from '../components/ProductCards.astro';
-import ScenarioCards from '../components/ScenarioCards.astro';
-import SectionHead from '../components/SectionHead.astro';
-import TwoDoors from '../components/TwoDoors.astro';
+import Pipeline from '../components/Pipeline.astro';
+import Section from '../components/Section.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
+import { DEMOS, LOGIN_URL } from '../config/links';
+import { READINGS } from '../data/media';
 import { dict } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
@@ -21,115 +21,269 @@ interface Props {
 const { locale } = Astro.props;
 const t = dict(locale);
 const h = t.home;
+const dataRows = h.data.leavesRows.map((leaves, i) => ({ leaves, stays: h.data.staysRows[i] }));
 ---
 
 <Base locale={locale} routeKey="home" title={h.meta.title} description={h.meta.description}>
-  <section class="hero greek-grid" aria-labelledby="hero-title">
-    <div class="container hero__grid">
-      <div class="hero__copy">
-        <BrandBox locale={locale} glitch />
-        <h1 id="hero-title">{h.hero.title}</h1>
-        <p class="lede">{h.hero.sub}</p>
-        <ul class="proof-line" role="list">
-          {h.hero.proof.map((item) => (
-            <li>{item}</li>
-          ))}
-        </ul>
-        <div class="btn-row hero__cta">
-          <WhatsAppButton locale={locale} />
-          <a class="btn btn--ghost" href={pathFor('howItWorks', locale)}>
-            {t.cta.howItWorks}
+  <section class="section q-section greek-grid section--cover section--flush" aria-labelledby="hero-title">
+    <div class="container q-grid">
+      <p class="q" aria-hidden="true">
+        {h.questions.what}
+      </p>
+      <div class="q-body q-body--wide hero">
+        <div class="hero__copy">
+          <BrandBox locale={locale} glitch />
+          <h1 id="hero-title">
+            <span class="visually-hidden">{h.questions.what} </span>
+            {h.hero.title}
+          </h1>
+          <p class="lede">{h.hero.sub}</p>
+          <div class="btn-row">
+            <WhatsAppButton locale={locale} />
+            <a class="btn btn--ghost" href={pathFor('demos', locale)}>
+              {t.cta.demo}
+            </a>
+          </div>
+        </div>
+        <HudVideo locale={locale} clip="hero" priority class="hero__video" />
+      </div>
+    </div>
+  </section>
+
+  <Section question={h.questions.gain} title={h.doors.title} id="gain-title" flush wide>
+    <div class="doors">
+      <div class="door">
+        <p class="eyebrow">{h.doors.plant.eyebrow}</p>
+        <h3>{h.doors.plant.title}</h3>
+        <DefList rows={h.doors.plant.rows} />
+        <div class="btn-row">
+          <WhatsAppButton locale={locale} label={h.doors.plant.cta} />
+        </div>
+      </div>
+      <div class="door">
+        <p class="eyebrow">{h.doors.partner.eyebrow}</p>
+        <h3>{h.doors.partner.title}</h3>
+        <DefList rows={h.doors.partner.rows} />
+        <div class="btn-row">
+          <a class="btn" href={pathFor('partners', locale)}>
+            <span class="btn__mark" aria-hidden="true"></span>
+            {h.doors.partner.cta}
           </a>
         </div>
       </div>
-      <HudVideo locale={locale} slot="hero" priority class="hero__video" />
     </div>
-  </section>
+  </Section>
 
-  <TwoDoors locale={locale} />
+  <Section question={h.questions.how} title={h.pipeline.title} id="how-title" wide>
+    <Pipeline locale={locale} />
+    <p class="after">
+      <a href={pathFor('howItWorks', locale)}>{h.pipeline.cta}</a>
+    </p>
+  </Section>
 
-  <section class="section" aria-labelledby="scenarios-title">
-    <div class="container">
-      <SectionHead eyebrow={h.scenarios.eyebrow} title={h.scenarios.title} text={h.scenarios.text} id="scenarios-title" />
-      <ScenarioCards locale={locale} />
+  <Section question={h.questions.see} title={h.stage.title} text={h.stage.text} id="see-title" wide>
+    <HudVideo locale={locale} clip="fire" readings id="stage" />
+    <div class="stage-alerts" data-stage-alerts>
+      {READINGS.map((s) => (
+        <AlertCard locale={locale} clip={s} {...(s === 'fire' ? {} : { class: 'is-hidden' })} />
+      ))}
     </div>
-  </section>
+    <p class="after">
+      {h.stage.demosLine}{' '}
+      <a href={DEMOS.epi} rel="noopener" target="_blank">
+        {h.stage.demoEpi}
+        <span class="visually-hidden"> ({t.a11y.external})</span>
+      </a>
+      {' · '}
+      <a href={DEMOS.fire} rel="noopener" target="_blank">
+        {h.stage.demoFire}
+        <span class="visually-hidden"> ({t.a11y.external})</span>
+      </a>
+      {' · '}
+      <a href={pathFor('demos', locale)}>{t.cta.seeDemos}</a>
+    </p>
+  </Section>
 
-  <section class="section" aria-labelledby="how-title">
-    <div class="container">
-      <SectionHead eyebrow={h.how.eyebrow} title={h.how.title} id="how-title" />
-      <HowItWorks locale={locale} />
-      <p class="section-link">
-        <a class="link-arrow" href={pathFor('howItWorks', locale)}>
-          {h.how.cta}
-        </a>
-      </p>
-    </div>
-  </section>
+  <Section question={h.questions.data} title={h.data.title} id="data-title">
+    <table class="data">
+      <caption class="visually-hidden">{h.data.title}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{h.data.leaves}</th>
+          <th scope="col">{h.data.stays}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {dataRows.map((r) => (
+          <tr>
+            <td>{r.leaves}</td>
+            <td>{r.stays}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <p>{h.data.retention}</p>
+    <p>
+      <a href={pathFor('compliance', locale)}>{h.data.cta}</a>
+    </p>
+  </Section>
 
-  <section class="section" aria-labelledby="partner-title">
-    <div class="container">
-      <SectionHead eyebrow={h.partner.eyebrow} title={h.partner.title} text={h.partner.text} id="partner-title" />
-      <PartnerBlock locale={locale} />
-      <p class="section-link">
-        <a class="link-arrow" href={pathFor('partners', locale)}>
-          {h.partner.cta}
-        </a>
-      </p>
-    </div>
-  </section>
-
-  <section class="section" aria-labelledby="products-title">
-    <div class="container">
-      <SectionHead eyebrow={h.products.eyebrow} title={h.products.title} id="products-title" />
-      <ProductCards locale={locale} />
-    </div>
-  </section>
-
-  <section class="section" aria-labelledby="lgpd-title">
-    <div class="container">
-      <LgpdStrip locale={locale} />
-    </div>
-  </section>
-
-  <section class="section" aria-labelledby="contact-title">
-    <div class="container">
-      <SectionHead eyebrow={h.contact.eyebrow} title={h.contact.title} id="contact-title" />
-      <ContactDual locale={locale} />
-    </div>
-  </section>
+  <Section question={h.questions.next} title={h.next.title} id="next-title">
+    <dl class="defs next">
+      <div class="defs__row next__row">
+        <dt>{h.next.plant.term}</dt>
+        <dd>{h.next.plant.text}</dd>
+        <dd class="next__action">
+          <WhatsAppButton locale={locale} />
+        </dd>
+      </div>
+      <div class="defs__row next__row">
+        <dt>{h.next.partner.term}</dt>
+        <dd>{h.next.partner.text}</dd>
+        <dd class="next__action">
+          <a class="btn" href={`${pathFor('partners', locale)}#parceria`}>
+            <span class="btn__mark" aria-hidden="true"></span>
+            {h.next.partner.cta}
+          </a>
+        </dd>
+      </div>
+      <div class="defs__row next__row">
+        <dt>{h.next.client.term}</dt>
+        <dd>{h.next.client.text}</dd>
+        <dd class="next__action">
+          <a href={LOGIN_URL} rel="noopener" target="_blank">
+            {t.nav.login}
+            <span class="visually-hidden"> ({t.a11y.external})</span>
+          </a>
+        </dd>
+      </div>
+    </dl>
+    <p class="after">
+      {h.next.also} <a href={pathFor('twins', locale)}>{t.nav.twins}</a>
+      {' · '}
+      <a href={pathFor('robotics', locale)}>{t.nav.robotics}</a>
+    </p>
+  </Section>
 </Base>
 
-<style>
-  .hero {
-    padding-block: clamp(2.5rem, 7vw, 5.5rem) clamp(3rem, 7vw, 5rem);
-  }
+<script>
+  // Stage: only the alert card of the active reading is shown.
+  const list = document.querySelector<HTMLFieldSetElement>('[data-hud-readings="stage"]');
+  const cards = document.querySelectorAll<HTMLElement>('[data-stage-alerts] [data-alert-card][data-slot]');
+  list?.addEventListener('change', (e) => {
+    const slot = (e.target as HTMLInputElement).value;
+    cards.forEach((c) => c.classList.toggle('is-hidden', c.dataset.slot !== slot));
+  });
+</script>
 
-  .hero__grid {
+<style>
+  /* Hero: text first, figure after; two columns (≈40 | 60) from 64rem so frame + caption fit the fold. */
+  .hero {
     display: grid;
-    gap: var(--lk-space-7);
-    align-items: center;
+    gap: var(--lk-space-6);
+    align-items: start;
   }
 
   .hero__copy h1 {
-    margin-top: var(--lk-space-6);
+    max-width: 16ch;
+    margin-top: var(--lk-space-5);
+    /* Two lines beside the figure at 1280; the global display size is for full-width covers. */
+    font-size: clamp(2.4rem, 4.4vw, 3.6rem);
   }
 
-  .hero__copy .proof-line {
-    margin-block: var(--lk-space-5);
+  .hero__copy .lede {
+    max-width: var(--lk-measure-lede);
   }
 
-  .hero__cta {
+  .hero__copy .btn-row {
     margin-top: var(--lk-space-5);
   }
 
-  .section-link {
-    margin: var(--lk-space-6) 0 0;
+  @media (min-width: 64rem) {
+    .hero {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: var(--lk-space-7);
+    }
   }
 
-  @media (min-width: 64rem) {
-    .hero__grid {
-      grid-template-columns: 1.05fr 1fr;
+  /* Two doors, a vertical rule between them, no frame. */
+  .doors {
+    display: grid;
+    gap: var(--lk-space-7);
+  }
+
+  .door h3 {
+    max-width: var(--lk-measure-lede);
+    margin: 0 0 var(--lk-space-5);
+  }
+
+  .door .btn-row {
+    margin-top: var(--lk-space-5);
+  }
+
+  @media (min-width: 48rem) {
+    .doors {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .door + .door {
+      border-left: 1px solid var(--lk-line);
+      padding-left: var(--lk-space-7);
+    }
+  }
+
+  /* Stage: one visible alert card at a time. */
+  .stage-alerts {
+    margin-top: var(--lk-space-5);
+  }
+
+  .stage-alerts :global(.is-hidden) {
+    display: none;
+  }
+
+  .after {
+    margin-top: var(--lk-space-6);
+  }
+
+  /* Data table: hairline rows, two columns. */
+  .data {
+    width: 100%;
+    max-width: var(--lk-measure);
+    border-collapse: collapse;
+    margin-top: var(--lk-space-5);
+  }
+
+  .data th,
+  .data td {
+    text-align: left;
+    vertical-align: top;
+    padding: var(--lk-space-3) var(--lk-space-4) var(--lk-space-3) 0;
+    border-bottom: 1px solid var(--lk-line);
+  }
+
+  .data th {
+    font-family: var(--lk-font-display);
+    font-weight: 500;
+    border-bottom: var(--lk-rule);
+  }
+
+  .data td {
+    color: var(--lk-text-2);
+  }
+
+  /* Next: a third cell for the action. */
+  .next {
+    margin-top: var(--lk-space-5);
+  }
+
+  .next__action {
+    max-width: none;
+  }
+
+  @media (min-width: 48rem) {
+    .next__row {
+      grid-template-columns: minmax(10rem, 0.8fr) minmax(0, 1.6fr) auto;
+      align-items: start;
     }
   }
 </style>

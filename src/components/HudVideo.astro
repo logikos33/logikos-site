@@ -13,7 +13,7 @@ import Icon from './Icon.astro';
 
 interface Props {
   locale: Locale;
-  slot: HudSlot;
+  clip: HudSlot;
   /** Hero starts as soon as it is visible; others wait for the viewport too. */
   priority?: boolean;
   /** Stage mode: a reading list drives which clip the same figure shows. */
@@ -22,7 +22,7 @@ interface Props {
   id?: string;
 }
 
-const { locale, slot, priority = false, readings = false, class: className, id = `hud-${slot}` } = Astro.props;
+const { locale, clip: slot, priority = false, readings = false, class: className, id = `hud-${slot}` } = Astro.props;
 const t = dict(locale);
 const labels: HudLabels = { states: t.states, labels: t.hud.labels, items: t.hud.items };
 const slots: HudSlot[] = readings ? [...READINGS] : [slot];
@@ -44,7 +44,13 @@ function caption(s: HudSlot, clip: HudClip) {
 
 const data = slots.map((s) => {
   const clip = CLIPS[s];
-  return { slot: s, src: mediaUrl(MEDIA[s].hud), video: MEDIA[s].video ? mediaUrl(MEDIA[s].video as string) : null, poster: `/media/posters/${locale}/${s}.svg`, ...caption(s, clip) };
+  return {
+    slot: s,
+    src: mediaUrl(MEDIA[s].hud),
+    video: MEDIA[s].video ? mediaUrl(MEDIA[s].video as string) : null,
+    poster: `/media/posters/${locale}/${s}.svg`,
+    ...caption(s, clip),
+  };
 });
 const first = data[0];
 const listId = `${id}-readings`;
@@ -75,14 +81,35 @@ const listId = `${id}-readings`;
     <div class="hud__stage">
       {data.map((d, i) =>
         d.video ? (
-          <video class="hud__media" data-for={d.slot} hidden={i !== 0} muted playsinline preload="metadata" poster={d.poster} width={POSTER_W} height={POSTER_H}>
+          <video
+            class="hud__media"
+            data-for={d.slot}
+            hidden={i !== 0}
+            muted
+            playsinline
+            preload="metadata"
+            poster={d.poster}
+            width={POSTER_W}
+            height={POSTER_H}
+          >
             <source src={d.video} type="video/mp4" />
           </video>
         ) : (
-          <div class="hud__media hud__poster" data-for={d.slot} hidden={i !== 0} set:html={posterSvg(d.slot, t.hud.posterLabel, { clip: CLIPS[d.slot], labels })} />
+          <div
+            class="hud__media hud__poster"
+            data-for={d.slot}
+            hidden={i !== 0}
+            set:html={posterSvg(d.slot, t.hud.posterLabel, { clip: CLIPS[d.slot], labels })}
+          />
         ),
       )}
-      <svg class="hud__overlay" viewBox={`0 0 ${POSTER_W} ${POSTER_H}`} preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"></svg>
+      <svg
+        class="hud__overlay"
+        viewBox={`0 0 ${POSTER_W} ${POSTER_H}`}
+        preserveAspectRatio="xMidYMid slice"
+        aria-hidden="true"
+        focusable="false"
+      ></svg>
       <span class="hud__badge" data-hud-badge hidden>
         {t.hud.mock}
       </span>
@@ -124,7 +151,7 @@ const listId = `${id}-readings`;
 <script>
   import { frameIndexAt, frameToBoxes, type HudBox, type HudClip, type HudLabels } from '../lib/hud';
   import { ICON_PATHS } from '../lib/icons';
-  import { bracketPath, HUD_GEOMETRY as G, POSTER_H, POSTER_W } from '../lib/poster';
+  import { bracketPath, POSTER_H, POSTER_W } from '../lib/poster';
 
   const SVG_NS = 'http://www.w3.org/2000/svg';
 
@@ -134,8 +161,11 @@ const listId = `${id}-readings`;
     return node;
   }
 
+  // Chip metrics in CSS px, converted to viewBox units with `k` so chips stay legible at any size.
+  const CHIP = { h: 24, pad: 8, font: 13, gap: 4, icon: 12 };
+
   /** One box = base stroke + state stroke (dashed for indeterminate) + a docked chip outside the box. */
-  function drawBox(svg: SVGSVGElement, b: HudBox): void {
+  function drawBox(svg: SVGSVGElement, b: HudBox, k: number): void {
     const x = b.x * POSTER_W;
     const y = b.y * POSTER_H;
     const w = b.w * POSTER_W;
@@ -144,16 +174,21 @@ const listId = `${id}-readings`;
     const d = bracketPath(x, y, w, h);
     g.append(el('path', { class: 'hud-box__base', d }));
     g.append(el('path', { class: 'hud-box__bracket', d }));
-    const chipW = (b.outlined ? 0 : G.chipH * 0.6) + b.text.length * G.chipFont * 0.6 + G.chipPad * 2;
-    const chipY = y - G.chipH - G.chipGap >= 0 ? y - G.chipH - G.chipGap : y + G.chipGap;
-    const chip = el('g', { class: `hud-chip hud-chip--${b.state}${b.outlined ? ' hud-chip--outlined' : ''}`, transform: `translate(${x} ${chipY})` });
-    chip.append(el('rect', { class: 'hud-chip__bg', width: chipW, height: G.chipH, rx: 2 }));
+    const lead = b.outlined ? 0 : CHIP.icon + 6;
+    const chipW = lead + b.text.length * CHIP.font * 0.6 + CHIP.pad * 2;
+    const chipH = CHIP.h * k;
+    const chipY = y - chipH - CHIP.gap * k >= 0 ? y - chipH - CHIP.gap * k : y + CHIP.gap * k;
+    const chip = el('g', {
+      class: `hud-chip hud-chip--${b.state}${b.outlined ? ' hud-chip--outlined' : ''}`,
+      transform: `translate(${x} ${chipY}) scale(${k})`,
+    });
+    chip.append(el('rect', { class: 'hud-chip__bg', width: chipW, height: CHIP.h, rx: 2 }));
     if (!b.outlined) {
-      const icon = el('g', { class: 'hud-chip__icon', transform: `translate(${G.chipPad - 2} 10) scale(1.15)` });
+      const icon = el('g', { class: 'hud-chip__icon', transform: `translate(${CHIP.pad} 6) scale(0.5)` });
       icon.innerHTML = ICON_PATHS[b.state];
       chip.append(icon);
     }
-    const text = el('text', { class: 'hud-chip__text', x: G.chipPad + (b.outlined ? 0 : G.chipH * 0.6), y: G.chipH * 0.68 });
+    const text = el('text', { class: 'hud-chip__text', x: CHIP.pad + lead, y: CHIP.h * 0.68 });
     text.textContent = b.text;
     chip.append(text);
     g.append(chip);
@@ -162,7 +197,9 @@ const listId = `${id}-readings`;
 
   function draw(svg: SVGSVGElement, boxes: HudBox[]): void {
     svg.replaceChildren();
-    for (const b of boxes) drawBox(svg, b);
+    const width = svg.getBoundingClientRect().width;
+    const k = width > 0 ? POSTER_W / width : 1;
+    for (const b of boxes) drawBox(svg, b, k);
   }
 
   const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -228,11 +265,11 @@ const listId = `${id}-readings`;
       setButton('replay');
     };
 
-    /** Idle: the poster already carries the verdict (drawn at build time), so the overlay stays empty. */
+    /** Idle: the verdict at rest — the last frame, drawn at the figure's real size (the poster's copy hides). */
     const backToIdle = () => {
       clearPlayback();
       shown = -1;
-      svg.replaceChildren();
+      if (clip) show(clip.frames.length - 1);
       fig.dataset.state = 'idle';
       setButton('play');
     };
@@ -308,19 +345,26 @@ const listId = `${id}-readings`;
       video = fig.querySelector<HTMLVideoElement>('video:not([hidden])');
       fig.dataset.slot = slot;
       fig.dataset.src = r.src;
-      if (machineCell) machineCell.lastChild!.textContent = r.machine;
+      if (machineCell?.lastChild) machineCell.lastChild.textContent = r.machine;
       if (personText) personText.textContent = r.person;
       if (receipt) {
         receipt.hidden = !r.verdict;
         receipt.className = `verdict verdict--${r.verdict ?? 'ok'}`;
         const t = receipt.querySelector('svg');
         if (t && r.verdict) t.innerHTML = ICON_PATHS[r.verdict];
-        receipt.lastChild!.textContent = r.word;
+        if (receipt.lastChild) receipt.lastChild.textContent = r.word;
       }
       if (!(await load(r.src))) return;
       if (reducedMotion() || handheld()) backToIdle();
       else play();
     });
+
+    new ResizeObserver(() => {
+      if (shown < 0) return;
+      const index = shown;
+      shown = -1;
+      show(index);
+    }).observe(svg);
 
     const io = new IntersectionObserver(
       (entries) => {
@@ -382,14 +426,16 @@ const listId = `${id}-readings`;
 
   .hud__overlay :global(.hud-box__base) {
     fill: none;
-    stroke-width: 8;
+    stroke-width: 4;
     stroke-linecap: square;
+    vector-effect: non-scaling-stroke;
   }
 
   .hud__overlay :global(.hud-box__bracket) {
     fill: none;
-    stroke-width: 4;
+    stroke-width: 2;
     stroke-linecap: square;
+    vector-effect: non-scaling-stroke;
   }
 
   .hud__overlay :global(.hud-box--ok .hud-box__bracket) {
@@ -431,12 +477,12 @@ const listId = `${id}-readings`;
 
   .hud__overlay :global(.hud-chip__text) {
     fill: var(--hud-ink);
-    font: 600 26px var(--lk-font-body);
+    font: 600 13px var(--lk-font-body);
   }
 
   .hud__overlay :global(.hud-chip--outlined .hud-chip__text) {
     fill: var(--hud-text);
-    font: 400 26px var(--lk-font-mono);
+    font: 400 13px var(--lk-font-mono);
   }
 
   .hud__overlay :global(.hud-chip__icon) {
@@ -486,11 +532,11 @@ const listId = `${id}-readings`;
     display: none;
   }
 
-  /* The grid grego is cover decoration and the poster's verdict is the rest state: both leave while playing. */
+  /* The poster's verdict is the no-JS fallback: once the script owns the state the overlay draws it
+     at the figure's real size. The grid grego is cover decoration and leaves with the first verdict. */
+  .hud[data-state] :global(.hud-poster__verdict),
   .hud[data-state='playing'] :global(.hud-poster__grid),
-  .hud[data-state='ended'] :global(.hud-poster__grid),
-  .hud[data-state='playing'] :global(.hud-poster__verdict),
-  .hud[data-state='ended'] :global(.hud-poster__verdict) {
+  .hud[data-state='ended'] :global(.hud-poster__grid) {
     display: none;
   }
 
