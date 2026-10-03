@@ -3,15 +3,18 @@ import { LOGIN_URL } from '../config/links';
 import { dict } from '../i18n';
 import { HTML_LANG, LOCALES, pathFor, type Locale, type RouteKey } from '../i18n/routes';
 import { whatsappHref } from '../lib/site';
+import Glitch from './Glitch.astro';
 import Icon from './Icon.astro';
 import Logo from './Logo.astro';
 
 interface Props {
   locale: Locale;
   routeKey?: RouteKey;
+  /** Home only: the signature entrance runs once per session on the wordmark (M1). */
+  glitch?: boolean;
 }
 
-const { locale, routeKey } = Astro.props;
+const { locale, routeKey, glitch = false } = Astro.props;
 const t = dict(locale);
 // Six items. Twins and Robotics are secondary (home §6 and footer).
 const NAV: RouteKey[] = ['recognition', 'howItWorks', 'demos', 'platform', 'partners', 'about'];
@@ -22,7 +25,7 @@ const ctaHref = wa ?? pathFor('contact', locale);
 <header class="site-header">
   <div class="container site-header__bar">
     <a class="site-header__logo" href={pathFor('home', locale)} aria-label={t.a11y.home}>
-      <Logo locale={locale} size={20} />
+      {glitch ? <Glitch locale={locale} size={20} arm decorative /> : <Logo locale={locale} size={20} decorative />}
     </a>
 
     <nav class="site-nav" aria-label={t.a11y.mainNav}>

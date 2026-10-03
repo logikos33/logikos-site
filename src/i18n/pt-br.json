@@ -61,7 +61,7 @@
   "brand": {
     "wordmark": "LOGIKOS",
     "label": "soluções",
-    "tagline": "A razão que enxerga."
+    "tagline": "Onde a lógica encontra a visão."
   },
   "states": {
     "ok": "conforme",
@@ -111,7 +111,6 @@
       "too_far": "distante",
       "unknown": "sem visão"
     },
-    "posterLabel": "prévia",
     "stop": "Parar",
     "cam": "CAM",
     "person": {
@@ -130,12 +129,12 @@
   },
   "home": {
     "meta": {
-      "title": "Logikos Soluções — A razão que enxerga",
+      "title": "Logikos Soluções — Visão computacional industrial",
       "description": "Fogo, EPI e ergonomia pela mesma câmera, dentro da planta. Visão computacional na borda para indústria, com evidência em clipe e alerta no WhatsApp."
     },
     "hero": {
-      "title": "A razão que enxerga.",
-      "sub": "Fogo, EPI e ergonomia pela mesma câmera, dentro da planta."
+      "title": "Fogo, EPI e ergonomia na câmera que a planta já tem.",
+      "sub": "O veredito chega com o clipe de evidência, no WhatsApp ou no painel. O vídeo contínuo não sai da planta."
     },
     "doors": {
       "title": "Por onde você entra",
@@ -687,7 +686,7 @@
     "hud": "HUD",
     "states": "Estados",
     "buttons": "Botões",
-    "displaySample": "A razão que enxerga.",
+    "displaySample": "Visão computacional industrial.",
     "bodySample": "Veredito, evidência e alerta dentro da planta.",
     "monoSample": "EVT · EPI · CONFORME"
   },

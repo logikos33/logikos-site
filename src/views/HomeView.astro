@@ -1,8 +1,8 @@
 ---
 // Home: six sections, six margin questions (PLANO-V2 §4). The hero is the only section built
-// by hand (BrandBox sits above the h1, two columns from 64rem); everything else is <Section>.
+// by hand: the verdict figure first (it leads on phones), the buyer's gain beside it from
+// 64rem. The name is in the header; it is not repeated here (AUDITORIA-V2 F-02).
 import AlertCard from '../components/AlertCard.astro';
-import BrandBox from '../components/BrandBox.astro';
 import DefList from '../components/DefList.astro';
 import DemoStatus from '../components/DemoStatus.astro';
 import HudVideo from '../components/HudVideo.astro';
@@ -32,8 +32,8 @@ const dataRows = h.data.leavesRows.map((leaves, i) => ({ leaves, stays: h.data.s
         {h.questions.what}
       </p>
       <div class="q-body q-body--wide hero">
+        <HudVideo locale={locale} clip="hero" priority class="hero__video" />
         <div class="hero__copy">
-          <BrandBox locale={locale} glitch />
           <h1 id="hero-title">
             <span class="visually-hidden">{h.questions.what} </span>
             {h.hero.title}
@@ -46,7 +46,6 @@ const dataRows = h.data.leavesRows.map((leaves, i) => ({ leaves, stays: h.data.s
             </a>
           </div>
         </div>
-        <HudVideo locale={locale} clip="hero" priority class="hero__video" />
       </div>
     </div>
   </section>
@@ -170,7 +169,9 @@ const dataRows = h.data.leavesRows.map((leaves, i) => ({ leaves, stays: h.data.s
 </script>
 
 <style>
-  /* Hero: text first, figure after; two columns (≈40 | 60) from 64rem so frame + caption fit the fold. */
+  /* Hero: the figure leads on phones; two columns (copy ≈40 | figure 60) from 64rem so frame +
+     caption fit the fold. The DOM order (figure, then copy) is the phone order, so tab order
+     and reading order agree at every width. */
   .hero {
     display: grid;
     gap: var(--lk-space-6);
@@ -178,8 +179,8 @@ const dataRows = h.data.leavesRows.map((leaves, i) => ({ leaves, stays: h.data.s
   }
 
   .hero__copy h1 {
-    max-width: 16ch;
-    margin-top: var(--lk-space-5);
+    max-width: 18ch;
+    margin-top: 0;
     /* Two lines beside the figure at 1280; the global display size is for full-width covers. */
     font-size: clamp(2.4rem, 4.4vw, 3.6rem);
   }
@@ -196,6 +197,16 @@ const dataRows = h.data.leavesRows.map((leaves, i) => ({ leaves, stays: h.data.s
     .hero {
       grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
       gap: var(--lk-space-7);
+    }
+
+    .hero__copy {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .hero :global(.hero__video) {
+      grid-column: 2;
+      grid-row: 1;
     }
   }
 

@@ -66,7 +66,7 @@ const STATES = ['ok', 'alert', 'warn'] as const;
       <div class="logo-specimens">
         <Logo locale="pt-br" size={64} />
         <Logo locale="pt-br" size={20} />
-        <Logo locale="pt-br" variant="monogram" size={48} />
+        <Logo locale="pt-br" variant="symbol" size={48} />
         <Logo locale="pt-br" variant="monogram" size={20} />
       </div>
     </div>
@@ -127,7 +127,9 @@ const STATES = ['ok', 'alert', 'warn'] as const;
     node.classList.remove('is-glitching');
     void node.offsetWidth;
     node.classList.add('is-glitching');
-    node.addEventListener('animationend', () => node.classList.remove('is-glitching'), { once: true });
+    node
+      .querySelector('.lk-glitch__slice--a')
+      ?.addEventListener('animationend', () => node.classList.remove('is-glitching'), { once: true });
   });
 </script>
 

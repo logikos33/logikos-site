@@ -152,3 +152,51 @@ export function clipVerdict(clip: Pick<HudClip, 'frames'>, labels: HudLabels): H
   if (states.includes('warn')) return 'warn';
   return 'ok';
 }
+
+export interface Rect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+export interface ChipRequest {
+  /** The box the chip docks to, in stage units. */
+  box: Rect;
+  /** Chip size and the gap to its box, in the same units. */
+  w: number;
+  h: number;
+  gap: number;
+}
+
+const intersects = (a: Rect, b: Rect): boolean => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+
+/**
+ * Docks each chip to its box — above it, else below, else inside its top edge — never leaving
+ * the stage and never covering a chip placed before it (a person and their helmet share a top
+ * edge: the second chip moves). Order matters: callers pass boxes in reading order.
+ */
+export function placeChips(requests: readonly ChipRequest[], stage: { w: number; h: number }): Rect[] {
+  const placed: Rect[] = [];
+  for (const r of requests) {
+    const w = Math.min(r.w, stage.w - 2 * r.gap);
+    const h = Math.min(r.h, stage.h);
+    // Clamped with one gap of breathing room from the stage edges.
+    const x = Math.max(r.gap, Math.min(r.box.x, stage.w - w - r.gap));
+    const inside = (y: number) => y >= 0 && y + h <= stage.h;
+    const candidates = [r.box.y - h - r.gap, r.box.y + r.box.h + r.gap, r.box.y + r.gap].filter(inside);
+    let chip = candidates.map((y) => ({ x, y, w, h })).find((c) => !placed.some((p) => intersects(p, c)));
+    if (!chip) {
+      // Everything collides: stack under the chips in the way, clamped to the stage.
+      let y = candidates[0] ?? Math.max(0, Math.min(r.box.y, stage.h - h));
+      for (let guard = 0; guard <= placed.length; guard++) {
+        const hit = placed.find((p) => intersects(p, { x, y, w, h }));
+        if (!hit) break;
+        y = Math.min(hit.y + hit.h + r.gap, stage.h - h);
+      }
+      chip = { x, y, w, h };
+    }
+    placed.push(chip);
+  }
+  return placed;
+}

@@ -8,6 +8,6 @@ export const getStaticPaths: GetStaticPaths = () => LOCALES.flatMap((lang) => HU
 export const GET: APIRoute = ({ params }) => {
   const t = dict(params.lang as Locale);
   const slot = params.slot as HudSlot;
-  const body = posterSvg(slot, t.hud.posterLabel, { standalone: true, caption: t.hud.slots[slot] });
+  const body = posterSvg(slot, { standalone: true, caption: t.hud.slots[slot] });
   return new Response(body, { headers: { 'Content-Type': 'image/svg+xml' } });
 };

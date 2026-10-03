@@ -1,71 +1,76 @@
 ---
-// Provisional logo system until the official vector wordmark from the brand manual lands
-// (see docs/decisions and the `brand` issue):
-// - wordmark: live text "LOGIKOS" in Space Grotesk 700, tracking .16em — the lockup the
-//   Recognition app uses today (apps/frontend/src/app/acesso/Marca.tsx on develop);
-// - monogram: solid circle with the Λ knocked out — official path from the Recognition
-//   loader (docs/design/handoff-f5/lk-loader.js, monogramSvg). Used below the 90 px wordmark minimum.
+// The official marks (src/lib/brand.ts, copied from ~/Documents/Logikos/Marca/oficial/):
+// - wordmark: the full lockup — L on the Λ angle, O-keyhole, Space Grotesk 700 outlines;
+// - symbol: the O-keyhole alone (favicon, avatar, footer);
+// - monogram: Λ in a disc, only at ≤ 24 px (spinner, table row).
+// Inherits currentColor: Preto Logikos on light, Branco Sinal on dark. Decision 0026.
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
+import {
+  MONOGRAM_INNER,
+  MONOGRAM_VIEWBOX,
+  SYMBOL_INNER,
+  SYMBOL_VIEWBOX,
+  WORDMARK_INNER,
+  WORDMARK_RATIO,
+  WORDMARK_VIEWBOX,
+} from '../lib/brand';
 
 interface Props {
   locale: Locale;
-  variant?: 'wordmark' | 'monogram';
-  /** Wordmark font size in px (cap height ≈ 0.7 × size). Monogram edge in px. */
+  variant?: 'wordmark' | 'symbol' | 'monogram';
+  /** Rendered height in px (wordmark: 20 or 64 — the 64 is fluid; marks: the edge). */
   size?: number;
   class?: string;
-  glitch?: boolean;
+  /** Decorative copy (a link or heading already names it). */
+  decorative?: boolean;
 }
 
-const { locale, variant = 'wordmark', size = 20, class: className, glitch = false } = Astro.props;
+const { locale, variant = 'wordmark', size = 20, class: className, decorative = false } = Astro.props;
 const t = dict(locale);
-const maskId = `lk-mono-${size}`;
+const inner = variant === 'wordmark' ? WORDMARK_INNER : variant === 'symbol' ? SYMBOL_INNER : MONOGRAM_INNER;
+const viewBox = variant === 'wordmark' ? WORDMARK_VIEWBOX : variant === 'symbol' ? SYMBOL_VIEWBOX : MONOGRAM_VIEWBOX;
+const a11y = decorative ? { 'aria-hidden': true as const } : { role: 'img' as const, 'aria-label': t.brand.wordmark };
+// Width/height attributes give the SVG an intrinsic ratio browsers honour (the fluid 64 px
+// variant then scales with `height: auto`); a viewBox alone does not size an inline <svg>.
+const width = variant === 'wordmark' ? Math.round(size * WORDMARK_RATIO) : size;
 ---
 
-{variant === 'wordmark' ? (
-  <span class:list={['lk-wordmark', className, { 'lk-glitch': glitch }]} data-text={t.brand.wordmark} data-size={size}>
-    {t.brand.wordmark}
-  </span>
-) : (
-  <svg class:list={['lk-monogram', className]} width={size} height={size} viewBox="0 0 100 100" aria-hidden="true">
-    <defs>
-      <mask id={maskId}>
-        <rect x="-20" y="-20" width="140" height="140" fill="#fff" />
-        <polyline points="27,79 50,27 73,79" fill="none" stroke="#000" stroke-width="10" stroke-linejoin="miter" stroke-miterlimit="8" />
-      </mask>
-    </defs>
-    <circle cx="50" cy="50" r="46" fill="currentColor" mask={`url(#${maskId})`} />
-  </svg>
-)}
+<svg
+  class:list={['lk-mark', `lk-mark--${variant}`, className]}
+  data-brand={variant}
+  data-size={size}
+  viewBox={viewBox}
+  width={width}
+  height={size}
+  fill="currentColor"
+  focusable="false"
+  set:html={inner}
+  {...a11y}
+/>
 
 <style>
-  .lk-wordmark {
+  .lk-mark {
     display: inline-block;
-    position: relative;
-    font-family: var(--lk-font-display);
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    /* Optical correction: tracking adds trailing space after the last letter. */
-    margin-right: -0.16em;
-    line-height: 1;
-    color: var(--lk-text);
-    white-space: nowrap;
-  }
-
-  .lk-wordmark[data-size='18'] {
-    font-size: 18px;
-  }
-
-  .lk-wordmark[data-size='20'] {
-    font-size: 20px;
-  }
-
-  .lk-wordmark[data-size='64'] {
-    font-size: clamp(36px, 9vw, 64px);
-  }
-
-  .lk-monogram {
     color: var(--lk-text);
     flex: none;
+    /* The global `svg { max-width: 100% }` would make a shrink-wrapped parent cyclic. */
+    max-width: none;
+    overflow: visible;
+  }
+
+  /* Below 360 px the header has no room for 130 px: 16 px tall is 104 px wide, still ≥ 90. */
+  @media (max-width: 22.49rem) {
+    .lk-mark--wordmark[data-size='20'] {
+      width: 104px;
+      height: 16px;
+    }
+  }
+
+  /* Brand minimum is 90 px wide: the 20 px header mark is 130 px. The 64 px cover mark is
+     fluid (36–64 px tall, i.e. 234–417 px wide) and keeps the lockup's proportion. */
+  .lk-mark--wordmark[data-size='64'] {
+    width: clamp(234px, 58.6vw, 417px);
+    height: auto;
   }
 </style>

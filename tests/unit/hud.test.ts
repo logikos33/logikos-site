@@ -2,7 +2,16 @@
 import assert from 'node:assert/strict';
 import { readdirSync, readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
-import { clipVerdict, frameIndexAt, frameToBoxes, personState, type HudClip, type HudFrame, type HudLabels } from '../../src/lib/hud.ts';
+import {
+  clipVerdict,
+  frameIndexAt,
+  frameToBoxes,
+  personState,
+  placeChips,
+  type HudClip,
+  type HudFrame,
+  type HudLabels,
+} from '../../src/lib/hud.ts';
 
 const pt = JSON.parse(readFileSync('src/i18n/pt-br.json', 'utf8'));
 const LABELS: HudLabels = { states: pt.states, labels: pt.hud.labels, items: pt.hud.items };
@@ -150,4 +159,44 @@ describe('mock clips follow the contract', () => {
       }
     });
   }
+});
+
+describe('placeChips', () => {
+  const stage = { w: 1600, h: 900 };
+  const chip = (box: { x: number; y: number; w: number; h: number }, w = 300) => ({ box, w, h: 56, gap: 8 });
+
+  it('docks above the box and never leaves the stage horizontally', () => {
+    const [a, b] = placeChips([chip({ x: 100, y: 300, w: 200, h: 200 }), chip({ x: 1500, y: 300, w: 100, h: 100 }, 400)], stage);
+    assert.deepEqual(a, { x: 100, y: 236, w: 300, h: 56 });
+    assert.equal(b?.x, 1192, 'shifted left so x + w ≤ stage width − gap');
+    assert.equal((b?.x ?? 0) + (b?.w ?? 0), 1592);
+  });
+
+  it('a person and their helmet share a top edge: the second chip moves instead of covering the first', () => {
+    const person = { x: 200, y: 216, w: 300, h: 600 };
+    const helmet = { x: 280, y: 216, w: 100, h: 80 };
+    const [p, h] = placeChips([chip(person, 320), chip(helmet, 260)], stage);
+    assert.ok(p && h);
+    const overlap = p.x < h.x + h.w && h.x < p.x + p.w && p.y < h.y + h.h && h.y < p.y + p.h;
+    assert.equal(overlap, false);
+    assert.equal(h.y, helmet.y + helmet.h + 8, 'helmet chip goes below its box');
+  });
+
+  it('a box at the very top gets its chip below, and a box at the very bottom inside its top edge', () => {
+    const [top, bottom] = placeChips([chip({ x: 0, y: 0, w: 400, h: 100 }), chip({ x: 800, y: 880, w: 400, h: 20 })], stage);
+    assert.equal(top?.y, 108);
+    assert.equal(bottom?.y, 816, 'above still fits: 880 − 56 − 8');
+    const [edge] = placeChips([chip({ x: 0, y: 895, w: 400, h: 5 })], stage);
+    assert.equal(edge?.y, 831, 'a sliver at the bottom edge: above (895 − 56 − 8), nothing past 900');
+    const [tall] = placeChips([chip({ x: 0, y: 20, w: 400, h: 880 })], stage);
+    assert.equal(tall?.y, 28, 'a box filling the stage: inside its top edge');
+  });
+
+  it('keeps one chip per box, in order', () => {
+    const boxes = [chip({ x: 0, y: 500, w: 100, h: 100 }), chip({ x: 0, y: 500, w: 100, h: 100 }), chip({ x: 0, y: 500, w: 100, h: 100 })];
+    const chips = placeChips(boxes, stage);
+    assert.equal(chips.length, 3);
+    const ys = chips.map((c) => c.y);
+    assert.equal(new Set(ys).size, 3, 'three identical boxes get three different chip rows');
+  });
 });

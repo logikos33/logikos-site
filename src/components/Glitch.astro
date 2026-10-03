@@ -1,0 +1,163 @@
+---
+// The signature glitch on the official wordmark: two extra copies of the SVG, clipped to
+// horizontal slices, shifted 2–4 px with cyan/magenta fringes, 0.5 s in steps, ending clean.
+// With `arm`, it runs once per session on load (never on internal/back navigation, never
+// under reduced motion) and dispatches `lk:entrance` so the hero HUD may start (M1).
+import type { Locale } from '../i18n/routes';
+import Logo from './Logo.astro';
+
+interface Props {
+  locale: Locale;
+  size: number;
+  /** Run on load (home header, once per session). Without it, only a replay can trigger it. */
+  arm?: boolean;
+  decorative?: boolean;
+}
+
+const { locale, size, arm = false, decorative = false } = Astro.props;
+---
+
+<span class:list={['lk-glitch', { 'lk-glitch--armed': arm }]} data-glitch>
+  <Logo locale={locale} size={size} decorative={decorative} />
+  <span class="lk-glitch__slice lk-glitch__slice--a" aria-hidden="true">
+    <Logo locale={locale} size={size} decorative />
+  </span>
+  <span class="lk-glitch__slice lk-glitch__slice--b" aria-hidden="true">
+    <Logo locale={locale} size={size} decorative />
+  </span>
+</span>
+
+{arm && <script>
+  const node = document.querySelector<HTMLElement>('.lk-glitch--armed');
+  const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+  const internal = (() => {
+    if (nav?.type === 'back_forward') return true;
+    try {
+      return document.referrer !== '' && new URL(document.referrer).origin === window.location.origin;
+    } catch {
+      return false;
+    }
+  })();
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // The one orchestrated entrance happens once per session; after it the HUD starts (M1).
+  const SESSION_KEY = 'lk-glitch';
+  const seen = (() => {
+    try {
+      return sessionStorage.getItem(SESSION_KEY) === 'done';
+    } catch {
+      return false;
+    }
+  })();
+  const handOver = () => document.dispatchEvent(new CustomEvent('lk:entrance'));
+  if (node) {
+    if (reduce) node.dataset.glitch = 'off-reduced-motion';
+    else if (seen) node.dataset.glitch = 'off-session';
+    else if (internal) node.dataset.glitch = 'off-internal-navigation';
+    if (node.dataset.glitch) handOver();
+    else {
+      // The marks are outlines: nothing waits for a font.
+      node.dataset.glitch = 'run';
+      node.classList.add('is-glitching');
+      node.querySelector('.lk-glitch__slice--a')?.addEventListener(
+        'animationend',
+        () => {
+          node.classList.remove('is-glitching');
+          node.dataset.glitch = 'done';
+          try {
+            sessionStorage.setItem(SESSION_KEY, 'done');
+          } catch {
+            // Storage blocked: the glitch may run again on the next load.
+          }
+          handOver();
+        },
+        { once: true },
+      );
+    }
+  }
+</script>}
+
+<style>
+  .lk-glitch {
+    position: relative;
+    display: inline-block;
+    /* As a flex item (header link) it must keep the mark's width, not shrink around it. */
+    flex: none;
+    line-height: 0;
+  }
+
+  /* Each slice is a full copy of the mark on the page background, clipped to a band and shifted,
+     so it covers the original where it moves. Bands span L, G-I-K and S only: the keyhole O
+     (18–31 % of the lockup) and the second O (74–85 %) are never cut (tests/e2e/motion.spec.ts). */
+  .lk-glitch__slice {
+    position: absolute;
+    inset: 0;
+    display: none;
+    background: var(--lk-bg);
+    pointer-events: none;
+  }
+
+  .lk-glitch.is-glitching .lk-glitch__slice {
+    display: block;
+  }
+
+  .lk-glitch__slice--a {
+    animation: lk-glitch-a 0.5s steps(1, end) 1 both;
+  }
+
+  .lk-glitch__slice--b {
+    animation: lk-glitch-b 0.5s steps(1, end) 1 both;
+  }
+
+  .lk-glitch__slice--a :global(.lk-mark) {
+    filter: drop-shadow(-2px 0 0 var(--lk-glitch-c)) drop-shadow(2px 0 0 var(--lk-glitch-m));
+  }
+
+  .lk-glitch__slice--b :global(.lk-mark) {
+    filter: drop-shadow(2px 0 0 var(--lk-glitch-c)) drop-shadow(-2px 0 0 var(--lk-glitch-m));
+  }
+
+  @keyframes lk-glitch-a {
+    0% {
+      clip-path: inset(18% 35% 60% 33%);
+      transform: translateX(3px);
+    }
+    30% {
+      clip-path: inset(58% 88% 22% 0);
+      transform: translateX(-4px);
+    }
+    60% {
+      clip-path: inset(40% 0 45% 87%);
+      transform: translateX(2px);
+    }
+    85%,
+    100% {
+      clip-path: inset(50% 50% 50% 50%);
+      transform: none;
+      opacity: 0;
+    }
+  }
+
+  @keyframes lk-glitch-b {
+    0% {
+      clip-path: inset(62% 0 20% 87%);
+      transform: translateX(-2px);
+    }
+    40% {
+      clip-path: inset(25% 35% 55% 33%);
+      transform: translateX(4px);
+    }
+    75%,
+    100% {
+      clip-path: inset(50% 50% 50% 50%);
+      transform: none;
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lk-glitch__slice {
+      display: none !important;
+      animation: none;
+    }
+  }
+</style>

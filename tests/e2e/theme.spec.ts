@@ -80,11 +80,10 @@ test('header wordmark keeps at least 90 px of ink (brand minimum)', async ({ pag
   for (const width of [1440, 360]) {
     await page.setViewportSize({ width, height: 800 });
     await page.goto('/');
-    const ink = await page.locator('.site-header__logo .lk-wordmark').evaluate((el) => {
-      const r = document.createRange();
-      r.selectNodeContents(el);
-      return r.getBoundingClientRect().width - (parseFloat(getComputedStyle(el).letterSpacing) || 0);
-    });
+    const ink = await page
+      .locator('.site-header__logo svg[data-brand="wordmark"]')
+      .first()
+      .evaluate((el) => el.getBoundingClientRect().width);
     expect(ink, `width ${width}`).toBeGreaterThanOrEqual(90);
   }
 });

@@ -1,0 +1,470 @@
+{
+  "404-360": {
+    "dom": 154,
+    "img": 0,
+    "video": 0,
+    "h1": "Página não encontrada",
+    "huds": [],
+    "uppercaseTracked": [],
+    "firstHudTop": null,
+    "kb": {
+      "total": 144,
+      "font": 108,
+      "css": 0,
+      "js": 1,
+      "html": 35,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "home-360": {
+    "dom": 637,
+    "img": 0,
+    "video": 0,
+    "h1": "o que é?\nA razão que enxerga.",
+    "huds": [
+      {
+        "slot": "hero",
+        "state": "idle",
+        "topPx": 585,
+        "inFold": true,
+        "overflow": 1
+      },
+      {
+        "slot": "fire",
+        "state": null,
+        "topPx": 3545,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": ["simulação", "Para a sua planta", "Para integradores"],
+    "firstHudTop": 585,
+    "kb": {
+      "total": 210,
+      "font": 108,
+      "css": 0,
+      "js": 10,
+      "html": 87,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "recognition-360": {
+    "dom": 741,
+    "img": 0,
+    "video": 0,
+    "h1": "o que é?\nCinco leituras na câmera que já existe.",
+    "huds": [
+      {
+        "slot": "fire",
+        "state": "idle",
+        "topPx": 784,
+        "inFold": false,
+        "overflow": 0
+      },
+      {
+        "slot": "epi",
+        "state": null,
+        "topPx": 2755,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": ["simulação"],
+    "firstHudTop": 784,
+    "kb": {
+      "total": 217,
+      "font": 108,
+      "css": 0,
+      "js": 9,
+      "html": 98,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "demos-360": {
+    "dom": 336,
+    "img": 0,
+    "video": 0,
+    "h1": "o que você vai ver?\nDuas demos, no seu navegador.",
+    "huds": [
+      {
+        "slot": "epi",
+        "state": "idle",
+        "topPx": 543,
+        "inFold": true,
+        "overflow": 1
+      },
+      {
+        "slot": "fire",
+        "state": null,
+        "topPx": 1623,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": ["simulação"],
+    "firstHudTop": 543,
+    "kb": {
+      "total": 177,
+      "font": 108,
+      "css": 0,
+      "js": 8,
+      "html": 55,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "404-390": {
+    "dom": 154,
+    "img": 0,
+    "video": 0,
+    "h1": "Página não encontrada",
+    "huds": [],
+    "uppercaseTracked": [],
+    "firstHudTop": null,
+    "kb": {
+      "total": 144,
+      "font": 108,
+      "css": 0,
+      "js": 1,
+      "html": 35,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "home-390": {
+    "dom": 637,
+    "img": 0,
+    "video": 0,
+    "h1": "o que é?\nA razão que enxerga.",
+    "huds": [
+      {
+        "slot": "hero",
+        "state": "idle",
+        "topPx": 585,
+        "inFold": true,
+        "overflow": 1
+      },
+      {
+        "slot": "fire",
+        "state": null,
+        "topPx": 3398,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": ["simulação", "Para a sua planta", "Para integradores"],
+    "firstHudTop": 585,
+    "kb": {
+      "total": 210,
+      "font": 108,
+      "css": 0,
+      "js": 10,
+      "html": 87,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "recognition-390": {
+    "dom": 741,
+    "img": 0,
+    "video": 0,
+    "h1": "o que é?\nCinco leituras na câmera que já existe.",
+    "huds": [
+      {
+        "slot": "fire",
+        "state": "idle",
+        "topPx": 740,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "epi",
+        "state": null,
+        "topPx": 2745,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": ["simulação"],
+    "firstHudTop": 740,
+    "kb": {
+      "total": 217,
+      "font": 108,
+      "css": 0,
+      "js": 9,
+      "html": 98,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "demos-390": {
+    "dom": 336,
+    "img": 0,
+    "video": 0,
+    "h1": "o que você vai ver?\nDuas demos, no seu navegador.",
+    "huds": [
+      {
+        "slot": "epi",
+        "state": "idle",
+        "topPx": 543,
+        "inFold": true,
+        "overflow": 1
+      },
+      {
+        "slot": "fire",
+        "state": null,
+        "topPx": 1640,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": ["simulação"],
+    "firstHudTop": 543,
+    "kb": {
+      "total": 177,
+      "font": 108,
+      "css": 0,
+      "js": 8,
+      "html": 55,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "404-768": {
+    "dom": 154,
+    "img": 0,
+    "video": 0,
+    "h1": "Página não encontrada",
+    "huds": [],
+    "uppercaseTracked": [],
+    "firstHudTop": null,
+    "kb": {
+      "total": 144,
+      "font": 108,
+      "css": 0,
+      "js": 1,
+      "html": 35,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "home-768": {
+    "dom": 637,
+    "img": 0,
+    "video": 0,
+    "h1": "o que é?\nA razão que enxerga.",
+    "huds": [
+      {
+        "slot": "hero",
+        "state": "idle",
+        "topPx": 573,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "fire",
+        "state": null,
+        "topPx": 2872,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": ["simulação", "Para a sua planta", "Para integradores"],
+    "firstHudTop": 573,
+    "kb": {
+      "total": 210,
+      "font": 108,
+      "css": 0,
+      "js": 10,
+      "html": 87,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "recognition-768": {
+    "dom": 741,
+    "img": 0,
+    "video": 0,
+    "h1": "o que é?\nCinco leituras na câmera que já existe.",
+    "huds": [
+      {
+        "slot": "fire",
+        "state": "idle",
+        "topPx": 606,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "epi",
+        "state": null,
+        "topPx": 2692,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": ["simulação"],
+    "firstHudTop": 606,
+    "kb": {
+      "total": 217,
+      "font": 108,
+      "css": 0,
+      "js": 9,
+      "html": 98,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "demos-768": {
+    "dom": 336,
+    "img": 0,
+    "video": 0,
+    "h1": "o que você vai ver?\nDuas demos, no seu navegador.",
+    "huds": [
+      {
+        "slot": "epi",
+        "state": "idle",
+        "topPx": 557,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "fire",
+        "state": null,
+        "topPx": 1718,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": ["simulação"],
+    "firstHudTop": 557,
+    "kb": {
+      "total": 177,
+      "font": 108,
+      "css": 0,
+      "js": 8,
+      "html": 55,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "404-1440": {
+    "dom": 154,
+    "img": 0,
+    "video": 0,
+    "h1": "Página não encontrada",
+    "huds": [],
+    "uppercaseTracked": [],
+    "firstHudTop": null,
+    "kb": {
+      "total": 144,
+      "font": 108,
+      "css": 0,
+      "js": 1,
+      "html": 35,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "home-1440": {
+    "dom": 637,
+    "img": 0,
+    "video": 0,
+    "h1": "o que é?\nA razão que enxerga.",
+    "huds": [
+      {
+        "slot": "hero",
+        "state": "idle",
+        "topPx": 161,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "fire",
+        "state": null,
+        "topPx": 2491,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": ["simulação", "Para a sua planta", "Para integradores"],
+    "firstHudTop": 161,
+    "kb": {
+      "total": 210,
+      "font": 108,
+      "css": 0,
+      "js": 10,
+      "html": 87,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "recognition-1440": {
+    "dom": 741,
+    "img": 0,
+    "video": 0,
+    "h1": "o que é?\nCinco leituras na câmera que já existe.",
+    "huds": [
+      {
+        "slot": "fire",
+        "state": "idle",
+        "topPx": 723,
+        "inFold": true,
+        "overflow": 0
+      },
+      {
+        "slot": "epi",
+        "state": null,
+        "topPx": 2452,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": ["simulação"],
+    "firstHudTop": 723,
+    "kb": {
+      "total": 217,
+      "font": 108,
+      "css": 0,
+      "js": 9,
+      "html": 98,
+      "img": 0,
+      "media": 0
+    }
+  },
+  "demos-1440": {
+    "dom": 336,
+    "img": 0,
+    "video": 0,
+    "h1": "o que você vai ver?\nDuas demos, no seu navegador.",
+    "huds": [
+      {
+        "slot": "epi",
+        "state": "idle",
+        "topPx": 734,
+        "inFold": true,
+        "overflow": 1
+      },
+      {
+        "slot": "fire",
+        "state": null,
+        "topPx": 1555,
+        "inFold": false,
+        "overflow": 0
+      }
+    ],
+    "uppercaseTracked": ["simulação"],
+    "firstHudTop": 734,
+    "kb": {
+      "total": 177,
+      "font": 108,
+      "css": 0,
+      "js": 8,
+      "html": 55,
+      "img": 0,
+      "media": 0
+    }
+  }
+}
