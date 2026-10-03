@@ -74,6 +74,12 @@ test('every HUD figure carries a two-cell caption (machine | person) and the pos
     const f = figs.nth(i);
     await expect(f.locator('[data-hud-machine]')).toHaveText(/CAM \d{2} · \d{2}:\d{2}:\d{2} · /);
     await expect(f.locator('[data-hud-person-text]')).not.toHaveText('');
-    expect(await f.locator('.hud__poster .hud-pbox, video[poster]').count(), `figure ${i} has a verdict at rest`).toBeGreaterThan(0);
+    const poster = f.locator('img.hud__poster:not([hidden]), video[poster]').first();
+    await expect(poster, `figure ${i} has a poster at rest`).toHaveCount(1);
   }
+  // The verdict poster (no-JS fallback) carries the last frame's boxes; the plain one does not.
+  const verdict = await (await page.request.get('/media/posters/pt-br/fire.svg')).text();
+  const plain = await (await page.request.get('/media/posters/pt-br/fire-plain.svg')).text();
+  expect(verdict).toContain('hud-pbox');
+  expect(plain).not.toContain('hud-pbox');
 });

@@ -7,7 +7,7 @@ import { CLIPS, MEDIA, READINGS } from '../data/media';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
 import { clipVerdict, type HudClip, type HudLabels, type HudState } from '../lib/hud';
-import { posterSvg, POSTER_H, POSTER_W, type HudSlot } from '../lib/poster';
+import { POSTER_H, POSTER_W, type HudSlot } from '../lib/poster';
 import { mediaUrl } from '../lib/site';
 import Icon from './Icon.astro';
 
@@ -49,6 +49,7 @@ const data = slots.map((s) => {
     src: mediaUrl(MEDIA[s].hud),
     video: MEDIA[s].video ? mediaUrl(MEDIA[s].video as string) : null,
     poster: `/media/posters/${locale}/${s}.svg`,
+    plain: `/media/posters/${locale}/${s}-plain.svg`,
     ...caption(s, clip),
   };
 });
@@ -95,11 +96,18 @@ const listId = `${id}-readings`;
             <source src={d.video} type="video/mp4" />
           </video>
         ) : (
-          <div
+          <img
             class="hud__media hud__poster"
             data-for={d.slot}
+            data-plain={d.plain}
             hidden={i !== 0}
-            set:html={posterSvg(d.slot, { clip: CLIPS[d.slot], labels })}
+            src={d.poster}
+            alt=""
+            width={POSTER_W}
+            height={POSTER_H}
+            decoding="async"
+            loading={priority ? 'eager' : 'lazy'}
+            fetchpriority={priority ? 'high' : undefined}
           />
         ),
       )}
@@ -193,11 +201,9 @@ const listId = `${id}-readings`;
     svg.append(g);
   }
 
-  /** Chips are sized in CSS px and scaled by `k`; placement runs in stage units so it matches the poster. */
-  function draw(svg: SVGSVGElement, boxes: HudBox[]): void {
+  /** Chips are sized in CSS px and scaled by `k` (stage units per CSS px, measured on resize, never per frame). */
+  function draw(svg: SVGSVGElement, boxes: HudBox[], k: number): void {
     svg.replaceChildren();
-    const width = svg.getBoundingClientRect().width;
-    const k = width > 0 ? POSTER_W / width : 1;
     const chips = placeChips(
       boxes.map((b) => ({ box: boxRect(b), w: chipWidth(b) * k, h: CHIP.h * k, gap: CHIP.gap * k })),
       { w: POSTER_W, h: POSTER_H },
@@ -233,12 +239,18 @@ const listId = `${id}-readings`;
     let clip: HudClip | undefined;
     let shown = -1;
     let timers: number[] = [];
+    let k = 1;
+    const measure = () => {
+      const width = svg.getBoundingClientRect().width;
+      k = width > 0 ? POSTER_W / width : 1;
+    };
+    measure();
 
     const show = (index: number) => {
       if (!clip || index === shown) return;
       shown = index;
       const frame = clip.frames[index];
-      draw(svg, frame ? frameToBoxes(frame, labels) : []);
+      draw(svg, frame ? frameToBoxes(frame, labels) : [], k);
     };
 
     const setButton = (mode: 'play' | 'stop' | 'replay') => {
@@ -327,6 +339,9 @@ const listId = `${id}-readings`;
       }
       if (badge) badge.hidden = clip.source !== 'mock';
       fig.dataset.source = clip.source;
+      // The overlay now owns the verdict: the visible poster drops its baked-in boxes.
+      const poster = fig.querySelector<HTMLImageElement>('img.hud__poster:not([hidden])');
+      if (poster?.dataset.plain && !poster.src.endsWith(poster.dataset.plain)) poster.src = poster.dataset.plain;
       return true;
     };
 
@@ -381,6 +396,7 @@ const listId = `${id}-readings`;
     });
 
     new ResizeObserver(() => {
+      measure();
       if (shown < 0) return;
       const index = shown;
       shown = -1;
@@ -437,20 +453,15 @@ const listId = `${id}-readings`;
     display: none;
   }
 
-  .hud__media :global(svg),
+  img.hud__media,
   video.hud__media {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 
-  /* Overlay and poster share the same box anatomy (the poster is the build-time twin). */
-  .hud__overlay :global(.hud-box__base),
-  .hud__media :global(.hud-box__base) {
-    stroke: var(--hud-base);
-  }
-
   .hud__overlay :global(.hud-box__base) {
+    stroke: var(--hud-base);
     fill: none;
     stroke-width: 4;
     stroke-linecap: square;
@@ -557,14 +568,6 @@ const listId = `${id}-readings`;
   /* Rendered from the start so the caption never shifts (CLS 0); invisible until the clip is ready. */
   .hud__play.is-pending {
     visibility: hidden;
-  }
-
-  /* The poster's verdict is the no-JS fallback: once the script owns the state the overlay draws it
-     at the figure's real size. The grid grego is cover decoration and leaves with the first verdict. */
-  .hud[data-state] :global(.hud-poster__verdict),
-  .hud[data-state='playing'] :global(.hud-poster__grid),
-  .hud[data-state='ended'] :global(.hud-poster__grid) {
-    display: none;
   }
 
   .hud__play:not([data-mode='play']) .hud__icon-play,

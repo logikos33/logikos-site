@@ -72,6 +72,33 @@
   --hud-indet: #a9b0b9;
 }
 
+/* The three voices, self-hosted subsets (scripts/subset-fonts.mjs: the characters the site can
+   show, weights in use). All three swap in over metric-matched fallbacks (no shift); only the
+   display and body faces are preloaded — the mono (captions, chips) is off the critical path. */
+@font-face {
+  font-family: 'Space Grotesk Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 700;
+  src: url('../fonts/space-grotesk.woff2') format('woff2-variations');
+}
+
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 700;
+  src: url('../fonts/inter.woff2') format('woff2-variations');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 500;
+  src: url('../fonts/jetbrains-mono.woff2') format('woff2-variations');
+}
+
 /* Metric-compatible fallbacks (size-adjust + ascent/descent overrides measured from the woff2
    files over a Latin sample): the swap to the web font does not move a single line, so the
    fold has no layout shift while the fonts arrive. */
