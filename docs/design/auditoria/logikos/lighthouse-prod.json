@@ -1,0 +1,68 @@
+{
+  "/recognition": {
+    "performance": 98,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 66,
+    "lcp_ms": 1566,
+    "cls": 0,
+    "tbt_ms": 56,
+    "kb": 135,
+    "lcp_el": "<h1 id=\"page-title\">"
+  },
+  "/como-funciona": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 66,
+    "lcp_ms": 1448,
+    "cls": 0,
+    "tbt_ms": 36,
+    "kb": 122,
+    "lcp_el": "<h1 id=\"hero-title\">"
+  },
+  "/": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 66,
+    "lcp_ms": 1619,
+    "cls": 0,
+    "tbt_ms": 61,
+    "kb": 136,
+    "lcp_el": "<p class=\"lede\" data-astro-cid-6voplrxj=\"\">"
+  },
+  "/demos": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 66,
+    "lcp_ms": 1464,
+    "cls": 0,
+    "tbt_ms": 0,
+    "kb": 130,
+    "lcp_el": "<p class=\"lede\">"
+  },
+  "/integradores": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 66,
+    "lcp_ms": 1522,
+    "cls": 0,
+    "tbt_ms": 0,
+    "kb": 126,
+    "lcp_el": "<h1 id=\"hero-title\">"
+  },
+  "/plataforma": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 66,
+    "lcp_ms": 1554,
+    "cls": 0,
+    "tbt_ms": 0,
+    "kb": 126,
+    "lcp_el": "<h1 id=\"platform-title\">"
+  }
+}
