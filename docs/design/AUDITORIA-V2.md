@@ -661,6 +661,7 @@ Cada afirmação foi conferida no código de `main` (`a7f7582`) e na captura de 
 - **Frame.work não foi medido**: o Cloudflare serviu só o interstitial. Fica com screenshot do desafio, sem notas.
 - **Protex** carregou 92 MB de vídeo e o Lighthouse avisou que a página não terminou no tempo; perf 10 é limite inferior.
 - Capturas de produção são de `logikos-site.pages.dev` em 03/10/2026, Chromium headless, 390×844 e 1440×900, claro e escuro, `reduced-motion` ligado para as de teclado.
+- **Errata (PR-B, 03/10/2026): o contador de "chips fora do estágio" estava inflado.** `audit-capture.mjs` somava os chips do poster escondidos por `display: none` (retângulo 0×0 na origem, logo "à esquerda do estágio"). Com o filtro corrigido, a produção em repouso tem **1 chip fora no herói a 360/390 e 1 em `/demos`** — não 3 e 7–9 como na tabela 8.1 e na afirmação 4. O defeito existia (evidências 02 e 03 mostram o chip cortado e o selo em cima dele) e está fechado no PR-B (0 em todas as páginas, `auditoria/pr-b/depois/metrics.json`); os quadros intermediários da reprodução não foram medidos.
 
 ### 7.2 O que cada auditor concluiu sobre as 12 afirmações
 

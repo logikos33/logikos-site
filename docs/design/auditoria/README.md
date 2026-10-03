@@ -11,4 +11,6 @@ Tudo aqui foi capturado por script, para a re-auditoria da Fase B repetir o mesm
 | `benchmarks/<site>-<390\|1440>.jpg` + `benchmarks.json`         | 15 sites de referência: captura, Lighthouse (paralelo e sequencial), fatos da dobra                        | workflow `scratchpad/benchmarks.js` da sessão; os números sequenciais foram re-medidos um a um                    |
 | `pares/<site>-<390\|1440>.jpg`                                  | Logikos à esquerda, benchmark à direita, mesma largura, 50 %                                               | script PIL inline (ver `AUDITORIA-V2.md` §6)                                                                      |
 
+`pr-b/antes|depois/`: home, recognition, demos e 404 a 360/390/768/1440 × claro/escuro (`WIDTHS=360,390,768,1440 PAGES=home,recognition,demos,404`), produção vs. build local do PR-B. O contador de chips fora do estágio em `logikos/metrics.json` está inflado (ver errata em `AUDITORIA-V2.md` §7.1); `pr-b/*/metrics.json` já usa o script corrigido.
+
 Regras: nenhuma captura é editada; a mesma largura vale para os dois lados de cada par; `framework` não foi medido (interstitial do Cloudflare).
