@@ -1,0 +1,144 @@
+---
+// Camera -> device -> verdict inside a 1px rectangle labelled "planta"; only the alert and the
+// clip cross the wall to the person, who decides. The only numbered sequence on the site.
+// Static here; the stepped reveal (M4) is added in the motion round and keyed on `data-pipeline`.
+import { dict } from '../i18n';
+import type { Locale } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+  /** Long version: the four texts in full (how-it-works page). */
+  long?: boolean;
+  class?: string;
+}
+
+const { locale, long = false, class: className } = Astro.props;
+const t = dict(locale);
+const INSIDE = ['camera', 'device', 'verdict'] as const;
+---
+
+<div class:list={['pipeline', { 'pipeline--long': long }, className]} data-pipeline>
+  <ol class="pipeline__wall" aria-label={t.home.pipeline.wall}>
+    <span class="pipeline__wall-label mono" aria-hidden="true">
+      {t.home.pipeline.wall}
+    </span>
+    {INSIDE.map((key, i) => (
+      <li class="pipeline__node">
+        <span class="pipeline__n" aria-hidden="true">
+          {i + 1}
+        </span>
+        <h3>{t.steps[key].title}</h3>
+        <p>{t.steps[key].text}</p>
+      </li>
+    ))}
+  </ol>
+  <div class="pipeline__cross" aria-hidden="true"></div>
+  <ol class="pipeline__outside" start="4">
+    <li class="pipeline__node pipeline__node--person">
+      <span class="pipeline__n" aria-hidden="true">
+        4
+      </span>
+      <h3>{t.steps.person.title}</h3>
+      <p>{t.steps.person.text}</p>
+    </li>
+  </ol>
+  <p class="pipeline__note">{t.home.pipeline.note}</p>
+</div>
+
+<style>
+  .pipeline {
+    display: grid;
+    gap: var(--lk-space-4);
+  }
+
+  .pipeline__wall,
+  .pipeline__outside {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--lk-space-4);
+  }
+
+  .pipeline__wall {
+    position: relative;
+    padding: var(--lk-space-5) var(--lk-space-4) var(--lk-space-4);
+    border: 1px solid var(--lk-text);
+    border-radius: var(--lk-radius);
+  }
+
+  .pipeline__wall-label {
+    position: absolute;
+    top: -0.6em;
+    left: var(--lk-space-4);
+    padding: 0 var(--lk-space-2);
+    background: var(--lk-bg);
+    font-size: 0.75rem;
+    color: var(--lk-text-2);
+  }
+
+  .pipeline__node {
+    border-top: var(--lk-rule);
+    padding-top: var(--lk-space-3);
+  }
+
+  .pipeline__node h3 {
+    font-size: 1.0625rem;
+    margin: var(--lk-space-2) 0;
+  }
+
+  .pipeline__node p {
+    margin: 0;
+    color: var(--lk-text-2);
+    font-size: 0.9375rem;
+  }
+
+  .pipeline--long .pipeline__node p {
+    font-size: 1rem;
+  }
+
+  .pipeline__n {
+    font: 500 1.0625rem/1 var(--lk-font-display);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The only line that crosses the wall: alert + clip, towards the person. */
+  .pipeline__cross {
+    width: 2px;
+    height: var(--lk-space-5);
+    margin-left: var(--lk-space-4);
+    background: var(--lk-text);
+  }
+
+  .pipeline__note {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--lk-text-2);
+  }
+
+  @media (min-width: 48rem) {
+    .pipeline {
+      grid-template-columns: minmax(0, 3fr) auto minmax(0, 1fr);
+      align-items: stretch;
+    }
+
+    .pipeline__wall {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .pipeline__cross {
+      width: var(--lk-space-6);
+      height: 2px;
+      margin: 0;
+      align-self: center;
+    }
+
+    .pipeline__outside {
+      padding-top: var(--lk-space-5);
+    }
+
+    .pipeline__note {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

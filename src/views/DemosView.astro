@@ -1,0 +1,87 @@
+---
+import HudVideo from '../components/HudVideo.astro';
+import Section from '../components/Section.astro';
+import { DEMOS } from '../config/links';
+import { dict } from '../i18n';
+import { pathFor, type Locale } from '../i18n/routes';
+import Base from '../layouts/Base.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dict(locale);
+const p = t.demos;
+const demos = ['epi', 'fire'] as const;
+---
+
+<Base locale={locale} routeKey="demos" title={p.meta.title} description={p.meta.description}>
+  <Section as="h1" cover question={p.hero.question} title={p.hero.title} text={p.hero.text} id="demos-title" />
+
+  {demos.map((k) => (
+    <Section question={p.questions[k]} title={p[k].title} text={p[k].see} id={`demo-${k}`} wide>
+      <div class="split">
+        <HudVideo locale={locale} clip={k} />
+        <div class="demo-body">
+          <dl class="defs">
+            <div class="defs__row">
+              <dt>
+                <span
+                  class="verdict verdict--outline"
+                  data-demo-status={k}
+                  data-label-up={p.status.up}
+                  data-label-down={p.status.down}
+                  data-demo-down-hint={p.status.downHint}
+                >
+                  {p.status.checking}
+                </span>
+              </dt>
+              <dd>{p.browser}</dd>
+            </div>
+            <div class="defs__row">
+              <dt>{p[k].title}</dt>
+              <dd>{p[k].verdict}</dd>
+            </div>
+          </dl>
+          <p class="note">{p[k].note}</p>
+          <div class="btn-row">
+            <a class="btn" href={DEMOS[k]} rel="noopener" target="_blank">
+              <span class="btn__mark" aria-hidden="true" />
+              {t.cta.openDemo}
+              <span class="visually-hidden"> ({t.a11y.external})</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </Section>
+  ))}
+
+  <Section question={p.questions.note} title={p.note.title} text={p.note.text} id="demos-note">
+    <p>
+      <a href={pathFor('recognition', locale)}>{t.nav.recognition}</a>
+    </p>
+  </Section>
+</Base>
+
+<style>
+  .split {
+    display: grid;
+    gap: var(--lk-space-6);
+    align-items: start;
+    margin-top: var(--lk-space-5);
+  }
+
+  .demo-body {
+    display: grid;
+    gap: var(--lk-space-5);
+    min-width: 0;
+  }
+
+  @media (min-width: 64rem) {
+    .split {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: var(--lk-space-7);
+    }
+  }
+</style>

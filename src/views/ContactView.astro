@@ -1,7 +1,6 @@
 ---
-import Icon from '../components/Icon.astro';
 import LeadForm from '../components/LeadForm.astro';
-import PageHero from '../components/PageHero.astro';
+import Section from '../components/Section.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
@@ -19,35 +18,40 @@ const hasWhatsapp = Boolean(whatsappHref(''));
 ---
 
 <Base locale={locale} routeKey="contact" title={p.meta.title} description={hasWhatsapp ? p.meta.description : p.meta.descriptionNoWhatsapp}>
-  <PageHero eyebrow={p.hero.eyebrow} title={p.hero.title} text={hasWhatsapp ? p.hero.text : p.hero.textNoWhatsapp} />
+  <Section
+    as="h1"
+    cover
+    id="hero-title"
+    question={p.hero.question}
+    title={p.hero.title}
+    text={hasWhatsapp ? p.hero.text : p.hero.textNoWhatsapp}
+  />
 
-  <section class="section section--flush" aria-label={p.hero.title}>
+  <section class="section section--flush" aria-labelledby="hero-title">
     <div class="container contact-grid">
-      <div class="contact-channels">
+      <dl class="defs contact-channels">
         {hasWhatsapp && (
-          <article class="card">
-            <h2 class="contact-channels__title">
-              <Icon name="chat" /> {p.whatsapp.title}
-            </h2>
-            <p>{p.whatsapp.text}</p>
-            <div class="card__foot">
+          <div class="defs__row">
+            <dt>{p.whatsapp.title}</dt>
+            <dd>
+              <p>{p.whatsapp.text}</p>
               <WhatsAppButton locale={locale} />
-            </div>
-          </article>
+            </dd>
+          </div>
         )}
         {CONTACT_EMAIL && (
-          <article class="card">
-            <h2 class="contact-channels__title">
-              <Icon name="mail" /> {p.email.title}
-            </h2>
-            <p>
+          <div class="defs__row">
+            <dt>{p.email.title}</dt>
+            <dd>
               <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-            </p>
-          </article>
+            </dd>
+          </div>
         )}
-      </div>
+      </dl>
       <div>
-        <h2 class="contact-form-title">{p.form.title}</h2>
+        <h2 class="contact-form-title" id="form-title">
+          {p.form.title}
+        </h2>
         <p class="contact-form-text">{p.form.text}</p>
         <LeadForm locale={locale} kind="contact" id="formulario" />
       </div>
@@ -66,16 +70,14 @@ const hasWhatsapp = Boolean(whatsappHref(''));
   }
 
   .contact-channels {
-    display: grid;
-    gap: var(--lk-space-4);
     align-content: start;
   }
 
-  .contact-channels__title,
+  .contact-channels dd > p {
+    margin: 0 0 var(--lk-space-3);
+  }
+
   .contact-form-title {
-    display: flex;
-    align-items: center;
-    gap: var(--lk-space-2);
     font-size: 1.25rem;
     margin: 0;
   }

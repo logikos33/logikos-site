@@ -146,14 +146,54 @@ kbd {
   border-top: 0;
 }
 
-.section-head {
-  max-width: 44rem;
-  margin-bottom: var(--lk-space-7);
+/* Document grid: question in the margin column from 64rem up; the answer fills the rest. */
+.q-grid {
+  display: grid;
+  gap: var(--lk-space-3);
 }
 
-.section-head p:not(.eyebrow) {
+.q {
+  display: none;
+  margin: 0;
+  padding-top: 0.35em;
+  font: 400 0.875rem/1.4 var(--lk-font-body);
   color: var(--lk-text-2);
-  font-size: 1.125rem;
+}
+
+.q-body {
+  min-width: 0;
+}
+
+.q-body > h1,
+.q-body > h2 {
+  max-width: 22ch;
+}
+
+.q-body > h1 {
+  max-width: 16ch;
+}
+
+.q-body > .lede {
+  max-width: var(--lk-measure-lede);
+}
+
+.q-body > p:not(.lede) {
+  max-width: var(--lk-measure);
+}
+
+.section--cover {
+  padding-block: clamp(3rem, 8vw, 6rem) clamp(2.5rem, 6vw, 4.5rem);
+}
+
+@media (min-width: 64rem) {
+  .q-grid {
+    grid-template-columns: var(--lk-margin) minmax(0, 1fr);
+    gap: var(--lk-space-5);
+  }
+
+  .q {
+    display: block;
+  }
 }
 
 .eyebrow {
@@ -173,7 +213,7 @@ kbd {
   content: '';
   width: 0.5rem;
   height: 0.5rem;
-  /* Neutral: cyan is reserved for interactive elements and the detection label. */
+  /* Only where it encodes audience (the two doors) or a code (404). Neutral square: cyan is interactive only. */
   background: var(--lk-line-strong);
 }
 
@@ -262,6 +302,123 @@ kbd {
   padding-top: var(--lk-space-3);
 }
 
+/* ---------- Definition rows (the one list shape) ---------- */
+
+.defs {
+  margin: 0;
+  padding: 0;
+}
+
+.defs__row {
+  display: grid;
+  gap: var(--lk-space-1) var(--lk-space-5);
+  padding: var(--lk-space-4) 0;
+  border-top: 1px solid var(--lk-line);
+}
+
+.defs__row:last-child {
+  border-bottom: 1px solid var(--lk-line);
+}
+
+.defs dt {
+  font-family: var(--lk-font-display);
+  font-weight: 500;
+  font-size: 1.125rem;
+  line-height: 1.25;
+}
+
+.defs dd {
+  margin: 0;
+  color: var(--lk-text-2);
+  max-width: var(--lk-measure);
+}
+
+@media (min-width: 48rem) {
+  .defs__row {
+    grid-template-columns: minmax(10rem, 0.8fr) minmax(0, 1.6fr);
+  }
+}
+
+/* ---------- Figure caption bar: machine | person ---------- */
+
+.figcap {
+  display: grid;
+  gap: var(--lk-space-2) var(--lk-space-4);
+  margin-top: var(--lk-space-2);
+  padding-top: var(--lk-space-2);
+  border-top: 1px solid var(--lk-line);
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--lk-text-2);
+}
+
+.figcap__machine {
+  font: 400 0.75rem/1.5 var(--lk-font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--lk-text);
+}
+
+.figcap__person {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--lk-space-2);
+}
+
+@media (min-width: 48rem) {
+  .figcap {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .figcap__person {
+    padding-left: var(--lk-space-4);
+    border-left: 1px solid var(--lk-line);
+  }
+}
+
+/* ---------- The verdict chip, inline (captions, alert card, legends): color + icon + word ---------- */
+
+.verdict {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 1.25rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--lk-radius);
+  font: 600 0.8125rem/1 var(--lk-font-body);
+  white-space: nowrap;
+}
+
+.verdict svg {
+  width: 0.75rem;
+  height: 0.75rem;
+  stroke-width: 2.4;
+  flex: none;
+}
+
+.verdict--ok {
+  background: var(--lk-ok);
+  color: var(--lk-ok-ink);
+}
+
+.verdict--alert {
+  background: var(--lk-alert);
+  color: var(--lk-alert-ink);
+}
+
+.verdict--warn {
+  background: var(--lk-warn);
+  color: var(--lk-warn-ink);
+}
+
+/* Outlined: status that is not a verdict (live state, counts). */
+.verdict--outline {
+  background: transparent;
+  color: var(--lk-text);
+  border: 1px solid var(--lk-line-strong);
+  font: 500 0.75rem/1 var(--lk-font-mono);
+}
+
 /* ---------- Buttons ---------- */
 
 .btn {
@@ -282,8 +439,8 @@ kbd {
   text-decoration: none;
   cursor: pointer;
   transition:
-    background-color var(--lk-motion-fast) var(--lk-steps),
-    color var(--lk-motion-fast) var(--lk-steps);
+    background-color var(--lk-motion-fast) var(--lk-steps-2),
+    color var(--lk-motion-fast) var(--lk-steps-2);
 }
 
 .btn:hover {
@@ -313,15 +470,6 @@ kbd {
   display: flex;
   flex-wrap: wrap;
   gap: var(--lk-space-3);
-}
-
-.link-arrow {
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.link-arrow:hover {
-  text-decoration: underline;
 }
 
 /* ---------- Chips & state ---------- */
@@ -365,29 +513,6 @@ kbd {
 
 .state--warn svg {
   color: var(--lk-warn);
-}
-
-.proof-line {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--lk-space-2) var(--lk-space-4);
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  font: 500 0.8125rem/1.4 var(--lk-font-mono);
-  color: var(--lk-text-2);
-}
-
-.proof-line li {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--lk-space-2);
-}
-
-.proof-line li + li::before {
-  content: '·';
-  color: var(--lk-line-strong);
-  margin-right: var(--lk-space-2);
 }
 
 /* ---------- Prose (privacy, compliance) ---------- */

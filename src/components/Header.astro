@@ -1,4 +1,5 @@
 ---
+import { LOGIN_URL } from '../config/links';
 import { dict } from '../i18n';
 import { HTML_LANG, LOCALES, pathFor, type Locale, type RouteKey } from '../i18n/routes';
 import { whatsappHref } from '../lib/site';
@@ -12,7 +13,8 @@ interface Props {
 
 const { locale, routeKey } = Astro.props;
 const t = dict(locale);
-const NAV: RouteKey[] = ['recognition', 'howItWorks', 'partners', 'twins', 'robotics', 'about'];
+// Six items. Twins and Robotics are secondary (home §6 and footer).
+const NAV: RouteKey[] = ['recognition', 'howItWorks', 'demos', 'platform', 'partners', 'about'];
 const wa = whatsappHref(t.cta.whatsappMessage);
 const ctaHref = wa ?? pathFor('contact', locale);
 ---
@@ -61,6 +63,14 @@ const ctaHref = wa ?? pathFor('contact', locale);
         <Icon name="sun" class="theme-toggle__sun" />
       </button>
 
+      <a class="site-header__login" href={LOGIN_URL} rel="noopener" target="_blank" data-login>
+        {t.nav.login}
+        <span class="visually-hidden">
+          {' '}
+          — {t.a11y.login} ({t.a11y.external})
+        </span>
+      </a>
+
       <a class="btn site-header__cta" href={ctaHref} {...(wa ? { rel: 'noopener', target: '_blank' } : {})} data-cta="whatsapp">
         <span class="btn__mark" aria-hidden="true"></span>
         {wa ? t.cta.whatsapp : t.cta.contactFallback}
@@ -84,6 +94,15 @@ const ctaHref = wa ?? pathFor('contact', locale);
             <li>
               <a href={pathFor('contact', locale)} aria-current={routeKey === 'contact' ? 'page' : undefined}>
                 {t.nav.contact}
+              </a>
+            </li>
+            <li>
+              <a href={LOGIN_URL} rel="noopener" target="_blank">
+                {t.nav.login}
+                <span class="visually-hidden">
+                  {' '}
+                  — {t.a11y.login} ({t.a11y.external})
+                </span>
               </a>
             </li>
           </ul>
@@ -176,7 +195,8 @@ const ctaHref = wa ?? pathFor('contact', locale);
   }
 
   .site-nav a,
-  .mobile-nav a {
+  .mobile-nav a,
+  .site-header__login {
     white-space: nowrap;
     display: inline-flex;
     align-items: center;
@@ -189,7 +209,8 @@ const ctaHref = wa ?? pathFor('contact', locale);
   }
 
   .site-nav a:hover,
-  .mobile-nav a:hover {
+  .mobile-nav a:hover,
+  .site-header__login:hover {
     text-decoration: underline;
   }
 
@@ -260,6 +281,7 @@ const ctaHref = wa ?? pathFor('contact', locale);
     display: none;
   }
 
+  .site-header__login,
   .site-header__cta {
     display: none;
     white-space: nowrap;
@@ -319,8 +341,13 @@ const ctaHref = wa ?? pathFor('contact', locale);
   }
 
   @media (min-width: 72rem) {
-    .site-nav {
+    .site-nav,
+    .site-header__login {
       display: block;
+    }
+
+    .site-header__login {
+      display: inline-flex;
     }
 
     .mobile-nav {

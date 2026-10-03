@@ -1,5 +1,5 @@
 // Build-time Open Graph card: plain light background, wordmark inside the detection box with
-// the mono label, tagline below. No glitch. Rendered with satori → resvg (dev-only deps).
+// the mono label, tagline below. No glitch. Rendered with satori -> resvg (dev-only deps).
 import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { Resvg } from '@resvg/resvg-js';

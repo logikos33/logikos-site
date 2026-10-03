@@ -15,7 +15,11 @@
   --lk-glitch-m: #ff2e63;
   --lk-ok: #1e8e4a;
   --lk-alert: #c9361b;
-  --lk-warn: #9a6a00;
+  --lk-warn: #855b00;
+  /* Ink on a filled state chip (AA ≥ 4.5:1 at 13px/600, checked in tests/unit/contrast.test.ts). */
+  --lk-ok-ink: #0a0a0f;
+  --lk-alert-ink: #f4f6f8;
+  --lk-warn-ink: #f4f6f8;
 
   /* Derived (AA-checked): link text uses the deeper cyan on light surfaces. */
   --lk-link: var(--lk-accent-2);
@@ -42,6 +46,9 @@
   --lk-ok: #3ddc84;
   --lk-alert: #ff5a36;
   --lk-warn: #ffb020;
+  --lk-ok-ink: #0a0a0f;
+  --lk-alert-ink: #0a0a0f;
+  --lk-warn-ink: #0a0a0f;
 
   --lk-link: var(--lk-accent);
   --lk-focus: var(--lk-accent);
@@ -53,14 +60,16 @@
   --lk-inverse-text: #0a0a0f;
 }
 
-/* HUD sits on video in both themes, so it always uses the dark state ramp. */
+/* HUD sits on video in both themes, so it always uses the dark state ramp; the chip ink
+   is dark on every fill (all three ≥ 7:1 on these fills), the bracket gets a dark base stroke. */
 .lk-hud-scope {
-  --hud-chip: #0a0a0f;
+  --hud-base: #0a0a0f;
+  --hud-ink: #0a0a0f;
   --hud-text: #f4f6f8;
-  --hud-stroke: #00e5ff;
   --hud-ok: #3ddc84;
   --hud-alert: #ff5a36;
   --hud-warn: #ffb020;
+  --hud-indet: #a9b0b9;
 }
 
 :root {
@@ -81,6 +90,15 @@
   --lk-radius: 2px;
   --lk-max: 72rem;
   --lk-gutter: clamp(1rem, 4vw, 2rem);
+  /* Document grid: the section's question lives in this margin column from 64rem up. */
+  --lk-margin: 11rem;
+  --lk-measure: 62ch;
+  --lk-measure-lede: 40ch;
+  --lk-rule: 2px solid var(--lk-text);
   --lk-steps: steps(4, end);
+  --lk-steps-1: steps(1, end);
+  --lk-steps-2: steps(2, end);
   --lk-motion-fast: 160ms;
+  --lk-motion-seq: 240ms;
+  --lk-motion-glitch: 500ms;
 }

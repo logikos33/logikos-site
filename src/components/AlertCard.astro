@@ -1,0 +1,147 @@
+---
+// The person half, expanded: what reaches whoever decides. The header reuses the verdict chip
+// verbatim (the card is the verdict's receipt); the decision row is always at rest — the
+// options are shown, never pre-pressed. Illustrative: generic camera ids, no names.
+import { CLIPS } from '../data/media';
+import { dict } from '../i18n';
+import type { Locale } from '../i18n/routes';
+import { clipVerdict, type HudLabels } from '../lib/hud';
+import type { HudSlot } from '../lib/poster';
+import Icon from './Icon.astro';
+
+interface Props {
+  locale: Locale;
+  clip: HudSlot;
+  class?: string;
+}
+
+const { locale, clip: slot, class: className } = Astro.props;
+const t = dict(locale);
+const clip = CLIPS[slot];
+const labels: HudLabels = { states: t.states, labels: t.hud.labels, items: t.hud.items };
+const words: Record<string, string> = labels.labels;
+const items: Record<string, string> = labels.items;
+const last = clip.frames[clip.frames.length - 1];
+const verdict = clipVerdict(clip, labels);
+const hazard = last?.hazards.find((h) => h.status === 'detected');
+const decisive = last?.people.flatMap((p) => p.ppe).find((e) => e.status === 'non_compliant' || e.status === 'indeterminate');
+const word = hazard ? t.hud.labels.alert : t.states[verdict];
+const object = hazard ? words[hazard.type === 'fire' ? 'flame' : hazard.type] : decisive ? items[decisive.item] : undefined;
+const sent = verdict === 'alert' && clip.meta.clip_s > 0 && clip.meta.channel;
+const a = t.alert;
+---
+
+<div class:list={['alert', className]} data-alert-card data-slot={slot} data-sent={sent ? 'true' : 'false'}>
+  <div class="alert__head">
+    <span class:list={['verdict', `verdict--${verdict}`]}>
+      <Icon name={verdict} size={12} />
+      {word}
+      {object && ` · ${object}`}
+    </span>
+    <span class="alert__stamp mono">
+      {t.hud.cam} {clip.meta.camera} · {clip.meta.time}
+    </span>
+  </div>
+  <dl class="alert__rows">
+    <div>
+      <dt>{a.seen}</dt>
+      <dd>{object ?? word}</dd>
+    </div>
+    <div>
+      <dt>{a.clip}</dt>
+      <dd class="mono">{clip.meta.clip_s > 0 ? `${clip.meta.clip_s} ${t.hud.person.s}` : '—'}</dd>
+    </div>
+    <div>
+      <dt>{a.notified}</dt>
+      <dd>{sent ? t.hud.person.channels[clip.meta.channel ?? 'panel'] : a.nothing}</dd>
+    </div>
+    <div>
+      <dt>{a.decision}</dt>
+      <dd class="alert__options">
+        {sent ? (
+          <>
+            <span class="alert__option">{a.confirm}</span>
+            <span class="alert__option">{a.dismiss}</span>
+            <span class="alert__option">{a.correct}</span>
+            <span class="alert__waiting">{a.waiting}</span>
+          </>
+        ) : (
+          <span class="alert__waiting">{a.nothing}</span>
+        )}
+      </dd>
+    </div>
+  </dl>
+</div>
+
+<style>
+  .alert {
+    border: 1px solid var(--lk-line-strong);
+    border-radius: var(--lk-radius);
+    background: var(--lk-surface);
+    font-size: 0.9375rem;
+  }
+
+  .alert__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--lk-space-2) var(--lk-space-4);
+    padding: var(--lk-space-3) var(--lk-space-4);
+    border-bottom: 1px solid var(--lk-line);
+  }
+
+  .alert__stamp {
+    font-size: 0.75rem;
+    color: var(--lk-text-2);
+  }
+
+  .alert__rows {
+    margin: 0;
+    padding: 0 var(--lk-space-4);
+  }
+
+  .alert__rows > div {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: var(--lk-space-3);
+    padding: var(--lk-space-3) 0;
+  }
+
+  .alert__rows > div + div {
+    border-top: 1px solid var(--lk-line);
+  }
+
+  .alert__rows dt {
+    color: var(--lk-text-2);
+    font-weight: 500;
+  }
+
+  .alert__rows dd {
+    margin: 0;
+    min-width: 0;
+  }
+
+  .alert__options {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--lk-space-2);
+  }
+
+  /* Shown, never pressed: the decision belongs to the person. */
+  .alert__option {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    padding: 0 var(--lk-space-3);
+    border: 1px solid var(--lk-line-strong);
+    border-radius: var(--lk-radius);
+    font-weight: 500;
+  }
+
+  .alert__waiting {
+    font-size: 0.8125rem;
+    color: var(--lk-text-2);
+  }
+</style>

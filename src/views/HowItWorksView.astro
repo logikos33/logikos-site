@@ -1,8 +1,7 @@
 ---
-import FeatureList from '../components/FeatureList.astro';
-import HowItWorks from '../components/HowItWorks.astro';
-import PageHero from '../components/PageHero.astro';
-import SectionHead from '../components/SectionHead.astro';
+import DefList from '../components/DefList.astro';
+import Pipeline from '../components/Pipeline.astro';
+import Section from '../components/Section.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
@@ -15,37 +14,32 @@ interface Props {
 const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.howItWorks;
+const i = p.integrations;
+const integrations = [i.alarm, i.mqtt, i.webhook].map((x) => ({ term: x.title, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="howItWorks" title={p.meta.title} description={p.meta.description}>
-  <PageHero eyebrow={p.hero.eyebrow} title={p.hero.title} text={p.hero.text} />
+  <Section as="h1" cover id="hero-title" question={p.hero.question} title={p.hero.title} text={p.hero.text} />
 
-  <section class="section section--flush" aria-label={p.hero.title}>
-    <div class="container">
-      <HowItWorks locale={locale} />
-    </div>
-  </section>
+  <Section id="pipeline-title" question={p.questions.pipeline} title={t.home.pipeline.title} wide>
+    <Pipeline locale={locale} long class="after" />
+  </Section>
 
-  <section class="section" aria-labelledby="offline-title">
-    <div class="container">
-      <SectionHead title={p.offline.title} text={p.offline.text} id="offline-title" />
-    </div>
-  </section>
+  <Section id="offline-title" question={p.questions.offline} title={p.offline.title} text={p.offline.text} />
 
-  <section class="section" aria-labelledby="integrations-title">
-    <div class="container">
-      <SectionHead title={p.integrations.title} id="integrations-title" />
-      <FeatureList items={[p.integrations.alarm, p.integrations.mqtt, p.integrations.webhook]} />
-    </div>
-  </section>
+  <Section id="integrations-title" question={p.questions.integrations} title={p.integrations.title}>
+    <DefList rows={integrations} class="after" />
+  </Section>
 
-  <section class="section" aria-labelledby="license-title">
-    <div class="container">
-      <SectionHead title={p.license.title} text={p.license.text} id="license-title">
-        <div class="btn-row">
-          <WhatsAppButton locale={locale} />
-        </div>
-      </SectionHead>
+  <Section id="license-title" question={p.questions.license} title={p.license.title} text={p.license.text}>
+    <div class="btn-row after">
+      <WhatsAppButton locale={locale} />
     </div>
-  </section>
+  </Section>
 </Base>
+
+<style>
+  .after {
+    margin-top: var(--lk-space-6);
+  }
+</style>

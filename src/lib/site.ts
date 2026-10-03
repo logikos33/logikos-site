@@ -11,13 +11,13 @@ export const COMPANY = {
   country: 'BR',
 } as const;
 
-/** E.164 digits only, e.g. 5547999999999. Empty → WhatsApp CTAs fall back to the contact page. */
+/** E.164 digits only, e.g. 5547999999999. Empty -> WhatsApp CTAs fall back to the contact page. */
 export const WHATSAPP_NUMBER: string = (env.PUBLIC_WHATSAPP_NUMBER ?? '').replace(/\D/g, '');
 
 /** Only confirmed mailbox on the domain (published by Logikos on the fire demo). Override via env. */
 export const CONTACT_EMAIL: string = env.PUBLIC_CONTACT_EMAIL || 'vitor@logikosvision.com.br';
 
-/** Base URL for final videos (R2). Empty → local placeholders under /media. */
+/** Base URL for final videos (R2). Empty -> local placeholders under /media. */
 export const MEDIA_BASE_URL: string = (env.PUBLIC_MEDIA_BASE_URL ?? '').replace(/\/$/, '');
 
 /** Cloudflare's documented always-pass test site key, used until the real key is configured. */

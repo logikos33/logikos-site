@@ -14,7 +14,13 @@
     "langCurrent": "idioma atual",
     "externalWhatsapp": "abre o WhatsApp",
     "required": "obrigatório",
-    "themeDark": "Tema escuro"
+    "themeDark": "Tema escuro",
+    "login": "Entrar na plataforma Recognition",
+    "external": "abre em nova aba",
+    "readings": "Leituras",
+    "captionMachine": "O que a máquina leu",
+    "captionPerson": "O que a pessoa fez",
+    "question": "Pergunta desta seção"
   },
   "nav": {
     "home": "Início",
@@ -26,7 +32,10 @@
     "compliance": "LGPD",
     "about": "Sobre",
     "contact": "Contato",
-    "privacy": "Política de privacidade"
+    "privacy": "Política de privacidade",
+    "demos": "Demos",
+    "platform": "Plataforma",
+    "login": "Entrar"
   },
   "lang": {
     "pt-br": "PT",
@@ -42,7 +51,12 @@
     "contactForm": "Enviar mensagem",
     "learnMore": "Ver detalhes",
     "howItWorks": "Ver como funciona",
-    "contactFallback": "Falar com a equipe"
+    "contactFallback": "Falar com a equipe",
+    "demo": "Ver a demo",
+    "openDemo": "Abrir a demo",
+    "requestAccess": "Pedir acesso",
+    "pilot": "Pedir piloto",
+    "seeDemos": "Abrir as demos"
   },
   "brand": {
     "wordmark": "LOGIKOS",
@@ -65,43 +79,54 @@
       "epi": "EPI por região do corpo",
       "fire": "Fogo e fumaça",
       "twins": "Nuvem de pontos a partir de vídeo",
-      "robotics": "Reconhecimento embarcado"
+      "robotics": "Reconhecimento embarcado",
+      "ergonomics": "Ergonomia",
+      "zones": "Zonas de risco",
+      "counting": "Contagem"
     },
     "labels": {
-      "person": "PESSOA",
-      "smoke": "FUMAÇA",
-      "flame": "CHAMA",
-      "ppeOk": "EPI OK",
-      "fireAlert": "ALERTA"
+      "person": "pessoa",
+      "smoke": "fumaça",
+      "flame": "chama",
+      "zone": "zona de risco",
+      "posture": "postura",
+      "count": "contagem",
+      "alert": "alerta"
     },
     "items": {
-      "helmet": "CAPACETE",
-      "vest": "COLETE",
-      "gloves": "LUVAS",
-      "goggles": "ÓCULOS",
-      "mask": "MÁSCARA",
-      "ear_muffs": "PROTETOR AURICULAR",
-      "boots": "CALÇADO"
-    },
-    "missing": {
-      "helmet": "SEM CAPACETE",
-      "vest": "SEM COLETE",
-      "gloves": "SEM LUVAS",
-      "goggles": "SEM ÓCULOS",
-      "mask": "SEM MÁSCARA",
-      "ear_muffs": "SEM PROTETOR",
-      "boots": "SEM CALÇADO"
+      "helmet": "capacete",
+      "vest": "colete",
+      "gloves": "luvas",
+      "goggles": "óculos",
+      "mask": "máscara",
+      "ear_muffs": "protetor auricular",
+      "boots": "calçado",
+      "posture": "postura"
     },
     "reasons": {
-      "occluded": "ENCOBERTO",
-      "out_of_frame": "FORA DO QUADRO",
-      "facing_away": "DE COSTAS",
-      "low_light": "POUCA LUZ",
-      "too_far": "DISTANTE",
-      "unknown": "INDETERMINADO"
+      "occluded": "encoberto",
+      "out_of_frame": "fora do quadro",
+      "facing_away": "de costas",
+      "low_light": "pouca luz",
+      "too_far": "distante",
+      "unknown": "sem visão"
     },
     "posterLabel": "prévia",
-    "stop": "Parar"
+    "stop": "Parar",
+    "cam": "CAM",
+    "person": {
+      "sent": "alerta enviado",
+      "clip": "clipe",
+      "s": "s",
+      "decision": "decisão: aguardando pessoa",
+      "nothing": "nada enviado",
+      "channels": {
+        "whatsapp": "WhatsApp",
+        "email": "e-mail",
+        "panel": "painel"
+      }
+    },
+    "illustrative": "ilustrativo"
   },
   "home": {
     "meta": {
@@ -110,89 +135,95 @@
     },
     "hero": {
       "title": "A razão que enxerga.",
-      "sub": "Fogo, EPI e ergonomia pela mesma câmera, dentro da planta.",
-      "proof": ["inferência na borda", "NVIDIA Jetson", "evidência em clipe", "alerta no WhatsApp"]
+      "sub": "Fogo, EPI e ergonomia pela mesma câmera, dentro da planta."
     },
     "doors": {
       "title": "Por onde você entra",
       "plant": {
         "eyebrow": "Para a sua planta",
         "title": "Segurança visível, sem trocar câmera.",
-        "text": "Conte o que precisa monitorar. Respondemos com o próximo passo.",
+        "rows": [
+          {
+            "term": "Sem câmera nova",
+            "text": "Usa as câmeras IP que a planta já tem."
+          },
+          {
+            "term": "Sem internet",
+            "text": "O dispositivo fica na planta. O vídeo contínuo não sai."
+          },
+          {
+            "term": "Prova, não aviso",
+            "text": "Cada alerta vem com o clipe do momento e o quadro marcado."
+          }
+        ],
         "cta": "Falar com a equipe"
       },
       "partner": {
         "eyebrow": "Para integradores",
         "title": "Leve o Recognition aos seus clientes.",
-        "text": "Painel na sua marca, piloto acompanhado e suporte técnico.",
+        "rows": [
+          {
+            "term": "Painel na sua marca",
+            "text": "Seu logo e suas cores no painel que o cliente usa."
+          },
+          {
+            "term": "Produto pronto",
+            "text": "Você vende e implanta. Plataforma e suporte são da Logikos."
+          },
+          {
+            "term": "Piloto acompanhado",
+            "text": "Na planta do cliente, antes da implantação."
+          }
+        ],
         "cta": "Conhecer o programa"
       }
     },
-    "scenarios": {
-      "eyebrow": "Mesma câmera",
-      "title": "Cinco leituras do mesmo vídeo.",
-      "text": "Cada câmera pode rodar mais de um cenário ao mesmo tempo."
+    "questions": {
+      "what": "o que é?",
+      "gain": "o que eu ganho?",
+      "how": "como funciona?",
+      "see": "veja funcionando",
+      "data": "o que acontece com meus dados?",
+      "next": "próximo passo?"
     },
-    "how": {
-      "eyebrow": "Como funciona",
-      "title": "Da câmera ao alerta, dentro da planta.",
+    "pipeline": {
+      "title": "Da câmera à decisão, sem sair da planta.",
+      "wall": "planta",
+      "note": "Só o alerta e o clipe atravessam o muro.",
       "cta": "Ver a arquitetura"
     },
-    "partner": {
-      "eyebrow": "Para o parceiro",
-      "title": "Um produto pronto para revender.",
-      "text": "Você cuida do cliente. A plataforma e o suporte ficam com a gente.",
-      "cta": "Ver o programa de parceiros"
+    "stage": {
+      "title": "Cinco leituras na mesma câmera.",
+      "text": "Escolha uma leitura. O mesmo vídeo, outro veredito.",
+      "demosLine": "Rode no seu navegador:",
+      "demoEpi": "Demo EPI",
+      "demoFire": "Demo fogo"
     },
-    "products": {
-      "eyebrow": "Também da Logikos",
-      "title": "O mesmo olhar em outros formatos."
-    },
-    "lgpd": {
-      "eyebrow": "LGPD",
-      "title": "Privacidade desde o projeto.",
-      "lines": [
-        "Monitora a condição; não identifica quem é a pessoa.",
-        "O vídeo contínuo fica na planta por padrão; saem só o alerta e a evidência do evento.",
-        "Retenção de evidência definida em contrato."
-      ],
+    "data": {
+      "title": "O vídeo contínuo nunca sai da planta.",
+      "leaves": "sai da planta",
+      "stays": "fica na planta",
+      "leavesRows": ["o alerta", "o clipe do evento", "o quadro marcado"],
+      "staysRows": ["o vídeo contínuo", "as gravações", "o modelo e o dispositivo"],
+      "retention": "A retenção da evidência é definida em contrato. Monitora a condição; não identifica quem é a pessoa.",
       "cta": "Ver como tratamos dados"
     },
-    "contact": {
-      "eyebrow": "Contato",
-      "title": "Dois caminhos, uma conversa.",
+    "next": {
+      "title": "Comece com um piloto acompanhado.",
       "plant": {
-        "title": "Tenho uma planta",
-        "text": "Fale direto com a equipe técnica.",
-        "secondary": "Prefere e-mail? Use o formulário."
+        "term": "Tenho uma planta",
+        "text": "Conte o que precisa monitorar. Respondemos com o próximo passo."
       },
       "partner": {
-        "title": "Sou integrador",
+        "term": "Sou integrador",
         "text": "Conte sobre sua carteira e sua região.",
         "cta": "Quero ser parceiro"
-      }
-    }
-  },
-  "scenarios": {
-    "fire": {
-      "title": "Fogo e fumaça",
-      "text": "Fumaça e chama reconhecidas no vídeo, com clipe do momento."
-    },
-    "epi": {
-      "title": "EPI por região do corpo",
-      "text": "Cada região recebe um veredito: conforme, não conforme ou indeterminado."
-    },
-    "ergonomics": {
-      "title": "Ergonomia",
-      "text": "Posturas de risco e tempo em cada posição."
-    },
-    "zones": {
-      "title": "Zonas de risco",
-      "text": "Entrada em área demarcada e tempo de permanência."
-    },
-    "counting": {
-      "title": "Contagem",
-      "text": "Passagens por linha ou por área."
+      },
+      "client": {
+        "term": "Já sou cliente",
+        "text": "Acesse o painel com o seu login."
+      },
+      "also": "Também da Logikos:"
     }
   },
   "steps": {
@@ -207,6 +238,10 @@
     "verdict": {
       "title": "Veredito, evidência e alerta",
       "text": "Cada evento gera um veredito, um clipe de evidência e um alerta para quem precisa agir."
+    },
+    "person": {
+      "title": "Pessoa decide",
+      "text": "Quem recebe o alerta vê o clipe e o quadro marcado, e decide."
     }
   },
   "partnerPoints": {
@@ -227,25 +262,14 @@
       "text": "Treinamento da sua equipe e suporte técnico da Logikos."
     }
   },
-  "products": {
-    "twins": {
-      "title": "Twins",
-      "text": "Gêmeo digital pelo celular: o vídeo vira uma nuvem de pontos navegável."
-    },
-    "robotics": {
-      "title": "Robótica",
-      "text": "O mesmo reconhecimento embarcado em drones e robôs quadrúpedes.",
-      "chip": "Sob projeto"
-    }
-  },
   "recognition": {
     "meta": {
       "title": "Recognition — visão computacional na borda para indústria",
       "description": "Fogo e fumaça, EPI por região do corpo, ergonomia, zonas de risco e contagem na mesma câmera. Processamento dentro da planta."
     },
     "hero": {
-      "eyebrow": "Recognition",
-      "title": "Tudo na mesma câmera.",
+      "question": "o que é?",
+      "title": "Cinco leituras na câmera que já existe.",
       "text": "O Recognition lê o vídeo das câmeras que a planta já tem e entrega um veredito por evento, com evidência."
     },
     "epi": {
@@ -255,20 +279,85 @@
         "ok": "O EPI está presente na região verificada.",
         "alert": "O EPI está ausente na região verificada.",
         "warn": "A região não está visível o bastante para decidir."
-      }
+      },
+      "regions": {
+        "head": "cabeça",
+        "eyes": "olhos",
+        "ears": "ouvidos",
+        "hands": "mãos",
+        "torso": "tronco",
+        "feet": "pés"
+      },
+      "poses": {
+        "standing": "de pé",
+        "crouching": "agachado",
+        "half": "meio quadro"
+      },
+      "explain": "Quando uma região sai do quadro, o veredito dela é indeterminado. Nada é disparado.",
+      "legend": "Escolha a pose para ver cada região sair do quadro."
     },
-    "evidence": {
-      "title": "Evidência, não suposição",
-      "text": "Todo alerta traz o clipe do momento e o quadro com a marcação. Quem recebe vê o que o sistema viu."
+    "questions": {
+      "readings": "o que ele lê?",
+      "epi": "como lê EPI?",
+      "alert": "o que chega a quem decide?",
+      "where": "onde roda?",
+      "partners": "e para integradores?",
+      "demo": "posso testar?",
+      "next": "próximo passo?"
+    },
+    "readings": {
+      "title": "Uma câmera, cinco vereditos.",
+      "fires": "O que dispara",
+      "receives": "O que a pessoa recebe",
+      "not": "O que não faz"
+    },
+    "alertAnatomy": {
+      "title": "O alerta, por dentro.",
+      "text": "O que chega a quem decide, linha por linha.",
+      "rows": [
+        {
+          "term": "Câmera e zona",
+          "text": "De qual câmera e de qual área veio o evento."
+        },
+        {
+          "term": "O que foi visto",
+          "text": "A condição e a região. Nunca a identidade da pessoa."
+        },
+        {
+          "term": "Clipe e quadro marcado",
+          "text": "Os segundos em torno do evento e o quadro com a marcação."
+        },
+        {
+          "term": "Quem foi avisado",
+          "text": "Canal, hora e destinatário."
+        },
+        {
+          "term": "Decisão",
+          "text": "Confirmar, descartar ou corrigir. Sempre da pessoa."
+        }
+      ]
+    },
+    "where": {
+      "title": "Dentro da planta.",
+      "text": "As câmeras IP existentes, um NVIDIA Jetson no rack e um painel. Funciona sem internet.",
+      "cta": "Ver como funciona"
+    },
+    "partners": {
+      "title": "Painel na sua marca, piloto acompanhado, licença por prazo.",
+      "cta": "Ver o programa de parceiros"
+    },
+    "demo": {
+      "title": "Rode o modelo no seu navegador.",
+      "text": "Duas demos abertas. Nada é enviado: o modelo roda no seu aparelho."
     }
   },
   "howItWorks": {
     "meta": {
       "title": "Como funciona — câmera, dispositivo na planta, alerta",
-      "description": "Câmera existente, processamento offline-first em NVIDIA Jetson dentro da planta, veredito com evidência e integração por contato seco, MQTT ou webhook assinado."
+      "description": "Câmera existente, processamento offline-first em NVIDIA Jetson dentro da planta, veredito com evidência e integração por contato seco, MQTT ou webhook."
     },
     "hero": {
-      "eyebrow": "Como funciona",
+      "question": "como funciona?",
       "title": "Câmera, dispositivo, veredito.",
       "text": "O processamento acontece dentro da planta. O vídeo contínuo fica lá por padrão."
     },
@@ -287,13 +376,19 @@
         "text": "Eventos publicados em tópicos para o seu sistema consumir."
       },
       "webhook": {
-        "title": "Webhook assinado",
-        "text": "Cada evento enviado por HTTP com assinatura verificável."
+        "title": "Webhook",
+        "text": "Cada evento enviado por HTTP para o seu sistema."
       }
     },
     "license": {
       "title": "Licença por prazo",
       "text": "Licença por prazo de 24 meses."
+    },
+    "questions": {
+      "pipeline": "qual é o caminho?",
+      "offline": "e sem internet?",
+      "integrations": "como integra?",
+      "license": "como se contrata?"
     }
   },
   "partners": {
@@ -302,7 +397,7 @@
       "description": "Painel na marca do parceiro, piloto acompanhado, suporte e treinamento para integradores de segurança e automação."
     },
     "hero": {
-      "eyebrow": "Integradores",
+      "question": "para quem?",
       "title": "Seu cliente, sua marca, nosso reconhecimento.",
       "text": "Para integradores de segurança eletrônica, automação e TI industrial."
     },
@@ -313,6 +408,10 @@
     "form": {
       "title": "Quero ser parceiro",
       "text": "Conte sobre sua empresa. Retornamos com os próximos passos."
+    },
+    "questions": {
+      "model": "como funciona o canal?",
+      "form": "como entro?"
     }
   },
   "twins": {
@@ -321,7 +420,7 @@
       "description": "Grave um vídeo com o celular e navegue pela nuvem de pontos do ambiente, com medição e anotação."
     },
     "hero": {
-      "eyebrow": "Twins",
+      "question": "o que é?",
       "title": "O ambiente, navegável.",
       "text": "Grave um vídeo com o celular. O Twins transforma o vídeo em uma nuvem de pontos que você navega, mede e anota."
     },
@@ -338,6 +437,15 @@
         "title": "Anotação",
         "text": "Marque pontos de atenção direto na nuvem de pontos."
       }
+    },
+    "questions": {
+      "what": "o que é?",
+      "how": "para que serve?",
+      "buy": "como se contrata?"
+    },
+    "buy": {
+      "title": "Por projeto.",
+      "text": "Cada ambiente é dimensionado a partir de um vídeo seu. Fale com a equipe."
     }
   },
   "robotics": {
@@ -346,7 +454,7 @@
       "description": "O reconhecimento do Recognition embarcado em drones e robôs quadrúpedes, sob projeto."
     },
     "hero": {
-      "eyebrow": "Robótica",
+      "question": "o que é?",
       "title": "O mesmo reconhecimento, em movimento.",
       "text": "Drones e robôs quadrúpedes levam a câmera até onde a câmera fixa não chega."
     },
@@ -364,6 +472,15 @@
         "title": "Sob projeto",
         "text": "Cada aplicação é dimensionada caso a caso, a partir do seu cenário."
       }
+    },
+    "questions": {
+      "what": "o que é?",
+      "how": "para que serve?",
+      "buy": "como se contrata?"
+    },
+    "buy": {
+      "title": "Por projeto.",
+      "text": "Cada aplicação é dimensionada caso a caso, a partir do seu cenário."
     }
   },
   "compliance": {
@@ -372,7 +489,7 @@
       "description": "Sinalização física, papéis de controlador e operador em contrato, detecção por presença e retenção de evidência definida."
     },
     "hero": {
-      "eyebrow": "Conformidade",
+      "question": "como tratamos dados?",
       "title": "Privacidade desde o projeto.",
       "text": "O Recognition foi projetado para apoiar a conformidade com a LGPD dentro da planta."
     },
@@ -394,7 +511,8 @@
         "text": "O prazo de guarda das evidências é definido em contrato. Depois dele, o clipe é apagado."
       }
     },
-    "note": "Este resumo não substitui o contrato nem a avaliação jurídica de cada instalação."
+    "note": "Este resumo não substitui o contrato nem a avaliação jurídica de cada instalação.",
+    "cta": "Ver a política de privacidade"
   },
   "about": {
     "meta": {
@@ -402,7 +520,7 @@
       "description": "Logikos Soluções, de Indaial/SC. Visão computacional na borda com NVIDIA Jetson e modelos de licença permissiva."
     },
     "hero": {
-      "eyebrow": "Sobre",
+      "question": "quem faz?",
       "title": "Razão e visão.",
       "text": "ΛΟΓΙΚΟΣ: racional, em grego. A Logikos Soluções faz visão computacional para a indústria, com engenharia que prova antes de prometer."
     },
@@ -419,6 +537,9 @@
         "title": "Licenças permissivas",
         "text": "Modelos de terceiros sob licenças permissivas, como Apache 2.0, MIT e BSD."
       }
+    },
+    "questions": {
+      "who": "quem faz?"
     }
   },
   "contact": {
@@ -428,7 +549,7 @@
       "descriptionNoWhatsapp": "Fale com a Logikos pelo formulário. Respondemos por e-mail ou WhatsApp."
     },
     "hero": {
-      "eyebrow": "Contato",
+      "question": "como falar?",
       "title": "Fale com a gente.",
       "text": "O WhatsApp é o caminho mais rápido. Se preferir, use o formulário.",
       "textNoWhatsapp": "Use o formulário. Respondemos por e-mail ou WhatsApp."
@@ -451,7 +572,7 @@
       "description": "Como a Logikos Soluções trata os dados pessoais enviados por este site."
     },
     "hero": {
-      "eyebrow": "Privacidade",
+      "question": "o que fazemos com seus dados?",
       "title": "Política de privacidade",
       "text": "Versão provisória. Texto final em revisão jurídica."
     },
@@ -542,7 +663,8 @@
   "notFound": {
     "title": "Página não encontrada",
     "text": "O endereço não existe ou mudou.",
-    "cta": "Voltar ao início"
+    "cta": "Voltar ao início",
+    "brand": "Logikos Soluções"
   },
   "marca": {
     "title": "Marca — conferência interna",
@@ -559,5 +681,177 @@
     "displaySample": "A razão que enxerga.",
     "bodySample": "Veredito, evidência e alerta dentro da planta.",
     "monoSample": "EVT · EPI · CONFORME"
+  },
+  "alert": {
+    "title": "alerta",
+    "seen": "visto",
+    "clip": "clipe",
+    "notified": "avisado",
+    "decision": "decisão",
+    "confirm": "Confirmar",
+    "dismiss": "Descartar",
+    "correct": "Corrigir",
+    "waiting": "aguardando a pessoa",
+    "nothing": "nada enviado"
+  },
+  "readings": {
+    "fire": {
+      "title": "Fogo e fumaça",
+      "text": "Fumaça e chama reconhecidas no vídeo, com clipe do momento.",
+      "fires": "Fumaça ou chama no quadro.",
+      "receives": "Clipe do momento, quadro marcado e alerta imediato.",
+      "not": "Não espera o sensor de teto: lê o vídeo."
+    },
+    "epi": {
+      "title": "EPI por região do corpo",
+      "text": "Cada região recebe um veredito: conforme, não conforme ou indeterminado.",
+      "fires": "Região do corpo visível sem o EPI exigido.",
+      "receives": "Veredito por região, com o quadro marcado.",
+      "not": "Região encoberta é indeterminado: não gera alarme."
+    },
+    "ergonomics": {
+      "title": "Ergonomia",
+      "text": "Posturas de risco e tempo em cada posição.",
+      "fires": "Postura de risco sustentada.",
+      "receives": "Tempo em cada postura e o clipe.",
+      "not": "Não identifica quem é a pessoa."
+    },
+    "zones": {
+      "title": "Zonas de risco",
+      "text": "Entrada em área demarcada e tempo de permanência.",
+      "fires": "Entrada em área demarcada.",
+      "receives": "Tempo de permanência e o quadro marcado.",
+      "not": "Não bloqueia nada: avisa quem decide."
+    },
+    "counting": {
+      "title": "Contagem",
+      "text": "Passagens por linha ou por área.",
+      "fires": "Passagem por linha ou por área.",
+      "receives": "Contagem por período, sem clipe.",
+      "not": "Não conta pessoas pelo rosto: conta passagens."
+    }
+  },
+  "products": {
+    "twins": {
+      "title": "Twins",
+      "text": "Gêmeo digital pelo celular."
+    },
+    "robotics": {
+      "title": "Robótica",
+      "text": "O mesmo reconhecimento em drones e quadrúpedes.",
+      "chip": "Sob projeto"
+    }
+  },
+  "demos": {
+    "meta": {
+      "title": "Demos — EPI e fogo no seu navegador",
+      "description": "Duas demos abertas do Recognition: EPI e fogo e fumaça. O modelo roda no seu navegador; nada é enviado."
+    },
+    "hero": {
+      "question": "o que você vai ver?",
+      "title": "Duas demos, no seu navegador.",
+      "text": "Aponte a câmera do seu aparelho. O modelo roda localmente e desenha o veredito na hora."
+    },
+    "questions": {
+      "epi": "EPI",
+      "fire": "fogo e fumaça",
+      "note": "o que não é?"
+    },
+    "epi": {
+      "title": "Demo de EPI",
+      "see": "Pessoas e objetos marcados em tempo real, com a caixa e o chip.",
+      "verdict": "O chip diz o que foi detectado. Conforme, não conforme ou indeterminado só aparecem no produto, com as regiões do corpo.",
+      "note": "Demo genérica de detecção. Não é o modelo de EPI da planta."
+    },
+    "fire": {
+      "title": "Demo de fogo e fumaça",
+      "see": "Chama e fumaça marcadas na câmera do seu aparelho.",
+      "verdict": "Alerta quando o modelo vê chama ou fumaça. A página da demo publica a taxa de alarme falso medida.",
+      "note": "Modelo treinado só com dados públicos de licença permissiva."
+    },
+    "status": {
+      "checking": "verificando",
+      "up": "no ar",
+      "down": "fora do ar agora",
+      "downHint": "veja o clipe gravado"
+    },
+    "clip": "Clipe gravado",
+    "browser": "O modelo roda no seu navegador. Nada é enviado.",
+    "note": {
+      "title": "O que estas demos não são.",
+      "text": "São modelos abertos rodando no seu aparelho, para você ver o veredito acontecer. O produto roda na planta, nas suas câmeras, com as cinco leituras."
+    }
+  },
+  "platform": {
+    "meta": {
+      "title": "Plataforma — Edge e Nuvem",
+      "description": "Dois modos do Recognition: dispositivo na planta, sem internet, licença por prazo; ou plataforma na nuvem por mensalidade, com painel e evidências. Sem preço público."
+    },
+    "hero": {
+      "question": "edge ou nuvem?",
+      "title": "Dois modos. A conversa define qual serve.",
+      "text": "Na planta, como um sensor. Ou na nuvem, como um serviço."
+    },
+    "questions": {
+      "edge": "edge",
+      "cloud": "nuvem",
+      "account": "como entro?"
+    },
+    "edge": {
+      "title": "Edge",
+      "lede": "Paga uma vez, como um sensor.",
+      "rows": [
+        {
+          "term": "Na planta",
+          "text": "Um dispositivo no rack lê as câmeras existentes."
+        },
+        {
+          "term": "Sem internet",
+          "text": "Funciona offline. O vídeo contínuo não sai."
+        },
+        {
+          "term": "Licença por prazo",
+          "text": "Licença por prazo de 24 meses."
+        },
+        {
+          "term": "Evidência local",
+          "text": "Clipes e quadros marcados ficam na planta."
+        }
+      ]
+    },
+    "cloud": {
+      "title": "Nuvem",
+      "lede": "Mensalidade, como um serviço.",
+      "rows": [
+        {
+          "term": "Acesso de qualquer lugar",
+          "text": "Painel pelo navegador, em qualquer dispositivo."
+        },
+        {
+          "term": "Evidências na nuvem",
+          "text": "Clipes e quadros marcados com retenção definida."
+        },
+        {
+          "term": "Painel",
+          "text": "Eventos, filtros e histórico por câmera."
+        },
+        {
+          "term": "Mensalidade",
+          "text": "Sem preço público. A proposta vem da conversa."
+        }
+      ]
+    },
+    "both": "Os dois modos existem. A conversa define qual serve à sua planta.",
+    "account": {
+      "title": "Criar conta",
+      "text": "A conta é criada pela equipe da Logikos. Conte quantas câmeras e qual modo prefere.",
+      "confirm": "Você recebe o acesso por e-mail.",
+      "cta": "Pedir acesso"
+    },
+    "login": {
+      "title": "Já tem conta?",
+      "text": "Entre no painel do Recognition.",
+      "cta": "Entrar"
+    }
   }
 }

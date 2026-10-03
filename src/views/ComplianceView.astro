@@ -1,6 +1,6 @@
 ---
-import FeatureList from '../components/FeatureList.astro';
-import PageHero from '../components/PageHero.astro';
+import DefList from '../components/DefList.astro';
+import Section from '../components/Section.astro';
 import { dict } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
@@ -13,27 +13,31 @@ const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.compliance;
 const i = p.items;
+const items = [i.signage, i.roles, i.retention].map((x) => ({ term: x.title, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="compliance" title={p.meta.title} description={p.meta.description}>
-  <PageHero eyebrow={p.hero.eyebrow} title={p.hero.title} text={p.hero.text} />
+  <Section as="h1" cover id="hero-title" question={p.hero.question} title={p.hero.title} text={p.hero.text} />
 
-  <section class="section" aria-label={p.hero.title}>
-    <div class="container">
-      <FeatureList items={[i.signage, i.roles, i.presence, i.retention]} columns={2} />
-      <p class="note compliance-note">{p.note}</p>
-      <p>
-        <a class="link-arrow" href={pathFor('privacy', locale)}>
-          {t.nav.privacy}
-        </a>
-      </p>
-    </div>
-  </section>
+  <Section id="items-title" question={p.hero.question} title={i.presence.title} text={i.presence.text}>
+    <DefList rows={items} class="after" />
+    <p class="note after">{p.note}</p>
+    <p class="after">
+      <a href={pathFor('privacy', locale)}>{p.cta}</a>
+    </p>
+  </Section>
 </Base>
 
 <style>
-  .compliance-note {
-    margin-top: var(--lk-space-7);
-    max-width: 44rem;
+  .after {
+    margin-top: var(--lk-space-6);
+  }
+
+  .note.after {
+    margin-top: var(--lk-space-5);
+  }
+
+  .note + .after {
+    margin-top: var(--lk-space-4);
   }
 </style>

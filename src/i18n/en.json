@@ -14,7 +14,13 @@
     "langCurrent": "current language",
     "externalWhatsapp": "opens WhatsApp",
     "required": "required",
-    "themeDark": "Dark theme"
+    "themeDark": "Dark theme",
+    "login": "Sign in to the Recognition platform",
+    "external": "opens in a new tab",
+    "readings": "Readings",
+    "captionMachine": "What the machine read",
+    "captionPerson": "What the person did",
+    "question": "This section's question"
   },
   "nav": {
     "home": "Home",
@@ -26,7 +32,10 @@
     "compliance": "Privacy & LGPD",
     "about": "About",
     "contact": "Contact",
-    "privacy": "Privacy policy"
+    "privacy": "Privacy policy",
+    "demos": "Demos",
+    "platform": "Platform",
+    "login": "Sign in"
   },
   "lang": {
     "pt-br": "PT",
@@ -42,7 +51,12 @@
     "contactForm": "Send a message",
     "learnMore": "See details",
     "howItWorks": "See how it works",
-    "contactFallback": "Talk to the team"
+    "contactFallback": "Talk to the team",
+    "demo": "See the demo",
+    "openDemo": "Open the demo",
+    "requestAccess": "Request access",
+    "pilot": "Request a pilot",
+    "seeDemos": "Open the demos"
   },
   "brand": {
     "wordmark": "LOGIKOS",
@@ -65,43 +79,54 @@
       "epi": "PPE by body region",
       "fire": "Fire and smoke",
       "twins": "Point cloud from video",
-      "robotics": "Onboard recognition"
+      "robotics": "Onboard recognition",
+      "ergonomics": "Ergonomics",
+      "zones": "Hazard zones",
+      "counting": "Counting"
     },
     "labels": {
-      "person": "PERSON",
-      "smoke": "SMOKE",
-      "flame": "FLAME",
-      "ppeOk": "PPE OK",
-      "fireAlert": "ALERT"
+      "person": "person",
+      "smoke": "smoke",
+      "flame": "flame",
+      "zone": "hazard zone",
+      "posture": "posture",
+      "count": "count",
+      "alert": "alert"
     },
     "items": {
-      "helmet": "HARD HAT",
-      "vest": "VEST",
-      "gloves": "GLOVES",
-      "goggles": "GOGGLES",
-      "mask": "MASK",
-      "ear_muffs": "EAR MUFFS",
-      "boots": "SAFETY BOOTS"
-    },
-    "missing": {
-      "helmet": "NO HARD HAT",
-      "vest": "NO VEST",
-      "gloves": "NO GLOVES",
-      "goggles": "NO GOGGLES",
-      "mask": "NO MASK",
-      "ear_muffs": "NO EAR MUFFS",
-      "boots": "NO SAFETY BOOTS"
+      "helmet": "hard hat",
+      "vest": "vest",
+      "gloves": "gloves",
+      "goggles": "goggles",
+      "mask": "mask",
+      "ear_muffs": "ear muffs",
+      "boots": "safety boots",
+      "posture": "posture"
     },
     "reasons": {
-      "occluded": "OCCLUDED",
-      "out_of_frame": "OUT OF FRAME",
-      "facing_away": "FACING AWAY",
-      "low_light": "LOW LIGHT",
-      "too_far": "TOO FAR",
-      "unknown": "UNDETERMINED"
+      "occluded": "occluded",
+      "out_of_frame": "out of frame",
+      "facing_away": "facing away",
+      "low_light": "low light",
+      "too_far": "too far",
+      "unknown": "not visible"
     },
     "posterLabel": "preview",
-    "stop": "Stop"
+    "stop": "Stop",
+    "cam": "CAM",
+    "person": {
+      "sent": "alert sent",
+      "clip": "clip",
+      "s": "s",
+      "decision": "decision: waiting for a person",
+      "nothing": "nothing sent",
+      "channels": {
+        "whatsapp": "WhatsApp",
+        "email": "email",
+        "panel": "dashboard"
+      }
+    },
+    "illustrative": "illustrative"
   },
   "home": {
     "meta": {
@@ -110,89 +135,95 @@
     },
     "hero": {
       "title": "Reason that sees.",
-      "sub": "Fire, PPE and ergonomics from the same camera, inside the plant.",
-      "proof": ["edge processing", "NVIDIA Jetson", "evidence clip", "WhatsApp alert"]
+      "sub": "Fire, PPE and ergonomics from the same camera, inside the plant."
     },
     "doors": {
       "title": "Where you come in",
       "plant": {
         "eyebrow": "For your plant",
         "title": "Safety you can see, on the cameras you already have.",
-        "text": "Tell us what you need to watch. We reply with the next step.",
+        "rows": [
+          {
+            "term": "No new cameras",
+            "text": "Runs on the IP cameras your plant already has."
+          },
+          {
+            "term": "No internet needed",
+            "text": "The device stays in the plant. Continuous video never leaves."
+          },
+          {
+            "term": "Proof, not a notice",
+            "text": "Every alert carries the clip of the moment and the marked frame."
+          }
+        ],
         "cta": "Talk to the team"
       },
       "partner": {
         "eyebrow": "For integrators",
         "title": "Bring Recognition to your customers.",
-        "text": "A dashboard under your brand, a guided pilot and technical support.",
+        "rows": [
+          {
+            "term": "Your brand on the dashboard",
+            "text": "Your logo and colors on the dashboard your customer uses."
+          },
+          {
+            "term": "A finished product",
+            "text": "You sell and deploy. Platform and support are on Logikos."
+          },
+          {
+            "term": "Guided pilot",
+            "text": "At the customer's plant, before rollout."
+          }
+        ],
         "cta": "See the program"
       }
     },
-    "scenarios": {
-      "eyebrow": "One camera",
-      "title": "Five readings of the same feed.",
-      "text": "A single camera can run more than one scenario at once."
+    "questions": {
+      "what": "what is it?",
+      "gain": "what do I gain?",
+      "how": "how does it work?",
+      "see": "see it working",
+      "data": "what happens to my data?",
+      "next": "next step?"
     },
-    "how": {
-      "eyebrow": "How it works",
-      "title": "From camera to alert, inside the plant.",
+    "pipeline": {
+      "title": "From camera to decision, without leaving the plant.",
+      "wall": "plant",
+      "note": "Only the alert and the clip cross the wall.",
       "cta": "See the architecture"
     },
-    "partner": {
-      "eyebrow": "For partners",
-      "title": "A product ready to resell.",
-      "text": "You own the customer. We handle the platform and the support.",
-      "cta": "See the partner program"
+    "stage": {
+      "title": "Five readings on the same camera.",
+      "text": "Pick a reading. Same video, different verdict.",
+      "demosLine": "Run it in your browser:",
+      "demoEpi": "PPE demo",
+      "demoFire": "Fire demo"
     },
-    "products": {
-      "eyebrow": "Also from Logikos",
-      "title": "The same eye, in other forms."
-    },
-    "lgpd": {
-      "eyebrow": "Privacy",
-      "title": "Privacy by design.",
-      "lines": [
-        "Watches the condition; never identifies who the person is.",
-        "Continuous video stays on site by default; only the alert and the event evidence leave.",
-        "Evidence retention is set by contract."
-      ],
+    "data": {
+      "title": "Continuous video never leaves the plant.",
+      "leaves": "leaves the plant",
+      "stays": "stays in the plant",
+      "leavesRows": ["the alert", "the event clip", "the marked frame"],
+      "staysRows": ["continuous video", "recordings", "the model and the device"],
+      "retention": "Evidence retention is set by contract. It watches the condition; it does not identify who the person is.",
       "cta": "How we handle data"
     },
-    "contact": {
-      "eyebrow": "Contact",
-      "title": "Two ways in, one conversation.",
+    "next": {
+      "title": "Start with a guided pilot.",
       "plant": {
-        "title": "I run a plant",
-        "text": "Talk straight to the engineering team.",
-        "secondary": "Prefer email? Use the form."
+        "term": "I run a plant",
+        "text": "Tell us what you need to watch. We reply with the next step."
       },
       "partner": {
-        "title": "I'm an integrator",
+        "term": "I'm an integrator",
         "text": "Tell us about your customers and your region.",
         "cta": "Become a partner"
-      }
-    }
-  },
-  "scenarios": {
-    "fire": {
-      "title": "Fire and smoke detection",
-      "text": "Smoke and flame flagged in the video, with a clip of the moment."
-    },
-    "epi": {
-      "title": "PPE by body region",
-      "text": "Every region gets a verdict: compliant, non-compliant or undetermined."
-    },
-    "ergonomics": {
-      "title": "Ergonomics",
-      "text": "Risky postures and time spent in each one."
-    },
-    "zones": {
-      "title": "Hazard zones",
-      "text": "Entry into marked areas and time spent inside."
-    },
-    "counting": {
-      "title": "Counting",
-      "text": "Crossings over a line or through an area."
+      },
+      "client": {
+        "term": "I'm a customer",
+        "text": "Open the dashboard with your login."
+      },
+      "also": "Also from Logikos:"
     }
   },
   "steps": {
@@ -207,6 +238,10 @@
     "verdict": {
       "title": "Verdict, evidence, alert",
       "text": "Every event produces a verdict, an evidence clip and an alert for whoever needs to act."
+    },
+    "person": {
+      "title": "A person decides",
+      "text": "Whoever gets the alert sees the clip and the marked frame, and decides."
     }
   },
   "partnerPoints": {
@@ -227,25 +262,14 @@
       "text": "Training for your team and technical support from Logikos."
     }
   },
-  "products": {
-    "twins": {
-      "title": "Twins",
-      "text": "A digital twin from your phone: video becomes a point cloud you can walk through."
-    },
-    "robotics": {
-      "title": "Robotics",
-      "text": "The same recognition on drones and quadruped robots.",
-      "chip": "By project"
-    }
-  },
   "recognition": {
     "meta": {
       "title": "Recognition — edge computer vision for industry",
       "description": "Fire and smoke, PPE by body region, ergonomics, hazard zones and counting on the same camera. Processed inside the plant."
     },
     "hero": {
-      "eyebrow": "Recognition",
-      "title": "All on one camera.",
+      "question": "what is it?",
+      "title": "Five readings on the camera you already have.",
       "text": "Recognition reads the video from the cameras your plant already has and returns a verdict for each event, with evidence."
     },
     "epi": {
@@ -255,20 +279,85 @@
         "ok": "PPE is present on the checked region.",
         "alert": "PPE is missing on the checked region.",
         "warn": "The region isn't visible enough to decide."
-      }
+      },
+      "regions": {
+        "head": "head",
+        "eyes": "eyes",
+        "ears": "ears",
+        "hands": "hands",
+        "torso": "torso",
+        "feet": "feet"
+      },
+      "poses": {
+        "standing": "standing",
+        "crouching": "crouching",
+        "half": "half in frame"
+      },
+      "explain": "When a region leaves the frame, its verdict is undetermined. Nothing fires.",
+      "legend": "Pick a pose to watch each region leave the frame."
     },
-    "evidence": {
-      "title": "Evidence, not assumptions",
-      "text": "Every alert carries a clip of the moment and the marked frame. Whoever gets it sees what the system saw."
+    "questions": {
+      "readings": "what does it read?",
+      "epi": "how does it read PPE?",
+      "alert": "what reaches the decision-maker?",
+      "where": "where does it run?",
+      "partners": "and for integrators?",
+      "demo": "can I try it?",
+      "next": "next step?"
+    },
+    "readings": {
+      "title": "One camera, five verdicts.",
+      "fires": "What triggers it",
+      "receives": "What the person receives",
+      "not": "What it does not do"
+    },
+    "alertAnatomy": {
+      "title": "The alert, inside.",
+      "text": "What reaches the decision-maker, line by line.",
+      "rows": [
+        {
+          "term": "Camera and zone",
+          "text": "Which camera and which area the event came from."
+        },
+        {
+          "term": "What was seen",
+          "text": "The condition and the region. Never the person's identity."
+        },
+        {
+          "term": "Clip and marked frame",
+          "text": "The seconds around the event and the frame with the marking."
+        },
+        {
+          "term": "Who was notified",
+          "text": "Channel, time and recipient."
+        },
+        {
+          "term": "Decision",
+          "text": "Confirm, dismiss or correct. Always the person."
+        }
+      ]
+    },
+    "where": {
+      "title": "Inside the plant.",
+      "text": "The existing IP cameras, an NVIDIA Jetson in the rack and a dashboard. Works without internet.",
+      "cta": "See how it works"
+    },
+    "partners": {
+      "title": "Your brand on the dashboard, a guided pilot, a term license.",
+      "cta": "See the partner program"
+    },
+    "demo": {
+      "title": "Run the model in your browser.",
+      "text": "Two open demos. Nothing is sent: the model runs on your device."
     }
   },
   "howItWorks": {
     "meta": {
       "title": "How it works — camera, edge device, alert",
-      "description": "Existing cameras, offline-first processing on NVIDIA Jetson inside the plant, verdicts with evidence, and integration via dry contact, MQTT or signed webhooks."
+      "description": "Existing cameras, offline-first processing on NVIDIA Jetson inside the plant, verdicts with evidence, and integration via dry contact, MQTT or webhooks."
     },
     "hero": {
-      "eyebrow": "How it works",
+      "question": "how does it work?",
       "title": "Camera, device, verdict.",
       "text": "Processing happens inside the plant. Continuous video stays there by default."
     },
@@ -287,13 +376,19 @@
         "text": "Events published to topics your systems subscribe to."
       },
       "webhook": {
-        "title": "Signed webhook",
-        "text": "Each event sent over HTTP with a verifiable signature."
+        "title": "Webhook",
+        "text": "Each event sent over HTTP to your system."
       }
     },
     "license": {
       "title": "Term license",
       "text": "A 24-month term license."
+    },
+    "questions": {
+      "pipeline": "what is the path?",
+      "offline": "and without internet?",
+      "integrations": "how does it integrate?",
+      "license": "how is it licensed?"
     }
   },
   "partners": {
@@ -302,7 +397,7 @@
       "description": "A dashboard under the partner's brand, guided pilots, support and training for security and automation integrators."
     },
     "hero": {
-      "eyebrow": "Partners",
+      "question": "for whom?",
       "title": "Your customer, your brand, our recognition.",
       "text": "For security, automation and industrial IT integrators."
     },
@@ -313,6 +408,10 @@
     "form": {
       "title": "Become a partner",
       "text": "Tell us about your company. We'll come back with next steps."
+    },
+    "questions": {
+      "model": "how does the channel work?",
+      "form": "how do I join?"
     }
   },
   "twins": {
@@ -321,7 +420,7 @@
       "description": "Record a video on your phone, then walk through a point cloud of the space, with measurements and notes."
     },
     "hero": {
-      "eyebrow": "Twins",
+      "question": "what is it?",
       "title": "The space, navigable.",
       "text": "Record a video on your phone. Twins turns it into a point cloud you can navigate, measure and annotate."
     },
@@ -338,6 +437,15 @@
         "title": "Notes",
         "text": "Pin points of interest right on the point cloud."
       }
+    },
+    "questions": {
+      "what": "what is it?",
+      "how": "what is it for?",
+      "buy": "how is it contracted?"
+    },
+    "buy": {
+      "title": "By project.",
+      "text": "Each space is scoped from a video of yours. Talk to the team."
     }
   },
   "robotics": {
@@ -346,7 +454,7 @@
       "description": "Recognition running on drones and quadruped robots, built per project."
     },
     "hero": {
-      "eyebrow": "Robotics",
+      "question": "what is it?",
       "title": "The same recognition, on the move.",
       "text": "Drones and quadruped robots take the camera where a fixed camera can't reach."
     },
@@ -364,6 +472,15 @@
         "title": "By project",
         "text": "Each application is scoped case by case, from your scenario."
       }
+    },
+    "questions": {
+      "what": "what is it?",
+      "how": "what is it for?",
+      "buy": "how is it contracted?"
+    },
+    "buy": {
+      "title": "By project.",
+      "text": "Each application is scoped case by case, from your scenario."
     }
   },
   "compliance": {
@@ -372,7 +489,7 @@
       "description": "Physical signage, controller and processor roles set by contract, presence-based detection and defined evidence retention."
     },
     "hero": {
-      "eyebrow": "Compliance",
+      "question": "how do we handle data?",
       "title": "Privacy by design.",
       "text": "Recognition is built to support compliance with Brazil's LGPD inside the plant."
     },
@@ -394,7 +511,8 @@
         "text": "How long evidence is kept is set by contract. After that, the clip is deleted."
       }
     },
-    "note": "This summary does not replace the contract or the legal review of each installation."
+    "note": "This summary does not replace the contract or the legal review of each installation.",
+    "cta": "See the privacy policy"
   },
   "about": {
     "meta": {
@@ -402,7 +520,7 @@
       "description": "Logikos Soluções, from Indaial, Brazil. Edge computer vision on NVIDIA Jetson, built on permissively licensed models."
     },
     "hero": {
-      "eyebrow": "About",
+      "question": "who makes it?",
       "title": "Reason and sight.",
       "text": "ΛΟΓΙΚΟΣ is Greek for rational. Logikos Soluções builds computer vision for industry, with engineering that proves before it promises."
     },
@@ -419,6 +537,9 @@
         "title": "Permissive licenses",
         "text": "Third-party models under permissive licenses such as Apache 2.0, MIT and BSD."
       }
+    },
+    "questions": {
+      "who": "who makes it?"
     }
   },
   "contact": {
@@ -428,7 +549,7 @@
       "descriptionNoWhatsapp": "Reach Logikos through the form. We reply by email or WhatsApp."
     },
     "hero": {
-      "eyebrow": "Contact",
+      "question": "how to reach us?",
       "title": "Talk to us.",
       "text": "WhatsApp is the fastest way. The form works too.",
       "textNoWhatsapp": "Use the form. We reply by email or WhatsApp."
@@ -451,7 +572,7 @@
       "description": "How Logikos Soluções handles personal data sent through this website."
     },
     "hero": {
-      "eyebrow": "Privacy",
+      "question": "what do we do with your data?",
       "title": "Privacy policy",
       "text": "Provisional version. Final text under legal review."
     },
@@ -542,7 +663,8 @@
   "notFound": {
     "title": "Page not found",
     "text": "This address doesn't exist or has moved.",
-    "cta": "Back to home"
+    "cta": "Back to home",
+    "brand": "Logikos Soluções"
   },
   "marca": {
     "title": "Brand — internal check",
@@ -559,5 +681,177 @@
     "displaySample": "Reason that sees.",
     "bodySample": "Verdict, evidence and alert inside the plant.",
     "monoSample": "EVT · PPE · COMPLIANT"
+  },
+  "alert": {
+    "title": "alert",
+    "seen": "seen",
+    "clip": "clip",
+    "notified": "notified",
+    "decision": "decision",
+    "confirm": "Confirm",
+    "dismiss": "Dismiss",
+    "correct": "Correct",
+    "waiting": "waiting for the person",
+    "nothing": "nothing sent"
+  },
+  "readings": {
+    "fire": {
+      "title": "Fire and smoke detection",
+      "text": "Smoke and flame flagged in the video, with a clip of the moment.",
+      "fires": "Smoke or flame in the frame.",
+      "receives": "Clip of the moment, marked frame and an immediate alert.",
+      "not": "Doesn't wait for a ceiling sensor: it reads the video."
+    },
+    "epi": {
+      "title": "PPE by body region",
+      "text": "Every region gets a verdict: compliant, non-compliant or undetermined.",
+      "fires": "A visible body region without the required PPE.",
+      "receives": "A verdict per region, with the marked frame.",
+      "not": "An occluded region is undetermined: no alarm."
+    },
+    "ergonomics": {
+      "title": "Ergonomics",
+      "text": "Risky postures and time spent in each one.",
+      "fires": "A sustained risky posture.",
+      "receives": "Time in each posture and the clip.",
+      "not": "Does not identify who the person is."
+    },
+    "zones": {
+      "title": "Hazard zones",
+      "text": "Entry into marked areas and time spent inside.",
+      "fires": "Entry into a marked area.",
+      "receives": "Dwell time and the marked frame.",
+      "not": "Blocks nothing: it tells whoever decides."
+    },
+    "counting": {
+      "title": "Counting",
+      "text": "Crossings over a line or through an area.",
+      "fires": "A crossing over a line or through an area.",
+      "receives": "Counts per period, no clip.",
+      "not": "Doesn't count people by face: it counts crossings."
+    }
+  },
+  "products": {
+    "twins": {
+      "title": "Twins",
+      "text": "A digital twin from your phone."
+    },
+    "robotics": {
+      "title": "Robotics",
+      "text": "The same recognition on drones and quadrupeds.",
+      "chip": "By project"
+    }
+  },
+  "demos": {
+    "meta": {
+      "title": "Demos — PPE and fire in your browser",
+      "description": "Two open Recognition demos: PPE and fire and smoke. The model runs in your browser; nothing is sent."
+    },
+    "hero": {
+      "question": "what will you see?",
+      "title": "Two demos, in your browser.",
+      "text": "Point your device camera. The model runs locally and draws the verdict on the spot."
+    },
+    "questions": {
+      "epi": "PPE",
+      "fire": "fire and smoke",
+      "note": "what is it not?"
+    },
+    "epi": {
+      "title": "PPE demo",
+      "see": "People and objects marked in real time, with the box and the chip.",
+      "verdict": "The chip says what was detected. Compliant, non-compliant and undetermined only appear in the product, with body regions.",
+      "note": "A generic detection demo. Not the plant's PPE model."
+    },
+    "fire": {
+      "title": "Fire and smoke demo",
+      "see": "Flame and smoke marked on your device camera.",
+      "verdict": "An alert when the model sees flame or smoke. The demo page publishes its measured false-alarm rate.",
+      "note": "A model trained only on public, permissively licensed data."
+    },
+    "status": {
+      "checking": "checking",
+      "up": "live",
+      "down": "down right now",
+      "downHint": "watch the recorded clip"
+    },
+    "clip": "Recorded clip",
+    "browser": "The model runs in your browser. Nothing is sent.",
+    "note": {
+      "title": "What these demos are not.",
+      "text": "They are open models running on your device, so you can watch a verdict happen. The product runs in the plant, on your cameras, with all five readings."
+    }
+  },
+  "platform": {
+    "meta": {
+      "title": "Platform — Edge and Cloud",
+      "description": "Two ways to run Recognition: a device in the plant, no internet needed, term license; or the cloud platform on a monthly plan, with dashboard and evidence. No public pricing."
+    },
+    "hero": {
+      "question": "edge or cloud?",
+      "title": "Two modes. The conversation decides which fits.",
+      "text": "In the plant, like a sensor. Or in the cloud, like a service."
+    },
+    "questions": {
+      "edge": "edge",
+      "cloud": "cloud",
+      "account": "how do I get in?"
+    },
+    "edge": {
+      "title": "Edge",
+      "lede": "Pay once, like a sensor.",
+      "rows": [
+        {
+          "term": "In the plant",
+          "text": "A device in the rack reads the existing cameras."
+        },
+        {
+          "term": "No internet needed",
+          "text": "Works offline. Continuous video never leaves."
+        },
+        {
+          "term": "Term license",
+          "text": "A 24-month term license."
+        },
+        {
+          "term": "Local evidence",
+          "text": "Clips and marked frames stay in the plant."
+        }
+      ]
+    },
+    "cloud": {
+      "title": "Cloud",
+      "lede": "Monthly plan, like a service.",
+      "rows": [
+        {
+          "term": "Access from anywhere",
+          "text": "Dashboard in the browser, on any device."
+        },
+        {
+          "term": "Evidence in the cloud",
+          "text": "Clips and marked frames with defined retention."
+        },
+        {
+          "term": "Dashboard",
+          "text": "Events, filters and history per camera."
+        },
+        {
+          "term": "Monthly plan",
+          "text": "No public pricing. The proposal comes from the conversation."
+        }
+      ]
+    },
+    "both": "Both modes exist. The conversation decides which one fits your plant.",
+    "account": {
+      "title": "Create an account",
+      "text": "Accounts are created by the Logikos team. Tell us how many cameras and which mode you prefer.",
+      "confirm": "You receive your access by email.",
+      "cta": "Request access"
+    },
+    "login": {
+      "title": "Already have an account?",
+      "text": "Sign in to the Recognition dashboard.",
+      "cta": "Sign in"
+    }
   }
 }

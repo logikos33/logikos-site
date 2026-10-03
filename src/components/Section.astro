@@ -1,0 +1,40 @@
+---
+// Document grid: the section's question lives in the margin column from 64rem up, the answer
+// (title + lede + content) fills the rest. Below that the question is for screen readers only,
+// so narrow screens never stack six identical grey lines. Replaces SectionHead + PageHero.
+interface Props {
+  question: string;
+  title: string;
+  text?: string;
+  id: string;
+  as?: 'h1' | 'h2';
+  /** Cover: the grid grego and no top rule (page heroes). */
+  cover?: boolean;
+  /** No top rule (first section after a cover). */
+  flush?: boolean;
+  /** Lets the content break out of the text column (figures, stages). */
+  wide?: boolean;
+  class?: string;
+}
+
+const { question, title, text, id, as: Tag = 'h2', cover = false, flush = false, wide = false, class: className } = Astro.props;
+---
+
+<section
+  class:list={['section', 'q-section', { 'greek-grid': cover, 'section--cover': cover, 'section--flush': flush || cover }, className]}
+  aria-labelledby={id}
+>
+  <div class="container q-grid">
+    <p class="q" aria-hidden="true">
+      {question}
+    </p>
+    <div class:list={['q-body', { 'q-body--wide': wide }]}>
+      <Tag id={id}>
+        <span class="visually-hidden">{question} </span>
+        {title}
+      </Tag>
+      {text && <p class="lede">{text}</p>}
+      <slot />
+    </div>
+  </div>
+</section>

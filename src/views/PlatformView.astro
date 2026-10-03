@@ -1,0 +1,71 @@
+---
+import DefList from '../components/DefList.astro';
+import Section from '../components/Section.astro';
+import { LOGIN_URL } from '../config/links';
+import { dict } from '../i18n';
+import { pathFor, type Locale } from '../i18n/routes';
+import Base from '../layouts/Base.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dict(locale);
+const p = t.platform;
+---
+
+<Base locale={locale} routeKey="platform" title={p.meta.title} description={p.meta.description}>
+  <Section as="h1" cover question={p.hero.question} title={p.hero.title} text={p.hero.text} id="platform-title" />
+
+  <Section question={p.questions.edge} title={p.edge.title} text={p.edge.lede} id="edge-title">
+    <DefList rows={p.edge.rows} />
+  </Section>
+
+  <Section question={p.questions.cloud} title={p.cloud.title} text={p.cloud.lede} id="cloud-title">
+    <DefList rows={p.cloud.rows} />
+    <p class="lede both">{p.both}</p>
+  </Section>
+
+  <Section question={p.questions.account} title={p.account.title} text={p.account.text} id="account-title">
+    <p>{p.account.confirm}</p>
+    <div class="btn-row">
+      <a class="btn" href={`${pathFor('contact', locale)}#formulario`}>
+        <span class="btn__mark" aria-hidden="true"></span>
+        {p.account.cta}
+      </a>
+    </div>
+    <div class="login">
+      <h3>{p.login.title}</h3>
+      <p>{p.login.text}</p>
+      <div class="btn-row">
+        <a class="btn btn--ghost" href={LOGIN_URL} rel="noopener" target="_blank">
+          {p.login.cta}
+          <span class="visually-hidden"> ({t.a11y.external})</span>
+        </a>
+      </div>
+    </div>
+  </Section>
+</Base>
+
+<style>
+  .both {
+    margin-top: var(--lk-space-5);
+  }
+
+  .login {
+    margin-top: var(--lk-space-7);
+    padding-top: var(--lk-space-5);
+    border-top: 1px solid var(--lk-line);
+    max-width: var(--lk-measure);
+  }
+
+  .login h3 {
+    margin: 0 0 var(--lk-space-2);
+  }
+
+  .login p {
+    margin: 0 0 var(--lk-space-4);
+    color: var(--lk-text-2);
+  }
+</style>
