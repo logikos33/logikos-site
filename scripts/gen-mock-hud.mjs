@@ -1,19 +1,28 @@
-// Deterministic generator for the mock HUD clips in public/media/hud/.
-// Frames follow raptor's `logikos.vision.frame/1` (docs/contratos/CONTRATO-EDGE-PAINEL-v1.md §3)
-// plus `t` (seconds from clip start). Run: node scripts/gen-mock-hud.mjs
+// Deterministic generator for the mock HUD clips. Frames follow raptor's
+// `logikos.vision.frame/1` (docs/contratos/CONTRATO-EDGE-PAINEL-v1.md §3) plus `t` (seconds from
+// clip start); `meta` is caption data (camera id, time, clip length, channel) — no words.
+// Writes the same files to src/data/hud/ (build-time import: posters, captions) and
+// public/media/hud/ (fetched by the HUD script). Run: node scripts/gen-mock-hud.mjs
 import { mkdirSync, writeFileSync } from 'node:fs';
 
-const OUT = new URL('../public/media/hud/', import.meta.url);
+const OUTS = [new URL('../src/data/hud/', import.meta.url), new URL('../public/media/hud/', import.meta.url)];
 const round = (n) => Math.round(n * 1000) / 1000;
 const bbox = (x0, y0, w, h) => [round(x0), round(y0), round(x0 + w), round(y0 + h)];
 
-function clip(frames, duration) {
+function clip(meta, frames, duration) {
   return {
     schema: 'logikos.site.hud/1',
     source: 'mock',
     fps: 30,
     duration_s: duration,
-    frames: frames.map((f) => ({ t: f.t, schema: 'logikos.vision.frame/1', people: f.people ?? [], hazards: f.hazards ?? [] })),
+    meta: { camera: '00', time: '00:00:00', clip_s: 0, channel: null, ...meta },
+    frames: frames.map((f) => ({
+      t: f.t,
+      schema: 'logikos.vision.frame/1',
+      people: f.people ?? [],
+      hazards: f.hazards ?? [],
+      ...(f.count === undefined ? {} : { count: f.count, line: f.line }),
+    })),
   };
 }
 
@@ -35,6 +44,7 @@ const steps = (n, dt) => Array.from({ length: n }, (_, i) => round(i * dt));
 
 // Hero: a worker walks in with a hard hat, takes it off; a flame starts on the bench.
 const hero = clip(
+  { camera: '03', time: '14:32:08', clip_s: 6, channel: 'whatsapp' },
   steps(13, 0.5).map((t, i) => {
     const x = 0.14 + Math.min(i, 8) * 0.022;
     const helmetOn = i < 6;
@@ -52,8 +62,9 @@ const hero = clip(
   6.5,
 );
 
-// EPI: two workers; one compliant, one goes from undetermined (occluded) to non-compliant.
+// EPI: two workers; one compliant, one goes from undetermined (facing away) to non-compliant.
 const epi = clip(
+  { camera: '07', time: '09:14:50', clip_s: 6, channel: 'whatsapp' },
   steps(11, 0.5).map((t, i) => ({
     t,
     people: [
@@ -72,6 +83,7 @@ const epi = clip(
 
 // Fire: smoke first, then flame.
 const fire = clip(
+  { camera: '11', time: '16:02:45', clip_s: 8, channel: 'whatsapp' },
   steps(11, 0.5).map((t, i) => ({
     t,
     hazards: [
@@ -82,8 +94,43 @@ const fire = clip(
   5.5,
 );
 
+// Ergonomics: one worker bends to lift; the posture entry turns non-compliant after it is sustained.
+const ergonomics = clip(
+  { camera: '05', time: '11:08:52', clip_s: 6, channel: 'panel' },
+  steps(11, 0.5).map((t, i) => ({
+    t,
+    people: [person('p-2', 0.4, 0.3 + Math.min(i, 5) * 0.03, 0.2, 0.62 - Math.min(i, 5) * 0.03, [['back', 'posture', i >= 7 ? 'non_compliant' : 'compliant']])],
+  })),
+  5.5,
+);
+
+// Zones: a hatched floor zone; a pedestrian approaches and steps in.
+const zones = clip(
+  { camera: '09', time: '15:47:03', clip_s: 6, channel: 'whatsapp' },
+  steps(11, 0.5).map((t, i) => ({
+    t,
+    people: [person('p-5', 0.12 + i * 0.045, 0.34, 0.11, 0.54, [['torso', 'vest', 'compliant']])],
+    hazards: [i >= 6 ? { type: 'zone', status: 'detected', bbox: bbox(0.42, 0.55, 0.4, 0.35) } : { type: 'zone', status: 'clear' }],
+  })),
+  5.5,
+);
+
+// Counting: boxes cross a line on a conveyor; the count climbs. No alert, no clip.
+const counting = clip(
+  { camera: '12', time: '10:21:30', clip_s: 0, channel: null },
+  steps(11, 0.5).map((t, i) => ({
+    t,
+    people: [],
+    hazards: [],
+    count: 8 + Math.floor(i / 2),
+    line: bbox(0.5, 0.12, 0.004, 0.76),
+  })),
+  5.5,
+);
+
 // Robotics: a quadruped patrol view; one worker in frame.
 const robotics = clip(
+  { camera: '21', time: '08:40:12', clip_s: 6, channel: 'panel' },
   steps(9, 0.5).map((t, i) => ({
     t,
     people: [
@@ -97,10 +144,12 @@ const robotics = clip(
 );
 
 // Twins: no detections — the slot shows the point-cloud capture placeholder only.
-const twins = clip([{ t: 0 }], 1);
+const twins = clip({ camera: '00', time: '00:00:00', clip_s: 0, channel: null }, [{ t: 0 }], 1);
 
-mkdirSync(OUT, { recursive: true });
-for (const [name, data] of Object.entries({ hero, epi, fire, robotics, twins })) {
-  writeFileSync(new URL(`${name}.json`, OUT), `${JSON.stringify(data)}\n`);
+for (const out of OUTS) {
+  mkdirSync(out, { recursive: true });
+  for (const [name, data] of Object.entries({ hero, epi, fire, ergonomics, zones, counting, robotics, twins })) {
+    writeFileSync(new URL(`${name}.json`, out), `${JSON.stringify(data)}\n`);
+  }
 }
-console.log('mock HUD clips written to public/media/hud/');
+console.log('mock HUD clips written to src/data/hud/ and public/media/hud/');

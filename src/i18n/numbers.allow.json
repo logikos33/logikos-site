@@ -1,11 +1,33 @@
 {
   "_doc": "Every number in src/i18n/*.json must be listed here under the exact key where it appears, with its source. scripts/i18n-gate.mjs enforces it per key, so a documented number cannot be reused elsewhere.",
   "allow": {
-    "partnerPoints.license.text": { "values": ["24"], "source": "Prazo da licença (24 meses) — brief do site, 01/10/2026." },
-    "howItWorks.license.text": { "values": ["24"], "source": "Prazo da licença (24 meses) — brief do site, 01/10/2026." },
-    "about.facts.licenses.text": { "values": ["2.0"], "source": "Nome da licença Apache 2.0 — política de licenças da Logikos." },
-    "privacy.sections.legalBasis.text": { "values": ["7"], "source": "LGPD (Lei 13.709/2018), art. 7º — bases legais." },
-    "privacy.sections.sharing.text": { "values": ["33"], "source": "LGPD (Lei 13.709/2018), art. 33 — transferência internacional." },
-    "privacy.sections.rights.text": { "values": ["18"], "source": "LGPD (Lei 13.709/2018), art. 18 — direitos do titular." }
+    "partnerPoints.license.text": {
+      "values": ["24"],
+      "source": "Prazo da licença (24 meses) — brief do site, 01/10/2026."
+    },
+    "howItWorks.license.text": {
+      "values": ["24"],
+      "source": "Prazo da licença (24 meses) — brief do site, 01/10/2026."
+    },
+    "about.facts.licenses.text": {
+      "values": ["2.0"],
+      "source": "Nome da licença Apache 2.0 — política de licenças da Logikos."
+    },
+    "privacy.sections.legalBasis.text": {
+      "values": ["7"],
+      "source": "LGPD (Lei 13.709/2018), art. 7º — bases legais."
+    },
+    "privacy.sections.sharing.text": {
+      "values": ["33"],
+      "source": "LGPD (Lei 13.709/2018), art. 33 — transferência internacional."
+    },
+    "privacy.sections.rights.text": {
+      "values": ["18"],
+      "source": "LGPD (Lei 13.709/2018), art. 18 — direitos do titular."
+    },
+    "platform.edge.rows[2].text": {
+      "values": ["24"],
+      "source": "Prazo da licença (24 meses) — brief do site, 01/10/2026."
+    }
   }
 }

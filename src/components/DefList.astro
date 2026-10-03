@@ -1,0 +1,24 @@
+---
+// Definition rows: term on the left (display face), proof on the right, a rule between rows.
+// The one list shape of the site — doors, gains, integrations, edge/cloud, next steps.
+interface Row {
+  term: string;
+  text: string;
+}
+
+interface Props {
+  rows: Row[];
+  class?: string;
+}
+
+const { rows, class: className } = Astro.props;
+---
+
+<dl class:list={['defs', className]}>
+  {rows.map((r) => (
+    <div class="defs__row">
+      <dt>{r.term}</dt>
+      <dd>{r.text}</dd>
+    </div>
+  ))}
+</dl>

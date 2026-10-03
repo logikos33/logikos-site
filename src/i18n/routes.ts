@@ -21,6 +21,8 @@ export const ROUTES = {
   home: { 'pt-br': '/', en: '/en/' },
   recognition: { 'pt-br': '/recognition', en: '/en/recognition' },
   howItWorks: { 'pt-br': '/como-funciona', en: '/en/how-it-works' },
+  demos: { 'pt-br': '/demos', en: '/en/demos' },
+  platform: { 'pt-br': '/plataforma', en: '/en/platform' },
   partners: { 'pt-br': '/integradores', en: '/en/partners' },
   twins: { 'pt-br': '/twins', en: '/en/twins' },
   robotics: { 'pt-br': '/robotica', en: '/en/robotics' },

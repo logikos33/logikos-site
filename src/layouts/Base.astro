@@ -20,7 +20,8 @@ const t = dict(locale);
 const site = Astro.site ?? new URL('https://logikosvision.com.br');
 const canonical = routeKey ? new URL(pathFor(routeKey, locale), site).href : undefined;
 const alternates = routeKey ? alternatesFor(routeKey, site) : [];
-const ogImage = new URL(`/og/${locale}.png`, site).href;
+// One card per page: title of the page on the brand composition (src/pages/og/[lang]/[route].png.ts).
+const ogImage = new URL(`/og/${locale}/${routeKey ?? 'home'}.png`, site).href;
 const otherLocale: Locale = locale === 'pt-br' ? 'en' : 'pt-br';
 
 const organization = {

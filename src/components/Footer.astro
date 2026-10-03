@@ -1,5 +1,6 @@
 ---
 import { dict } from '../i18n';
+import { LOGIN_URL } from '../config/links';
 import { pathFor, type Locale, type RouteKey } from '../i18n/routes';
 import { COMPANY, CONTACT_EMAIL } from '../lib/site';
 import Logo from './Logo.astro';
@@ -11,7 +12,7 @@ interface Props {
 const { locale } = Astro.props;
 const t = dict(locale);
 const year = new Date().getFullYear();
-const LINKS: RouteKey[] = ['recognition', 'howItWorks', 'partners', 'twins', 'robotics', 'compliance', 'about', 'contact'];
+const LINKS: RouteKey[] = ['recognition', 'howItWorks', 'demos', 'platform', 'partners', 'twins', 'robotics', 'compliance', 'about', 'contact'];
 ---
 
 <footer class="site-footer">
@@ -28,6 +29,12 @@ const LINKS: RouteKey[] = ['recognition', 'howItWorks', 'partners', 'twins', 'ro
             <a href={pathFor(key, locale)}>{t.nav[key]}</a>
           </li>
         ))}
+        <li>
+          <a href={LOGIN_URL} rel="noopener" target="_blank">
+            {t.nav.login}
+            <span class="visually-hidden"> — {t.a11y.login} ({t.a11y.external})</span>
+          </a>
+        </li>
       </ul>
     </nav>
 
