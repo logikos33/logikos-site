@@ -20,3 +20,7 @@ https://:project.pages.dev/*
 
 /media/hud/*
   Cache-Control: public, max-age=300
+
+# Generated posters change only with a deploy; a day in cache is plenty.
+/media/posters/*
+  Cache-Control: public, max-age=86400
