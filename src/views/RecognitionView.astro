@@ -3,6 +3,7 @@
 // inside · where it runs · partners · demos · next step. The region avatar (M3) and the live
 // demo chips (M7) arrive in the motion round; the structure they hook into is built here.
 import AlertCard from '../components/AlertCard.astro';
+import Avatar from '../components/Avatar.astro';
 import DefList from '../components/DefList.astro';
 import HudVideo from '../components/HudVideo.astro';
 import Icon from '../components/Icon.astro';
@@ -24,10 +25,7 @@ const p = t.recognition;
 const q = p.questions;
 
 const READINGS = ['fire', 'epi', 'ergonomics', 'zones', 'counting'] as const;
-const REGIONS = ['head', 'eyes', 'ears', 'hands', 'torso', 'feet'] as const;
 const STATES = ['ok', 'alert', 'warn'] as const;
-/** Rest case of the avatar: hands covered -> indeterminate (M3 keeps this as the default). */
-const regionState = (r: (typeof REGIONS)[number]) => (r === 'hands' ? 'warn' : 'ok');
 const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoints.license].map((x) => ({ term: x.title, text: x.text }));
 ---
 
@@ -66,33 +64,20 @@ const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoin
   </Section>
 
   <Section question={q.epi} title={p.epi.title} text={p.epi.text} id="epi-title" wide>
-    <div class="split">
-      <ul class="regions" data-avatar>
-        {REGIONS.map((r) => (
-          <li class="regions__row">
-            <span>{p.epi.regions[r]}</span>
-            <span class:list={['verdict', `verdict--${regionState(r)}`]}>
-              <Icon name={regionState(r)} size={12} />
-              {t.states[regionState(r)]}
+    <Avatar locale={locale} />
+    <dl class="defs legend">
+      {STATES.map((s) => (
+        <div class="defs__row">
+          <dt>
+            <span class:list={['verdict', `verdict--${s}`]}>
+              <Icon name={s} size={12} />
+              {t.states[s]}
             </span>
-          </li>
-        ))}
-      </ul>
-      <dl class="defs">
-        {STATES.map((s) => (
-          <div class="defs__row">
-            <dt>
-              <span class:list={['verdict', `verdict--${s}`]}>
-                <Icon name={s} size={12} />
-                {t.states[s]}
-              </span>
-            </dt>
-            <dd>{p.epi.states[s]}</dd>
-          </div>
-        ))}
-      </dl>
-    </div>
-    <p class="explain">{p.epi.explain}</p>
+          </dt>
+          <dd>{p.epi.states[s]}</dd>
+        </div>
+      ))}
+    </dl>
     <HudVideo locale={locale} clip="epi" />
   </Section>
 
@@ -167,28 +152,8 @@ const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoin
     align-items: start;
   }
 
-  .regions {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .regions__row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--lk-space-3);
-    padding: var(--lk-space-3) 0;
-    border-top: 1px solid var(--lk-line);
-  }
-
-  .regions__row:last-child {
-    border-bottom: 1px solid var(--lk-line);
-  }
-
-  .explain {
-    max-width: var(--lk-measure);
-    margin: var(--lk-space-5) 0;
+  .legend {
+    margin-top: var(--lk-space-5);
   }
 
   @media (min-width: 64rem) {

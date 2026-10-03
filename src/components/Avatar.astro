@@ -1,0 +1,317 @@
+---
+// M3: the body-region avatar. A pose selector (radio group, no JavaScript) moves a line figure
+// inside a fixed frame; when a region leaves the frame its verdict turns indeterminate
+// (dashed) and the person side reads "nothing sent". Three poses show the three states.
+// Everything is CSS: :has() on the checked radio drives the figure, the chips and the caption.
+import { dict } from '../i18n';
+import type { Locale } from '../i18n/routes';
+import type { HudState } from '../lib/hud';
+import Icon from './Icon.astro';
+
+interface Props {
+  locale: Locale;
+  id?: string;
+}
+
+const { locale, id = 'avatar' } = Astro.props;
+const t = dict(locale);
+const p = t.recognition.epi;
+const REGIONS = ['head', 'eyes', 'ears', 'hands', 'torso', 'feet'] as const;
+const POSES = ['standing', 'crouching', 'half'] as const;
+type Pose = (typeof POSES)[number];
+type Region = (typeof REGIONS)[number];
+
+/** Verdict per region and pose. Standing rests on the case that needs explaining: covered hands. */
+const STATE: Record<Pose, Record<Region, HudState>> = {
+  standing: { head: 'ok', eyes: 'ok', ears: 'ok', hands: 'warn', torso: 'ok', feet: 'ok' },
+  crouching: { head: 'alert', eyes: 'ok', ears: 'ok', hands: 'ok', torso: 'ok', feet: 'warn' },
+  half: { head: 'warn', eyes: 'warn', ears: 'warn', hands: 'ok', torso: 'ok', feet: 'ok' },
+};
+const ITEM: Record<Region, string> = {
+  head: t.hud.items.helmet,
+  eyes: t.hud.items.goggles,
+  ears: t.hud.items.ear_muffs,
+  hands: t.hud.items.gloves,
+  torso: t.hud.items.vest,
+  feet: t.hud.items.boots,
+};
+const worst = (pose: Pose): HudState =>
+  Object.values(STATE[pose]).includes('alert') ? 'alert' : Object.values(STATE[pose]).includes('warn') ? 'warn' : 'ok';
+const alertItem = (pose: Pose): string | undefined => {
+  const r = REGIONS.find((x) => STATE[pose][x] === 'alert');
+  return r ? ITEM[r] : undefined;
+};
+/** Region boxes in the figure's own coordinates (viewBox 0 0 200 300). */
+const BOX: Record<Region, [number, number, number, number]> = {
+  head: [78, 14, 44, 44],
+  eyes: [84, 34, 32, 12],
+  ears: [70, 36, 60, 16],
+  hands: [40, 140, 120, 36],
+  torso: [66, 70, 68, 76],
+  feet: [62, 246, 76, 30],
+};
+---
+
+<div class="avatar" data-avatar id={id}>
+  <fieldset class="avatar__poses">
+    <legend class="visually-hidden">{p.legend}</legend>
+    {POSES.map((pose, i) => (
+      <label class="avatar__pose">
+        <input type="radio" name={`${id}-pose`} value={pose} checked={i === 0} />
+        <span>{p.poses[pose]}</span>
+      </label>
+    ))}
+  </fieldset>
+
+  <div class="avatar__grid">
+    <figure class="avatar__frame lk-hud-scope">
+      <svg class="avatar__svg" viewBox="0 0 200 300" aria-hidden="true" focusable="false">
+        <g class="avatar__figure">
+          <!-- Line figure: head, hard hat, torso, arms, legs, boots. -->
+          <circle cx="100" cy="36" r="18" />
+          <path d="M80 30a20 20 0 0 1 40 0H80z" class="avatar__hat" />
+          <path d="M72 70h56l6 76H66z" />
+          <path d="M72 76L40 152M128 76l32 76" />
+          <path d="M40 152l-4 20M160 152l4 20" />
+          <path d="M80 146l-8 100M120 146l8 100" />
+          <path d="M66 246h14v24H60zM120 246h14v24h20z" />
+          {REGIONS.map((r) => {
+            const [x, y, w, h] = BOX[r];
+            const c = 8;
+            const d = `M${x} ${y + c}V${y}H${x + c} M${x + w - c} ${y}H${x + w}V${y + c} M${x + w} ${y + h - c}V${y + h}H${x + w - c} M${x + c} ${y + h}H${x}V${y + h - c}`;
+            return (
+              <g class="avatar__region" data-region={r}>
+                <path class="avatar__base" d={d} />
+                <path class="avatar__bracket" d={d} />
+              </g>
+            );
+          })}
+        </g>
+      </svg>
+      <figcaption class="figcap avatar__caption">
+        <span class="figcap__machine">
+          {t.hud.cam} 07 · {t.hud.slots.epi}
+        </span>
+        <span class="figcap__person">
+          {POSES.map((pose) => (
+            <span class="avatar__person" data-pose={pose}>
+              {worst(pose) === 'alert' ? (
+                <>
+                  <span class="verdict verdict--alert">
+                    <Icon name="alert" size={12} />
+                    {t.states.alert}
+                    {alertItem(pose) && ` · ${alertItem(pose)}`}
+                  </span>
+                  <span>
+                    {t.hud.person.sent} · {t.hud.person.channels.whatsapp}
+                  </span>
+                </>
+              ) : (
+                <span>{t.hud.person.nothing}</span>
+              )}
+            </span>
+          ))}
+        </span>
+      </figcaption>
+    </figure>
+
+    <ul class="avatar__list" role="list">
+      {REGIONS.map((r) => (
+        <li class="avatar__row" data-region={r}>
+          <span class="avatar__name">{p.regions[r]}</span>
+          {POSES.map((pose) => (
+            <span class:list={['verdict', `verdict--${STATE[pose][r]}`, 'avatar__chip']} data-pose={pose}>
+              <Icon name={STATE[pose][r]} size={12} />
+              {t.states[STATE[pose][r]]}
+              {STATE[pose][r] !== 'ok' && ` · ${ITEM[r]}`}
+            </span>
+          ))}
+        </li>
+      ))}
+    </ul>
+  </div>
+  <p class="avatar__explain">{p.explain}</p>
+</div>
+
+<style>
+  .avatar {
+    display: grid;
+    gap: var(--lk-space-4);
+  }
+
+  .avatar__poses {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--lk-space-2);
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .avatar__pose {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    padding: 0 var(--lk-space-3);
+    border: 1px solid var(--lk-line-strong);
+    border-radius: var(--lk-radius);
+    font: 500 0.9375rem/1 var(--lk-font-body);
+    cursor: pointer;
+    transition:
+      background-color var(--lk-motion-fast) var(--lk-steps-2),
+      color var(--lk-motion-fast) var(--lk-steps-2);
+  }
+
+  .avatar__pose input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+
+  .avatar__pose:has(input:checked) {
+    background: var(--lk-inverse-bg);
+    color: var(--lk-inverse-text);
+    border-color: var(--lk-inverse-bg);
+  }
+
+  .avatar__pose:has(input:focus-visible) {
+    outline: 2px solid var(--lk-focus);
+    outline-offset: 3px;
+  }
+
+  .avatar__grid {
+    display: grid;
+    gap: var(--lk-space-5);
+    align-items: start;
+  }
+
+  .avatar__frame {
+    margin: 0;
+  }
+
+  .avatar__svg {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #14141c;
+    border: 1px solid var(--lk-line);
+    border-radius: var(--lk-radius);
+    overflow: hidden;
+  }
+
+  .avatar__figure {
+    fill: none;
+    stroke: var(--hud-text);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    transform-origin: 100px 150px;
+    /* The pose moves the whole figure; a region that leaves the frame becomes "not seen". */
+    transition: transform var(--lk-motion-seq) var(--lk-steps);
+  }
+
+  .avatar__hat {
+    fill: var(--hud-text);
+    fill-opacity: 0.15;
+  }
+
+  .avatar__base {
+    stroke: var(--hud-base);
+    stroke-width: 4;
+    stroke-linecap: square;
+  }
+
+  .avatar__bracket {
+    stroke-width: 2;
+    stroke-linecap: square;
+    stroke: var(--hud-ok);
+  }
+
+  /* Figure placement: the frame is 16:9, the figure is tall, so poses translate and scale it. */
+  .avatar:has(input[value='standing']:checked) .avatar__figure {
+    transform: translate(100px, 0) scale(0.95);
+  }
+
+  .avatar:has(input[value='crouching']:checked) .avatar__figure {
+    transform: translate(100px, 70px) scale(0.95);
+  }
+
+  .avatar:has(input[value='half']:checked) .avatar__figure {
+    transform: translate(100px, -60px) scale(0.95);
+  }
+
+  /* Region brackets per pose (same states as the list). */
+  .avatar:has(input[value='standing']:checked) [data-region='hands'] .avatar__bracket,
+  .avatar:has(input[value='crouching']:checked) [data-region='feet'] .avatar__bracket,
+  .avatar:has(input[value='half']:checked) [data-region='head'] .avatar__bracket,
+  .avatar:has(input[value='half']:checked) [data-region='eyes'] .avatar__bracket,
+  .avatar:has(input[value='half']:checked) [data-region='ears'] .avatar__bracket {
+    stroke: var(--hud-indet);
+    stroke-dasharray: 4 3;
+  }
+
+  .avatar:has(input[value='crouching']:checked) [data-region='head'] .avatar__bracket {
+    stroke: var(--hud-alert);
+  }
+
+  /* Chips and captions: only the checked pose's variant is shown. */
+  .avatar__chip,
+  .avatar__person {
+    display: none;
+  }
+
+  .avatar:has(input[value='standing']:checked) [data-pose='standing'],
+  .avatar:has(input[value='crouching']:checked) [data-pose='crouching'],
+  .avatar:has(input[value='half']:checked) [data-pose='half'] {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--lk-space-2);
+  }
+
+  .avatar__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .avatar__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--lk-space-3);
+    padding: var(--lk-space-3) 0;
+    border-top: 1px solid var(--lk-line);
+    transition: border-color var(--lk-motion-fast) var(--lk-steps-2);
+  }
+
+  .avatar__row:last-child {
+    border-bottom: 1px solid var(--lk-line);
+  }
+
+  .avatar__row:hover {
+    border-top-color: var(--lk-text);
+  }
+
+  .avatar__name {
+    font-weight: 500;
+  }
+
+  .avatar__explain {
+    max-width: var(--lk-measure);
+    margin: 0;
+    color: var(--lk-text-2);
+  }
+
+  @media (min-width: 64rem) {
+    .avatar__grid {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .avatar__figure {
+      transition: none;
+    }
+  }
+</style>

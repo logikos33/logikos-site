@@ -45,8 +45,8 @@ test('glitch does not repeat on Back navigation to home', async ({ page }) => {
   await expect(page).toHaveURL(/\/sobre$/);
   await page.goBack();
   const state = await page.locator('[data-brand-box] .lk-glitch').getAttribute('data-glitch');
-  // Restored from bfcache (no script re-run) keeps "done"; a fresh load must skip.
-  expect(['done', 'off-internal-navigation']).toContain(state);
+  // Restored from bfcache (no script re-run) keeps "done"; a fresh load must skip (same session or internal).
+  expect(['done', 'off-session', 'off-internal-navigation']).toContain(state);
 });
 
 test('no continuous animation anywhere on the home page after it settles', async ({ page }) => {
@@ -168,4 +168,71 @@ test('glitch slices never cross the two O letters (keyhole), at desktop and phon
     expect(overlaps, `width ${width}`).toEqual([]);
     await ctx.close();
   }
+});
+
+test('M1: the glitch runs once per session and hands over to the hero HUD', async ({ browser }) => {
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  await page.goto('/');
+  const mark = page.locator('[data-brand-box] .lk-glitch');
+  await expect(mark).toHaveAttribute('data-glitch', 'done', { timeout: 5000 });
+  const hud = page.locator('[data-hud][data-slot="hero"]');
+  await expect(hud).toHaveAttribute('data-state', /playing|ended/, { timeout: 5000 });
+  // Same session, fresh external load: no second glitch, the HUD still starts.
+  await page.goto('about:blank');
+  await page.goto('/');
+  await expect(mark).toHaveAttribute('data-glitch', 'off-session');
+  await expect(mark).not.toHaveClass(/is-glitching/);
+  await expect(page.locator('[data-hud][data-slot="hero"]')).toHaveAttribute('data-state', /playing|ended/, { timeout: 5000 });
+  await ctx.close();
+});
+
+test('M4: the pipeline is revealed in order, once, and ends at rest; static when reduced motion', async ({ browser }) => {
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await ctx.newPage();
+  await page.goto('/');
+  const pipe = page.locator('[data-pipeline]').first();
+  await expect(pipe).toHaveClass(/pipeline--armed/);
+  await pipe.scrollIntoViewIfNeeded();
+  await expect(pipe).toHaveClass(/is-seen/);
+  const nodes = pipe.locator('.pipeline__node');
+  await expect(nodes).toHaveCount(4);
+  for (let i = 0; i < 4; i++) await expect(nodes.nth(i)).toBeVisible({ timeout: 3000 });
+  await page.waitForTimeout(1500);
+  const running = await page.evaluate(() => document.getAnimations().filter((a) => a.playState === 'running').length);
+  expect(running).toBe(0);
+  await ctx.close();
+
+  const reduced = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 1280, height: 800 } });
+  const p2 = await reduced.newPage();
+  await p2.goto('/');
+  await expect(p2.locator('[data-pipeline]').first()).not.toHaveClass(/pipeline--armed/);
+  await expect(p2.locator('[data-pipeline] .pipeline__node').first()).toBeVisible();
+  await reduced.close();
+});
+
+test('M3: the pose selector moves a region out of frame and the verdict follows, without JavaScript', async ({ browser }) => {
+  const ctx = await browser.newContext({ javaScriptEnabled: false });
+  const page = await ctx.newPage();
+  await page.goto('/recognition');
+  const avatar = page.locator('[data-avatar]');
+  await avatar.scrollIntoViewIfNeeded();
+  const hands = avatar.locator('.avatar__row[data-region="hands"] .verdict:visible');
+  const feet = avatar.locator('.avatar__row[data-region="feet"] .verdict:visible');
+  const head = avatar.locator('.avatar__row[data-region="head"] .verdict:visible');
+  await expect(hands).toHaveClass(/verdict--warn/);
+  await expect(avatar.locator('.avatar__person:visible')).toHaveText(/nada enviado|nothing sent/);
+  await avatar.locator('input[value="crouching"]').check();
+  await expect(feet).toHaveClass(/verdict--warn/);
+  await expect(head).toHaveClass(/verdict--alert/);
+  await expect(avatar.locator('.avatar__person:visible')).toContainText(/alerta enviado|alert sent/);
+  await avatar.locator('input[value="half"]').check();
+  await expect(head).toHaveClass(/verdict--warn/);
+  await expect(avatar.locator('.avatar__person:visible')).toHaveText(/nada enviado|nothing sent/);
+  // Every visible chip carries icon + word (never color alone).
+  for (const chip of await avatar.locator('.verdict:visible').all()) {
+    await expect(chip.locator('svg')).toHaveCount(1);
+    await expect(chip).not.toHaveText('');
+  }
+  await ctx.close();
 });
