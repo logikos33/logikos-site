@@ -24,8 +24,9 @@ const t = dict(locale);
 </div>
 
 {glitch && <script>
-  // Once per home load; never on internal or back/forward navigation; never under reduced
+  // Once per session; never on internal or back/forward navigation; never under reduced
   // motion; and only once the wordmark font is ready (the slices are fitted to its letters).
+  // Whatever happens, `lk:entrance` is dispatched so the hero HUD knows it may start.
   const node = document.querySelector<HTMLElement>('[data-brand-box] .lk-glitch');
   const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
   const internal = (() => {
@@ -37,9 +38,21 @@ const t = dict(locale);
     }
   })();
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // The one orchestrated entrance happens once per session; after it the HUD starts (M1).
+  const SESSION_KEY = 'lk-glitch';
+  const seen = (() => {
+    try {
+      return sessionStorage.getItem(SESSION_KEY) === 'done';
+    } catch {
+      return false;
+    }
+  })();
+  const handOver = () => document.dispatchEvent(new CustomEvent('lk:entrance'));
   if (node) {
     if (reduce) node.dataset.glitch = 'off-reduced-motion';
+    else if (seen) node.dataset.glitch = 'off-session';
     else if (internal) node.dataset.glitch = 'off-internal-navigation';
+    if (node.dataset.glitch) handOver();
     else {
       node.dataset.glitch = 'waiting-font';
       const timeout = new Promise<boolean>((resolve) => window.setTimeout(() => resolve(false), 800));
@@ -50,6 +63,7 @@ const t = dict(locale);
       void Promise.race([loaded, timeout]).then((ok) => {
         if (!ok) {
           node.dataset.glitch = 'off-font-timeout';
+          handOver();
           return;
         }
         node.dataset.glitch = 'run';
@@ -59,6 +73,12 @@ const t = dict(locale);
           () => {
             node.classList.remove('is-glitching');
             node.dataset.glitch = 'done';
+            try {
+              sessionStorage.setItem(SESSION_KEY, 'done');
+            } catch {
+              // Storage blocked: the glitch may run again on the next load.
+            }
+            handOver();
           },
           { once: true },
         );

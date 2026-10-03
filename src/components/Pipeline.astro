@@ -45,6 +45,27 @@ const INSIDE = ['camera', 'device', 'verdict'] as const;
   <p class="pipeline__note">{t.home.pipeline.note}</p>
 </div>
 
+<script>
+  // M4: the only numbered sequence on the site is revealed in its order, once, in steps.
+  // Armed only when motion is allowed and the layout is the wide one; otherwise it is static.
+  const allow = !window.matchMedia('(prefers-reduced-motion: reduce)').matches && window.matchMedia('(min-width: 48rem)').matches;
+  if (allow) {
+    for (const el of document.querySelectorAll<HTMLElement>('[data-pipeline]')) {
+      el.classList.add('pipeline--armed');
+      const io = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            io.disconnect();
+            el.classList.add('is-seen');
+          }
+        },
+        { threshold: 0.35 },
+      );
+      io.observe(el);
+    }
+  }
+</script>
+
 <style>
   .pipeline {
     display: grid;
@@ -114,6 +135,46 @@ const INSIDE = ['camera', 'device', 'verdict'] as const;
     margin: 0;
     font-size: 0.875rem;
     color: var(--lk-text-2);
+  }
+
+  /* M4: armed by the script; each node lands one step after the other and stays. */
+  .pipeline--armed .pipeline__node,
+  .pipeline--armed .pipeline__cross,
+  .pipeline--armed .pipeline__note {
+    visibility: hidden;
+  }
+
+  .pipeline--armed.is-seen .pipeline__node,
+  .pipeline--armed.is-seen .pipeline__cross,
+  .pipeline--armed.is-seen .pipeline__note {
+    animation: lk-land 1ms var(--lk-steps-1) forwards;
+  }
+
+  .pipeline--armed.is-seen .pipeline__wall .pipeline__node:nth-child(2) {
+    animation-delay: 0ms;
+  }
+
+  .pipeline--armed.is-seen .pipeline__wall .pipeline__node:nth-child(3) {
+    animation-delay: var(--lk-motion-seq);
+  }
+
+  .pipeline--armed.is-seen .pipeline__wall .pipeline__node:nth-child(4) {
+    animation-delay: calc(var(--lk-motion-seq) * 2);
+  }
+
+  .pipeline--armed.is-seen .pipeline__cross {
+    animation-delay: calc(var(--lk-motion-seq) * 3);
+  }
+
+  .pipeline--armed.is-seen .pipeline__outside .pipeline__node,
+  .pipeline--armed.is-seen .pipeline__note {
+    animation-delay: calc(var(--lk-motion-seq) * 4);
+  }
+
+  @keyframes lk-land {
+    to {
+      visibility: visible;
+    }
   }
 
   @media (min-width: 48rem) {

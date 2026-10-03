@@ -327,8 +327,26 @@ const listId = `${id}-readings`;
       return true;
     };
 
+    /** M1: the hero figure starts after the wordmark's entrance (or at once when there is none). */
+    const entrance = (): Promise<void> =>
+      new Promise((resolve) => {
+        const mark = document.querySelector<HTMLElement>('[data-brand-box] .lk-glitch');
+        if (
+          fig.dataset.priority !== 'true' ||
+          !mark ||
+          (mark.dataset.glitch && mark.dataset.glitch !== 'waiting-font' && mark.dataset.glitch !== 'run')
+        ) {
+          resolve();
+          return;
+        }
+        const done = () => resolve();
+        document.addEventListener('lk:entrance', done, { once: true });
+        window.setTimeout(done, 2000);
+      });
+
     const start = async () => {
-      if (!(await load(fig.dataset.src ?? ''))) return;
+      const [loaded] = await Promise.all([load(fig.dataset.src ?? ''), entrance()]);
+      if (!loaded) return;
       if (reducedMotion() || handheld()) backToIdle();
       else play();
     };
