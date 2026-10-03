@@ -2,7 +2,7 @@
 import { dict, fill } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
 import Icon from './Icon.astro';
-import { EMAIL_PATTERN, LEAD_INTERESTS, LIMITS, PHONE_PATTERN, type LeadKind } from '../lib/lead';
+import { EMAIL_PATTERN, LEAD_INTERESTS, LEAD_MODES, LIMITS, MAX_CAMERAS, PHONE_PATTERN, type LeadKind } from '../lib/lead';
 import { CONTACT_EMAIL, TURNSTILE_SITE_KEY } from '../lib/site';
 
 interface Props {
@@ -15,6 +15,8 @@ const { locale, kind, id } = Astro.props;
 const t = dict(locale);
 const f = t.form;
 const defaults = kind === 'partner' ? ['partnership'] : [];
+const submitLabel = kind === 'partner' ? f.submitPartner : kind === 'account' ? f.submitAccount : f.submit;
+const successMsg = kind === 'account' ? f.successAccount : f.success;
 const field = (name: string) => `${id}-${name}`;
 ---
 
@@ -28,6 +30,8 @@ const field = (name: string) => `${id}-${name}`;
   data-err-email={f.errors.email}
   data-err-consent={f.errors.consent}
   data-err-whatsapp={f.errors.whatsapp}
+  data-err-cameras={f.errors.cameras}
+  data-err-mode={f.errors.mode}
   data-err-server={f.errors.invalidServer}
   novalidate
 >
@@ -97,6 +101,53 @@ const field = (name: string) => `${id}-${name}`;
     </div>
   </div>
 
+  {kind === 'account' && (
+    <div class="lead-form__grid">
+      <div class="field">
+        <label for={field('cameras')}>
+          {f.cameras}{' '}
+          <span class="field__req" aria-hidden="true">
+            *
+          </span>
+        </label>
+        <input
+          id={field('cameras')}
+          name="cameras"
+          type="number"
+          inputmode="numeric"
+          required
+          min="1"
+          max={MAX_CAMERAS}
+          step="1"
+          aria-describedby={field('cameras-hint')}
+        />
+        <p class="field__hint" id={field('cameras-hint')}>
+          {f.camerasHint}
+        </p>
+        <p class="field__error" id={field('cameras-error')} hidden>
+          <Icon name="alert" size={16} />
+          <span data-error-text></span>
+        </p>
+      </div>
+      <fieldset class="field field--group">
+        <legend>
+          {f.mode}{' '}
+          <span class="field__req" aria-hidden="true">
+            *
+          </span>
+        </legend>
+        <div class="checks">
+          {LEAD_MODES.map((m, i) => (
+            <label class="check">
+              <input type="radio" name="mode" value={m} required={i === 0} />
+              <span>{m === 'edge' ? f.modeEdge : f.modeCloud}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+    </div>
+  )}
+
   <fieldset class="field field--group">
     <legend>{f.interests}</legend>
     <p class="field__hint" id={field('interests-hint')}>
@@ -141,16 +192,16 @@ const field = (name: string) => `${id}-${name}`;
   <div class="turnstile" data-turnstile data-sitekey={TURNSTILE_SITE_KEY}></div>
 
   <div class="lead-form__actions">
-    <button type="submit" class="btn" data-label-idle={kind === 'partner' ? f.submitPartner : f.submit} data-label-busy={f.sending}>
+    <button type="submit" class="btn" data-label-idle={submitLabel} data-label-busy={f.sending}>
       <span class="btn__mark" aria-hidden="true"></span>
-      <span data-submit-label>{kind === 'partner' ? f.submitPartner : f.submit}</span>
+      <span data-submit-label>{submitLabel}</span>
     </button>
     <p
       class="lead-form__status"
       role="status"
       aria-live="polite"
       data-status
-      data-msg-success={f.success}
+      data-msg-success={successMsg}
       data-msg-error={fill(f.error, { email: CONTACT_EMAIL })}
       data-msg-verification={f.errorVerification}
       data-msg-invalid={f.invalid}
@@ -283,7 +334,11 @@ const field = (name: string) => `${id}-${name}`;
               ? form.dataset.errWhatsapp
               : el.name === 'email'
                 ? form.dataset.errEmail
-                : form.dataset.errServer;
+                : el.name === 'cameras'
+                  ? form.dataset.errCameras
+                  : el.name === 'mode'
+                    ? form.dataset.errMode
+                    : form.dataset.errServer;
       const text = box.querySelector<HTMLElement>('[data-error-text]');
       if (text) text.textContent = msg ?? '';
       box.hidden = false;
@@ -293,7 +348,7 @@ const field = (name: string) => `${id}-${name}`;
     };
 
     // Controls the browser can validate (required or with a pattern).
-    const VALIDATED = 'input[required], input[pattern], textarea[required]';
+    const VALIDATED = 'input[required], input[pattern], input[type="number"], textarea[required]';
     for (const el of form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(VALIDATED)) {
       el.addEventListener(el instanceof HTMLInputElement && el.type === 'checkbox' ? 'change' : 'input', () => {
         delete el.dataset.serverInvalid;
@@ -340,6 +395,7 @@ const field = (name: string) => `${id}-${name}`;
         interests: data.getAll('interests'),
         message: data.get('message'),
         consent: data.get('consent') === 'on',
+        ...(form.dataset.kind === 'account' ? { cameras: data.get('cameras'), mode: data.get('mode') } : {}),
         website: data.get('website'),
         page: window.location.pathname,
         turnstileToken: token,

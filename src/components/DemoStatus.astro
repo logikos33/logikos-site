@@ -1,0 +1,86 @@
+---
+// M7: a demo link with its live state. Starts as "verificando"; the script asks /api/status
+// (same origin) once and flips the chip in one step to "no ar" or "fora do ar agora — veja o
+// clipe". Never a spinner, never a pulse. The link stays whatever the state.
+import { DEMOS } from '../config/links';
+import { dict } from '../i18n';
+import type { Locale } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+  demo: keyof typeof DEMOS;
+  /** Button instead of a text link. */
+  button?: boolean;
+  label?: string;
+}
+
+const { locale, demo, button = false, label } = Astro.props;
+const t = dict(locale);
+const text = label ?? (demo === 'epi' ? t.demos.epi.title : t.demos.fire.title);
+---
+
+<span class="demo-status" data-demo={demo}>
+  <a class:list={button ? ['btn', 'btn--ghost'] : []} href={DEMOS[demo]} rel="noopener" target="_blank">
+    {text}
+    <span class="visually-hidden"> ({t.a11y.external})</span>
+  </a>
+  <span
+    class="verdict verdict--outline demo-status__chip"
+    data-demo-status={demo}
+    data-label-up={t.demos.status.up}
+    data-label-down={t.demos.status.down}
+    data-label-hint={t.demos.status.downHint}
+    role="status"
+  >
+    {t.demos.status.checking}
+  </span>
+</span>
+
+<script>
+  // One request per page for all chips; a failed request leaves "verificando" (never a fake "up").
+  type Status = { epi: 'up' | 'down'; fire: 'up' | 'down' };
+  const chips = document.querySelectorAll<HTMLElement>('[data-demo-status]');
+  if (chips.length > 0) {
+    fetch('/api/status', { headers: { Accept: 'application/json' } })
+      .then((r) => (r.ok ? (r.json() as Promise<Status>) : Promise.reject(new Error(String(r.status)))))
+      .then((s) => {
+        for (const chip of chips) {
+          const key = chip.dataset.demoStatus as keyof Status;
+          const state = s[key];
+          if (!state) continue;
+          chip.dataset.state = state;
+          chip.textContent =
+            state === 'up' ? (chip.dataset.labelUp ?? '') : `${chip.dataset.labelDown ?? ''} — ${chip.dataset.labelHint ?? ''}`;
+        }
+      })
+      .catch(() => {
+        /* unknown stays "verificando" */
+      });
+  }
+</script>
+
+<style>
+  .demo-status {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--lk-space-2);
+  }
+
+  .demo-status__chip {
+    white-space: normal;
+    text-align: left;
+    transition:
+      color var(--lk-motion-fast) var(--lk-steps-1),
+      border-color var(--lk-motion-fast) var(--lk-steps-1);
+  }
+
+  /* Status, not a verdict: the word carries it; the border hints the state (AA kept: text stays --lk-text). */
+  .demo-status__chip[data-state='up'] {
+    border-color: var(--lk-ok);
+  }
+
+  .demo-status__chip[data-state='down'] {
+    color: var(--lk-text-2);
+  }
+</style>

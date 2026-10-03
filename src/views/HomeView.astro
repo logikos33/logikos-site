@@ -4,11 +4,12 @@
 import AlertCard from '../components/AlertCard.astro';
 import BrandBox from '../components/BrandBox.astro';
 import DefList from '../components/DefList.astro';
+import DemoStatus from '../components/DemoStatus.astro';
 import HudVideo from '../components/HudVideo.astro';
 import Pipeline from '../components/Pipeline.astro';
 import Section from '../components/Section.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
-import { DEMOS, LOGIN_URL } from '../config/links';
+import { LOGIN_URL } from '../config/links';
 import { READINGS } from '../data/media';
 import { dict } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
@@ -88,18 +89,10 @@ const dataRows = h.data.leavesRows.map((leaves, i) => ({ leaves, stays: h.data.s
         <AlertCard locale={locale} clip={s} {...(s === 'fire' ? {} : { class: 'is-hidden' })} />
       ))}
     </div>
-    <p class="after">
-      {h.stage.demosLine}{' '}
-      <a href={DEMOS.epi} rel="noopener" target="_blank">
-        {h.stage.demoEpi}
-        <span class="visually-hidden"> ({t.a11y.external})</span>
-      </a>
-      {' · '}
-      <a href={DEMOS.fire} rel="noopener" target="_blank">
-        {h.stage.demoFire}
-        <span class="visually-hidden"> ({t.a11y.external})</span>
-      </a>
-      {' · '}
+    <p class="after demos-line">
+      <span>{h.stage.demosLine}</span>
+      <DemoStatus locale={locale} demo="epi" label={h.stage.demoEpi} />
+      <DemoStatus locale={locale} demo="fire" label={h.stage.demoFire} />
       <a href={pathFor('demos', locale)}>{t.cta.seeDemos}</a>
     </p>
   </Section>
@@ -285,5 +278,12 @@ const dataRows = h.data.leavesRows.map((leaves, i) => ({ leaves, stays: h.data.s
       grid-template-columns: minmax(10rem, 0.8fr) minmax(0, 1.6fr) auto;
       align-items: start;
     }
+  }
+
+  .demos-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--lk-space-2) var(--lk-space-4);
   }
 </style>

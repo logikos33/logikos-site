@@ -258,3 +258,28 @@ describe('validateLead', () => {
     }
   });
 });
+
+describe('account requests', () => {
+  const NOW = new Date('2026-10-03T12:00:00Z');
+  const base = { ...VALID, kind: 'account', page: '/plataforma' };
+
+  it('require a camera count (1–999) and a mode, stored in Portuguese', () => {
+    const r = validateLead({ ...base, cameras: '12', mode: 'cloud' }, NOW);
+    assert.ok(r.ok);
+    assert.equal(r.lead.cameras, 12);
+    assert.equal(r.lead.modo, 'nuvem');
+    const e = validateLead({ ...base, cameras: '0', mode: 'edge' }, NOW);
+    assert.ok(!e.ok && e.errors.includes('cameras'));
+    const m = validateLead({ ...base, cameras: 3, mode: 'hybrid' }, NOW);
+    assert.ok(!m.ok && m.errors.includes('mode'));
+    const n = validateLead({ ...base, cameras: '1000', mode: 'edge' }, NOW);
+    assert.ok(!n.ok && n.errors.includes('cameras'));
+  });
+
+  it('other kinds carry null and reject stray account fields', () => {
+    const c = validateLead(VALID, NOW);
+    assert.ok(c.ok && c.lead.cameras === null && c.lead.modo === null);
+    const stray = validateLead({ ...VALID, cameras: 4 }, NOW);
+    assert.ok(!stray.ok && stray.errors.includes('cameras'));
+  });
+});

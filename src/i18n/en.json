@@ -622,6 +622,11 @@
     "email": "Email",
     "whatsapp": "WhatsApp",
     "whatsappHint": "With country and area code.",
+    "cameras": "How many cameras",
+    "camerasHint": "An estimate is fine.",
+    "mode": "Mode",
+    "modeEdge": "Edge (device in the plant)",
+    "modeCloud": "Cloud (platform on a monthly plan)",
     "interests": "Interests",
     "interestsHint": "Pick one or more.",
     "message": "Message",
@@ -630,8 +635,10 @@
     "consentAfter": "and agree to the use of this data to reply to me.",
     "submit": "Send",
     "submitPartner": "Send partner request",
+    "submitAccount": "Request access",
     "sending": "Sending…",
     "success": "Received. We'll be in touch soon.",
+    "successAccount": "Received. You get your access by email.",
     "error": "We couldn't send it right now. Try again or write to {email}.",
     "errorVerification": "We couldn't confirm you're not a bot. Reload the page and try again.",
     "invalid": "Please check the highlighted fields.",
@@ -651,7 +658,9 @@
       "email": "Enter a valid email.",
       "consent": "Tick this box so we can reply.",
       "whatsapp": "Use digits, with country and area code.",
-      "invalidServer": "This field was not accepted. Please check it."
+      "invalidServer": "This field was not accepted. Please check it.",
+      "cameras": "Enter a number of cameras.",
+      "mode": "Pick a mode."
     }
   },
   "footer": {

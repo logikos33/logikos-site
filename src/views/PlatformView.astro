@@ -1,9 +1,10 @@
 ---
 import DefList from '../components/DefList.astro';
+import LeadForm from '../components/LeadForm.astro';
 import Section from '../components/Section.astro';
 import { LOGIN_URL } from '../config/links';
 import { dict } from '../i18n';
-import { pathFor, type Locale } from '../i18n/routes';
+import type { Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
 
 interface Props {
@@ -29,11 +30,8 @@ const p = t.platform;
 
   <Section question={p.questions.account} title={p.account.title} text={p.account.text} id="account-title">
     <p>{p.account.confirm}</p>
-    <div class="btn-row">
-      <a class="btn" href={`${pathFor('contact', locale)}#formulario`}>
-        <span class="btn__mark" aria-hidden="true"></span>
-        {p.account.cta}
-      </a>
+    <div class="account-form">
+      <LeadForm locale={locale} kind="account" id="conta" />
     </div>
     <div class="login">
       <h3>{p.login.title}</h3>
@@ -67,5 +65,10 @@ const p = t.platform;
   .login p {
     margin: 0 0 var(--lk-space-4);
     color: var(--lk-text-2);
+  }
+
+  .account-form {
+    max-width: 52rem;
+    margin-top: var(--lk-space-5);
   }
 </style>

@@ -5,12 +5,12 @@
 import AlertCard from '../components/AlertCard.astro';
 import Avatar from '../components/Avatar.astro';
 import DefList from '../components/DefList.astro';
+import DemoStatus from '../components/DemoStatus.astro';
 import HudVideo from '../components/HudVideo.astro';
 import Icon from '../components/Icon.astro';
 import Pipeline from '../components/Pipeline.astro';
 import Section from '../components/Section.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
-import { DEMOS } from '../config/links';
 import { dict } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
@@ -104,14 +104,8 @@ const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoin
 
   <Section question={q.demo} title={p.demo.title} text={p.demo.text} id="demo-title">
     <div class="btn-row">
-      <a class="btn btn--ghost" href={DEMOS.epi} rel="noopener" target="_blank">
-        {t.demos.epi.title}
-        <span class="visually-hidden"> ({t.a11y.external})</span>
-      </a>
-      <a class="btn btn--ghost" href={DEMOS.fire} rel="noopener" target="_blank">
-        {t.demos.fire.title}
-        <span class="visually-hidden"> ({t.a11y.external})</span>
-      </a>
+      <DemoStatus locale={locale} demo="epi" button />
+      <DemoStatus locale={locale} demo="fire" button />
     </div>
     <p>
       <a href={pathFor('demos', locale)}>{t.cta.seeDemos}</a>

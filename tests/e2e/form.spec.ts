@@ -115,6 +115,7 @@ test('client patterns match the server: malformed e-mail and phone are caught be
 for (const [path, id, lang] of [
   ['/contato', 'formulario', 'pt-br'],
   ['/en/partners', 'parceria', 'en'],
+  ['/plataforma', 'conta', 'pt-br'],
 ] as const) {
   test(`valid lead from ${path} is stored (proved by KV listing) and never logged`, async ({ page }) => {
     await stubTurnstile(page);
@@ -133,6 +134,10 @@ for (const [path, id, lang] of [
     await form.locator('input[name="email"]').fill(values.email);
     await form.locator('textarea[name="message"]').fill(values.message);
     await form.locator('input[name="interests"][value="epi"]').check();
+    if (id === 'conta') {
+      await form.locator('input[name="cameras"]').fill('12');
+      await form.locator('input[name="mode"][value="edge"]').check();
+    }
     await form.locator('input[name="consent"]').check();
     await form.locator('button[type="submit"]').click();
     const status = form.locator('[data-status]');
