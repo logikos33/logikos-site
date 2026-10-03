@@ -1,7 +1,6 @@
 ---
-import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
-import jetbrainsMonoLatin from '@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url';
-import spaceGroteskLatin from '@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2?url';
+import inter from '../fonts/inter.woff2?url';
+import spaceGrotesk from '../fonts/space-grotesk.woff2?url';
 import '../styles/global.css';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
@@ -60,9 +59,9 @@ const organization = {
       })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="preload" href={spaceGroteskLatin} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={jetbrainsMonoLatin} as="font" type="font/woff2" crossorigin />
+    <!-- Display and body only: the mono is font-display: optional and must not be fetched early. -->
+    <link rel="preload" href={spaceGrotesk} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={inter} as="font" type="font/woff2" crossorigin />
     <title>{title}</title>
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
