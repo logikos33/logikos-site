@@ -6,11 +6,11 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: inventory | apply | verify | rollback
+        description: inventory | apply | verify | diag | rollback
         required: true
         default: inventory
         type: choice
-        options: [inventory, apply, verify, rollback]
+        options: [inventory, apply, verify, diag, rollback]
       ruleset_id:
         description: só para rollback
         required: false
