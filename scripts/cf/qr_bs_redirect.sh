@@ -101,8 +101,12 @@ diag() { # diagnóstico só leitura: DNS público, origem, resposta para user-ag
   if [ -n "$origin" ]; then
     echo "--- o que a origem serve se o DNS do cliente pular a Cloudflare"
     for p in / /bs; do printf '  https://%s%s via %s -> ' "$ZONE_NAME" "$p" "$origin"
-      curl -sk --max-time 10 -o /tmp/o.html -w '%{http_code} ' --resolve "$ZONE_NAME:443:$origin" "https://$ZONE_NAME$p" || printf 'falhou '
-      grep -oiE '<title>[^<]{0,80}' /tmp/o.html 2>/dev/null | head -1; echo; done
+      : > /tmp/o.html
+      curl -sk --max-time 10 -o /tmp/o.html -w '%{http_code} ' --resolve "$ZONE_NAME:443:$origin" "https://$ZONE_NAME$p" || printf 'falhou(https) '
+      printf 'http-> '; curl -s --max-time 10 -o /tmp/o2.html -w '%{http_code} ' -H "Host: $ZONE_NAME" "http://$origin$p" || printf 'falhou(http) '
+      { grep -ohiE '<title>[^<]{0,80}' /tmp/o.html /tmp/o2.html 2>/dev/null | head -1; } || true; echo; done
+    echo "--- a origem responde ao ping/TCP?"; (timeout 6 bash -c "echo > /dev/tcp/$origin/443" 2>/dev/null && echo "  tcp/443 aberto") || echo "  tcp/443 sem resposta em 6s"
+    (timeout 6 bash -c "echo > /dev/tcp/$origin/80" 2>/dev/null && echo "  tcp/80 aberto") || echo "  tcp/80 sem resposta em 6s"
   fi
   echo "--- /bs via Cloudflare com user-agents de celular"
   for ua in "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1" "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Mobile Safari/537.36"; do
