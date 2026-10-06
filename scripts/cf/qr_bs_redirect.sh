@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# QR folder BrandSchutz -> WhatsApp (Plano A: Single Redirect, fase http_request_dynamic_redirect)
+# QR folder BrandSchutz -> site oficial (Plano A: Single Redirect, fase http_request_dynamic_redirect)
 # Uso: CLOUDFLARE_API_TOKEN=... ./qr_bs_redirect.sh [inventory|apply|verify|rollback <ruleset_id> <rule_id>]
 # Nunca imprime o token. Nunca faz DELETE. Nunca PUT em entrypoint que já tem regras.
 set -euo pipefail
 : "${CLOUDFLARE_API_TOKEN:?defina CLOUDFLARE_API_TOKEN no ambiente}"  # token de ZONA: Zone:Read + DNS:Read + Zone Rulesets:Edit
 ZONE_NAME="logikosvision.com.br"
-TARGET='https://wa.me/554733048928?text=Ol%C3%A1%21%20Quero%20testar%20o%20Cloud%20Vision.'
+TARGET='https://www.brandschutz.com.br/'
 API="https://api.cloudflare.com/client/v4"
 cf() { curl -sS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H "Content-Type: application/json" "$@"; }
 need() { command -v "$1" >/dev/null || { echo "falta $1"; exit 1; }; }
@@ -51,7 +51,7 @@ inventory() {
 }
 
 rule_json() { jq -n --arg t "$TARGET" '{
-  description:"QR folder BrandSchutz -> WhatsApp",
+  description:"QR folder BrandSchutz -> site",
   expression:"(http.host eq \"logikosvision.com.br\" and http.request.uri.path in {\"/bs\" \"/bs/\"})",
   action:"redirect",
   action_parameters:{from_value:{status_code:302,target_url:{value:$t},preserve_query_string:false}},
