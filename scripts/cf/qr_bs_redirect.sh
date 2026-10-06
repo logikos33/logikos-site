@@ -91,6 +91,27 @@ verify() {
   for p in / /bsx; do echo "== $p (não deve ir ao WhatsApp)"; curl -sI "https://$ZONE_NAME$p" | grep -iE '^(HTTP|location)' || true; done
 }
 
+diag() { # diagnóstico só leitura: DNS público, origem, resposta para user-agents de celular
+  local z; z=$(zone_id)
+  echo "--- DNS público (A)"
+  for r in 1.1.1.1 8.8.8.8 208.67.222.222; do printf '  @%s: ' "$r"; dig +short A "$ZONE_NAME" @"$r" | tr '\n' ' '; echo; done
+  echo "--- registro A na Cloudflare (conteúdo = IP da origem)"
+  local origin; origin=$(cf "$API/zones/$z/dns_records?type=A&name=$ZONE_NAME" | jq -r '.result[0].content // empty')
+  echo "  origem: ${origin:-?}"
+  if [ -n "$origin" ]; then
+    echo "--- o que a origem serve se o DNS do cliente pular a Cloudflare"
+    for p in / /bs; do printf '  https://%s%s via %s -> ' "$ZONE_NAME" "$p" "$origin"
+      curl -sk --max-time 10 -o /tmp/o.html -w '%{http_code} ' --resolve "$ZONE_NAME:443:$origin" "https://$ZONE_NAME$p" || printf 'falhou '
+      grep -oiE '<title>[^<]{0,80}' /tmp/o.html 2>/dev/null | head -1; echo; done
+  fi
+  echo "--- /bs via Cloudflare com user-agents de celular"
+  for ua in "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1" "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Mobile Safari/537.36"; do
+    echo "  UA: ${ua:0:40}..."; curl -sI -A "$ua" "https://$ZONE_NAME/bs" | grep -iE '^(HTTP|location|cf-mitigated|cf-ray)' | sed 's/^/    /'
+  done
+  echo "--- http:// (sem s) /bs"; curl -sI "http://$ZONE_NAME/bs" | grep -iE '^(HTTP|location)' | sed 's/^/  /'
+  echo "--- cabeçalhos completos de /bs"; curl -sI "https://$ZONE_NAME/bs" | sed 's/^/  /'
+}
+
 rollback() { # desativa a regra (reversível; não deleta)
   local z; z=$(zone_id); cf -X PATCH "$API/zones/$z/rulesets/$1/rules/$2" --data '{"enabled":false}' | jq '{success,errors}'
 }
@@ -99,6 +120,7 @@ case "${1:-inventory}" in
   inventory) inventory ;;
   apply) inventory; echo; apply; echo; verify ;;
   verify) verify ;;
+  diag) diag ;;
   rollback) rollback "$2" "$3" ;;
-  *) echo "uso: $0 inventory|apply|verify|rollback <ruleset_id> <rule_id>"; exit 1 ;;
+  *) echo "uso: $0 inventory|apply|verify|diag|rollback <ruleset_id> <rule_id>"; exit 1 ;;
 esac
