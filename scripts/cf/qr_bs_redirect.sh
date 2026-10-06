@@ -3,7 +3,7 @@
 # Uso: CLOUDFLARE_API_TOKEN=... ./qr_bs_redirect.sh [inventory|apply|verify|rollback <ruleset_id> <rule_id>]
 # Nunca imprime o token. Nunca faz DELETE. Nunca PUT em entrypoint que já tem regras.
 set -euo pipefail
-: "${CLOUDFLARE_API_TOKEN:?defina CLOUDFLARE_API_TOKEN no ambiente}"
+: "${CLOUDFLARE_API_TOKEN:?defina CLOUDFLARE_API_TOKEN no ambiente}"  # token de ZONA: Zone:Read + DNS:Read + Zone Rulesets:Edit
 ZONE_NAME="logikosvision.com.br"
 TARGET='https://wa.me/554733048928?text=Ol%C3%A1%21%20Quero%20testar%20o%20Cloud%20Vision.'
 API="https://api.cloudflare.com/client/v4"
@@ -11,7 +11,17 @@ cf() { curl -sS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H "Content-Typ
 need() { command -v "$1" >/dev/null || { echo "falta $1"; exit 1; }; }
 need curl; need jq
 
-zone_id() { cf "$API/zones?name=$ZONE_NAME" | jq -r '.result[0].id // empty'; }
+zone_id() {
+  local r; r=$(cf -w '\n%{http_code}' "$API/zones?name=$ZONE_NAME")
+  local code; code=$(tail -n1 <<<"$r"); local body; body=$(sed '$d' <<<"$r")
+  local id; id=$(jq -r '.result[0].id // empty' <<<"$body" 2>/dev/null || true)
+  if [ -z "$id" ]; then
+    echo "GET /zones?name=$ZONE_NAME -> HTTP $code" >&2
+    jq -r '.errors[]? | "  api error \(.code): \(.message)"' <<<"$body" >&2 2>/dev/null || true
+    [ "$code" = "200" ] && echo "  (200 com result vazio: token válido, mas sem Zone:Read nesta zona ou zona em outra conta)" >&2
+  fi
+  printf '%s' "$id"
+}
 
 inventory() {
   local z; z=$(zone_id); [ -n "$z" ] || { echo "zona $ZONE_NAME não encontrada (token sem Zone:Read ou zona fora da conta)"; exit 2; }

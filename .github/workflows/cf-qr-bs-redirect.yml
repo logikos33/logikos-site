@@ -30,10 +30,14 @@ jobs:
       - uses: actions/checkout@v4
       - name: run (${{ inputs.mode }})
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          # CLOUDFLARE_ZONE_TOKEN: token só de zona (Zone:Read, DNS:Read, Zone Rulesets:Edit em logikosvision.com.br).
+          # O CLOUDFLARE_API_TOKEN do deploy (Pages) não tem Zone:Read e serve apenas de fallback.
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_ZONE_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
+          USING_ZONE_TOKEN: ${{ secrets.CLOUDFLARE_ZONE_TOKEN != '' }}
         run: |
           set -euo pipefail
-          [ -n "$CLOUDFLARE_API_TOKEN" ] || { echo "::error::CLOUDFLARE_API_TOKEN ausente"; exit 1; }
+          [ -n "$CLOUDFLARE_API_TOKEN" ] || { echo "::error::nenhum token Cloudflare disponível"; exit 1; }
+          [ "$USING_ZONE_TOKEN" = "true" ] || echo "::warning::CLOUDFLARE_ZONE_TOKEN ausente; usando o token de deploy (sem Zone:Read, vai falhar no inventário)"
           case "${{ inputs.mode }}" in
             rollback) scripts/cf/qr_bs_redirect.sh rollback "${{ inputs.ruleset_id }}" "${{ inputs.rule_id }}" ;;
             *) scripts/cf/qr_bs_redirect.sh "${{ inputs.mode }}" ;;
