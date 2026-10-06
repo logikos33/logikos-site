@@ -11,6 +11,8 @@ cf() { curl -sS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H "Content-Typ
 need() { command -v "$1" >/dev/null || { echo "falta $1"; exit 1; }; }
 need curl; need jq
 
+api_errors() { jq -r '.errors[]? | "  api error \(.code): \(.message)"' <<<"$1" 2>/dev/null || true; }
+
 zone_id() {
   local r; r=$(cf -w '\n%{http_code}' "$API/zones?name=$ZONE_NAME")
   local code; code=$(tail -n1 <<<"$r"); local body; body=$(sed '$d' <<<"$r")
@@ -32,15 +34,20 @@ inventory() {
   echo "--- entrypoint http_request_dynamic_redirect"
   local ep; ep=$(cf -w '\n%{http_code}' "$API/zones/$z/rulesets/phases/http_request_dynamic_redirect/entrypoint")
   local code; code=$(tail -n1 <<<"$ep"); local body; body=$(sed '$d' <<<"$ep")
-  if [ "$code" = "404" ]; then echo "entrypoint: não existe (404)"; else
+  echo "GET entrypoint -> HTTP $code"
+  if [ "$code" = "404" ]; then echo "entrypoint: não existe (404) -> apply fará PUT com uma regra"
+  elif [ "$code" != "200" ]; then echo "entrypoint: resposta inesperada"; api_errors "$body"
+  else
     echo "ruleset_id: $(jq -r '.result.id' <<<"$body")  regras: $(jq -r '.result.rules | length' <<<"$body")"
     jq -r '.result.rules[]? | "  rule id=\(.id) enabled=\(.enabled) desc=\(.description // "") expr=\(.expression)"' <<<"$body"
     jq -r '.result.rules[]? | select(.expression | test("/bs")) | "  >> JÁ CASA /bs: \(.id)"' <<<"$body"
   fi
   echo "--- Page Rules"
-  cf "$API/zones/$z/pagerules" | jq -r '.result[]? | "  id=\(.id) status=\(.status) targets=\([.targets[].constraint.value]|join(","))"'
+  local pr; pr=$(cf -w '\n%{http_code}' "$API/zones/$z/pagerules"); echo "  HTTP $(tail -n1 <<<"$pr"), $(sed '$d' <<<"$pr" | jq -r '.result | length // 0') itens"
+  sed '$d' <<<"$pr" | jq -r '.result[]? | "  id=\(.id) status=\(.status) targets=\([.targets[].constraint.value]|join(","))"'; api_errors "$(sed '$d' <<<"$pr")"
   echo "--- Worker routes"
-  cf "$API/zones/$z/workers/routes" | jq -r '.result[]? | "  id=\(.id) pattern=\(.pattern) script=\(.script // "")"'
+  local wr; wr=$(cf -w '\n%{http_code}' "$API/zones/$z/workers/routes"); echo "  HTTP $(tail -n1 <<<"$wr"), $(sed '$d' <<<"$wr" | jq -r '.result | length // 0') itens"
+  sed '$d' <<<"$wr" | jq -r '.result[]? | "  id=\(.id) pattern=\(.pattern) script=\(.script // "")"'; api_errors "$(sed '$d' <<<"$wr")"
 }
 
 rule_json() { jq -n --arg t "$TARGET" '{
@@ -54,6 +61,9 @@ apply() {
   local z; z=$(zone_id); [ -n "$z" ] || exit 2
   local ep; ep=$(cf -w '\n%{http_code}' "$API/zones/$z/rulesets/phases/http_request_dynamic_redirect/entrypoint")
   local code; code=$(tail -n1 <<<"$ep"); local body; body=$(sed '$d' <<<"$ep")
+  if [ "$code" != "404" ] && [ "$code" != "200" ]; then
+    echo "ABORT: GET entrypoint devolveu HTTP $code; não escrevo sem saber o estado atual"; api_errors "$body"; exit 3
+  fi
   if [ "$code" = "404" ]; then
     echo "entrypoint inexistente -> PUT com lista de uma regra"
     cf -X PUT "$API/zones/$z/rulesets/phases/http_request_dynamic_redirect/entrypoint" \
