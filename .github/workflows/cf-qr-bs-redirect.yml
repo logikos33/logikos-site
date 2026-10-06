@@ -1,0 +1,40 @@
+name: cf-qr-bs-redirect
+
+# Manual only. Single Redirect "QR folder BrandSchutz -> WhatsApp" na zona logikosvision.com.br.
+# Não deploya nada, não toca DNS/SSL/Pages. Modo padrão: inventory (só leitura).
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: inventory | apply | verify | rollback
+        required: true
+        default: inventory
+        type: choice
+        options: [inventory, apply, verify, rollback]
+      ruleset_id:
+        description: só para rollback
+        required: false
+        default: ''
+      rule_id:
+        description: só para rollback
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  redirect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: run (${{ inputs.mode }})
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          [ -n "$CLOUDFLARE_API_TOKEN" ] || { echo "::error::CLOUDFLARE_API_TOKEN ausente"; exit 1; }
+          case "${{ inputs.mode }}" in
+            rollback) scripts/cf/qr_bs_redirect.sh rollback "${{ inputs.ruleset_id }}" "${{ inputs.rule_id }}" ;;
+            *) scripts/cf/qr_bs_redirect.sh "${{ inputs.mode }}" ;;
+          esac
