@@ -17,7 +17,7 @@ env:
   ASTRO_TELEMETRY_DISABLED: '1'
   WRANGLER_SEND_METRICS: 'false'
   # Public build-time values live in repository *variables* (not secrets).
-  PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL || 'https://logikosvision.com.br' }}
+  PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL || 'https://www.logikosvision.com.br' }}
   PUBLIC_WHATSAPP_NUMBER: ${{ vars.PUBLIC_WHATSAPP_NUMBER }}
   PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL }}
   PUBLIC_MEDIA_BASE_URL: ${{ vars.PUBLIC_MEDIA_BASE_URL }}

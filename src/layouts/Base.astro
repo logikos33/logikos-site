@@ -20,7 +20,7 @@ interface Props {
 
 const { locale, routeKey, title, description, noindex = false, theme = 'dark' } = Astro.props;
 const t = dict(locale);
-const site = Astro.site ?? new URL('https://logikosvision.com.br');
+const site = Astro.site ?? new URL('https://www.logikosvision.com.br');
 const canonical = routeKey ? new URL(pathFor(routeKey, locale), site).href : undefined;
 const alternates = routeKey ? alternatesFor(routeKey, site) : [];
 // One card per page: title of the page on the brand composition (src/pages/og/[lang]/[route].png.ts).

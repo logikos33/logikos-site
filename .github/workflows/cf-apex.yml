@@ -1,17 +1,23 @@
 name: cf-apex
 
 # Manual only. Raiz logikosvision.com.br -> site institucional via Worker "logikos-apex".
-# Não toca DNS, túnel, Pages nem regras. Padrão: inventory (só leitura).
+# Padrão: inventory (só leitura). Só o modo www toca DNS (cria o CNAME www) e o Pages (domínio www);
+# nenhum modo toca MX/TXT, o túnel ou outros registros.
 # /demo, /experiencia e /bs continuam indo para a origem de hoje.
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: inventory | apply | verify | rollback | ponte | ponte-rollback
+        description: inventory | apply | verify | rollback | ponte | ponte-rollback | www | www-rollback
         required: true
         default: inventory
         type: choice
-        options: [inventory, apply, verify, rollback, ponte, ponte-rollback]
+        options: [inventory, apply, verify, rollback, ponte, ponte-rollback, www, www-rollback]
+      destino:
+        description: destino da ponte (modo ponte)
+        required: false
+        default: https://www.logikosvision.com.br
+        type: string
 
 permissions:
   contents: read
@@ -30,4 +36,5 @@ jobs:
           CF_DEPLOY_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           WRANGLER_SEND_METRICS: 'false'
+          PONTE_DESTINO: ${{ inputs.destino }}
         run: scripts/cf/apex.sh "${{ inputs.mode }}"

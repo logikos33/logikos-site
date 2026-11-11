@@ -13,7 +13,7 @@ for (const file of ['.env', `.env.${process.env.NODE_ENV === 'development' ? 'de
   }
 }
 
-const SITE = process.env.PUBLIC_SITE_URL ?? 'https://logikosvision.com.br';
+const SITE = process.env.PUBLIC_SITE_URL ?? 'https://www.logikosvision.com.br';
 const MEDIA_BASE = process.env.PUBLIC_MEDIA_BASE_URL ?? '';
 const ANALYTICS = Boolean(process.env.PUBLIC_CF_ANALYTICS_TOKEN);
 

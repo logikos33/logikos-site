@@ -4,7 +4,7 @@ import { LOCALES, ROUTE_KEYS, ROUTES } from '../../src/i18n/routes.ts';
 
 export const ALL_ROUTES = ROUTE_KEYS.flatMap((key) => LOCALES.map((locale) => ({ key, locale, path: ROUTES[key][locale] })));
 
-export const SITE = process.env.PUBLIC_SITE_URL ?? 'https://logikosvision.com.br';
+export const SITE = process.env.PUBLIC_SITE_URL ?? 'https://www.logikosvision.com.br';
 
 export function trackConsole(page: Page): string[] {
   const errors: string[] = [];
