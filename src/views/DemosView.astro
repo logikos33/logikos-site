@@ -1,13 +1,14 @@
 ---
+// /demos (feedback 11/11, items 18 and 25c): one call — try it on your phone camera — and what shows
+// up on screen, on the real clips, side by side. No technical notes, no live-status chips.
 import Cam from '../components/Cam.astro';
-import DemoStatus from '../components/DemoStatus.astro';
 import Icon from '../components/Icon.astro';
 import PageClose from '../components/PageClose.astro';
 import PageHero from '../components/PageHero.astro';
 import Section from '../components/Section.astro';
 import { EXPERIENCE_URL, PHONE_DEMO_URL } from '../config/links';
 import { dict } from '../i18n';
-import { pathFor, type Locale } from '../i18n/routes';
+import type { Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
 
 interface Props {
@@ -17,15 +18,14 @@ interface Props {
 const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.demos;
-const demos = [
-  ['epi', 'v-epi', t.pages.cams.epi],
-  ['fire', 'v-fogo', t.pages.cams.fogo],
-] as const;
+const SEE = [
+  { clip: 'v-epi', name: t.pages.cams.epi, ...p.epi },
+  { clip: 'v-fogo', name: t.pages.cams.fogo, ...p.fire },
+];
 ---
 
 <Base locale={locale} routeKey="demos" title={p.meta.title} description={p.meta.description}>
   <PageHero locale={locale} id="demos-title" title={p.hero.title} text={p.hero.text}>
-    <!-- One click to the phone demo (the same as the home's "CAM 07 · yours"), each open demo shows its live state below. -->
     <Fragment slot="actions">
       <a class="btn" href={PHONE_DEMO_URL} data-cta="phone-demo">
         <Icon name="camera" size={18} />
@@ -36,47 +36,28 @@ const demos = [
         <Icon name="arrow" size={18} />
       </a>
     </Fragment>
-    <p slot="note" class="note">
-      {p.browser}
-    </p>
     <figure class="vert">
       <Cam clip="fs-publico" vertical label={t.pages.fireshow.label} />
       <figcaption class="mono">{t.pages.fireshow.caption}</figcaption>
     </figure>
   </PageHero>
 
-  {demos.map(([k, clip, name]) => (
-    <Section question={p.questions[k]} title={p[k].title} text={p[k].see} id={`demo-${k}`} wide>
-      <div class="split">
-        <figure>
-          <Cam clip={clip} name={name} />
-          <figcaption class="mono">{t.pages.clipNote}</figcaption>
-        </figure>
-        <div class="texto">
-          <p>{p[k].verdict}</p>
-          <p class="note">{p[k].note}</p>
-          <div class="btn-row">
-            <DemoStatus locale={locale} demo={k} primary label={t.cta.openDemo} />
-          </div>
-        </div>
-      </div>
-    </Section>
-  ))}
-
-  <Section question={p.questions.note} title={p.note.title} text={p.note.text} id="demos-note">
-    <p>
-      <a href={pathFor('recognition', locale)}>{t.nav.recognition}</a>
-    </p>
+  <Section question={p.see.question} title={p.see.title} text={p.see.text} id="see-title" wide>
+    <ul class="ver" role="list">
+      {SEE.map((s) => (
+        <li>
+          <Cam clip={s.clip} name={s.name} />
+          <h3>{s.title}</h3>
+          <p>{s.text}</p>
+        </li>
+      ))}
+    </ul>
   </Section>
 
   <PageClose locale={locale} />
 </Base>
 
 <style>
-  .note {
-    max-width: var(--lk-measure);
-  }
-
   figure {
     margin: 0;
   }
@@ -87,32 +68,33 @@ const demos = [
     color: var(--lk-text-2);
   }
 
-  /* The Fireshow clip is portrait: keep it a phone-sized column, centred in the media cell. */
+  /* Portrait clip: never taller than about half the screen on a phone. */
   .vert {
-    /* Portrait clip: never taller than about half the screen on a phone. */
-    width: min(100%, 20rem, 31svh);
+    width: min(100%, 18rem, 31svh);
     margin-inline: auto;
   }
 
-  .split {
+  .ver {
     display: grid;
-    gap: var(--lk-space-6);
-    align-items: center;
-    margin-top: var(--lk-space-6);
+    gap: var(--lk-space-5);
+    margin: var(--lk-space-5) 0 0;
+    padding: 0;
+    list-style: none;
   }
 
-  .texto {
-    display: grid;
-    gap: var(--lk-space-4);
+  .ver h3 {
+    margin: var(--lk-space-3) 0 var(--lk-space-1);
+    font-size: 1.15rem;
   }
 
-  .texto p {
+  .ver p {
     margin: 0;
+    color: var(--lk-text-lead, var(--lk-text-2));
   }
 
-  @media (min-width: 64rem) {
-    .split {
-      grid-template-columns: 1.1fr 0.9fr;
+  @media (min-width: 48rem) {
+    .ver {
+      grid-template-columns: 1fr 1fr;
     }
   }
 </style>

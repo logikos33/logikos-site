@@ -1,11 +1,16 @@
 ---
+// /sobre (feedback 11/11, item 26): manifesto → what we do (one card per front) → how we work →
+// where we are → "Request your custom model". Nothing invented: no numbers, clients or awards.
 import Cam from '../components/Cam.astro';
 import DefList from '../components/DefList.astro';
+import Icon from '../components/Icon.astro';
 import PageClose from '../components/PageClose.astro';
 import PageHero from '../components/PageHero.astro';
 import Section from '../components/Section.astro';
+import SpecialistButton from '../components/SpecialistButton.astro';
+import { EXPERIENCE_URL } from '../config/links';
 import { dict } from '../i18n';
-import type { Locale } from '../i18n/routes';
+import { pathFor, type Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
 
 interface Props {
@@ -17,32 +22,57 @@ const t = dict(locale);
 const p = t.about;
 const f = p.facts;
 const facts = [f.model, f.processing].map((x) => ({ term: x.title, text: x.text }));
+const FRONTS = (['recognition', 'robotics', 'twins'] as const).map((key, i) => ({ key, ...p.fronts.items[i] }));
+const how = p.how.items.map((x) => ({ term: x.name, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="about" title={p.meta.title} description={p.meta.description}>
   <!-- "Engineering that proves before it promises": the proof is the crowd testing it at Fireshow 2026. -->
   <PageHero locale={locale} id="hero-title" title={p.hero.title} text={p.hero.text}>
+    <Fragment slot="actions">
+      <a class="btn" href={EXPERIENCE_URL} data-cta="experience">
+        {t.cta.experience}
+        <Icon name="arrow" size={18} />
+      </a>
+      <SpecialistButton locale={locale} variant="ghost" label={p.cta} interest="custom" />
+    </Fragment>
     <figure class="vert">
       <Cam clip="fs-publico" vertical label={t.pages.fireshow.label} />
       <figcaption class="mono">{t.pages.fireshow.caption}</figcaption>
     </figure>
   </PageHero>
 
-  <Section id="who-title" question={p.questions.who} title={f.place.title} text={f.place.text}>
-    <DefList rows={facts} class="after" />
+  <Section id="why-title" question={p.questions.why} title={p.manifesto.title} text={p.manifesto.text} />
+
+  <Section id="vision-title" question={p.questions.vision} title={p.vision.title} text={p.vision.text} />
+
+  <Section id="fronts-title" question={p.questions.fronts} title={p.fronts.title} wide>
+    <ul class="frentes" role="list">
+      {FRONTS.map((fr) => (
+        <li class="folha">
+          <h3>
+            <a href={pathFor(fr.key, locale)}>{fr.name}</a>
+          </h3>
+          <p>{fr.text}</p>
+        </li>
+      ))}
+    </ul>
   </Section>
 
-  <PageClose locale={locale} />
+  <Section id="how-title" question={p.questions.how} title={p.how.title}>
+    <DefList rows={how} />
+  </Section>
+
+  <Section id="who-title" question={p.questions.who} title={f.place.title} text={f.place.text}>
+    <DefList rows={facts} />
+  </Section>
+
+  <PageClose locale={locale} interest="custom" label={p.cta} />
 </Base>
 
 <style>
-  .after {
-    margin-top: var(--lk-space-6);
-  }
-
   .vert {
-    /* Portrait clip: never taller than about half the screen on a phone. */
-    width: min(100%, 20rem, 31svh);
+    width: min(100%, 18rem, 31svh);
     margin: 0 auto;
   }
 
@@ -50,5 +80,34 @@ const facts = [f.model, f.processing].map((x) => ({ term: x.title, text: x.text 
     margin-top: var(--lk-space-2);
     font-size: 0.8125rem;
     color: var(--lk-text-2);
+  }
+
+  .frentes {
+    display: grid;
+    gap: var(--lk-space-4);
+    margin: var(--lk-space-5) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .frentes h3 {
+    margin: 0 0 var(--lk-space-2);
+    font-size: 1.2rem;
+  }
+
+  .frentes h3 a {
+    color: var(--lk-text);
+    text-decoration-color: var(--lk-accent-2);
+  }
+
+  .frentes p {
+    margin: 0;
+    color: var(--lk-text-2);
+  }
+
+  @media (min-width: 48rem) {
+    .frentes {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
 </style>

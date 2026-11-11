@@ -22,7 +22,12 @@ const ctaHref = specialistHref(locale);
 <header class="site-header">
   <div class="container site-header__bar">
     <a class="site-header__logo" href={pathFor('home', locale)} aria-label={t.a11y.home}>
+      <!-- Logikos Vision, direction B (ESBOCO v2): at header size the stacked A's VISION would be ~8 px
+           tall, so the bar uses LOGIKOS | VISION on one line (same cap height, Névoa, a hairline between). -->
       <Logo locale={locale} size={20} decorative />
+      <span class="site-header__vision" aria-hidden="true">
+        {t.brand.vision}
+      </span>
     </a>
 
     <nav class="site-nav" aria-label={t.a11y.mainNav}>
@@ -147,6 +152,54 @@ const ctaHref = specialistHref(locale);
     font-size: 20px;
     text-decoration: none;
     color: var(--lk-text);
+  }
+
+  /* VISION: Space Grotesk 400 at the wordmark's cap height (20 px cap ≈ 1.43 em of type), tracking
+     0.153 em like the wordmark, Névoa; a 1 px rule as tall as the cap, 44 u (0.44 cap) each side. */
+  .site-header__vision {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 0.44em;
+    padding-left: 0.44em;
+    border-left: 1px solid var(--lk-text-2);
+    color: var(--lk-text-2);
+    font: 400 1.43em/0.72 var(--lk-font-display);
+    letter-spacing: 0.153em;
+    margin-right: -0.153em;
+  }
+
+  /* The pair scales as one (VISION follows the wordmark's em): smaller where the bar is tight —
+     phones, and the 72–90 rem band where the six-item nav shares the bar. Wordmark ≥ 90 px wide. */
+  /* Below 360 px the pair would push the menu out: VISION steps down a little (the wordmark
+     cannot: 91 px is the brand minimum). */
+  @media (max-width: 22.49rem) {
+    .site-header__vision {
+      margin-left: 0.3em;
+      padding-left: 0.3em;
+      font-size: 1.15em;
+    }
+  }
+
+  @media (max-width: 37.49rem) {
+    .site-header__logo {
+      font-size: 14px;
+    }
+
+    .site-header__logo :global(.lk-mark) {
+      width: 91px;
+      height: 14px;
+    }
+  }
+
+  @media (min-width: 72rem) and (max-width: 89.99rem) {
+    .site-header__logo {
+      font-size: 16px;
+    }
+
+    .site-header__logo :global(.lk-mark) {
+      width: 104px;
+      height: 16px;
+    }
   }
 
   .site-nav {

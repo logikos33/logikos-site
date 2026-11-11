@@ -1,6 +1,7 @@
 ---
 import Cam from '../components/Cam.astro';
-import LeadForm from '../components/LeadForm.astro';
+import CrmForm from '../components/CrmForm.astro';
+import LicenseOptions from '../components/LicenseOptions.astro';
 import PageClose from '../components/PageClose.astro';
 import PageHero from '../components/PageHero.astro';
 import Section from '../components/Section.astro';
@@ -51,11 +52,13 @@ const p = t.platform;
     </div>
   </Section>
 
-  <Section question={p.questions.account} title={p.account.title} text={p.account.text} id="account-title">
-    <p>{p.account.confirm}</p>
-    <div class="account-form">
-      <LeadForm locale={locale} kind="account" id="conta" />
-    </div>
+  <Section question={t.howItWorks.questions.license} title={t.pages.license.title} text={t.pages.license.text} id="license-title" wide>
+    <LicenseOptions locale={locale} />
+  </Section>
+
+  <!-- The form sits beside its text on desktop (the section's right column). -->
+  <Section question={p.questions.account} title={p.account.title} text={`${p.account.text} ${p.account.confirm}`} id="account-title">
+    <CrmForm locale={locale} kind="conta" id="conta" />
   </Section>
 
   <PageClose locale={locale} />
@@ -142,10 +145,5 @@ const p = t.platform;
     .compare td:nth-child(3)::before {
       content: attr(data-cloud);
     }
-  }
-
-  .account-form {
-    max-width: 52rem;
-    margin-top: var(--lk-space-5);
   }
 </style>

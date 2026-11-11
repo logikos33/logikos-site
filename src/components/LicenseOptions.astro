@@ -1,0 +1,103 @@
+---
+// Licence terms, the same on every page (feedback 11/11, items 17 and 25d): monthly, annual or
+// biennial, side by side, the biennial lit as the recommended one. No prices: the CTA opens the
+// conversation with Koda.
+import { dict } from '../i18n';
+import type { Locale } from '../i18n/routes';
+import SpecialistButton from './SpecialistButton.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dict(locale);
+const l = t.pages.license;
+const OPTIONS = [
+  { ...l.monthly, top: false },
+  { ...l.annual, top: false },
+  { ...l.biennial, top: true },
+];
+---
+
+<div class="licenca">
+  <ul class="licenca__opcoes" role="list">
+    {OPTIONS.map((o) => (
+      <li class:list={['opcao', { 'opcao--top': o.top }]}>
+        {o.top && 'badge' in o && <span class="opcao__selo mono">{o.badge}</span>}
+        <h3>{o.name}</h3>
+        <p>{o.text}</p>
+      </li>
+    ))}
+  </ul>
+  <div class="btn-row">
+    <SpecialistButton locale={locale} />
+  </div>
+</div>
+
+<style>
+  .licenca {
+    display: grid;
+    gap: var(--lk-space-5);
+    margin-top: var(--lk-space-5);
+  }
+
+  .licenca__opcoes {
+    display: grid;
+    gap: var(--lk-space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .opcao {
+    display: grid;
+    align-content: start;
+    gap: var(--lk-space-2);
+    padding: var(--lk-space-5);
+    background: var(--lk-surface);
+    border: 1px solid var(--lk-line-strong);
+    border-radius: 14px;
+  }
+
+  .opcao h3 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+
+  .opcao p {
+    margin: 0;
+    color: var(--lk-text-2);
+  }
+
+  /* The recommended term: the light sheet with the brand's cyan edge and seal. */
+  .opcao--top {
+    background: #f4f6f8;
+    border: 2px solid #00d4ff;
+    box-shadow: 0 22px 48px -28px #000;
+  }
+
+  .opcao--top h3 {
+    color: #0a0a0f;
+  }
+
+  .opcao--top p {
+    color: #3b3f46;
+  }
+
+  .opcao__selo {
+    justify-self: start;
+    padding: 0.2rem 0.55rem;
+    background: #0a0a0f;
+    border-radius: 999px;
+    color: #00d4ff;
+    font-size: 0.75rem;
+  }
+
+  @media (min-width: 48rem) {
+    .licenca__opcoes {
+      grid-template-columns: 1fr 1fr 1.25fr;
+      align-items: stretch;
+    }
+  }
+</style>

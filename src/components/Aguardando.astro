@@ -1,0 +1,138 @@
+---
+// "Waiting for connection" loop for the CAM 07 monitors (feedback 11/11, item 23): soft static, a
+// sync band rolling down, "connecting…" pulsing and a running timestamp, like a CCTV input with no
+// signal yet. Pure decoration (aria-hidden) painted under the monitor's own text and button: the
+// parent becomes an isolated stack and these layers sit at z-index -1, over its background only.
+// Reduced motion: still frame, clock stopped. Only transform/opacity animate.
+import { dict } from '../i18n';
+import type { Locale } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+  /** Small tile (the wall's "CAM 07 · yours"): no clock, smaller type. */
+  compact?: boolean;
+}
+
+const { locale, compact = false } = Astro.props;
+const t = dict(locale);
+---
+
+<div class:list={['ag', { 'ag--compacto': compact }]} aria-hidden="true">
+  <span class="ag__ruido"></span>
+  <span class="ag__barra"></span>
+  {!compact && (
+    <span class="ag__hora mono" data-relogio>
+      --:--:--
+    </span>
+  )}
+  <span class="ag__con mono">{t.pages.connecting}</span>
+</div>
+
+<script>
+  // One clock for every monitor on the page; stopped (but shown) with reduced motion.
+  const clocks = [...document.querySelectorAll<HTMLElement>('[data-relogio]')];
+  const tick = () => {
+    const now = new Date().toLocaleTimeString('pt-BR', { hour12: false });
+    clocks.forEach((c) => (c.textContent = now));
+  };
+  if (clocks.length) {
+    tick();
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) window.setInterval(tick, 1000);
+  }
+</script>
+
+<style>
+  :global(:has(> .ag)) {
+    isolation: isolate;
+  }
+
+  .ag {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  /* Static: the backdrop's grain tile, denser, jumping in steps (compositor only). */
+  .ag__ruido {
+    position: absolute;
+    inset: -128px;
+    background:
+      repeating-linear-gradient(0deg, #ffffff0a 0 1px, #0000 1px 3px),
+      url('/media/ruido-v2.webp') repeat;
+    opacity: 0.9;
+    animation: ag-chuvisco 0.5s steps(1, end) infinite;
+  }
+
+  /* Vertical-hold drift: a soft bright band rolling down the screen. */
+  .ag__barra {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 22%;
+    background: linear-gradient(#ffffff00, #ffffff14 45%, #ffffff1f 50%, #ffffff14 55%, #ffffff00);
+    transform: translateY(-110%);
+    animation: ag-sincronia 4.2s linear infinite;
+  }
+
+  .ag__hora,
+  .ag__con {
+    position: absolute;
+    font-size: 0.75rem;
+    line-height: 1;
+    color: var(--lk-text);
+  }
+
+  .ag__hora {
+    top: 0.6rem;
+    right: 0.75rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ag__con {
+    left: 0.75rem;
+    bottom: 0.6rem;
+    color: var(--lk-accent);
+    animation: ag-pulso 1.4s steps(2, jump-none) infinite;
+  }
+
+  .ag--compacto .ag__con {
+    left: 0.5rem;
+    bottom: 0.4rem;
+    font-size: 0.625rem;
+  }
+
+  @keyframes ag-chuvisco {
+    0% {
+      transform: translate(0, 0);
+    }
+
+    25% {
+      transform: translate(-41px, 37px);
+    }
+
+    50% {
+      transform: translate(63px, -22px);
+    }
+
+    75% {
+      transform: translate(-17px, -71px);
+    }
+  }
+
+  @keyframes ag-sincronia {
+    to {
+      transform: translateY(560%);
+    }
+  }
+
+  @keyframes ag-pulso {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0.35;
+    }
+  }
+</style>

@@ -28,7 +28,7 @@ const t = dict(locale);
 const media = Astro.slots.has('default');
 ---
 
-<section class:list={['ph', 'greek-grid', { 'ph--media': media && !stacked }]} aria-labelledby={id}>
+<section class:list={['ph', 'greek-grid', { 'ph--media': media && !stacked, 'ph--texto': !media }]} aria-labelledby={id}>
   <div class="container ph__grade">
     <div class="ph__copy">
       <h1 id={id}>{title}</h1>
@@ -66,7 +66,7 @@ const media = Astro.slots.has('default');
 
 <style>
   .ph {
-    padding-block: clamp(2rem, 6vw, 4.5rem) clamp(3rem, 6vw, 5rem);
+    padding-block: clamp(1.5rem, 4vw, 3rem) var(--lk-section-y);
   }
 
   .ph__grade {
@@ -94,6 +94,23 @@ const media = Astro.slots.has('default');
 
   .ph__media {
     min-width: 0;
+  }
+
+  /* Text-only hero (LGPD, privacy): heading left, text right — never half a black screen (item 25b). */
+  @media (min-width: 64rem) {
+    .ph--texto .ph__copy {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      column-gap: clamp(2.5rem, 5vw, 5rem);
+      align-items: start;
+    }
+
+    .ph--texto .ph__copy > :not(h1) {
+      grid-column: 2;
+    }
+
+    .ph--texto h1 {
+      grid-row: 1 / span 4;
+    }
   }
 
   @media (min-width: 56rem) {

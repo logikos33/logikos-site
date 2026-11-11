@@ -1,6 +1,6 @@
 ---
 import Icon from '../components/Icon.astro';
-import LeadForm from '../components/LeadForm.astro';
+import CrmForm from '../components/CrmForm.astro';
 import PageClose from '../components/PageClose.astro';
 import PageHero from '../components/PageHero.astro';
 import PointList from '../components/PointList.astro';
@@ -39,10 +39,8 @@ const points = [pp.brand, pp.license, pp.pilot, pp.support].map((x) => ({ term: 
     <PointList rows={points} class="after" />
   </Section>
 
-  <Section id="partner-form-title" question={p.questions.form} title={p.form.title} text={p.form.text} wide>
-    <div class="form-wrap after">
-      <LeadForm locale={locale} kind="partner" id="parceria" />
-    </div>
+  <Section id="partner-form-title" question={p.questions.form} title={p.form.title} text={p.form.text}>
+    <CrmForm locale={locale} kind="integrador" id="parceria" />
   </Section>
 
   <PageClose locale={locale} interest="partnership" />
@@ -51,9 +49,5 @@ const points = [pp.brand, pp.license, pp.pilot, pp.support].map((x) => ({ term: 
 <style>
   .after {
     margin-top: var(--lk-space-6);
-  }
-
-  .form-wrap {
-    max-width: 52rem;
   }
 </style>

@@ -43,6 +43,13 @@ const RULES = [
   ['TensorRT / DeepStream / ONNX', /\b(?:tensorrt|deepstream|onnx)\b/],
   ['nome de placa', /\b(?:orin|xavier|raspberry\s*pi|hailo|coral\s+tpu)\b/],
   ['edge (como nome técnico)', /\bedge\s+(?:computing|device|ai)\b|\bna\s+borda\b/],
+  // Feedback 11/11, item 25c-d: no technical notes for the public, and the licence is monthly /
+  // annual / biennial everywhere — never "24 months".
+  [
+    'detalhe técnico das demos',
+    /\bnada e enviado\b|\bnothing is sent\b|\brode o modelo\b|\brun the model\b|\broda no seu aparelho\b|\bruns on your device\b|\bdemos abertas\b|\bopen demos\b|\bdemo generica\b|\bgeneric detection demo\b|\balarme falso medida\b|\bfalse-alarm rate\b/,
+  ],
+  ['licença de 24 meses', /\b24\s*meses\b|\b24-month\b/],
 ];
 
 // Partner mentions approved by Vitor for the home only (decision 0027): the partner strip and the

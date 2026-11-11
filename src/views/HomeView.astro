@@ -4,6 +4,7 @@
 // specialist band, camera → decision, Fireshow, data, FAQ, contact. "Talk to a specialist" always
 // opens the conversation with Koda on the contact page. No video downloads before
 // it is near the screen; reduced motion turns off the opening, carousel, pulse and autoplay.
+import Aguardando from '../components/Aguardando.astro';
 import Icon from '../components/Icon.astro';
 import { EXPERIENCE_URL, PHONE_DEMO_URL } from '../config/links';
 import { dict, fill } from '../i18n';
@@ -49,14 +50,13 @@ const SCENES = (
   };
 });
 
+// A still row, whole logos, no mask (feedback 11/11, item 15: the old sliding strip faded its
+// edges and showed the Visdec cut as it passed). `k` (tall / medium / wide mark) sets its height for equal visual weight.
 const LOGOS = [
-  { src: '/media/parceiros/l-brandschutz.webp', alt: h.partners.bs, w: 143, h: 38 },
-  { src: '/media/parceiros/l-visdec-v2.webp', alt: h.partners.visdec, w: 154, h: 30 },
-  { src: '/media/parceiros/l-cath-v2.webp', alt: h.partners.cath, w: 117, h: 48 },
+  { k: 'alta', src: '/media/parceiros/l-cath-v2.webp', alt: h.partners.cath, w: 117, h: 48 },
+  { k: 'media', src: '/media/parceiros/l-brandschutz.webp', alt: h.partners.bs, w: 143, h: 38 },
+  { k: 'larga', src: '/media/parceiros/l-visdec-v2.webp', alt: h.partners.visdec, w: 154, h: 30 },
 ];
-// The track is two identical halves (each half = the logos twice, wider than the strip at any
-// width); it slides by exactly one half, so the loop has no seam.
-const COPIES = [0, 1, 2, 3];
 const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, ${base}.webp 640w`;
 ---
 
@@ -121,6 +121,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
               </div>
             ))}
             <a class="cam cam--voce" href={PHONE_DEMO_URL}>
+              <Aguardando locale={locale} compact />
               <span>
                 <b>{h.hero.yours.title}</b>
                 {h.hero.yours.text}
@@ -146,17 +147,13 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     <div class="parceiros">
       <div class="wrap parceiros__linha">
         <p id="parceiros-titulo">{h.partners.label}</p>
-        <div class="marquee">
-          <ul aria-labelledby="parceiros-titulo">
-            {COPIES.map((c) =>
-              LOGOS.map((l) => (
-                <li {...(c ? { 'aria-hidden': 'true', 'data-copia': '' } : {})}>
-                  <img src={l.src} alt={c ? '' : l.alt} width={l.w} height={l.h} loading="lazy" />
-                </li>
-              )),
-            )}
-          </ul>
-        </div>
+        <ul class="logos" aria-labelledby="parceiros-titulo">
+          {LOGOS.map((l) => (
+            <li data-logo={l.k}>
+              <img src={l.src} alt={l.alt} width={l.w} height={l.h} loading="lazy" />
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
 
@@ -500,6 +497,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
           <!-- The page ends where it began: one more camera on the wall, waiting for the visitor's signal. -->
           <div class="sinal">
             <div class="sinal__tela">
+              <Aguardando locale={locale} />
               <p class="sinal__osd mono">
                 <span class="sinal__rec" aria-hidden="true"></span>
                 {h.contact.screen}
@@ -846,7 +844,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   }
 
   .home section:not(.heroi) {
-    padding-block: clamp(3.5rem, 9vw, 7.5rem);
+    padding-block: var(--lk-section-y);
     border-top: 1px solid var(--lk-line);
   }
 
@@ -1175,53 +1173,33 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     color: var(--lk-text-2);
   }
 
-  /* Short fade at the edges and wide gaps: a logo is either clearly in or on its way out. */
-  .marquee {
-    --gap: clamp(4.5rem, 10vw, 8rem);
-    flex: 1 1 26rem;
-    min-width: 0;
-    overflow: hidden;
-    mask-image: linear-gradient(90deg, #0000, #000 4%, #000 96%, #0000);
-  }
-
-  .marquee ul {
+  .logos {
     display: flex;
+    flex: 1 1 26rem;
+    flex-wrap: wrap;
     align-items: center;
-    width: max-content;
-    gap: var(--gap);
+    justify-content: space-around;
+    gap: var(--lk-space-5) clamp(2rem, 6vw, 5rem);
     margin: 0;
     padding: 0;
     list-style: none;
-    animation: corre 26s steps(520, end) infinite;
   }
 
-  .marquee:hover ul,
-  .marquee:focus-within ul,
-  :global(.lk-parado) .marquee ul {
-    animation-play-state: paused;
-  }
-
-  .marquee img {
-    height: clamp(1.6rem, 3.4vw, 2.4rem);
+  .logos img {
     width: auto;
+    height: clamp(1.7rem, 3.2vw, 2.3rem);
     filter: brightness(0) invert(1);
-    opacity: 0.8;
+    opacity: 0.85;
   }
 
-  .marquee li:nth-child(3n) img {
-    height: clamp(2.1rem, 4.4vw, 3rem);
+  /* Same visual weight (equal ink area, not equal height): the compact CATH a little taller,
+     the wide Visdec wordmark a little lower than BrandSchutz. */
+  .logos [data-logo='alta'] img {
+    height: clamp(2.1rem, 4vw, 2.9rem);
   }
 
-  /* Same visual weight for the three marks (equal ink area, not equal height): the wide Visdec
-     wordmark runs a little lower than BrandSchutz, the compact CATH a little taller. */
-  .marquee li:nth-child(3n + 2) img {
-    height: clamp(1.25rem, 2.5vw, 1.8rem);
-  }
-
-  @keyframes corre {
-    to {
-      transform: translateX(calc(-50% - var(--gap) / 2));
-    }
+  .logos [data-logo='larga'] img {
+    height: clamp(1.25rem, 2.4vw, 1.75rem);
   }
 
   /* ---------- Koda ---------- */
@@ -2141,19 +2119,10 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
 
   /* ---------- Reduced motion: posters, a still strip, a static diagram ---------- */
   @media (prefers-reduced-motion: reduce) {
-    .marquee ul,
     .pulso,
     .opA,
     .opB {
       animation: none;
-    }
-
-    .marquee {
-      mask-image: none;
-    }
-
-    .marquee [data-copia] {
-      display: none;
     }
 
     .opB {

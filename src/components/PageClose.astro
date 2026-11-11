@@ -5,6 +5,7 @@ import { EXPERIENCE_URL, PHONE_DEMO_URL } from '../config/links';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
 import type { ChatInterest } from '../lib/site';
+import Aguardando from './Aguardando.astro';
 import Icon from './Icon.astro';
 import SpecialistButton from './SpecialistButton.astro';
 
@@ -12,9 +13,11 @@ interface Props {
   locale: Locale;
   /** Interest Koda picks in advance when the specialist button opens the conversation. */
   interest?: ChatInterest;
+  /** Label for the specialist button (the About page asks for a custom model). */
+  label?: string;
 }
 
-const { locale, interest } = Astro.props;
+const { locale, interest, label } = Astro.props;
 const t = dict(locale);
 const c = t.pages.close;
 ---
@@ -30,11 +33,12 @@ const c = t.pages.close;
             {t.cta.experience}
             <Icon name="arrow" size={18} />
           </a>
-          <SpecialistButton locale={locale} variant="ghost" {...(interest ? { interest } : {})} />
+          <SpecialistButton locale={locale} variant="ghost" {...(interest ? { interest } : {})} {...(label ? { label } : {})} />
         </div>
       </div>
       <div class="sinal liga">
         <div class="sinal__tela">
+          <Aguardando locale={locale} />
           <p class="sinal__osd mono">
             <span class="sinal__rec" aria-hidden="true"></span>
             {c.screen}

@@ -1,11 +1,12 @@
 ---
+import CaixaAbrindo from '../components/CaixaAbrindo.astro';
 import Cam from '../components/Cam.astro';
+import LicenseOptions from '../components/LicenseOptions.astro';
 import PageClose from '../components/PageClose.astro';
 import PageHero from '../components/PageHero.astro';
 import Pipeline from '../components/Pipeline.astro';
 import PointList from '../components/PointList.astro';
 import Section from '../components/Section.astro';
-import SpecialistButton from '../components/SpecialistButton.astro';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
@@ -34,16 +35,17 @@ const integrations = [i.alarm, i.mqtt, i.webhook].map((x) => ({ term: x.title, t
     <Pipeline locale={locale} long class="after" />
   </Section>
 
-  <Section id="offline-title" question={p.questions.offline} title={p.offline.title} text={p.offline.text} />
+  <!-- Item 16: the Logikos box opens beside the text (once, on first sight). -->
+  <Section id="offline-title" question={p.questions.offline} title={p.offline.title} text={p.offline.text}>
+    <CaixaAbrindo locale={locale} />
+  </Section>
 
   <Section id="integrations-title" question={p.questions.integrations} title={p.integrations.title}>
     <PointList rows={integrations} class="after" />
   </Section>
 
-  <Section id="license-title" question={p.questions.license} title={p.license.title} text={p.license.text}>
-    <div class="btn-row after">
-      <SpecialistButton locale={locale} />
-    </div>
+  <Section id="license-title" question={p.questions.license} title={t.pages.license.title} text={t.pages.license.text} wide>
+    <LicenseOptions locale={locale} />
   </Section>
 
   <PageClose locale={locale} />

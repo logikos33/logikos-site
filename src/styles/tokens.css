@@ -152,6 +152,8 @@
   /* As wide as the home (v3): header, pages and footer line up on every route. */
   --lk-max: 82.5rem;
   --lk-gutter: clamp(1rem, 4vw, 2rem);
+  /* Vertical rhythm between sections, the one value for every page (feedback 11/11, item 25a). */
+  --lk-section-y: clamp(2.5rem, 5vw, 4.5rem);
   /* Document grid: the section's question lives in this margin column from 64rem up. */
   --lk-margin: 11rem;
   --lk-measure: 62ch;

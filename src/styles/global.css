@@ -49,10 +49,11 @@ body::after {
   animation: crt-grain 0.9s steps(1, end) infinite;
 }
 
-/* The home's stop control (WCAG 2.2.2) freezes the backdrop too. */
+/* The home's stop control (WCAG 2.2.2) freezes the backdrop and the CAM 07 monitors too. */
 .lk-parado body::before,
-.lk-parado body::after {
-  animation-play-state: paused;
+.lk-parado body::after,
+.lk-parado .ag * {
+  animation-play-state: paused !important;
 }
 
 @keyframes crt-flicker {
@@ -211,8 +212,8 @@ kbd {
 }
 
 .section {
-  /* The home's rhythm (v3): generous bands split by a hairline. */
-  padding-block: clamp(3.5rem, 9vw, 7.5rem);
+  /* One rhythm for every page (feedback 11/11, item 25a): bands split by a hairline. */
+  padding-block: var(--lk-section-y);
   border-top: 1px solid var(--lk-line);
 }
 
@@ -257,6 +258,44 @@ kbd {
 
 .q-body:not(.q-body--wide) {
   max-width: 47.5rem;
+}
+
+/* No half-empty screens (feedback 11/11, item 25b): from 64rem a text section uses the whole
+   width — heading on the left, its content (or, when there is none, its text) on the right. */
+@media (min-width: 64rem) {
+  .q-body:not(.q-body--wide) {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: clamp(2.5rem, 5vw, 5rem);
+    align-items: start;
+    max-width: none;
+  }
+
+  .q-body:not(.q-body--wide) > :is(h1, h2) {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .q-body:not(.q-body--wide) > .lede {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .q-body:not(.q-body--wide) > .q-content {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+  }
+
+  .q-body:not(.q-body--wide) > .q-content > :first-child {
+    margin-top: 0;
+  }
+
+  /* Text only: the heading on the left, its text on the right. */
+  .q-body:not(.q-body--wide):not(:has(> .q-content)) > .lede {
+    grid-column: 2;
+    grid-row: 1;
+    margin-top: 0.35em;
+  }
 }
 
 .section--cover {
@@ -627,8 +666,12 @@ kbd {
 }
 
 @media (max-width: 22.49rem) {
+  /* A long label (e.g. "Solicite seu modelo customizado") wraps instead of widening the page. */
   .btn {
     padding-inline: var(--lk-space-4);
+    white-space: normal;
+    text-align: center;
+    line-height: 1.25;
   }
 }
 

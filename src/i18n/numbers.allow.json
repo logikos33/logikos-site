@@ -1,14 +1,6 @@
 {
   "_doc": "Every number in src/i18n/*.json must be listed here under the exact key where it appears, with its source. scripts/i18n-gate.mjs enforces it per key, so a documented number cannot be reused elsewhere.",
   "allow": {
-    "partnerPoints.license.text": {
-      "values": ["24"],
-      "source": "Prazo da licença (24 meses) — brief do site, 01/10/2026."
-    },
-    "howItWorks.license.text": {
-      "values": ["24"],
-      "source": "Prazo da licença (24 meses) — brief do site, 01/10/2026."
-    },
     "privacy.sections.legalBasis.text": {
       "values": ["7"],
       "source": "LGPD (Lei 13.709/2018), art. 7º — bases legais."
@@ -20,10 +12,6 @@
     "privacy.sections.rights.text": {
       "values": ["18"],
       "source": "LGPD (Lei 13.709/2018), art. 18 — direitos do titular."
-    },
-    "platform.compare.rows[4].edge": {
-      "values": ["24"],
-      "source": "Prazo da licença (24 meses) — brief do site, 01/10/2026."
     },
     "home.hero.yours.title": {
       "values": ["07"],
@@ -140,6 +128,38 @@
     "pages.fireshow.caption": {
       "values": ["2026"],
       "source": "Fireshow 2026 (6 a 8/10/2026), gravações próprias do estande — docs/provas/midia-home-v3.md."
+    },
+    "recognition.cases[0].example": {
+      "values": ["03", "8"],
+      "source": "Exemplo ilustrativo de alerta (câmera, local e números de demonstração), aprovado como texto de vitrine na rodada 4 do feedback 11/11."
+    },
+    "recognition.cases[1].example": {
+      "values": ["02", "3"],
+      "source": "Exemplo ilustrativo de alerta (câmera, local e números de demonstração), aprovado como texto de vitrine na rodada 4 do feedback 11/11."
+    },
+    "recognition.cases[2].example": {
+      "values": ["04", "1"],
+      "source": "Exemplo ilustrativo de alerta (câmera, local e números de demonstração), aprovado como texto de vitrine na rodada 4 do feedback 11/11."
+    },
+    "recognition.cases[3].example": {
+      "values": ["05", "07", "412"],
+      "source": "Exemplo ilustrativo de alerta (câmera, local e números de demonstração), aprovado como texto de vitrine na rodada 4 do feedback 11/11."
+    },
+    "recognition.cases[4].example": {
+      "values": ["06", "38", "4"],
+      "source": "Exemplo ilustrativo de alerta (câmera, local e números de demonstração), aprovado como texto de vitrine na rodada 4 do feedback 11/11."
+    },
+    "recognition.cases[5].example": {
+      "values": ["01"],
+      "source": "Exemplo ilustrativo de alerta (câmera, local e números de demonstração), aprovado como texto de vitrine na rodada 4 do feedback 11/11."
+    },
+    "pages.license.biennial.text": {
+      "values": ["2"],
+      "source": "Licença bienal (2 anos), texto do Vitor na rodada 4 do feedback 11/11."
+    },
+    "about.vision.text": {
+      "values": ["4.0"],
+      "source": "Indústria 4.0 (nome do conceito), pedido do Vitor no item 26 do feedback 11/11."
     }
   }
 }

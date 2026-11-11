@@ -1,0 +1,370 @@
+---
+// Short lead form for the account (Plataforma) and partner (Integradores) pages (feedback 11/11,
+// items 19-20): name, company, cameras, contact, model of interest and the privacy box — the only
+// required click. Posts straight to the CRM like the conversation with Koda (text/plain JSON,
+// honeypot, per-IP limit on the server); no Turnstile. Email is required because the CRM refuses a
+// lead without one; WhatsApp is optional.
+import { CRM_LEAD_URL } from '../config/links';
+import { dict } from '../i18n';
+import { pathFor, type Locale } from '../i18n/routes';
+import { CHAT_INTERESTS, CONTACT_EMAIL } from '../lib/site';
+
+interface Props {
+  locale: Locale;
+  kind: 'conta' | 'integrador';
+  id: string;
+}
+
+const { locale, kind, id } = Astro.props;
+const t = dict(locale);
+const f = t.form;
+const MODELS = CHAT_INTERESTS.filter((k) => !['twins', 'robotics', 'partnership'].includes(k));
+const submit = kind === 'conta' ? f.submitAccount : f.submitPartner;
+const texts = {
+  sending: f.sending,
+  success: kind === 'conta' ? f.successAccount : f.success,
+  error: f.error.replace('{email}', CONTACT_EMAIL),
+  errors: f.errors,
+  consent: `${f.consentBefore} ${f.consentLink} ${f.consentAfter}`,
+};
+---
+
+<form
+  class="crm"
+  id={id}
+  novalidate
+  data-crm
+  data-endpoint={CRM_LEAD_URL}
+  data-origem={`site-logikos-${kind}`}
+  data-textos={JSON.stringify(texts)}
+>
+  <div class="crm__linha">
+    <label class="campo">
+      <span>{f.name}</span>
+      <input name="nome" autocomplete="name" required aria-describedby={`${id}-nome-erro`} />
+      <span class="erro" id={`${id}-nome-erro`}></span>
+    </label>
+    <label class="campo">
+      <span>{f.company}</span>
+      <input name="empresa" autocomplete="organization" required aria-describedby={`${id}-empresa-erro`} />
+      <span class="erro" id={`${id}-empresa-erro`}></span>
+    </label>
+  </div>
+  <label class="campo campo--curto">
+    <span>{f.cameras}</span>
+    <input
+      name="cameras"
+      type="number"
+      inputmode="numeric"
+      min="1"
+      max="100000"
+      required
+      aria-describedby={`${id}-cameras-erro ${id}-cameras-dica`}
+    />
+    <span class="dica" id={`${id}-cameras-dica`}>
+      {f.camerasHint}
+    </span>
+    <span class="erro" id={`${id}-cameras-erro`}></span>
+  </label>
+  <fieldset class="crm__grupo">
+    <legend>{f.contact}</legend>
+    <div class="crm__linha">
+      <label class="campo">
+        <span>{f.email}</span>
+        <input name="email" type="email" autocomplete="email" required aria-describedby={`${id}-email-erro`} />
+        <span class="erro" id={`${id}-email-erro`}></span>
+      </label>
+      <label class="campo">
+        <span>{f.whatsappOptional}</span>
+        <input name="telefone" type="tel" inputmode="tel" autocomplete="tel" aria-describedby={`${id}-telefone-erro`} />
+        <span class="erro" id={`${id}-telefone-erro`}></span>
+      </label>
+    </div>
+  </fieldset>
+  <fieldset class="crm__grupo" aria-describedby={`${id}-interesse-erro`}>
+    <legend>{f.interests}</legend>
+    <div class="chips">
+      {MODELS.map((k) => (
+        <label class="chip-op">
+          <input type="checkbox" name="interesse" value={f.options[k]} />
+          <span>{f.options[k]}</span>
+        </label>
+      ))}
+    </div>
+    <span class="erro" id={`${id}-interesse-erro`}></span>
+  </fieldset>
+  <label class="aceite">
+    <input type="checkbox" name="aceite" required aria-describedby={`${id}-aceite-erro`} />
+    <span>
+      {f.consentBefore}{' '}
+      <a href={pathFor('privacy', locale)} target="_blank">
+        {f.consentLink}
+      </a>
+      {f.consentAfter}
+    </span>
+  </label>
+  <span class="erro" id={`${id}-aceite-erro`}></span>
+  <!-- Honeypot: people never see or fill it; the CRM drops anything that arrives with it. -->
+  <div class="mel" aria-hidden="true">
+    <label>
+      {f.honeypot}
+      <input type="text" name="website" tabindex="-1" autocomplete="off" />
+    </label>
+  </div>
+  <div class="crm__envio">
+    <button type="submit" class="btn">
+      {submit}
+    </button>
+    <p class="crm__status" role="status" data-status></p>
+  </div>
+</form>
+
+<script>
+  type Texts = { sending: string; success: string; error: string; consent: string; errors: Record<string, string> };
+  const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  // CRM camera bands (funil/faixas.ts in the CRM).
+  const band = (n: number) => (n <= 4 ? '1-4' : n <= 10 ? '5-10' : n <= 30 ? '11-30' : n <= 100 ? '31-100' : '100+');
+
+  for (const form of document.querySelectorAll<HTMLFormElement>('[data-crm]')) {
+    const T = JSON.parse(form.dataset.textos ?? '{}') as Texts;
+    const status = form.querySelector<HTMLElement>('[data-status]');
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const eventId = crypto.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const field = (name: string) => form.elements.namedItem(name) as HTMLInputElement | null;
+    const mark = (name: string, message: string) => {
+      const box = form.querySelector<HTMLElement>(`#${form.id}-${name}-erro`);
+      if (box) box.textContent = message;
+      const input = name === 'interesse' ? form.querySelector('input[name="interesse"]') : field(name);
+      if (message) input?.setAttribute('aria-invalid', 'true');
+      else input?.removeAttribute('aria-invalid');
+      return Boolean(message);
+    };
+
+    form.addEventListener('input', (e) => {
+      const name = (e.target as HTMLInputElement).name;
+      mark(name === 'aceite' ? 'aceite' : name, '');
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const v = (n: string) => (field(n)?.value ?? '').trim();
+      const picked = [...form.querySelectorAll<HTMLInputElement>('input[name="interesse"]:checked')].map((i) => i.value);
+      const cameras = Number(v('cameras'));
+      const phone = v('telefone').replace(/\D/g, '');
+      const bad = [
+        mark('nome', v('nome') ? '' : (T.errors.required ?? '')),
+        mark('empresa', v('empresa') ? '' : (T.errors.required ?? '')),
+        mark('cameras', Number.isInteger(cameras) && cameras > 0 ? '' : (T.errors.cameras ?? '')),
+        mark('email', EMAIL.test(v('email')) ? '' : (T.errors.email ?? '')),
+        mark('telefone', !phone || (phone.length >= 10 && phone.length <= 13) ? '' : (T.errors.whatsapp ?? '')),
+        mark('interesse', picked.length ? '' : (T.errors.interests ?? '')),
+        mark('aceite', field('aceite')?.checked ? '' : (T.errors.consent ?? '')),
+      ];
+      const first = ['nome', 'empresa', 'cameras', 'email', 'telefone', 'interesse', 'aceite'][bad.indexOf(true)];
+      if (first) {
+        (first === 'interesse' ? form.querySelector<HTMLInputElement>('input[name="interesse"]') : field(first))?.focus();
+        return;
+      }
+      if (!button || !status) return;
+      button.disabled = true;
+      status.textContent = T.sending;
+      const lead = {
+        origem: form.dataset.origem,
+        nome: v('nome'),
+        empresa: v('empresa'),
+        email: v('email'),
+        telefone: phone,
+        cameras,
+        faixa_cameras: band(cameras),
+        interesse: picked.join(', '),
+        consentimento: true,
+        consentimento_em: new Date().toISOString(),
+        consentimento_texto: T.consent,
+        event_id: eventId,
+        pagina: location.href,
+        website: v('website'),
+      };
+      let ok: boolean;
+      try {
+        const r = await fetch(form.dataset.endpoint ?? '', {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(lead),
+          keepalive: true,
+        });
+        ok = r.ok && ((await r.json()) as { ok?: boolean }).ok === true;
+      } catch {
+        ok = false;
+      }
+      status.textContent = ok ? T.success : T.error;
+      status.dataset.kind = ok ? 'success' : 'error';
+      if (ok) form.querySelectorAll('input, button').forEach((el) => ((el as HTMLInputElement).disabled = true));
+      else button.disabled = false;
+    });
+  }
+</script>
+
+<style>
+  .crm {
+    display: grid;
+    gap: var(--lk-space-4);
+    padding: clamp(1.1rem, 3vw, 1.75rem);
+    background: var(--lk-surface);
+    border: 1px solid var(--lk-line);
+    border-radius: 14px;
+  }
+
+  .crm__linha {
+    display: grid;
+    gap: var(--lk-space-4);
+  }
+
+  .campo {
+    display: grid;
+    gap: 0.35rem;
+    font-weight: 600;
+    font-size: 0.9375rem;
+  }
+
+  .campo--curto {
+    max-width: 14rem;
+  }
+
+  .campo input {
+    min-height: 3rem;
+    padding: 0.6rem 0.85rem;
+    background: var(--lk-bg);
+    border: 1px solid var(--lk-field-border);
+    border-radius: var(--lk-radius);
+    color: var(--lk-text);
+    font: 400 1rem var(--lk-font-body);
+  }
+
+  .campo input:focus-visible {
+    outline: 2px solid var(--lk-focus);
+    outline-offset: 1px;
+  }
+
+  .campo input[aria-invalid='true'] {
+    border-color: var(--lk-alert);
+  }
+
+  .dica {
+    color: var(--lk-text-2);
+    font-weight: 400;
+    font-size: 0.8125rem;
+  }
+
+  .erro {
+    color: var(--lk-alert);
+    font-weight: 500;
+    font-size: 0.8125rem;
+  }
+
+  .erro:empty {
+    display: none;
+  }
+
+  .crm__grupo {
+    display: grid;
+    gap: var(--lk-space-3);
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .crm__grupo legend {
+    margin-bottom: var(--lk-space-2);
+    padding: 0;
+    font-weight: 600;
+    font-size: 0.9375rem;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--lk-space-2);
+  }
+
+  .chip-op {
+    position: relative;
+  }
+
+  .chip-op input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .chip-op span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0 1rem;
+    border: 1px solid var(--lk-field-border);
+    border-radius: 999px;
+    font-size: 0.9375rem;
+  }
+
+  .chip-op input:checked + span {
+    background: var(--lk-accent);
+    border-color: var(--lk-accent);
+    color: #0a0a0f;
+  }
+
+  .chip-op input:focus-visible + span {
+    outline: 2px solid var(--lk-focus);
+    outline-offset: 2px;
+  }
+
+  .aceite {
+    display: flex;
+    gap: var(--lk-space-3);
+    align-items: flex-start;
+    font-size: 0.9375rem;
+  }
+
+  .aceite input {
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: 0.1rem 0 0;
+    accent-color: var(--lk-accent);
+  }
+
+  .mel {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .crm__envio {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--lk-space-3);
+  }
+
+  .crm__status {
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+
+  .crm__status[data-kind='success'] {
+    color: var(--lk-ok);
+  }
+
+  .crm__status[data-kind='error'] {
+    color: var(--lk-alert);
+  }
+
+  @media (min-width: 40rem) {
+    .crm__linha {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
