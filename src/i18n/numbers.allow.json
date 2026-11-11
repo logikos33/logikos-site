@@ -129,30 +129,6 @@
       "values": ["2026"],
       "source": "Fireshow 2026 (6 a 8/10/2026), gravações próprias do estande — docs/provas/midia-home-v3.md."
     },
-    "recognition.cases[0].example": {
-      "values": ["03", "8"],
-      "source": "Exemplo ilustrativo de alerta (câmera, local e números de demonstração), aprovado como texto de vitrine na rodada 4 do feedback 11/11."
-    },
-    "recognition.cases[1].example": {
-      "values": ["02", "3"],
-      "source": "Exemplo ilustrativo de alerta (câmera, local e números de demonstração), aprovado como texto de vitrine na rodada 4 do feedback 11/11."
-    },
-    "recognition.cases[2].example": {
-      "values": ["04", "1"],
-      "source": "Exemplo ilustrativo de alerta (câmera, local e números de demonstração), aprovado como texto de vitrine na rodada 4 do feedback 11/11."
-    },
-    "recognition.cases[3].example": {
-      "values": ["05", "07", "412"],
-      "source": "Exemplo ilustrativo de alerta (câmera, local e números de demonstração), aprovado como texto de vitrine na rodada 4 do feedback 11/11."
-    },
-    "recognition.cases[4].example": {
-      "values": ["06", "38", "4"],
-      "source": "Exemplo ilustrativo de alerta (câmera, local e números de demonstração), aprovado como texto de vitrine na rodada 4 do feedback 11/11."
-    },
-    "recognition.cases[5].example": {
-      "values": ["01"],
-      "source": "Exemplo ilustrativo de alerta (câmera, local e números de demonstração), aprovado como texto de vitrine na rodada 4 do feedback 11/11."
-    },
     "pages.license.biennial.text": {
       "values": ["2"],
       "source": "Licença bienal (2 anos), texto do Vitor na rodada 4 do feedback 11/11."
@@ -180,6 +156,78 @@
     "home.scenarios.twin.gets": {
       "values": ["3"],
       "source": "Ambiente em 3D (nuvem de pontos do Twins), rodada 5 do feedback 11/11."
+    },
+    "recognition.cases[0].example.title": {
+      "values": ["03"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[0].example.body": {
+      "values": ["8"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[0].example.time": {
+      "values": ["14", "32"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[1].example.title": {
+      "values": ["02"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[1].example.body": {
+      "values": ["3"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[1].example.time": {
+      "values": ["14", "32"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[2].example.title": {
+      "values": ["04"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[2].example.body": {
+      "values": ["1"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[2].example.time": {
+      "values": ["14", "32"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[3].example.title": {
+      "values": ["05"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[3].example.body": {
+      "values": ["07", "412"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[3].example.time": {
+      "values": ["14", "32"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[4].example.title": {
+      "values": ["06"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[4].example.body": {
+      "values": ["38", "4"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[4].example.time": {
+      "values": ["14", "32"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[5].example.title": {
+      "values": ["01"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[5].example.time": {
+      "values": ["14", "32"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "twins.partsPoints[0].title": {
+      "values": ["100"],
+      "source": "Inspeção de 100 % (todas as peças), pedido do Vitor para o Twins."
     }
   }
 }

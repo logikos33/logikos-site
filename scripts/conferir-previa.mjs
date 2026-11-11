@@ -5,7 +5,7 @@ import { mkdirSync } from 'node:fs';
 
 const OUT = process.argv[2] ?? 'docs/design/feedback-vitor-11-11/rodada-4';
 const B = process.argv[3] ?? 'https://pr-48.logikos-site.pages.dev';
-const PHONE = 'https://logikosvision.com.br/teste-no-seu-celular/';
+const PHONE = 'https://logikosvision.com.br/teste-no-seu-celular/?direto=1';
 mkdirSync(OUT, { recursive: true });
 const browser = await chromium.launch();
 const rows = [];

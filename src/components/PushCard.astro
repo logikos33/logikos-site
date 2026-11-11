@@ -1,0 +1,104 @@
+---
+// The alert as it reaches the phone (final review, items 12-13): a system notification card — the
+// Logikos icon, the app name and time on top, then title and text — the same look as the push of
+// the Logikos experience (push-card.tsx). Red edge only for fire; amber for the other alerts.
+import { dict } from '../i18n';
+import type { Locale } from '../i18n/routes';
+import Logo from './Logo.astro';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  body: string;
+  time: string;
+  tone?: 'fogo' | 'atencao' | 'neutro';
+}
+
+const { locale, title, body, time, tone = 'neutro' } = Astro.props;
+const t = dict(locale);
+---
+
+<div class:list={['push', `push--${tone}`]}>
+  <span class="push__icone" aria-hidden="true">
+    <Logo locale={locale} variant="symbol" size={20} decorative />
+  </span>
+  <div class="push__corpo">
+    <p class="push__app">
+      <span>{t.recognition.app}</span>
+      <span class="push__hora">{time}</span>
+    </p>
+    <p class="push__titulo">{title}</p>
+    <p class="push__texto">{body}</p>
+  </div>
+</div>
+
+<style>
+  .push {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 0.75rem;
+    background: #ffffff;
+    border: 1px solid #dfe3e8;
+    border-radius: 16px;
+    box-shadow: 0 6px 18px -10px rgb(10 10 15 / 0.45);
+    color: #0a0a0f;
+  }
+
+  .push--fogo {
+    border: 1.5px solid #c9361b;
+  }
+
+  .push--atencao {
+    border: 1.5px solid #b77900;
+  }
+
+  .push__icone {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 2.25rem;
+    height: 2.25rem;
+    background: #0a0a0f;
+    border-radius: 9px;
+    color: #f4f6f8;
+  }
+
+  .push__icone :global(.lk-mark) {
+    color: #f4f6f8;
+  }
+
+  .push__corpo {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .push__app {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin: 0;
+    font: 600 0.6875rem/1.3 var(--lk-font-body);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #5c616b;
+  }
+
+  .push__hora {
+    font-variant-numeric: tabular-nums;
+    text-transform: none;
+  }
+
+  .push__titulo {
+    margin: 0.15rem 0 0;
+    font: 600 0.875rem/1.35 var(--lk-font-body);
+    text-wrap: balance;
+  }
+
+  .push__texto {
+    margin: 0.1rem 0 0;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    color: #3b3f46;
+  }
+</style>

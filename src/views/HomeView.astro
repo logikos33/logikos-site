@@ -188,7 +188,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
         <h2 id="problema-title">
           {h.problem.title} <span>{h.problem.muted}</span>
         </h2>
-        <p class="lead">{h.problem.text}</p>
+        <p class="lead folha">{h.problem.text}</p>
       </div>
     </section>
 
@@ -1279,13 +1279,16 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   }
 
   /* ---------- Problem ---------- */
+  /* Final review, item 7: title and text centred, the text on a light sheet (never loose on black). */
   .problema__grade {
     display: grid;
-    gap: var(--lk-space-5) clamp(1.5rem, 5vw, 4.5rem);
-    align-items: end;
+    justify-items: center;
+    gap: var(--lk-space-5);
+    text-align: center;
   }
 
   .problema h2 {
+    max-width: 22ch;
     font-size: clamp(1.9rem, 4.2vw, 3.4rem);
   }
 
@@ -1293,10 +1296,11 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     color: var(--lk-text-2);
   }
 
-  @media (min-width: 56.25rem) {
-    .problema__grade {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    }
+  .problema .lead.folha {
+    max-width: 46rem;
+    color: #3b3f46;
+    font-size: clamp(1.0625rem, 1.5vw, 1.2rem);
+    line-height: 1.55;
   }
 
   /* ---------- Channels: carousel ---------- */

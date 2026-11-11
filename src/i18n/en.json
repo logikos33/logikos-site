@@ -408,20 +408,20 @@
   },
   "partnerPoints": {
     "brand": {
-      "title": "Your brand on the dashboard",
-      "text": "Your logo and colors on the dashboard your customer uses."
-    },
-    "license": {
-      "title": "Monthly, annual or biennial licence",
-      "text": "Biennial is the one we recommend: two years without worrying about the models."
+      "title": "You bring the case",
+      "text": "What your client needs to see on their cameras: the area, the risk, the part, the indicator."
     },
     "pilot": {
-      "title": "Pilot first",
-      "text": "A pilot at the customer's plant before rollout."
+      "title": "Logikos trains the model",
+      "text": "A proprietary model trained and validated on the client's images, with a guided pilot."
+    },
+    "license": {
+      "title": "Delivered to the operation",
+      "text": "In the cloud or in the plant, with a monthly, annual or biennial licence (biennial recommended)."
     },
     "support": {
-      "title": "Support and training",
-      "text": "Training for your team and technical support from Logikos."
+      "title": "Support and evolution",
+      "text": "Training for your team and model updates on Logikos."
     }
   },
   "recognition": {
@@ -504,8 +504,8 @@
       "cta": "See how it works"
     },
     "partners": {
-      "title": "Your brand on the dashboard, a guided pilot, a monthly, annual or biennial licence.",
-      "cta": "See the partner program"
+      "title": "For integrators: your client's custom model.",
+      "cta": "See how to build the model"
     },
     "demo": {
       "title": "Try it on your phone camera.",
@@ -514,56 +514,81 @@
     "caseLabels": {
       "solves": "What it solves",
       "gets": "What you get",
-      "example": "Sample alert"
+      "example": "App notification"
     },
     "cases": [
       {
         "name": "Fire and smoke",
         "solves": "An early-stage fire seen before the ceiling detector, in yards, storage or open sheds.",
         "gets": "An alert on the fire brigade's WhatsApp, with the clip and the marked frame.",
-        "example": "CAM 03 · Outdoor yard — smoke in cardboard boxes; 8 s clip sent to the brigade.",
+        "example": {
+          "title": "Smoke · CAM 03 · Outdoor yard",
+          "body": "Early-stage fire in cardboard boxes. 8 s clip sent to the brigade.",
+          "time": "14:32"
+        },
         "next": "Try the Fire scenario"
       },
       {
         "name": "PPE",
         "solves": "People without a helmet, vest or goggles where they are required, person by person.",
         "gets": "An alert to the safety technician and the history per shift.",
-        "example": "CAM 02 · Warehouse — operator without a helmet at dock 3; frame sent to the technician.",
+        "example": {
+          "title": "No helmet · CAM 02 · Warehouse",
+          "body": "Operator at dock 3. Frame sent to the safety technician.",
+          "time": "14:32"
+        },
         "next": "Try the PPE scenario"
       },
       {
         "name": "Quality",
         "solves": "Out-of-spec parts pulled from the line, without inspecting item by item.",
         "gets": "The frame of every rejected part and the count per batch.",
-        "example": "CAM 04 · Filling — crooked cap on line 1; part marked for removal.",
+        "example": {
+          "title": "Out-of-spec part · CAM 04 · Filling",
+          "body": "Crooked cap on line 1. Part marked for removal.",
+          "time": "14:32"
+        },
         "next": "Try the Quality scenario"
       },
       {
         "name": "Counting",
         "solves": "Boxes counted on the conveyor or at the dock, without spreadsheets or double checks.",
         "gets": "The total per period and per batch, on the dashboard.",
-        "example": "CAM 05 · Shipping — batch 07 closed at 412 boxes.",
+        "example": {
+          "title": "Batch closed · CAM 05 · Shipping",
+          "body": "Batch 07 closed at 412 boxes.",
+          "time": "14:32"
+        },
         "next": "Try the Counting scenario"
       },
       {
         "name": "Ergonomics",
         "solves": "A risky posture repeated in the same task, before it turns into sick leave.",
         "gets": "Time in each posture per workstation, so the safety team can act.",
-        "example": "CAM 06 · Picking — trunk bent for 38 % of the shift at station 4.",
+        "example": {
+          "title": "Risky posture · CAM 06 · Picking",
+          "body": "Trunk bent for 38 % of the shift at station 4.",
+          "time": "14:32"
+        },
         "next": "Talk to an ergonomics specialist"
       },
       {
         "name": "Hazard zones",
         "solves": "Someone in a forklift, press or suspended-load area, the moment they step in.",
         "gets": "An immediate alert and the frame of whoever crossed the line.",
-        "example": "CAM 01 · Dock — person in the forklift lane; shift lead notified.",
+        "example": {
+          "title": "Hazard zone · CAM 01 · Dock",
+          "body": "Person in the forklift lane. Shift lead notified.",
+          "time": "14:32"
+        },
         "next": "Talk to a hazard-zone specialist"
       }
     ],
     "custom": {
       "title": "Bring your own indicators to the platform.",
       "text": "Readings, alerts and dashboards tuned to your operation: your areas, your shifts, your targets and who gets each alert."
-    }
+    },
+    "app": "Logikos Vision"
   },
   "howItWorks": {
     "meta": {
@@ -613,24 +638,24 @@
   },
   "partners": {
     "meta": {
-      "title": "Partners — Logikos integrator program",
-      "description": "A dashboard under the partner's brand, guided pilots, support and training for security and automation integrators."
+      "title": "Partners — a custom model with Logikos",
+      "description": "You bring your client's case; Logikos trains and delivers the custom model for their operation, with support."
     },
     "hero": {
       "question": "for whom?",
-      "title": "Sell Recognition under your brand.",
-      "text": "Logikos runs the platform and the support. For electronic security, automation and industrial IT integrators: a panel with your logo, a guided pilot at the client’s plant, a monthly, annual or biennial licence."
+      "title": "Build your client's custom model with Logikos.",
+      "text": "For electronic security, automation and industrial IT integrators: you bring the case, Logikos trains the model and delivers it ready for your client's operation."
     },
     "model": {
-      "title": "Channel model",
-      "text": "The partner sells and installs. Logikos provides the platform and the support."
+      "title": "How it works",
+      "text": "From your client's case to the model running in their operation."
     },
     "form": {
-      "title": "Become a partner",
-      "text": "Tell us about your company. We'll come back with next steps."
+      "title": "I want to build a model",
+      "text": "Tell us your client's case. We come back with the next steps."
     },
     "questions": {
-      "model": "how does the channel work?",
+      "model": "how does it work?",
       "form": "how do I join?"
     }
   },
@@ -670,7 +695,30 @@
     "buy": {
       "title": "By project.",
       "text": "Each space is scoped from a video of yours. Talk to the team."
-    }
+    },
+    "parts": {
+      "question": "and every part?",
+      "title": "A digital twin of every part.",
+      "text": "Every part on the line gets its own twin: quality followed part by part, not by sampling."
+    },
+    "partsPoints": [
+      {
+        "title": "100 % inspection",
+        "text": "Every part checked on the line, not a sample."
+      },
+      {
+        "title": "Traceability",
+        "text": "Every part with its own identity, start to finish."
+      },
+      {
+        "title": "Deviation before the batch",
+        "text": "The difference from the design shows up before it becomes a batch."
+      },
+      {
+        "title": "Part-by-part history",
+        "text": "The record of every part for audits and improvement."
+      }
+    ]
   },
   "robotics": {
     "meta": {
@@ -1069,22 +1117,22 @@
   },
   "demos": {
     "meta": {
-      "title": "Demos — try it on your phone camera",
-      "description": "Open the demo on your phone and watch Logikos mark PPE and early-stage fire on the spot, like a camera in your plant."
+      "title": "Demos — watch computer vision at work",
+      "description": "Open the demo on your phone and watch the camera start to understand what it sees: people, objects and situations marked on the spot."
     },
     "hero": {
       "question": "what will you see?",
-      "title": "Try it on your phone camera.",
-      "text": "Point your phone at someone with and without a helmet: the marking shows up on the spot, like a camera in your plant."
+      "title": "Watch computer vision at work.",
+      "text": "Point your phone at whatever is in front of you: the camera starts to understand what it sees and marks it on the spot. The same principle runs on your plant's cameras, in any scenario."
     },
     "see": {
       "question": "what shows up?",
-      "title": "What shows up on screen",
-      "text": "The same alerts your team gets from the plant."
+      "title": "What the camera starts to understand",
+      "text": "Two examples of what the same camera recognizes once it has a Logikos model."
     },
     "epi": {
       "title": "PPE",
-      "text": "Anyone without a helmet is marked on the spot, with the camera and the time."
+      "text": "People and what they are wearing, marked on the spot, with the camera and the time."
     },
     "fire": {
       "title": "Fire and smoke",
@@ -1173,7 +1221,7 @@
     "kodaAlt": "Koda, the Logikos assistant",
     "close": {
       "title": "Want to see this on your cameras?",
-      "text": "Open the demo on your phone and point it at anything: the Logikos proprietary model marks it on the spot, sending nothing. Or let the experience show the scenarios at work.",
+      "text": "Open your phone camera and point it at anything: the Logikos proprietary model marks it on the spot. Or let the experience show the scenarios at work.",
       "phone": "Try it on your phone camera",
       "screen": "CAM 07 · waiting for signal",
       "screenSub": "your camera goes here"

@@ -47,7 +47,7 @@ const RULES = [
   // annual / biennial everywhere — never "24 months".
   [
     'detalhe técnico das demos',
-    /\bnada e enviado\b|\bnothing is sent\b|\brode o modelo\b|\brun the model\b|\broda no seu aparelho\b|\bruns on your device\b|\bdemos abertas\b|\bopen demos\b|\bdemo generica\b|\bgeneric detection demo\b|\balarme falso medida\b|\bfalse-alarm rate\b/,
+    /\bnada e enviado\b|\bsem enviar nada\b|\bnothing is sent\b|\bsending nothing\b|\brode o modelo\b|\brun the model\b|\broda no seu aparelho\b|\bruns on your device\b|\bdemos abertas\b|\bopen demos\b|\bdemo generica\b|\bgeneric detection demo\b|\balarme falso medida\b|\bfalse-alarm rate\b/,
   ],
   ['licença de 24 meses', /\b24\s*meses\b|\b24-month\b/],
   // Round 5 (a): no "stock footage / real detection over…" captions anywhere.

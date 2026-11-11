@@ -5,7 +5,8 @@
 export const EXPERIENCE_URL = 'https://logikosvision.com.br/experiencia/';
 
 /** The phone demo with the site's identity (feedback 11/11, item 21): the visitor's own camera. */
-export const PHONE_DEMO_URL = 'https://logikosvision.com.br/teste-no-seu-celular/';
+/** `?direto=1` opens the live camera straight away, without the demo's start screen (final review, item 10). */
+export const PHONE_DEMO_URL = 'https://logikosvision.com.br/teste-no-seu-celular/?direto=1';
 
 /**
  * Logikos CRM lead intake (receberLead in the CRM repo): JSON as text/plain (a "simple" request, no

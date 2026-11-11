@@ -11,6 +11,7 @@ import Icon from '../components/Icon.astro';
 import PageClose from '../components/PageClose.astro';
 import PageHero from '../components/PageHero.astro';
 import PointList from '../components/PointList.astro';
+import PushCard from '../components/PushCard.astro';
 import Section from '../components/Section.astro';
 import SpecialistButton from '../components/SpecialistButton.astro';
 import Wall from '../components/Wall.astro';
@@ -32,13 +33,13 @@ const q = p.questions;
 
 // Order and next step of the six scenarios (texts in recognition.cases): the experience has a scene
 // for the first four; ergonomics and zones go to the conversation with Koda.
-const CASES: { icon: IconName; cenario?: string; interest: ChatInterest }[] = [
-  { icon: 'flame', cenario: 'fogo', interest: 'fire' },
-  { icon: 'helmet', cenario: 'epi', interest: 'epi' },
-  { icon: 'ok', cenario: 'qualidade', interest: 'quality' },
-  { icon: 'counter', cenario: 'contagem', interest: 'counting' },
-  { icon: 'posture', interest: 'ergonomics' },
-  { icon: 'zone', interest: 'zones' },
+const CASES: { icon: IconName; cenario?: string; interest: ChatInterest; tone: 'fogo' | 'atencao' | 'neutro' }[] = [
+  { icon: 'flame', cenario: 'fogo', interest: 'fire', tone: 'fogo' },
+  { icon: 'helmet', cenario: 'epi', interest: 'epi', tone: 'atencao' },
+  { icon: 'ok', cenario: 'qualidade', interest: 'quality', tone: 'atencao' },
+  { icon: 'counter', cenario: 'contagem', interest: 'counting', tone: 'neutro' },
+  { icon: 'posture', interest: 'ergonomics', tone: 'atencao' },
+  { icon: 'zone', interest: 'zones', tone: 'atencao' },
 ];
 const cases = CASES.map((c, i) => {
   const text = p.cases[i];
@@ -70,7 +71,9 @@ const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoin
             </div>
             <div>
               <dt>{p.caseLabels.example}</dt>
-              <dd class="leitura__exemplo mono">{c.example}</dd>
+              <dd class="leitura__exemplo">
+                <PushCard locale={locale} title={c.example.title} body={c.example.body} time={c.example.time} tone={c.tone} />
+              </dd>
             </div>
           </dl>
           {c.cenario ? (
@@ -208,14 +211,9 @@ const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoin
     line-height: 1.45;
   }
 
-  /* The sample alert reads like a notification on the phone. */
+  /* The sample alert is the app notification itself (PushCard). */
   .leitura__exemplo {
-    margin-top: 0.35rem !important;
-    padding: 0.55rem 0.7rem;
-    background: #0a0a0f;
-    border-radius: 8px;
-    color: #f4f6f8;
-    font-size: 0.8125rem !important;
+    margin-top: 0.5rem !important;
   }
 
   .leitura__proximo {

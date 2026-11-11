@@ -3,12 +3,10 @@
 // where we are → "Request your custom model". Nothing invented: no numbers, clients or awards.
 import Cam from '../components/Cam.astro';
 import DefList from '../components/DefList.astro';
-import Icon from '../components/Icon.astro';
 import PageClose from '../components/PageClose.astro';
 import PageHero from '../components/PageHero.astro';
 import Section from '../components/Section.astro';
 import SpecialistButton from '../components/SpecialistButton.astro';
-import { EXPERIENCE_URL } from '../config/links';
 import { dict } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
@@ -29,12 +27,9 @@ const how = p.how.items.map((x) => ({ term: x.name, text: x.text }));
 <Base locale={locale} routeKey="about" title={p.meta.title} description={p.meta.description}>
   <!-- "Engineering that proves before it promises": the proof is the crowd testing it at Fireshow 2026. -->
   <PageHero locale={locale} id="hero-title" title={p.hero.title} text={p.hero.text}>
+    <!-- Final review, item 5: only this page's call, no "Try the experience" here. -->
     <Fragment slot="actions">
-      <a class="btn" href={EXPERIENCE_URL} data-cta="experience">
-        {t.cta.experience}
-        <Icon name="arrow" size={18} />
-      </a>
-      <SpecialistButton locale={locale} variant="ghost" label={p.cta} interest="custom" />
+      <SpecialistButton locale={locale} label={p.cta} interest="custom" />
     </Fragment>
     <figure class="vert">
       <Cam clip="fs-publico" vertical label={t.pages.fireshow.label} />

@@ -19,7 +19,7 @@ const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.partners;
 const pp = t.partnerPoints;
-const points = [pp.brand, pp.license, pp.pilot, pp.support].map((x) => ({ term: x.title, text: x.text }));
+const points = [pp.brand, pp.pilot, pp.license, pp.support].map((x) => ({ term: x.title, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="partners" title={p.meta.title} description={p.meta.description}>

@@ -30,7 +30,7 @@ const integrations = [i.alarm, i.mqtt, i.webhook].map((x) => ({ term: x.title, t
   </PageHero>
 
   <!-- The figure this page exists for: camera → processing → verdict → the person who decides. -->
-  <Section id="pipeline-title" question={p.hero.question} title={t.home.how.title} wide>
+  <Section id="pipeline-title" question={p.hero.question} title={t.home.how.title} wide class="section--perto">
     <Pipeline locale={locale} long class="after" />
   </Section>
 

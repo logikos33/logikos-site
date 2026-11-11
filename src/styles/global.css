@@ -221,6 +221,12 @@ kbd {
   border-top: 0;
 }
 
+/* A section that continues the one above (final review, item 11): less air on top. */
+.section--perto {
+  padding-top: clamp(1rem, 2vw, 1.5rem);
+  border-top: 0;
+}
+
 /* Section head like the home's: the heading speaks for itself (no kicker, no margin label); the
    question stays for screen readers only (.q-sr). Wide content takes the whole page width. */
 .q-grid {
@@ -301,10 +307,14 @@ kbd {
   }
 
   /* Text only: the heading on the left, its text on the right. */
+  .q-body:not(.q-body--wide):not(:has(> .q-content)) {
+    align-items: center;
+  }
+
   .q-body:not(.q-body--wide):not(:has(> .q-content)) > .lede {
     grid-column: 2;
     grid-row: 1;
-    margin-top: 0.35em;
+    margin: 0;
   }
 }
 

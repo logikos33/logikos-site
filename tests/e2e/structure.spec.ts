@@ -31,7 +31,7 @@ test('home v3: sections in the approved order, Koda right after the partners, le
     await expect(page.locator('#contato img')).toHaveCount(0);
     // No lead form on the home any more; the wall's sixth tile is the phone demo.
     await expect(page.locator('main form')).toHaveCount(0);
-    await expect(page.locator('.cam--voce')).toHaveAttribute('href', 'https://logikosvision.com.br/teste-no-seu-celular/');
+    await expect(page.locator('.cam--voce')).toHaveAttribute('href', 'https://logikosvision.com.br/teste-no-seu-celular/?direto=1');
   }
 });
 
@@ -69,8 +69,14 @@ test('footer pages: real media, the hero CTA pair and the phone-camera close', a
     await expect(page.locator('img[src*="/media/posters/"]'), `${path}: generated poster`).toHaveCount(0);
     if (!MEDIA.includes(path)) continue;
     await expect(page.locator('.ph__media img[src^="/media/home/"]').first(), `${path}: real media`).toBeVisible();
-    await expect(page.locator('.ph [data-heroi-acoes] .btn'), `${path}: hero CTAs`).toHaveCount(2);
-    await expect(page.locator('.fecho a[href="https://logikosvision.com.br/teste-no-seu-celular/"]'), `${path}: phone demo`).toHaveCount(1);
+    // Sobre and Robótica keep only their own call (final review, items 5 and 9).
+    await expect(page.locator('.ph [data-heroi-acoes] .btn'), `${path}: hero CTAs`).toHaveCount(
+      ['/sobre', '/robotica'].includes(path) ? 1 : 2,
+    );
+    await expect(
+      page.locator('.fecho a[href="https://logikosvision.com.br/teste-no-seu-celular/?direto=1"]'),
+      `${path}: phone demo`,
+    ).toHaveCount(1);
   }
 });
 

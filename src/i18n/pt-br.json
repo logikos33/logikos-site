@@ -408,20 +408,20 @@
   },
   "partnerPoints": {
     "brand": {
-      "title": "Painel na sua marca",
-      "text": "Seu logo e suas cores no painel que o cliente usa."
-    },
-    "license": {
-      "title": "Licença mensal, anual ou bienal",
-      "text": "A bienal é a recomendada: dois anos sem se preocupar com os modelos."
+      "title": "Você traz o caso",
+      "text": "O que o seu cliente precisa ver nas câmeras dele: a área, o risco, a peça, o indicador."
     },
     "pilot": {
-      "title": "Piloto acompanhado",
-      "text": "Piloto na planta do cliente antes da implantação."
+      "title": "A Logikos treina o modelo",
+      "text": "Modelo proprietário treinado e validado nas imagens do cliente, com um piloto acompanhado."
+    },
+    "license": {
+      "title": "Entregue para a operação",
+      "text": "Na nuvem ou na planta, com licença mensal, anual ou bienal (a bienal é a recomendada)."
     },
     "support": {
-      "title": "Suporte e treinamento",
-      "text": "Treinamento da sua equipe e suporte técnico da Logikos."
+      "title": "Suporte e evolução",
+      "text": "Treinamento da sua equipe e atualizações do modelo por conta da Logikos."
     }
   },
   "recognition": {
@@ -504,8 +504,8 @@
       "cta": "Ver como funciona"
     },
     "partners": {
-      "title": "Painel na sua marca, piloto acompanhado, licença mensal, anual ou bienal.",
-      "cta": "Ver o programa de parceiros"
+      "title": "Para integradores: o modelo customizado do seu cliente.",
+      "cta": "Ver como criar o modelo"
     },
     "demo": {
       "title": "Teste na câmera do seu celular.",
@@ -514,56 +514,81 @@
     "caseLabels": {
       "solves": "O que resolve",
       "gets": "O que você recebe",
-      "example": "Exemplo de alerta"
+      "example": "Notificação no app"
     },
     "cases": [
       {
         "name": "Fogo e fumaça",
         "solves": "Princípio de incêndio visto antes do detector de teto, em pátio, depósito ou galpão aberto.",
         "gets": "Alerta no WhatsApp da brigada, com o clipe e o quadro marcado.",
-        "example": "CAM 03 · Pátio externo — fumaça em caixas de papelão; clipe de 8 s enviado à brigada.",
+        "example": {
+          "title": "Fumaça · CAM 03 · Pátio externo",
+          "body": "Princípio de incêndio em caixas de papelão. Clipe de 8 s enviado à brigada.",
+          "time": "14:32"
+        },
         "next": "Testar o cenário Fogo"
       },
       {
         "name": "EPI",
         "solves": "Gente sem capacete, colete ou óculos na área que exige, pessoa por pessoa.",
         "gets": "Alerta para o técnico de segurança e o histórico por turno.",
-        "example": "CAM 02 · Armazém — operador sem capacete na doca 3; quadro enviado ao técnico.",
+        "example": {
+          "title": "Sem capacete · CAM 02 · Armazém",
+          "body": "Operador na doca 3. Quadro enviado ao técnico de segurança.",
+          "time": "14:32"
+        },
         "next": "Testar o cenário EPI"
       },
       {
         "name": "Qualidade",
         "solves": "Peça fora do padrão separada na linha, sem inspecionar item por item.",
         "gets": "O quadro de cada peça reprovada e a contagem por lote.",
-        "example": "CAM 04 · Envase — tampa torta na linha 1; peça marcada para retirada.",
+        "example": {
+          "title": "Peça fora do padrão · CAM 04 · Envase",
+          "body": "Tampa torta na linha 1. Peça marcada para retirada.",
+          "time": "14:32"
+        },
         "next": "Testar o cenário Qualidade"
       },
       {
         "name": "Contagem",
         "solves": "Volumes contados na esteira ou na doca, sem planilha nem conferência dupla.",
         "gets": "O total por período e por lote, no painel.",
-        "example": "CAM 05 · Expedição — lote 07 fechado com 412 volumes.",
+        "example": {
+          "title": "Lote fechado · CAM 05 · Expedição",
+          "body": "Lote 07 fechado com 412 volumes.",
+          "time": "14:32"
+        },
         "next": "Testar o cenário Contagem"
       },
       {
         "name": "Ergonomia",
         "solves": "Postura de risco repetida na mesma tarefa, antes de virar afastamento.",
         "gets": "O tempo em cada postura por posto, para o SESMT agir.",
-        "example": "CAM 06 · Separação — tronco curvado em 38 % do turno no posto 4.",
+        "example": {
+          "title": "Postura de risco · CAM 06 · Separação",
+          "body": "Tronco curvado em 38 % do turno no posto 4.",
+          "time": "14:32"
+        },
         "next": "Falar com especialista em ergonomia"
       },
       {
         "name": "Zonas de risco",
         "solves": "Pessoa em área de empilhadeira, prensa ou carga suspensa, no momento em que entra.",
         "gets": "Alerta imediato e o quadro de quem cruzou a faixa.",
-        "example": "CAM 01 · Doca — pessoa na faixa da empilhadeira; aviso ao líder do turno.",
+        "example": {
+          "title": "Zona de risco · CAM 01 · Doca",
+          "body": "Pessoa na faixa da empilhadeira. Líder do turno avisado.",
+          "time": "14:32"
+        },
         "next": "Falar com especialista em zonas"
       }
     ],
     "custom": {
       "title": "Traga os seus indicadores para a plataforma.",
       "text": "Leituras, alertas e painéis ajustados à sua operação: as suas áreas, os seus turnos, as suas metas e quem recebe cada aviso."
-    }
+    },
+    "app": "Logikos Vision"
   },
   "howItWorks": {
     "meta": {
@@ -613,24 +638,24 @@
   },
   "partners": {
     "meta": {
-      "title": "Integradores — programa de parceiros Logikos",
-      "description": "Painel na marca do parceiro, piloto acompanhado, suporte e treinamento para integradores de segurança e automação."
+      "title": "Integradores — modelo customizado com a Logikos",
+      "description": "Você traz o caso do seu cliente; a Logikos treina e entrega o modelo customizado para a operação dele, com suporte."
     },
     "hero": {
       "question": "para quem?",
-      "title": "Venda o Recognition com a sua marca.",
-      "text": "A plataforma e o suporte são da Logikos. Para integradores de segurança eletrônica, automação e TI industrial: painel com o seu logo, piloto acompanhado na planta do cliente, licença mensal, anual ou bienal."
+      "title": "Crie o modelo customizado do seu cliente com a Logikos.",
+      "text": "Para integradores de segurança eletrônica, automação e TI industrial: você traz o caso, a Logikos treina o modelo e entrega pronto para a operação do cliente."
     },
     "model": {
-      "title": "Modelo de canal",
-      "text": "O parceiro vende e instala. A Logikos fornece a plataforma e o suporte."
+      "title": "Como funciona",
+      "text": "Do caso do cliente ao modelo rodando na operação dele."
     },
     "form": {
-      "title": "Quero ser parceiro",
-      "text": "Conte sobre sua empresa. Retornamos com os próximos passos."
+      "title": "Quero criar um modelo",
+      "text": "Conte o caso do seu cliente. Retornamos com os próximos passos."
     },
     "questions": {
-      "model": "como funciona o canal?",
+      "model": "como funciona?",
       "form": "como entro?"
     }
   },
@@ -670,7 +695,30 @@
     "buy": {
       "title": "Por projeto.",
       "text": "Cada ambiente é dimensionado a partir de um vídeo seu. Fale com a equipe."
-    }
+    },
+    "parts": {
+      "question": "e cada peça?",
+      "title": "O gêmeo digital de cada peça.",
+      "text": "Cada peça que passa pela linha ganha o seu gêmeo: a qualidade acompanhada peça a peça, não por amostragem."
+    },
+    "partsPoints": [
+      {
+        "title": "Inspeção de 100 %",
+        "text": "Todas as peças conferidas na linha, não uma amostra."
+      },
+      {
+        "title": "Rastreabilidade",
+        "text": "Cada peça com a sua identidade, do início ao fim."
+      },
+      {
+        "title": "Desvio antes do lote",
+        "text": "A diferença em relação ao projeto aparece antes de virar lote."
+      },
+      {
+        "title": "Histórico peça a peça",
+        "text": "O registro de cada peça para auditoria e melhoria."
+      }
+    ]
   },
   "robotics": {
     "meta": {
@@ -1069,22 +1117,22 @@
   },
   "demos": {
     "meta": {
-      "title": "Demos — teste na câmera do seu celular",
-      "description": "Abra a demo no celular e veja a Logikos marcar EPI e princípio de incêndio na hora, como numa câmera da sua planta."
+      "title": "Demos — veja a visão computacional funcionando",
+      "description": "Abra a demo no celular e veja a câmera passar a entender o que vê: pessoas, objetos e situações marcados na hora."
     },
     "hero": {
       "question": "o que você vai ver?",
-      "title": "Teste na câmera do seu celular.",
-      "text": "Aponte o celular para alguém com e sem capacete: a marcação aparece na hora, como numa câmera da sua planta."
+      "title": "Veja a visão computacional funcionando.",
+      "text": "Aponte o celular para o que estiver à sua frente: a câmera passa a entender o que vê e marca na hora. É o mesmo princípio que roda nas câmeras da sua planta, em qualquer cenário."
     },
     "see": {
       "question": "o que aparece?",
-      "title": "O que aparece na tela",
-      "text": "Os mesmos alertas que a sua equipe recebe da planta."
+      "title": "O que a câmera passa a entender",
+      "text": "Dois exemplos do que a mesma câmera reconhece quando ganha um modelo da Logikos."
     },
     "epi": {
       "title": "EPI",
-      "text": "Quem está sem capacete é marcado na hora, com a câmera e o horário."
+      "text": "Pessoas e o que elas usam, marcadas na hora, com a câmera e o horário."
     },
     "fire": {
       "title": "Fogo e fumaça",
@@ -1173,7 +1221,7 @@
     "kodaAlt": "Koda, o assistente da Logikos",
     "close": {
       "title": "Quer ver isso nas suas câmeras?",
-      "text": "Abra a demo no celular e aponte para o que quiser: o modelo proprietário Logikos marca na hora, sem enviar nada. Se preferir, a experiência mostra os cenários funcionando.",
+      "text": "Abra a câmera do celular e aponte para o que quiser: o modelo proprietário Logikos marca na hora. Se preferir, a experiência mostra os cenários funcionando.",
       "phone": "Teste na câmera do seu celular",
       "screen": "CAM 07 · aguardando sinal",
       "screenSub": "a sua câmera entra aqui"

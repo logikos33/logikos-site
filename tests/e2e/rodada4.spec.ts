@@ -104,7 +104,7 @@ test('item 21 and 25c: every demo link is the phone demo on the site, never the 
   for (const path of ['/', '/demos', '/recognition', '/en/demos']) {
     await page.goto(path);
     await expect(page.locator('a[href*="railway.app"], a[href$="/demo/"]'), path).toHaveCount(0);
-    expect(await page.locator('a[href="https://logikosvision.com.br/teste-no-seu-celular/"]').count(), path).toBeGreaterThan(0);
+    expect(await page.locator('a[href="https://logikosvision.com.br/teste-no-seu-celular/?direto=1"]').count(), path).toBeGreaterThan(0);
   }
 });
 
@@ -159,7 +159,7 @@ test('round 5: CH6 digital twin in the carousel and on the Twins hero, with WebM
   await expect(slide).toContainText(/peça/);
   await page.goto('/twins');
   await expect(page.locator('.ph__media video')).toHaveAttribute('data-webm', /v-gemeo\.webm$/);
-  await expect(page.locator('main')).toContainText('Gêmeo de cada peça');
+  await expect(page.locator('main')).toContainText(/gêmeo digital de cada peça/i);
 });
 
 // Round 5 (c, d): the email lives only in the footer (and in the privacy policy, the data subject's
@@ -171,4 +171,26 @@ test('round 5: no email in the page body and no city anywhere visible', async ({
     await expect(page.locator('body'), path).not.toContainText(/Indaial|Itajaí|Santa Catarina/);
   }
   await expect(page.locator('.site-footer a[href^="mailto:"]')).toHaveCount(1);
+});
+
+// Final review (13 points).
+test('final review: app notifications, page CTAs, custom-model partners, demos about computer vision', async ({ page }) => {
+  await page.goto('/recognition');
+  await expect(page.locator('.leitura .push')).toHaveCount(6);
+  await expect(page.locator('.leitura .push--fogo')).toHaveCount(1);
+  for (const path of ['/sobre', '/robotica']) {
+    await page.goto(path);
+    await expect(page.locator('.ph [data-heroi-acoes] [data-cta="experience"]'), path).toHaveCount(0);
+    await expect(page.locator('.ph [data-heroi-acoes] .btn'), path).toHaveCount(1);
+  }
+  await page.goto('/como-funciona');
+  await expect(page.locator('main')).not.toContainText('Só o alerta e o clipe do evento saem da planta');
+  await page.goto('/integradores');
+  await expect(page.locator('h1')).toContainText('modelo customizado');
+  await page.goto('/demos');
+  await expect(page.locator('h1')).toContainText('visão computacional');
+  await page.goto('/twins');
+  await expect(page.locator('#parts-title')).toBeVisible();
+  await page.goto('/?sem-abertura');
+  await expect(page.locator('.problema .folha')).toBeVisible();
 });
