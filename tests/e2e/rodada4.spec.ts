@@ -141,3 +141,23 @@ test('item 23: the CAM 07 monitors show the waiting loop with a running clock', 
   await expect(clock).not.toHaveText(first ?? '', { timeout: 3000 });
   await expect(page.locator('.fecho .ag__con')).toBeVisible();
 });
+
+// Round 5.
+test('round 5: "Dentro da planta" has the box beside it and its link as a secondary button', async ({ page }) => {
+  await page.goto('/recognition');
+  const where = page.locator('section[aria-labelledby="where-title"]');
+  await expect(where.locator('[data-caixa]')).toHaveCount(1);
+  await expect(where.locator('.q-actions a.btn.btn--ghost')).toHaveAttribute('href', '/como-funciona');
+});
+
+test('round 5: CH6 digital twin in the carousel and on the Twins hero, with WebM and MP4', async ({ page }) => {
+  await page.goto('/?sem-abertura');
+  const slide = page.locator('#painel-gemeo');
+  await expect(slide.locator('video')).toHaveAttribute('data-webm', /v-gemeo\.webm$/);
+  await expect(slide.locator('video')).toHaveAttribute('data-src', /v-gemeo\.mp4$/);
+  await expect(slide.locator('a.btn')).toHaveAttribute('href', '/contato?interesse=twins#conversa');
+  await expect(slide).toContainText(/peça/);
+  await page.goto('/twins');
+  await expect(page.locator('.ph__media video')).toHaveAttribute('data-webm', /v-gemeo\.webm$/);
+  await expect(page.locator('main')).toContainText('Gêmeo de cada peça');
+});

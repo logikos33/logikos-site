@@ -160,6 +160,26 @@
     "about.vision.text": {
       "values": ["4.0"],
       "source": "Indústria 4.0 (nome do conceito), pedido do Vitor no item 26 do feedback 11/11."
+    },
+    "home.scenarios.twin.tab": {
+      "values": ["6"],
+      "source": "Número do canal (CH6, gêmeo digital) do carrossel da home, rodada 5 do feedback 11/11."
+    },
+    "home.scenarios.twin.solves": {
+      "values": ["100"],
+      "source": "Inspeção de 100 % (todas as peças), pedido do Vitor para o Twins na rodada 5 do feedback 11/11."
+    },
+    "twins.meta.description": {
+      "values": ["100"],
+      "source": "Inspeção de 100 % (todas as peças), pedido do Vitor para o Twins na rodada 5 do feedback 11/11."
+    },
+    "twins.features.parts.text": {
+      "values": ["100"],
+      "source": "Inspeção de 100 % (todas as peças), pedido do Vitor para o Twins na rodada 5 do feedback 11/11."
+    },
+    "home.scenarios.twin.gets": {
+      "values": ["3"],
+      "source": "Ambiente em 3D (nuvem de pontos do Twins), rodada 5 do feedback 11/11."
     }
   }
 }

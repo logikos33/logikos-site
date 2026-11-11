@@ -33,6 +33,11 @@ const { question, title, text, id, as: Tag = 'h2', cover = false, flush = false,
       <p class="visually-hidden q-sr">{question}</p>
       <Tag id={id}>{title}</Tag>
       {text && <p class="lede">{text}</p>}
+      {Astro.slots.has('actions') && (
+        <div class="btn-row q-actions">
+          <slot name="actions" />
+        </div>
+      )}
       {Astro.slots.has('default') && (
         <div class="q-content">
           <slot />

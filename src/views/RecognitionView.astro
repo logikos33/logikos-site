@@ -4,6 +4,7 @@
 // a call to bring your own indicators; EPI without false alarms on the real clip; the alert as it
 // arrives; where it runs; partners; and one call to try it, the phone-camera close.
 import AlertCard from '../components/AlertCard.astro';
+import CaixaAbrindo from '../components/CaixaAbrindo.astro';
 import Cam from '../components/Cam.astro';
 import DefList from '../components/DefList.astro';
 import Icon from '../components/Icon.astro';
@@ -124,17 +125,21 @@ const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoin
     </div>
   </Section>
 
+  <!-- Round 5: the Logikos box beside the text, and the link becomes a secondary button under it. -->
   <Section question={q.where} title={p.where.title} text={p.where.text} id="where-title">
-    <p>
-      <a href={pathFor('howItWorks', locale)}>{p.where.cta}</a>
-    </p>
+    <a slot="actions" class="btn btn--ghost" href={pathFor('howItWorks', locale)}>
+      {p.where.cta}
+      <Icon name="arrow" size={18} />
+    </a>
+    <CaixaAbrindo locale={locale} />
   </Section>
 
   <Section question={q.partners} title={p.partners.title} id="partners-title">
+    <a slot="actions" class="btn btn--ghost" href={pathFor('partners', locale)}>
+      {p.partners.cta}
+      <Icon name="arrow" size={18} />
+    </a>
     <PointList rows={partnerRows} />
-    <p>
-      <a href={pathFor('partners', locale)}>{p.partners.cta}</a>
-    </p>
   </Section>
 
   <PageClose locale={locale} />

@@ -1,6 +1,6 @@
 ---
 import DefList from '../components/DefList.astro';
-import Koda from '../components/Koda.astro';
+import Cam from '../components/Cam.astro';
 import PageClose from '../components/PageClose.astro';
 import PageHero from '../components/PageHero.astro';
 import Section from '../components/Section.astro';
@@ -16,13 +16,16 @@ const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.twins;
 const f = p.features;
-const uses = [f.measure, f.annotate].map((x) => ({ term: x.title, text: x.text }));
+const uses = [f.measure, f.annotate, f.parts].map((x) => ({ term: x.title, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="twins" title={p.meta.title} description={p.meta.description}>
-  <!-- No point-cloud capture of our own to show yet: Koda carries the hero instead of a mock clip. -->
+  <!-- Round 5: the digital twin scene (the part on the line and its twin on the monitor). -->
   <PageHero locale={locale} interest="twins" id="hero-title" title={p.hero.title} text={p.hero.text}>
-    <Koda locale={locale} />
+    <figure class="fig">
+      <Cam clip="v-gemeo" webm name={t.home.scenarios.twin.name} />
+      <figcaption class="mono">{t.home.scenarios.twin.source}</figcaption>
+    </figure>
   </PageHero>
 
   <Section id="how-title" question={p.questions.how} title={f.capture.title} text={f.capture.text}>
@@ -37,5 +40,15 @@ const uses = [f.measure, f.annotate].map((x) => ({ term: x.title, text: x.text }
 <style>
   .after {
     margin-top: var(--lk-space-6);
+  }
+
+  .fig {
+    margin: 0;
+  }
+
+  .fig figcaption {
+    margin-top: var(--lk-space-2);
+    font-size: 0.8125rem;
+    color: var(--lk-text-2);
   }
 </style>

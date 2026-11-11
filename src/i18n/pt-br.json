@@ -257,7 +257,18 @@
           "source": "modelo proprietário Logikos · vídeo de banco",
           "wa": "Olá! Quero falar com um especialista sobre ergonomia."
         }
-      ]
+      ],
+      "solves": "o que resolve",
+      "gets": "o que você recebe",
+      "twin": {
+        "tab": "CH6",
+        "name": "Gêmeo digital",
+        "state": "GÊMEO DIGITAL · planta e peça a peça",
+        "solves": "A planta navegável a partir de um vídeo do celular, para medir e anotar sem ir até lá; e o gêmeo de cada peça, com inspeção de 100 % e o desvio em relação ao projeto visível antes de virar lote.",
+        "gets": "O ambiente em 3D para medir e anotar, a rastreabilidade de cada peça e o histórico peça a peça.",
+        "source": "Logikos Twins · cena ilustrativa",
+        "cta": "Solicite seu modelo customizado"
+      }
     },
     "band": {
       "title": "Quer ver isso nas suas câmeras?",
@@ -634,12 +645,12 @@
   "twins": {
     "meta": {
       "title": "Twins — gêmeo digital pelo celular",
-      "description": "Grave um vídeo com o celular e navegue pela nuvem de pontos do ambiente, com medição e anotação."
+      "description": "O gêmeo digital da planta, a partir de um vídeo do celular, e o de cada peça: inspeção de 100 %, rastreabilidade e o desvio em relação ao projeto antes de virar lote."
     },
     "hero": {
       "question": "o que é?",
       "title": "O ambiente, navegável.",
-      "text": "Grave um vídeo com o celular. O Twins transforma o vídeo em uma nuvem de pontos que você navega, mede e anota."
+      "text": "Grave um vídeo com o celular e o Twins transforma o ambiente em uma nuvem de pontos que você navega, mede e anota. E não é só a planta: cada peça ganha o seu gêmeo, para acompanhar a qualidade peça a peça."
     },
     "features": {
       "capture": {
@@ -653,6 +664,10 @@
       "annotate": {
         "title": "Anotação",
         "text": "Marque pontos de atenção direto na nuvem de pontos."
+      },
+      "parts": {
+        "title": "Gêmeo de cada peça",
+        "text": "Inspeção de 100 % na linha, rastreabilidade de cada peça, o desvio em relação ao projeto visível antes de virar lote e o histórico peça a peça."
       }
     },
     "questions": {

@@ -109,7 +109,7 @@ test('home channels: a real carousel — arrows, ruler and swipe move the slides
   await page.goto('/?sem-abertura');
   const slides = page.locator('[data-slide]');
   const marks = page.locator('[data-ir]');
-  await expect(slides).toHaveCount(5);
+  await expect(slides).toHaveCount(6);
   await expect(marks.nth(0)).toHaveAttribute('aria-current', 'true');
   await expect(page.locator('#painel-epi')).toHaveAttribute('inert', '');
   await page.locator('[data-proximo]').click();

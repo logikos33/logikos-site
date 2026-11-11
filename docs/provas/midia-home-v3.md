@@ -17,3 +17,4 @@ O `pnpm gate:license` cobre só pacotes npm servidos; mídia não passa por ele.
 Os clipes dos cenários mostram detecção real rodada por cima dos vídeos de banco (legenda "vídeo de banco" em cada canal). Os IDs do Pexels foram conferidos por comparação de quadro com os candidatos baixados em `stock/` na rodada do esboço.
 
 | `public/media/ruido-v2.webp` | Tile de grão do fundo de TV (128 px, gerado por script, alfa médio 11,9/255) | Próprio |
+| `v-gemeo.*` (mp4 h264 + webm vp9 + pôsteres) | Loop composto do gêmeo digital (`Marca/oficial/vision/v2/gemeo/previa-gemeo-loop.mp4`, cena com o logo Logikos Vision + gêmeo no monitor), convertido para 960×540, sem áudio | Mídia própria (cena gerada no Artlist pelo Vitor); legenda "cena ilustrativa" no site |

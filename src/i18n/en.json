@@ -257,7 +257,18 @@
           "source": "Logikos proprietary model · stock footage",
           "wa": "Hi! I’d like to talk to a specialist about ergonomics."
         }
-      ]
+      ],
+      "solves": "what it solves",
+      "gets": "what you get",
+      "twin": {
+        "tab": "CH6",
+        "name": "Digital twin",
+        "state": "DIGITAL TWIN · plant and part by part",
+        "solves": "A walkable plant from a phone video, to measure and annotate without going there; and a twin of every part, with 100 % inspection and the deviation from the design visible before it becomes a batch.",
+        "gets": "The site in 3D to measure and annotate, traceability of every part and its history, part by part.",
+        "source": "Logikos Twins · illustrative scene",
+        "cta": "Request your custom model"
+      }
     },
     "band": {
       "title": "Want to see this on your cameras?",
@@ -634,12 +645,12 @@
   "twins": {
     "meta": {
       "title": "Twins — a digital twin from your phone",
-      "description": "Record a video on your phone, then walk through a point cloud of the space, with measurements and notes."
+      "description": "The digital twin of the plant, from a phone video, and of every part: 100 % inspection, traceability and the deviation from the design before it becomes a batch."
     },
     "hero": {
       "question": "what is it?",
       "title": "The space, navigable.",
-      "text": "Record a video on your phone. Twins turns it into a point cloud you can navigate, measure and annotate."
+      "text": "Record a phone video and Twins turns the site into a point cloud you can walk, measure and annotate. And not just the plant: every part gets its own twin, to follow quality part by part."
     },
     "features": {
       "capture": {
@@ -653,6 +664,10 @@
       "annotate": {
         "title": "Notes",
         "text": "Pin points of interest right on the point cloud."
+      },
+      "parts": {
+        "title": "A twin of every part",
+        "text": "100 % inspection on the line, traceability of every part, the deviation from the design visible before it becomes a batch, and the history part by part."
       }
     },
     "questions": {

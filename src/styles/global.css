@@ -260,6 +260,11 @@ kbd {
   max-width: 47.5rem;
 }
 
+/* A section's own call (a secondary button) sits right under its text. */
+.q-actions {
+  margin-top: var(--lk-space-5);
+}
+
 /* No half-empty screens (feedback 11/11, item 25b): from 64rem a text section uses the whole
    width — heading on the left, its content (or, when there is none, its text) on the right. */
 @media (min-width: 64rem) {
@@ -281,9 +286,14 @@ kbd {
     grid-row: 2;
   }
 
+  .q-body:not(.q-body--wide) > .q-actions {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
   .q-body:not(.q-body--wide) > .q-content {
     grid-column: 2;
-    grid-row: 1 / span 3;
+    grid-row: 1 / span 4;
   }
 
   .q-body:not(.q-body--wide) > .q-content > :first-child {
