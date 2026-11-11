@@ -32,7 +32,7 @@ inventory() {
 }
 
 verify_publico() {
-  for p in / /demo/ /experiencia/ /bs /en/ /api/status; do
+  for p in / /demo/ /teste-no-seu-celular/ /experiencia/ /bs /en/ /api/status; do
     printf '  %-14s %s\n' "$p" "$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "https://$ZONE_NAME$p")"
   done
   echo "  robots na raiz: $(curl -sI "https://$ZONE_NAME/" | grep -i '^x-robots-tag' || echo 'sem X-Robots-Tag')"
@@ -61,11 +61,11 @@ rollback() {
 
 # --- Ponte temporária (só com Zone Rulesets:Edit, que o token de zona já tem) -----------
 # Enquanto o Worker não pode ganhar rota (falta Workers Routes:Edit), a raiz redireciona com
-# 302 para o site no Pages. /demo, /experiencia e /bs ficam fora da regra e seguem como hoje.
+# 302 para o site no Pages. /demo, /teste-no-seu-celular, /experiencia e /bs ficam fora da regra e seguem como hoje.
 PONTE_DESC="Raiz -> site institucional (ponte 302 até o Worker logikos-apex)"
 ponte_json() { jq -n --arg d "$PONTE_DESC" '{
   description:$d,
-  expression:"(http.host eq \"logikosvision.com.br\" and not starts_with(http.request.uri.path, \"/demo\") and not starts_with(http.request.uri.path, \"/experiencia\") and not (http.request.uri.path in {\"/bs\" \"/bs/\"}))",
+  expression:"(http.host eq \"logikosvision.com.br\" and not starts_with(http.request.uri.path, \"/demo\") and not starts_with(http.request.uri.path, \"/experiencia\") and not starts_with(http.request.uri.path, \"/teste-no-seu-celular\") and not (http.request.uri.path in {\"/bs\" \"/bs/\"}))",
   action:"redirect",
   action_parameters:{from_value:{status_code:302,target_url:{expression:"concat(\"https://logikos-site.pages.dev\", http.request.uri.path)"},preserve_query_string:true}},
   enabled:true}'; }
