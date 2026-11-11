@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 # Raiz logikosvision.com.br -> site institucional (Worker "logikos-apex" na rota logikosvision.com.br/*).
-# Uso: ./apex.sh [inventory|apply|verify|rollback|ponte|ponte-rollback]
+# Uso: ./apex.sh [inventory|apply|verify|rollback|ponte|ponte-rollback|www|www-rollback]
+# www: põe o site no domínio www.logikosvision.com.br (domínio personalizado do Pages + CNAME www).
+# Nenhum modo toca MX/TXT (e-mail Titan), o túnel, brandschutz.* ou outros registros da zona.
 # inventory e verify só leem. apply publica o Worker e a rota (não toca DNS, túnel, Pages nem regras).
 # rollback remove só a rota do Worker: a raiz volta a ir direto para a origem de hoje.
 set -euo pipefail
 : "${CF_ZONE_TOKEN:?}" ; : "${CF_DEPLOY_TOKEN:?}" ; : "${CLOUDFLARE_ACCOUNT_ID:?}"
 ZONE_NAME="logikosvision.com.br"; PATTERN="logikosvision.com.br/*"; SCRIPT="logikos-apex"
+WWW="www.logikosvision.com.br"; PROJECT="logikos-site"; PAGES_HOST="logikos-site.pages.dev"
+WWW_COMMENT="logikos-site: www no Pages (cf-apex www)"
 API="https://api.cloudflare.com/client/v4"
 cf() { local t="$1"; shift; curl -sS -H "Authorization: Bearer $t" -H "Content-Type: application/json" "$@"; }
 st() { jq -r '"  success=\(.success) " + ([.errors[]? | "erro \(.code): \(.message)"] | join("; "))'; }
@@ -32,11 +36,68 @@ inventory() {
 }
 
 verify_publico() {
-  for p in / /demo/ /teste-no-seu-celular/ /experiencia/ /bs /en/ /api/status; do
-    printf '  %-14s %s\n' "$p" "$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "https://$ZONE_NAME$p")"
+  for p in / /demo/ /teste-no-seu-celular/ /experiencia/ /bs /en/; do
+    printf '  %-24s %s\n' "$ZONE_NAME$p" "$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "https://$ZONE_NAME$p")"
   done
-  echo "  robots na raiz: $(curl -sI "https://$ZONE_NAME/" | grep -i '^x-robots-tag' || echo 'sem X-Robots-Tag')"
-  echo "  título da raiz: $(curl -s "https://$ZONE_NAME/" | grep -o '<title>[^<]*' | head -1)"
+  for p in / /en/ /recognition /contato; do
+    printf '  %-24s %s\n' "$WWW$p" "$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "https://$WWW$p")"
+  done
+  echo "  título do www: $(curl -s "https://$WWW/" | grep -o '<title>[^<]*' | head -1)"
+  echo "  robots no www: $(curl -sI "https://$WWW/" | grep -i '^x-robots-tag' || echo 'sem X-Robots-Tag (indexável)')"
+  echo "  brandschutz.$ZONE_NAME: $(curl -s -o /dev/null -w '%{http_code}' "https://brandschutz.$ZONE_NAME/")"
+  echo "  MX: $(curl -s -H 'accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=$ZONE_NAME&type=MX" | jq -r '[.Answer[]?.data] | join(", ")')"
+}
+
+# --- www no Pages ---------------------------------------------------------------------------
+# Domínio personalizado do projeto Pages + CNAME www -> logikos-site.pages.dev (proxied). Se já
+# houver um registro www apontando para outro lugar, aborta sem mexer.
+www() {
+  local z; z=$(zone_id); [ -n "$z" ] || { echo "sem zona"; exit 2; }
+  echo "--- domínio $WWW no Pages ($PROJECT)"
+  local ok=""
+  for n in CF_DEPLOY_TOKEN CF_ZONE_TOKEN; do
+    local r; r=$(cf "${!n}" -X POST "$API/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$PROJECT/domains" --data "{\"name\":\"$WWW\"}")
+    echo "com $n:"; echo "$r" | st
+    if jq -e '.success or ([.errors[]?.message // ""] | any(test("already"; "i")))' >/dev/null <<<"$r"; then ok=1; break; fi
+  done
+  [ -n "$ok" ] || { echo "::error::nenhum token adicionou o domínio no Pages. Nada mais foi alterado."; exit 3; }
+  echo "--- DNS: CNAME $WWW -> $PAGES_HOST (proxied)"
+  local rec; rec=$(cf "$CF_ZONE_TOKEN" "$API/zones/$z/dns_records?name=$WWW")
+  local cur; cur=$(jq -r '.result[0] | if . then "\(.type) \(.content)" else "" end' <<<"$rec")
+  if [ "$cur" = "CNAME $PAGES_HOST" ]; then echo "  já existe: $cur"
+  elif [ -n "$cur" ]; then echo "::error::$WWW já aponta para '$cur'. Não sobrescrevo; decida antes."; exit 4
+  else
+    local body; body=$(jq -n --arg n "$WWW" --arg c "$PAGES_HOST" --arg m "$WWW_COMMENT" '{type:"CNAME",name:$n,content:$c,proxied:true,ttl:1,comment:$m}')
+    local done_dns=""
+    for n in CF_ZONE_TOKEN CF_DEPLOY_TOKEN; do
+      local r; r=$(cf "${!n}" -X POST "$API/zones/$z/dns_records" --data "$body"); echo "com $n:"; echo "$r" | st
+      if jq -e '.success' >/dev/null <<<"$r"; then done_dns=1; break; fi
+    done
+    [ -n "$done_dns" ] || { echo "::error::nenhum token tem DNS:Edit. O domínio ficou pendente no Pages; rode www-rollback ou crie o CNAME."; exit 5; }
+  fi
+  echo "--- aguardando o Pages validar o domínio (até 10 min)"
+  for _ in $(seq 1 40); do
+    local s; s=$(cf "$CF_DEPLOY_TOKEN" "$API/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$PROJECT/domains/$WWW" | jq -r '.result.status // "?"')
+    echo "  status: $s"; [ "$s" = "active" ] && break; sleep 15
+  done
+  verify_publico
+}
+
+# Desfaz só o que o modo www criou: o domínio no Pages e o CNAME com o comentário do cf-apex.
+www_rollback() {
+  local z; z=$(zone_id)
+  for n in CF_DEPLOY_TOKEN CF_ZONE_TOKEN; do
+    local r; r=$(cf "${!n}" -X DELETE "$API/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$PROJECT/domains/$WWW"); echo "domínio no Pages com $n:"; echo "$r" | st
+    jq -e '.success' >/dev/null <<<"$r" && break
+  done
+  local id; id=$(cf "$CF_ZONE_TOKEN" "$API/zones/$z/dns_records?name=$WWW" | jq -r --arg m "$WWW_COMMENT" '.result[]? | select(.comment==$m) | .id' | head -1)
+  if [ -n "$id" ]; then
+    for n in CF_ZONE_TOKEN CF_DEPLOY_TOKEN; do
+      local r; r=$(cf "${!n}" -X DELETE "$API/zones/$z/dns_records/$id"); echo "CNAME com $n:"; echo "$r" | st
+      jq -e '.success' >/dev/null <<<"$r" && break
+    done
+  else echo "CNAME do cf-apex não encontrado: nada a desfazer no DNS"; fi
+  sleep 20; verify_publico
 }
 
 apply() {
@@ -59,15 +120,16 @@ rollback() {
   echo "rota $PATTERN não encontrada: nada a desfazer"
 }
 
-# --- Ponte temporária (só com Zone Rulesets:Edit, que o token de zona já tem) -----------
-# Enquanto o Worker não pode ganhar rota (falta Workers Routes:Edit), a raiz redireciona com
-# 302 para o site no Pages. /demo, /teste-no-seu-celular, /experiencia e /bs ficam fora da regra e seguem como hoje.
+# --- Ponte (só com Zone Rulesets:Edit, que o token de zona já tem) -------------------------
+# A raiz redireciona com 302 para o site: o www (lançamento, 11/11/2026) ou, com
+# PONTE_DESTINO=https://logikos-site.pages.dev, o endereço do Pages (como antes do lançamento). /demo, /teste-no-seu-celular, /experiencia e /bs ficam fora da regra e seguem como hoje.
 PONTE_DESC="Raiz -> site institucional (ponte 302 até o Worker logikos-apex)"
-ponte_json() { jq -n --arg d "$PONTE_DESC" '{
+PONTE_DESTINO="${PONTE_DESTINO:-https://$WWW}"
+ponte_json() { jq -n --arg d "$PONTE_DESC" --arg t "$PONTE_DESTINO" '{
   description:$d,
   expression:"(http.host eq \"logikosvision.com.br\" and not starts_with(http.request.uri.path, \"/demo\") and not starts_with(http.request.uri.path, \"/experiencia\") and not starts_with(http.request.uri.path, \"/teste-no-seu-celular\") and not (http.request.uri.path in {\"/bs\" \"/bs/\"}))",
   action:"redirect",
-  action_parameters:{from_value:{status_code:302,target_url:{expression:"concat(\"https://logikos-site.pages.dev\", http.request.uri.path)"},preserve_query_string:true}},
+  action_parameters:{from_value:{status_code:302,target_url:{expression:("concat(\"" + $t + "\", http.request.uri.path)")},preserve_query_string:true}},
   enabled:true}'; }
 
 ponte() {
@@ -97,4 +159,4 @@ ponte_rollback() {
   sleep 20; verify_publico
 }
 
-case "${1:-inventory}" in inventory) inventory ;; apply) apply ;; verify) verify_publico ;; rollback) rollback ;; ponte) ponte ;; ponte-rollback) ponte_rollback ;; *) echo "modo inválido"; exit 1 ;; esac
+case "${1:-inventory}" in inventory) inventory ;; apply) apply ;; verify) verify_publico ;; rollback) rollback ;; ponte) ponte ;; ponte-rollback) ponte_rollback ;; www) www ;; www-rollback) www_rollback ;; *) echo "modo inválido"; exit 1 ;; esac

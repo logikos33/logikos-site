@@ -22,6 +22,78 @@ body {
   font-feature-settings: 'cv11', 'ss01';
 }
 
+/* Old-TV backdrop on every page (feedback 11/11, item 12): fine scanlines with a rare, faint
+   flicker (::before) and a slow static grain (::after, a 2.7 KB tile). Both are fixed layers behind
+   the content and only animate transform/opacity, so the compositor moves them without repainting
+   the page. Visible on black but light: the backdrop averages ~#121217 under the text, which keeps
+   every text token AA (checked in tests/unit/contrast.test.ts). Reduced motion stops them (the rule at the end of this file): a still screen. */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+}
+
+body::before {
+  inset: 0;
+  background: repeating-linear-gradient(0deg, #ffffff0f 0 1px, #0000 1px 3px);
+  animation: crt-flicker 11s steps(1, end) infinite;
+}
+
+body::after {
+  inset: -128px;
+  background: url('/media/ruido-v2.webp') repeat;
+  opacity: 1;
+  will-change: transform;
+  animation: crt-grain 0.9s steps(1, end) infinite;
+}
+
+/* The home's stop control (WCAG 2.2.2) freezes the backdrop and the CAM 07 monitors too. */
+.lk-parado body::before,
+.lk-parado body::after,
+.lk-parado .ag * {
+  animation-play-state: paused !important;
+}
+
+@keyframes crt-flicker {
+  0%,
+  96%,
+  100% {
+    opacity: 1;
+  }
+
+  96.6% {
+    opacity: 0.35;
+  }
+
+  97.2% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes crt-grain {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  20% {
+    transform: translate(-37px, 22px);
+  }
+
+  40% {
+    transform: translate(51px, -64px);
+  }
+
+  60% {
+    transform: translate(-90px, 41px);
+  }
+
+  80% {
+    transform: translate(18px, 93px);
+  }
+}
+
 img,
 svg,
 video {
@@ -98,6 +170,11 @@ kbd {
   font-variant-numeric: tabular-nums;
 }
 
+/* `hidden` always wins over a component's display (buttons and grids set their own). */
+[hidden] {
+  display: none !important;
+}
+
 .visually-hidden {
   position: absolute !important;
   width: 1px;
@@ -135,7 +212,8 @@ kbd {
 }
 
 .section {
-  padding-block: clamp(3.5rem, 8vw, 6rem);
+  /* One rhythm for every page (feedback 11/11, item 25a): bands split by a hairline. */
+  padding-block: var(--lk-section-y);
   border-top: 1px solid var(--lk-line);
 }
 
@@ -143,18 +221,20 @@ kbd {
   border-top: 0;
 }
 
-/* Document grid: question in the margin column from 64rem up; the answer fills the rest. */
+/* A section that continues the one above (final review, item 11): less air on top. */
+.section--perto {
+  padding-top: clamp(1rem, 2vw, 1.5rem);
+  border-top: 0;
+}
+
+/* Section head like the home's: the heading speaks for itself (no kicker, no margin label); the
+   question stays for screen readers only (.q-sr). Wide content takes the whole page width. */
 .q-grid {
-  display: grid;
-  gap: var(--lk-space-3);
+  display: block;
 }
 
 .q {
   display: none;
-  margin: 0;
-  padding-top: 0.35em;
-  font: 400 0.875rem/1.4 var(--lk-font-body);
-  color: var(--lk-text-2);
 }
 
 .q-body {
@@ -163,33 +243,110 @@ kbd {
 
 .q-body > h1,
 .q-body > h2 {
-  max-width: 22ch;
+  max-width: 24ch;
 }
 
-.q-body > h1 {
-  max-width: 16ch;
+.q-body > h2 {
+  font-size: clamp(1.7rem, 3.4vw, 2.7rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 
 .q-body > .lede {
-  max-width: var(--lk-measure-lede);
+  max-width: 58ch;
 }
 
-.q-body > p:not(.lede) {
-  max-width: var(--lk-measure);
+.q-body > p:not(.lede),
+.q-body > .defs,
+.q-body > .points {
+  max-width: 47.5rem;
+}
+
+.q-body:not(.q-body--wide) {
+  max-width: 47.5rem;
+}
+
+/* A section's own call (a secondary button) sits right under its text. */
+.q-actions {
+  margin-top: var(--lk-space-5);
+}
+
+/* No half-empty screens (feedback 11/11, item 25b): from 64rem a text section uses the whole
+   width — heading on the left, its content (or, when there is none, its text) on the right. */
+@media (min-width: 64rem) {
+  .q-body:not(.q-body--wide) {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: clamp(2.5rem, 5vw, 5rem);
+    align-items: start;
+    max-width: none;
+  }
+
+  .q-body:not(.q-body--wide) > :is(h1, h2) {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .q-body:not(.q-body--wide) > .lede {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .q-body:not(.q-body--wide) > .q-actions {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .q-body:not(.q-body--wide) > .q-content {
+    grid-column: 2;
+    grid-row: 1 / span 4;
+  }
+
+  .q-body:not(.q-body--wide) > .q-content > :first-child {
+    margin-top: 0;
+  }
+
+  /* Text only: the heading on the left, its text on the right. */
+  .q-body:not(.q-body--wide):not(:has(> .q-content)) {
+    align-items: center;
+  }
+
+  .q-body:not(.q-body--wide):not(:has(> .q-content)) > .lede {
+    grid-column: 2;
+    grid-row: 1;
+    margin: 0;
+  }
 }
 
 .section--cover {
-  padding-block: clamp(3rem, 8vw, 6rem) clamp(2.5rem, 6vw, 4.5rem);
+  padding-block: clamp(2rem, 6vw, 4.5rem) clamp(3rem, 6vw, 5rem);
 }
 
-@media (min-width: 64rem) {
-  .q-grid {
-    grid-template-columns: var(--lk-margin) minmax(0, 1fr);
-    gap: var(--lk-space-5);
+/* CRT turn-on as a screen enters the view (scroll-driven, stepped, ends at rest) — home and pages. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .liga {
+      animation: liga steps(6, end) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+  }
+}
+
+@keyframes liga {
+  0% {
+    clip-path: inset(49.5% 0 49.5% 0);
+    filter: brightness(2.4);
   }
 
-  .q {
-    display: block;
+  40% {
+    clip-path: inset(0);
+    filter: brightness(1.6);
+  }
+
+  100% {
+    clip-path: inset(0);
+    filter: none;
   }
 }
 
@@ -213,8 +370,8 @@ kbd {
 }
 
 .lede {
-  font-size: clamp(1.125rem, 2vw, 1.3rem);
-  color: var(--lk-text-2);
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  color: var(--lk-text-lead, var(--lk-text-2));
   max-width: 40rem;
 }
 
@@ -297,10 +454,35 @@ kbd {
   padding-top: var(--lk-space-3);
 }
 
+/* ---------- Light sheet (feedback 11/11, item 13) ----------
+   Dense data — definition rows, comparisons, the five readings — sits on a light card on the dark
+   page: grouped, with air around it, AA on paper (the light tokens are re-declared on .folha in
+   tokens.css: secondary text #5C616B, never the dark theme's #8A8F98). One elevation: a shadow. */
+.folha {
+  padding: clamp(1rem, 3vw, 1.75rem) clamp(1.1rem, 3.5vw, 2rem);
+  background: var(--lk-bg);
+  color: var(--lk-text);
+  border-radius: 14px;
+  box-shadow: 0 22px 48px -28px #000;
+}
+
+.folha > .defs__row:first-child,
+.folha.defs > .defs__row:first-child {
+  border-top: 0;
+}
+
+.folha > .defs__row:last-child,
+.folha.defs > .defs__row:last-child {
+  border-bottom: 0;
+}
+
 /* ---------- Definition rows (the one list shape) ---------- */
 
 .defs {
   margin: 0;
+}
+
+.defs:not(.folha) {
   padding: 0;
 }
 
@@ -503,9 +685,13 @@ kbd {
   --btn-line: var(--lk-accent-2);
 }
 
-@media (max-width: 22.49rem) {
+@media (max-width: 29.99rem) {
+  /* A long label (e.g. "Solicite seu modelo customizado") wraps instead of widening the page. */
   .btn {
     padding-inline: var(--lk-space-4);
+    white-space: normal;
+    text-align: center;
+    line-height: 1.25;
   }
 }
 

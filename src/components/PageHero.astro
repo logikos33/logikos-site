@@ -1,0 +1,123 @@
+---
+// Page hero in the home's language (v3): H1 + lead + the same pair of calls to action (experience,
+// specialist) beside a real frame — a camera, the wall, Koda or the diagram. While its buttons are
+// on screen the header's pair hides (one pair at a time, as on the home). Read pages (privacy,
+// LGPD) pass `quiet` and keep only the text.
+import { EXPERIENCE_URL } from '../config/links';
+import { dict } from '../i18n';
+import type { Locale } from '../i18n/routes';
+import type { ChatInterest } from '../lib/site';
+import Icon from './Icon.astro';
+import SpecialistButton from './SpecialistButton.astro';
+
+interface Props {
+  locale: Locale;
+  id: string;
+  title: string;
+  text: string;
+  /** Text-only hero, no buttons (Read pages). */
+  quiet?: boolean;
+  /** Media under the text instead of beside it (wide diagrams). */
+  stacked?: boolean;
+  /** Interest Koda picks in advance when the specialist button opens the conversation. */
+  interest?: ChatInterest;
+}
+
+const { locale, id, title, text, quiet = false, stacked = false, interest } = Astro.props;
+const t = dict(locale);
+const media = Astro.slots.has('default');
+---
+
+<section class:list={['ph', 'greek-grid', { 'ph--media': media && !stacked, 'ph--texto': !media }]} aria-labelledby={id}>
+  <div class="container ph__grade">
+    <div class="ph__copy">
+      <h1 id={id}>{title}</h1>
+      <p class="lede">{text}</p>
+      {!quiet && (
+        <div class="btn-row" data-heroi-acoes>
+          <slot name="actions">
+            <a class="btn" href={EXPERIENCE_URL} data-cta="experience">
+              {t.cta.experience}
+              <Icon name="arrow" size={18} />
+            </a>
+            <SpecialistButton locale={locale} variant="ghost" {...(interest ? { interest } : {})} />
+          </slot>
+        </div>
+      )}
+      <slot name="note" />
+    </div>
+    {media && (
+      <div class="ph__media">
+        <slot />
+      </div>
+    )}
+  </div>
+</section>
+
+<script>
+  // Same rule as the home: the header's CTAs wait until the hero's have scrolled away.
+  const actions = document.querySelector('.ph [data-heroi-acoes]');
+  if (actions) {
+    new IntersectionObserver(([e]) => {
+      if (e) document.documentElement.classList.toggle('lk-heroi-acoes', e.isIntersecting);
+    }).observe(actions);
+  }
+</script>
+
+<style>
+  .ph {
+    padding-block: clamp(1.5rem, 4vw, 3rem) var(--lk-section-y);
+  }
+
+  .ph__grade {
+    display: grid;
+    gap: var(--lk-space-6);
+  }
+
+  .ph__copy {
+    display: grid;
+    gap: var(--lk-space-5);
+    align-content: center;
+  }
+
+  .ph h1 {
+    font-size: clamp(2.1rem, 3.6vw, 3.25rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    max-width: 18ch;
+    margin: 0;
+  }
+
+  .ph .lede {
+    margin: 0;
+  }
+
+  .ph__media {
+    min-width: 0;
+  }
+
+  /* Text-only hero (LGPD, privacy): heading left, text right — never half a black screen (item 25b). */
+  @media (min-width: 64rem) {
+    .ph--texto .ph__copy {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      column-gap: clamp(2.5rem, 5vw, 5rem);
+      align-items: start;
+    }
+
+    .ph--texto .ph__copy > :not(h1) {
+      grid-column: 2;
+    }
+
+    .ph--texto h1 {
+      grid-row: 1 / span 4;
+    }
+  }
+
+  @media (min-width: 56rem) {
+    .ph--media .ph__grade {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: clamp(2rem, 5vw, 4.5rem);
+      align-items: center;
+    }
+  }
+</style>

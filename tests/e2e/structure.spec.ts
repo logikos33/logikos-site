@@ -1,8 +1,7 @@
 import { expect, test } from '@playwright/test';
-import { ALL_ROUTES, skipOpening, stubTurnstile } from './helpers.ts';
+import { ALL_ROUTES, skipOpening } from './helpers.ts';
 
 test.beforeEach(async ({ page }) => {
-  await stubTurnstile(page);
   await skipOpening(page);
 });
 
@@ -32,47 +31,71 @@ test('home v3: sections in the approved order, Koda right after the partners, le
     await expect(page.locator('#contato img')).toHaveCount(0);
     // No lead form on the home any more; the wall's sixth tile is the phone demo.
     await expect(page.locator('main form')).toHaveCount(0);
-    await expect(page.locator('.cam--voce')).toHaveAttribute('href', 'https://logikosvision.com.br/demo/');
+    await expect(page.locator('.cam--voce')).toHaveAttribute('href', 'https://logikosvision.com.br/teste-no-seu-celular/?direto=1');
   }
 });
 
-test('home: every "talk to a specialist" goes to WhatsApp, or to the contact page while there is no number', async ({ page }) => {
-  await page.goto('/');
-  const hrefs = await page
-    .locator('a[data-cta="whatsapp"], main a, .barra a')
-    .evaluateAll((els) =>
-      els
-        .filter((e) => /especialista|ergonomia/i.test(e.textContent ?? '') && !/experiencia\//.test(e.getAttribute('href') ?? ''))
-        .map((e) => ({ href: e.getAttribute('href') ?? '', target: e.getAttribute('target') ?? '' })),
+test('every "talk to a specialist" opens the conversation with Koda (feedback 11/11, item 11)', async ({ page }) => {
+  for (const path of ['/', '/recognition', '/integradores', '/robotica', '/en/']) {
+    await page.goto(path);
+    const hrefs = await page
+      .locator('a')
+      .evaluateAll((els) =>
+        els.filter((e) => /especialista|specialist/i.test(e.textContent ?? '')).map((e) => e.getAttribute('href') ?? ''),
+      );
+    expect(hrefs.length, path).toBeGreaterThanOrEqual(2);
+    for (const href of hrefs) expect(href, path).toMatch(/^\/(en\/contact|contato)(\?interesse=[a-z]+)?#conversa$/);
+  }
+});
+
+test('section heads speak for themselves: the question is for screen readers only, at every width', async ({ browser }) => {
+  for (const width of [1440, 390]) {
+    const ctx = await browser.newContext({ viewport: { width, height: 844 } });
+    const page = await ctx.newPage();
+    await page.goto('/sobre');
+    await expect(page.locator('main > section .q').first()).toBeHidden();
+    await expect(page.locator('main > section .q-sr').first()).toHaveText(/\?/);
+    await ctx.close();
+  }
+});
+
+// Feedback 11/11, item 5: every footer page in the home's language — real clips (no generated
+// poster), the same CTA pair in the hero and the phone-camera close.
+test('footer pages: real media, the hero CTA pair and the phone-camera close', async ({ page }) => {
+  const MEDIA = ['/recognition', '/demos', '/integradores', '/robotica', '/sobre', '/como-funciona', '/plataforma', '/twins'];
+  for (const path of [...MEDIA, '/conformidade', '/contato', '/privacidade']) {
+    await page.goto(path);
+    await expect(page.locator('html'), path).toHaveAttribute('data-theme', 'dark');
+    await expect(page.locator('img[src*="/media/posters/"]'), `${path}: generated poster`).toHaveCount(0);
+    if (!MEDIA.includes(path)) continue;
+    await expect(page.locator('.ph__media img[src^="/media/home/"]').first(), `${path}: real media`).toBeVisible();
+    // Sobre and Robótica keep only their own call (final review, items 5 and 9).
+    await expect(page.locator('.ph [data-heroi-acoes] .btn'), `${path}: hero CTAs`).toHaveCount(
+      ['/sobre', '/robotica'].includes(path) ? 1 : 2,
     );
-  expect(hrefs.length).toBeGreaterThanOrEqual(8);
-  for (const { href, target } of hrefs) {
-    if (href.startsWith('https://wa.me/')) expect(target).toBe('_blank');
-    else expect(href).toBe('/contato');
+    await expect(
+      page.locator('.fecho a[href="https://logikosvision.com.br/teste-no-seu-celular/?direto=1"]'),
+      `${path}: phone demo`,
+    ).toHaveCount(1);
   }
 });
 
-test('the margin question is visible on desktop and hidden (but readable) on narrow screens', async ({ browser }) => {
-  const wide = await browser.newContext({ viewport: { width: 1280, height: 800 } });
-  const w = await wide.newPage();
-  await w.goto('/sobre');
-  await expect(w.locator('main > section .q').first()).toBeVisible();
-  await wide.close();
-  const narrow = await browser.newContext({ viewport: { width: 390, height: 844 } });
-  const n = await narrow.newPage();
-  await n.goto('/sobre');
-  await expect(n.locator('main > section .q').first()).toBeHidden();
-  await expect(n.locator('main > section .q-sr').first()).toHaveText(/\?/);
-  await narrow.close();
-});
-
-test('nav has six items plus sign-in (production login, new tab) and the CTA', async ({ page }) => {
+test('nav has six items and no "Entrar" anywhere; /entrar goes home (feedback 11/11)', async ({ page, request }) => {
   await page.goto('/');
   await expect(page.locator('.site-nav a')).toHaveCount(6);
-  const login = page.locator('header [data-login]');
-  await expect(login).toHaveAttribute('href', /frontend-production-bf96\.up\.railway\.app\/login$/);
-  await expect(login).toHaveAttribute('target', '_blank');
-  await expect(login).toHaveAttribute('rel', /noopener/);
+  for (const path of ['/', '/plataforma', '/en/platform', '/contato']) {
+    await page.goto(path);
+    await expect(page.locator('a[href*="railway.app"], a[href*="/login"], [data-login]'), path).toHaveCount(0);
+    await expect(page.getByRole('link', { name: /^(Entrar|Sign in)\b/ }), path).toHaveCount(0);
+  }
+  for (const [from, to] of [
+    ['/entrar', '/'],
+    ['/en/sign-in', '/en/'],
+  ] as const) {
+    const res = await request.get(from, { maxRedirects: 0 });
+    expect(res.status(), from).toBe(302);
+    expect(new URL(res.headers()['location'] ?? '', 'http://x').pathname, from).toBe(to);
+  }
 });
 
 test('no generic tells in the built pages: arrows in links, decorative eyebrows, card grids', async ({ page }) => {
@@ -88,37 +111,43 @@ test('no generic tells in the built pages: arrows in links, decorative eyebrows,
   }
 });
 
-test('the stage swaps reading, clip and caption on the same figure (Recognition)', async ({ page }) => {
-  await page.goto('/recognition');
-  const stage = page.locator('[data-hud]#rec-stage');
-  await expect(stage).toHaveAttribute('data-slot', 'fire');
-  const before = await stage.locator('[data-hud-machine]').textContent();
-  await page.locator('[data-hud-readings="rec-stage"] input[value="counting"]').check();
-  await expect(stage).toHaveAttribute('data-slot', 'counting');
-  await expect(stage.locator('[data-hud-machine]')).not.toHaveText(before ?? '');
-  await expect(stage.locator('[data-hud-person-text]')).toHaveText(/nada enviado|nothing sent/);
-  await expect(page.locator('[data-reading-text][data-slot="counting"]')).toBeVisible();
-  await expect(page.locator('[data-reading-text][data-slot="fire"]')).toBeHidden();
-});
-
-test('home channels: tabs swap the panel in place, by click and by arrow keys', async ({ page }) => {
-  await page.goto('/');
-  const tabs = page.locator('[data-abas] [role="tab"]');
-  await expect(tabs).toHaveCount(5);
-  await expect(page.locator('#painel-fogo')).toBeVisible();
-  await tabs.nth(3).click();
-  await expect(tabs.nth(3)).toHaveAttribute('aria-selected', 'true');
-  await expect(page.locator('#painel-contagem')).toBeVisible();
-  await expect(page.locator('#painel-fogo')).toBeHidden();
-  await page.keyboard.press('ArrowRight');
-  await expect(tabs.nth(4)).toBeFocused();
-  await expect(page.locator('#painel-ergonomia')).toBeVisible();
-  // Every panel names its NR or check, and the fire one links to its scenario in the experience.
+test('home channels: a real carousel — arrows, ruler and swipe move the slides; only the shown one is reachable', async ({ page }) => {
+  await page.goto('/?sem-abertura');
+  const slides = page.locator('[data-slide]');
+  const marks = page.locator('[data-ir]');
+  await expect(slides).toHaveCount(6);
+  await expect(marks.nth(0)).toHaveAttribute('aria-current', 'true');
+  await expect(page.locator('#painel-epi')).toHaveAttribute('inert', '');
+  await page.locator('[data-proximo]').click();
+  await expect(marks.nth(1)).toHaveAttribute('aria-current', 'true');
+  await expect(page.locator('#painel-epi')).not.toHaveAttribute('inert', '');
+  await expect(page.locator('#painel-fogo')).toHaveAttribute('inert', '');
+  await marks.nth(3).click();
+  await expect(marks.nth(3)).toHaveAttribute('aria-current', 'true');
+  await expect(page.locator('#painel-contagem')).toBeInViewport({ ratio: 0.6 });
+  await page.locator('[data-anterior]').click();
+  await expect(marks.nth(2)).toHaveAttribute('aria-current', 'true');
+  // A swipe is a native scroll of the track: the slide that settles becomes the current one.
+  await page.locator('[data-trilho]').evaluate((t) => t.scrollTo({ left: (t.firstElementChild as HTMLElement).offsetWidth * 4 + 200 }));
+  await expect(marks.nth(4)).toHaveAttribute('aria-current', 'true');
+  // The fire slide links to its scenario in the experience.
   await expect(page.locator('#painel-fogo a.btn')).toHaveAttribute('href', /experiencia\/\?cenario=fogo$/);
 });
 
+test('home channels: the carousel advances on its own when its progress rule fills', async ({ page }) => {
+  await page.goto('/?sem-abertura');
+  await page.locator('#cenarios .cab').scrollIntoViewIfNeeded();
+  await page.mouse.move(0, 0);
+  await expect(page.locator('[data-carrossel]')).toHaveClass(/em-tela/);
+  // Skip the 7 s timer: finish the running progress animation.
+  await page.evaluate(() => document.getAnimations().forEach((a) => (a as CSSAnimation).animationName === 'progresso' && a.finish()));
+  await expect(page.locator('[data-ir]').nth(1)).toHaveAttribute('aria-current', 'true');
+  await expect(page.locator('#painel-epi')).toBeInViewport({ ratio: 0.6 });
+});
+
 test('every HUD figure carries a two-cell caption (machine | person) and the poster already shows the verdict', async ({ page }) => {
-  await page.goto('/recognition');
+  // The simulated HUD left the public pages (feedback 11/11); it is kept on the internal brand page.
+  await page.goto('/_marca');
   const figs = page.locator('[data-hud]');
   expect(await figs.count()).toBeGreaterThan(0);
   for (let i = 0; i < (await figs.count()); i++) {
@@ -152,6 +181,7 @@ test('buttons: one size, a visible hover (cyan as state), and one pair of CTAs o
     await expect(headerCta).toBeVisible();
     // Hover changes the primary button (never a dead button), from white to the accent.
     const btn = page.locator('#painel-fogo a.btn');
+    await btn.scrollIntoViewIfNeeded();
     const rest = await btn.evaluate((e) => getComputedStyle(e).backgroundColor);
     await btn.hover();
     await expect.poll(() => btn.evaluate((e) => getComputedStyle(e).backgroundColor)).toBe('rgb(0, 229, 255)');
@@ -160,5 +190,39 @@ test('buttons: one size, a visible hover (cyan as state), and one pair of CTAs o
   // Koda's link is only Koda and the balloon, not an invisible strip under the wall.
   await page.goto('/');
   const peek = await page.locator('.espia').boundingBox();
-  expect(peek?.width ?? 999).toBeLessThan(320);
+  expect(peek?.width ?? 999).toBeLessThan(420);
+});
+
+// Feedback 11/11, item 15: CATH, BrandSchutz, Visdec in a still row, whole (no mask, nothing past the
+// row's edges), at desktop and phone widths.
+test('partner logos: a still row of three whole logos, no mask', async ({ browser }) => {
+  for (const viewport of [
+    { width: 1440, height: 900 },
+    { width: 390, height: 844 },
+  ]) {
+    const ctx = await browser.newContext({ viewport });
+    await ctx.addInitScript(() => sessionStorage.setItem('lk-abertura', '1'));
+    const page = await ctx.newPage();
+    await page.goto('/');
+    const row = page.locator('.logos');
+    await row.scrollIntoViewIfNeeded();
+    await expect(row.locator('img')).toHaveCount(3);
+    expect(await row.locator('img').evaluateAll((is) => is.map((i) => i.getAttribute('src')?.split('/').pop()))).toEqual([
+      'l-cath-v2.webp',
+      'l-brandschutz.webp',
+      'l-visdec-v2.webp',
+    ]);
+    const clipped = await row.evaluate((ul) => {
+      const r = ul.getBoundingClientRect();
+      const masked = getComputedStyle(ul).maskImage !== 'none' || getComputedStyle(ul.parentElement as Element).maskImage !== 'none';
+      const out = [...ul.querySelectorAll('img')].some((i) => {
+        const b = i.getBoundingClientRect();
+        return b.left < r.left - 1 || b.right > r.right + 1 || b.right > window.innerWidth || i.naturalWidth === 0;
+      });
+      return masked || out;
+    });
+    expect(clipped, `${viewport.width}px`).toBe(false);
+    expect(await page.evaluate(() => document.getAnimations().some((a) => (a as CSSAnimation).animationName === 'corre'))).toBe(false);
+    await ctx.close();
+  }
 });

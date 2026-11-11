@@ -7,6 +7,9 @@
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
 import {
+  LOCKUP_INNER,
+  LOCKUP_RATIO,
+  LOCKUP_VIEWBOX,
   MONOGRAM_INNER,
   MONOGRAM_VIEWBOX,
   SYMBOL_INNER,
@@ -18,7 +21,8 @@ import {
 
 interface Props {
   locale: Locale;
-  variant?: 'wordmark' | 'symbol' | 'monogram';
+  /** lockup = Logikos Vision, direction A (wordmark with VISION under the S). */
+  variant?: 'wordmark' | 'lockup' | 'symbol' | 'monogram';
   /** Rendered height in px (wordmark: 20 or 64 — the 64 is fluid; marks: the edge). */
   size?: number;
   class?: string;
@@ -28,12 +32,18 @@ interface Props {
 
 const { locale, variant = 'wordmark', size = 20, class: className, decorative = false } = Astro.props;
 const t = dict(locale);
-const inner = variant === 'wordmark' ? WORDMARK_INNER : variant === 'symbol' ? SYMBOL_INNER : MONOGRAM_INNER;
-const viewBox = variant === 'wordmark' ? WORDMARK_VIEWBOX : variant === 'symbol' ? SYMBOL_VIEWBOX : MONOGRAM_VIEWBOX;
-const a11y = decorative ? { 'aria-hidden': true as const } : { role: 'img' as const, 'aria-label': t.brand.wordmark };
+const SHAPES = {
+  wordmark: [WORDMARK_INNER, WORDMARK_VIEWBOX, WORDMARK_RATIO],
+  lockup: [LOCKUP_INNER, LOCKUP_VIEWBOX, LOCKUP_RATIO],
+  symbol: [SYMBOL_INNER, SYMBOL_VIEWBOX, 1],
+  monogram: [MONOGRAM_INNER, MONOGRAM_VIEWBOX, 1],
+} as const;
+const [inner, viewBox, ratio] = SHAPES[variant];
+const name = variant === 'lockup' ? t.brand.product : t.brand.wordmark;
+const a11y = decorative ? { 'aria-hidden': true as const } : { role: 'img' as const, 'aria-label': name };
 // Width/height attributes give the SVG an intrinsic ratio browsers honour (the fluid 64 px
 // variant then scales with `height: auto`); a viewBox alone does not size an inline <svg>.
-const width = variant === 'wordmark' ? Math.round(size * WORDMARK_RATIO) : size;
+const width = Math.round(size * ratio);
 ---
 
 <svg
@@ -67,10 +77,22 @@ const width = variant === 'wordmark' ? Math.round(size * WORDMARK_RATIO) : size;
     }
   }
 
+  /* Logikos Vision lockup (direction A): white with the soft glow of the approved Artlist
+     refinement, drawn in CSS so the vector stays crisp at any size. */
+  .lk-mark--lockup {
+    filter: drop-shadow(0 0 1px rgb(255 255 255 / 0.55)) drop-shadow(0 0 7px rgb(255 255 255 / 0.28));
+  }
+
   /* Brand minimum is 90 px wide: the 20 px header mark is 130 px. The 64 px cover mark is
      fluid (36–64 px tall, i.e. 234–417 px wide) and keeps the lockup's proportion. */
   .lk-mark--wordmark[data-size='64'] {
     width: clamp(234px, 58.6vw, 417px);
+    height: auto;
+  }
+
+  /* Cover lockup (404): fluid, VISION legible at every width. */
+  .lk-mark--lockup[data-size='88'] {
+    width: clamp(240px, 60vw, 404px);
     height: auto;
   }
 </style>

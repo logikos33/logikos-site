@@ -13,14 +13,13 @@ for (const file of ['.env', `.env.${process.env.NODE_ENV === 'development' ? 'de
   }
 }
 
-const SITE = process.env.PUBLIC_SITE_URL ?? 'https://logikosvision.com.br';
+const SITE = process.env.PUBLIC_SITE_URL ?? 'https://www.logikosvision.com.br';
 const MEDIA_BASE = process.env.PUBLIC_MEDIA_BASE_URL ?? '';
 const ANALYTICS = Boolean(process.env.PUBLIC_CF_ANALYTICS_TOKEN);
 
-const TURNSTILE = 'https://challenges.cloudflare.com';
 const mediaOrigin = MEDIA_BASE ? new URL(MEDIA_BASE).origin : '';
 
-const scriptSources = ["'self'", TURNSTILE, ...(ANALYTICS ? ['https://static.cloudflareinsights.com'] : [])];
+const scriptSources = ["'self'", ...(ANALYTICS ? ['https://static.cloudflareinsights.com'] : [])];
 
 export default defineConfig({
   site: SITE,
@@ -59,9 +58,10 @@ export default defineConfig({
         "img-src 'self' data:",
         "font-src 'self'",
         `media-src 'self'${mediaOrigin ? ` ${mediaOrigin}` : ''}`,
-        `frame-src ${TURNSTILE}`,
-        // HUD JSON is fetched from the media origin when PUBLIC_MEDIA_BASE_URL is set.
-        `connect-src 'self'${mediaOrigin ? ` ${mediaOrigin}` : ''}${ANALYTICS ? ' https://cloudflareinsights.com' : ''}`,
+        "frame-src 'none'",
+        // HUD JSON is fetched from the media origin when PUBLIC_MEDIA_BASE_URL is set; the contact
+        // conversation posts to the CRM (src/config/links.ts CRM_LEAD_URL).
+        `connect-src 'self' https://brandschutz.logikosvision.com.br${mediaOrigin ? ` ${mediaOrigin}` : ''}${ANALYTICS ? ' https://cloudflareinsights.com' : ''}`,
       ],
       scriptDirective: { resources: scriptSources },
     },

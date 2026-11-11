@@ -1,0 +1,79 @@
+---
+// A real sequence, shown as one (revisão final 2, q1 and q3): numbered steps in order, joined by a
+// rule, on light sheets. Three or six steps: one row (or two rows of three) on desktop, a column on
+// phones. Numbers are allowed here because the order is the information.
+interface Props {
+  steps: { title: string; text: string }[];
+  class?: string;
+}
+
+const { steps, class: className } = Astro.props;
+---
+
+<ol class:list={['passos', className]}>
+  {steps.map((s, i) => (
+    <li class="passo folha">
+      <span class="passo__n" aria-hidden="true">
+        {String(i + 1).padStart(2, '0')}
+      </span>
+      <h3>{s.title}</h3>
+      <p>{s.text}</p>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .passos {
+    display: grid;
+    gap: var(--lk-space-4);
+    margin: var(--lk-space-5) 0 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: passo;
+  }
+
+  .passo {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: var(--lk-space-2);
+  }
+
+  .passo__n {
+    justify-self: start;
+    padding: 0.2rem 0.55rem;
+    background: #0a0a0f;
+    border-radius: 999px;
+    color: #00d4ff;
+    font: 600 0.8125rem/1.2 var(--lk-font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .passo h3 {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+
+  .passo p {
+    margin: 0;
+    color: var(--lk-text-2);
+    font-size: 0.9875rem;
+  }
+
+  /* The rule that joins one step to the next (desktop rows). */
+  @media (min-width: 48rem) {
+    .passos {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .passo:not(:nth-child(3n))::after {
+      content: '';
+      position: absolute;
+      top: 1.85rem;
+      right: calc(-1 * var(--lk-space-4));
+      width: var(--lk-space-4);
+      height: 2px;
+      background: #00d4ff;
+    }
+  }
+</style>

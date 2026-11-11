@@ -1,19 +1,26 @@
 ---
-// /recognition — PLANO-V2 §5: cover · five readings (stage) · EPI in three states · the alert,
-// inside · where it runs · partners · demos · next step. The region avatar (M3) and the live
-// demo chips (M7) arrive in the motion round; the structure they hook into is built here.
+// /recognition in the home's language (feedback 11/11, items 5, 24, 25): the monitor wall with the
+// real clips; six scenario cards (what it solves, what you get, a sample alert, the next step) and
+// a call to bring your own indicators; EPI without false alarms on the real clip; the alert as it
+// arrives; where it runs; partners; and one call to try it, the phone-camera close.
 import AlertCard from '../components/AlertCard.astro';
-import Avatar from '../components/Avatar.astro';
+import CaixaAbrindo from '../components/CaixaAbrindo.astro';
+import Cam from '../components/Cam.astro';
 import DefList from '../components/DefList.astro';
-import DemoStatus from '../components/DemoStatus.astro';
-import PointList from '../components/PointList.astro';
-import HudVideo from '../components/HudVideo.astro';
 import Icon from '../components/Icon.astro';
+import PageClose from '../components/PageClose.astro';
+import PageHero from '../components/PageHero.astro';
+import PointList from '../components/PointList.astro';
+import PushCard from '../components/PushCard.astro';
 import Section from '../components/Section.astro';
-import WhatsAppButton from '../components/WhatsAppButton.astro';
+import SpecialistButton from '../components/SpecialistButton.astro';
+import Wall from '../components/Wall.astro';
+import { EXPERIENCE_URL } from '../config/links';
 import { dict } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
+import type { IconName } from '../lib/icons';
+import type { ChatInterest } from '../lib/site';
 
 interface Props {
   locale: Locale;
@@ -24,57 +31,93 @@ const t = dict(locale);
 const p = t.recognition;
 const q = p.questions;
 
-const READINGS = ['fire', 'epi', 'ergonomics', 'zones', 'counting'] as const;
+// Order and next step of the six scenarios (texts in recognition.cases): the experience has a scene
+// for the first four; ergonomics and zones go to the conversation with Koda.
+const CASES: { icon: IconName; cenario?: string; interest: ChatInterest; tone: 'fogo' | 'atencao' | 'neutro' }[] = [
+  { icon: 'flame', cenario: 'fogo', interest: 'fire', tone: 'fogo' },
+  { icon: 'helmet', cenario: 'epi', interest: 'epi', tone: 'atencao' },
+  { icon: 'ok', cenario: 'qualidade', interest: 'quality', tone: 'atencao' },
+  { icon: 'counter', cenario: 'contagem', interest: 'counting', tone: 'neutro' },
+  { icon: 'posture', interest: 'ergonomics', tone: 'atencao' },
+  { icon: 'zone', interest: 'zones', tone: 'atencao' },
+];
+const cases = CASES.map((c, i) => {
+  const text = p.cases[i];
+  if (!text) throw new Error(`recognition.cases[${i}] missing`);
+  return { ...c, ...text };
+});
 const STATES = ['ok', 'alert', 'warn'] as const;
 const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoints.license].map((x) => ({ term: x.title, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="recognition" title={p.meta.title} description={p.meta.description}>
-  <Section cover as="h1" question={p.hero.question} title={p.hero.title} text={p.hero.text} id="page-title" wide>
-    <!-- The page's proof is its hero: the stage with the five readings (AUDITORIA-V2 F-10, F-15). -->
-    <HudVideo locale={locale} clip="fire" readings id="rec-stage" class="hero-stage" />
-    <div class="reading-texts">
-      {READINGS.map((k) => (
-        <div data-reading-text data-slot={k} hidden={k !== 'fire'}>
-          <dl class="defs">
-            <div class="defs__row">
-              <dt>{p.readings.fires}</dt>
-              <dd>{t.readings[k].fires}</dd>
+  <PageHero locale={locale} id="page-title" title={p.hero.title} text={p.hero.text}>
+    <Wall locale={locale} clips={['fogo', 'epi', 'qualidade', 'contagem', 'ergonomia']} yours />
+  </PageHero>
+
+  <Section question={p.hero.question} title={p.readings.title} id="readings-title" wide>
+    <ul class="leituras" role="list">
+      {cases.map((c) => (
+        <li class="leitura folha">
+          <h3>
+            <Icon name={c.icon} size={22} />
+            {c.name}
+          </h3>
+          <p class="leitura__resolve">{c.solves}</p>
+          <dl>
+            <div>
+              <dt>{p.caseLabels.gets}</dt>
+              <dd>{c.gets}</dd>
             </div>
-            <div class="defs__row">
-              <dt>{p.readings.receives}</dt>
-              <dd>{t.readings[k].receives}</dd>
-            </div>
-            <div class="defs__row">
-              <dt>{p.readings.not}</dt>
-              <dd>{t.readings[k].not}</dd>
+            <div>
+              <dt>{p.caseLabels.example}</dt>
+              <dd class="leitura__exemplo">
+                <PushCard locale={locale} title={c.example.title} body={c.example.body} time={c.example.time} tone={c.tone} />
+              </dd>
             </div>
           </dl>
-        </div>
+          {c.cenario ? (
+            <a class="leitura__proximo" href={`${EXPERIENCE_URL}?cenario=${c.cenario}`}>
+              {c.next}
+              <Icon name="arrow" size={16} />
+            </a>
+          ) : (
+            <a class="leitura__proximo" href={`${pathFor('contact', locale)}?interesse=${c.interest}#conversa`}>
+              <Icon name="chat" size={16} />
+              {c.next}
+            </a>
+          )}
+        </li>
       ))}
-    </div>
-    <div class="btn-row hero-actions">
-      <WhatsAppButton locale={locale} label={t.cta.pilot} />
-      <DemoStatus locale={locale} demo="epi" button label={t.cta.demo} />
-    </div>
+      <li class="chamada">
+        <div>
+          <h3>{p.custom.title}</h3>
+          <p>{p.custom.text}</p>
+        </div>
+        <SpecialistButton locale={locale} interest="custom" />
+      </li>
+    </ul>
   </Section>
 
   <Section question={q.epi} title={p.epi.title} text={p.epi.text} id="epi-title" wide>
-    <Avatar locale={locale} />
-    <dl class="defs legend">
-      {STATES.map((s) => (
-        <div class="defs__row">
-          <dt>
-            <span class:list={['verdict', `verdict--${s}`]}>
-              <Icon name={s} size={12} />
-              {t.states[s]}
-            </span>
-          </dt>
-          <dd>{p.epi.states[s]}</dd>
-        </div>
-      ))}
-    </dl>
-    <HudVideo locale={locale} clip="epi" />
+    <div class="split">
+      <figure>
+        <Cam clip="v-epi" name={t.pages.cams.epi} />
+      </figure>
+      <dl class="defs folha legend">
+        {STATES.map((s) => (
+          <div class="defs__row">
+            <dt>
+              <span class:list={['verdict', `verdict--${s}`]}>
+                <Icon name={s} size={12} />
+                {t.states[s]}
+              </span>
+            </dt>
+            <dd>{p.epi.states[s]}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
   </Section>
 
   <Section question={q.alert} title={p.alertAnatomy.title} text={p.alertAnatomy.text} id="alert-title" wide>
@@ -84,76 +127,164 @@ const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoin
     </div>
   </Section>
 
+  <!-- Round 5: the Logikos box beside the text, and the link becomes a secondary button under it. -->
   <Section question={q.where} title={p.where.title} text={p.where.text} id="where-title">
-    <p>
-      <a href={pathFor('howItWorks', locale)}>{p.where.cta}</a>
-    </p>
+    <a slot="actions" class="btn btn--ghost" href={pathFor('howItWorks', locale)}>
+      {p.where.cta}
+      <Icon name="arrow" size={18} />
+    </a>
+    <CaixaAbrindo locale={locale} />
   </Section>
 
   <Section question={q.partners} title={p.partners.title} id="partners-title">
+    <a slot="actions" class="btn btn--ghost" href={pathFor('partners', locale)}>
+      {p.partners.cta}
+      <Icon name="arrow" size={18} />
+    </a>
     <PointList rows={partnerRows} />
-    <p>
-      <a href={pathFor('partners', locale)}>{p.partners.cta}</a>
-    </p>
   </Section>
 
-  <Section question={q.demo} title={p.demo.title} text={p.demo.text} id="demo-title">
-    <div class="btn-row">
-      <DemoStatus locale={locale} demo="epi" button />
-      <DemoStatus locale={locale} demo="fire" button />
-    </div>
-    <p>
-      <a href={pathFor('demos', locale)}>{t.cta.seeDemos}</a>
-    </p>
-  </Section>
-
-  <Section question={q.next} title={t.home.next.title} id="next-title">
-    <div class="btn-row">
-      <WhatsAppButton locale={locale} label={t.cta.pilot} />
-      <a class="btn btn--ghost" href={pathFor('partners', locale)}>
-        {t.cta.partner}
-      </a>
-    </div>
-  </Section>
+  <PageClose locale={locale} />
 </Base>
 
-<script>
-  // Stage: the reading list on the HUD drives which trio of definition rows is shown.
-  const list = document.querySelector<HTMLFieldSetElement>('[data-hud-readings="rec-stage"]');
-  list?.addEventListener('change', () => {
-    const slot = list.querySelector<HTMLInputElement>('input:checked')?.value;
-    for (const el of document.querySelectorAll<HTMLElement>('[data-reading-text]')) el.hidden = el.dataset.slot !== slot;
-  });
-</script>
-
 <style>
-  .hero-stage {
-    margin-top: var(--lk-space-5);
+  /* One card per scenario (feedback 11/11, items 13, 24, 25e): what it solves (the lead line), what
+     you get, a sample alert as it would arrive, and the next step. 3 columns → 2 → 1. */
+  .leituras {
+    display: grid;
+    gap: var(--lk-space-4);
+    margin: var(--lk-space-5) 0 0;
+    padding: 0;
+    list-style: none;
   }
 
-  .hero-actions {
-    margin-top: var(--lk-space-5);
+  .leitura {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: var(--lk-space-3);
   }
 
-  .reading-texts {
-    margin-top: var(--lk-space-5);
+  .leitura h3 {
+    display: flex;
+    align-items: center;
+    gap: var(--lk-space-3);
+    margin: 0;
+    font-size: 1.2rem;
   }
 
-  .reading-texts [hidden] {
-    display: none;
+  .leitura h3 :global(svg) {
+    flex: none;
+    box-sizing: content-box;
+    padding: 0.4rem;
+    background: #0a0a0f;
+    border-radius: 8px;
+    color: #00d4ff;
+  }
+
+  .leitura__resolve {
+    margin: 0;
+    font-size: 1.0625rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .leitura dl {
+    display: grid;
+    gap: var(--lk-space-3);
+    align-content: start;
+    margin: 0;
+  }
+
+  .leitura dl > div {
+    padding-top: var(--lk-space-3);
+    border-top: 1px solid var(--lk-line);
+  }
+
+  .leitura dt {
+    font: 600 0.8125rem/1.4 var(--lk-font-body);
+    color: var(--lk-text-2);
+  }
+
+  .leitura dd {
+    margin: 0.15rem 0 0;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+
+  /* The sample alert is the app notification itself (PushCard). */
+  .leitura__exemplo {
+    margin-top: 0.5rem !important;
+  }
+
+  .leitura__proximo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    font-weight: 600;
+  }
+
+  /* The call card: the brand's own surface, full row, different from the six. */
+  .chamada {
+    display: grid;
+    gap: var(--lk-space-4);
+    align-items: center;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    background: linear-gradient(120deg, #0a2a33, #0a0a0f 70%);
+    border: 1px solid #00d4ff;
+    border-radius: 14px;
+  }
+
+  .chamada h3 {
+    margin: 0 0 var(--lk-space-2);
+    font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+  }
+
+  .chamada p {
+    margin: 0;
+    max-width: 60ch;
+    color: var(--lk-text-lead, var(--lk-text-2));
+  }
+
+  @media (min-width: 40rem) {
+    .leituras {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .chamada {
+      grid-column: 1 / -1;
+      grid-template-columns: 1fr auto;
+    }
   }
 
   .split {
     display: grid;
     gap: var(--lk-space-6);
     align-items: start;
+    margin-top: var(--lk-space-6);
   }
 
-  .legend {
-    margin-top: var(--lk-space-5);
+  figure {
+    margin: 0;
+  }
+
+  figcaption {
+    margin-top: var(--lk-space-2);
+    font-size: 0.8125rem;
+    color: var(--lk-text-2);
+  }
+
+  @media (min-width: 40rem) {
+    .leituras {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   @media (min-width: 64rem) {
+    .leituras {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
     .split {
       grid-template-columns: 1fr 1fr;
     }

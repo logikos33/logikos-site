@@ -1,47 +1,24 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
-import { ALL_ROUTES, setTheme, skipOpening, stubTurnstile } from './helpers.ts';
+import { ALL_ROUTES, setTheme, skipOpening } from './helpers.ts';
 
-// Deterministic: Turnstile's real widget is exercised only by the form tests.
 test.beforeEach(async ({ page }) => {
-  await stubTurnstile(page);
   await skipOpening(page);
 });
 
-test('light theme by default, even when the OS prefers dark', async ({ browser }) => {
-  const ctx = await browser.newContext({ colorScheme: 'dark' });
+// Feedback 11/11 (item 5): every page follows the dark v3 home — no toggle, the OS preference and
+// an old saved choice are ignored.
+test('every page is dark, with no toggle, whatever the OS or a saved choice say', async ({ browser }) => {
+  const ctx = await browser.newContext({ colorScheme: 'light' });
   const page = await ctx.newPage();
-  await page.goto('/sobre');
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
-  await ctx.close();
-});
-
-test('the home is always dark, has no toggle and leaves the saved choice alone', async ({ page }) => {
   await setTheme(page, 'light');
-  await page.goto('/');
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-  await expect(page.locator('[data-theme-toggle]')).toHaveCount(0);
-  await page.goto('/sobre');
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
-});
-
-test('theme toggle persists across reload and navigation', async ({ page }) => {
-  await page.goto('/sobre');
-  const toggle = page.locator('[data-theme-toggle]');
-  await expect(toggle).toHaveAttribute('aria-pressed', 'false');
-  const name = await toggle.getAttribute('aria-label');
-  await toggle.click();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-  await expect(toggle).toHaveAttribute('aria-pressed', 'true');
-  // Fixed accessible name; only the pressed state changes.
-  await expect(toggle).toHaveAttribute('aria-label', name ?? '');
-  await page.reload();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-  await page.goto('/en/about');
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-  await page.locator('[data-theme-toggle]').click();
-  await page.reload();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  await skipOpening(page);
+  for (const { path } of ALL_ROUTES) {
+    await page.goto(path);
+    await expect(page.locator('html'), path).toHaveAttribute('data-theme', 'dark');
+    await expect(page.locator('[data-theme-toggle]'), path).toHaveCount(0);
+  }
+  await ctx.close();
 });
 
 test('no flash of the wrong theme: data-theme is set before first paint', async ({ page }) => {
@@ -57,7 +34,7 @@ test('no flash of the wrong theme: data-theme is set before first paint', async 
   expect(seen).toEqual(['dark']);
 });
 
-for (const theme of ['light', 'dark'] as const) {
+for (const theme of ['dark'] as const) {
   test(`axe: zero violations (WCAG 2 A/AA, incl. contrast) on all 20 pages — ${theme}`, async ({ page }, info) => {
     test.setTimeout(240_000);
     await setTheme(page, theme);
@@ -75,13 +52,10 @@ for (const theme of ['light', 'dark'] as const) {
   });
 }
 
-test('icon swaps show exactly one icon (theme toggle, mobile menu)', async ({ page }) => {
+test('icon swaps show exactly one icon (mobile menu)', async ({ page }) => {
   await page.goto('/sobre');
   const visibleIcons = (sel: string) =>
     page.locator(`${sel} svg`).evaluateAll((els) => els.filter((e) => getComputedStyle(e).display !== 'none').length);
-  expect(await visibleIcons('[data-theme-toggle]')).toBe(1);
-  await page.locator('[data-theme-toggle]').click();
-  expect(await visibleIcons('[data-theme-toggle]')).toBe(1);
   await page.setViewportSize({ width: 390, height: 800 });
   expect(await visibleIcons('.mobile-nav summary')).toBe(1);
   await page.locator('.mobile-nav summary').click();
@@ -93,7 +67,7 @@ test('header wordmark keeps at least 90 px of ink (brand minimum)', async ({ pag
     await page.setViewportSize({ width, height: 800 });
     await page.goto('/sobre');
     const ink = await page
-      .locator('.site-header__logo svg[data-brand="wordmark"]')
+      .locator('.site-header__logo svg[data-brand="lockup"]')
       .first()
       .evaluate((el) => el.getBoundingClientRect().width);
     expect(ink, `width ${width}`).toBeGreaterThanOrEqual(90);

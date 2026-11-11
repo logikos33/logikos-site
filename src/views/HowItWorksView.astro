@@ -1,8 +1,12 @@
 ---
+import CaixaAbrindo from '../components/CaixaAbrindo.astro';
+import Cam from '../components/Cam.astro';
+import LicenseOptions from '../components/LicenseOptions.astro';
+import PageClose from '../components/PageClose.astro';
+import PageHero from '../components/PageHero.astro';
 import Pipeline from '../components/Pipeline.astro';
 import PointList from '../components/PointList.astro';
 import Section from '../components/Section.astro';
-import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
@@ -19,26 +23,45 @@ const integrations = [i.alarm, i.mqtt, i.webhook].map((x) => ({ term: x.title, t
 ---
 
 <Base locale={locale} routeKey="howItWorks" title={p.meta.title} description={p.meta.description}>
-  <Section as="h1" cover id="hero-title" question={p.hero.question} title={p.hero.title} text={p.hero.text} wide>
-    <!-- The figure this page exists for, in its hero (AUDITORIA-V2 F-10). -->
+  <PageHero locale={locale} id="hero-title" title={p.hero.title} text={p.hero.text}>
+    <figure class="fig">
+      <Cam clip="v-fogo" name={t.pages.cams.fogo} />
+    </figure>
+  </PageHero>
+
+  <!-- The figure this page exists for: camera → processing → verdict → the person who decides. -->
+  <Section id="pipeline-title" question={p.hero.question} title={t.home.how.title} wide class="section--perto">
     <Pipeline locale={locale} long class="after" />
   </Section>
 
-  <Section id="offline-title" question={p.questions.offline} title={p.offline.title} text={p.offline.text} />
+  <!-- Item 16: the Logikos box opens beside the text (once, on first sight). -->
+  <Section id="offline-title" question={p.questions.offline} title={p.offline.title} text={p.offline.text}>
+    <CaixaAbrindo locale={locale} />
+  </Section>
 
   <Section id="integrations-title" question={p.questions.integrations} title={p.integrations.title}>
     <PointList rows={integrations} class="after" />
   </Section>
 
-  <Section id="license-title" question={p.questions.license} title={p.license.title} text={p.license.text}>
-    <div class="btn-row after">
-      <WhatsAppButton locale={locale} />
-    </div>
+  <Section id="license-title" question={p.questions.license} title={t.pages.license.title} text={t.pages.license.text} wide>
+    <LicenseOptions locale={locale} />
   </Section>
+
+  <PageClose locale={locale} />
 </Base>
 
 <style>
   .after {
     margin-top: var(--lk-space-6);
+  }
+
+  .fig {
+    margin: 0;
+  }
+
+  .fig figcaption {
+    margin-top: var(--lk-space-2);
+    font-size: 0.8125rem;
+    color: var(--lk-text-2);
   }
 </style>

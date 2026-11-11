@@ -33,6 +33,25 @@ const RULES = [
   ['Roccatextil', /\broccatextil\b/],
   ['EPI Monitor', /\bepi\s*monitor\b|\bepimonitor\b/],
   ['YOLOv8', /\byolo\s*v?8\b/],
+  // Feedback 11/11 (item 6): no model name, architecture or hardware on any page — the site says
+  // "modelo proprietário Logikos" and "processamento na nuvem ou na planta".
+  ['YOLO / YOLOX', /\byolo\w*/],
+  ['RT-DETR', /\brt-?detr\b/],
+  ['FireSet', /\bfireset\b/],
+  ['NVIDIA', /\bnvidia\b/],
+  ['Jetson', /\bjetson\b/],
+  ['TensorRT / DeepStream / ONNX', /\b(?:tensorrt|deepstream|onnx)\b/],
+  ['nome de placa', /\b(?:orin|xavier|raspberry\s*pi|hailo|coral\s+tpu)\b/],
+  ['edge (como nome técnico)', /\bedge\s+(?:computing|device|ai)\b|\bna\s+borda\b/],
+  // Feedback 11/11, item 25c-d: no technical notes for the public, and the licence is monthly /
+  // annual / biennial everywhere — never "24 months".
+  [
+    'detalhe técnico das demos',
+    /\bnada e enviado\b|\bsem enviar nada\b|\bnothing is sent\b|\bsending nothing\b|\brode o modelo\b|\brun the model\b|\broda no seu aparelho\b|\bruns on your device\b|\bdemos abertas\b|\bopen demos\b|\bdemo generica\b|\bgeneric detection demo\b|\balarme falso medida\b|\bfalse-alarm rate\b/,
+  ],
+  ['licença de 24 meses', /\b24\s*meses\b|\b24-month\b/],
+  // Round 5 (a): no "stock footage / real detection over…" captions anywhere.
+  ['legenda de vídeo de banco', /\bvideos? de banco\b|\bstock footage\b|\bdeteccao real\b|\breal detection\b/],
 ];
 
 // Partner mentions approved by Vitor for the home only (decision 0027): the partner strip and the
@@ -41,14 +60,17 @@ const RULES = [
 const APPROVED = {
   'index.html': [
     '/media/parceiros/l-brandschutz.webp',
-    '/media/parceiros/l-cath.webp',
+    '/media/parceiros/l-cath-v2.webp',
     'alt="brandschutz"',
     'alt="cath projetos e seguranca"',
     'estande da parceira brandschutz',
     'booth of our partner brandschutz',
   ],
 };
-const approvedFor = (file) => (/^(?:en\/)?index\.html$/.test(relative(ROOT, file)) ? APPROVED['index.html'] : []);
+// The CRM's intake host (src/config/links.ts CRM_LEAD_URL), on any page: a machine address, never
+// copy. Only this exact URL is allowed; the name in text still fails.
+const EVERYWHERE = ['https://brandschutz.logikosvision.com.br/api/lead', 'https://brandschutz.logikosvision.com.br'];
+const approvedFor = (file) => [...EVERYWHERE, ...(/^(?:en\/)?index\.html$/.test(relative(ROOT, file)) ? APPROVED['index.html'] : [])];
 
 const TEXT_EXT = new Set(['.html', '.xml', '.json', '.svg', '.txt', '.css', '.js', '.webmanifest']);
 

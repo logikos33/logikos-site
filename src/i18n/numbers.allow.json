@@ -1,18 +1,6 @@
 {
   "_doc": "Every number in src/i18n/*.json must be listed here under the exact key where it appears, with its source. scripts/i18n-gate.mjs enforces it per key, so a documented number cannot be reused elsewhere.",
   "allow": {
-    "partnerPoints.license.text": {
-      "values": ["24"],
-      "source": "Prazo da licença (24 meses) — brief do site, 01/10/2026."
-    },
-    "howItWorks.license.text": {
-      "values": ["24"],
-      "source": "Prazo da licença (24 meses) — brief do site, 01/10/2026."
-    },
-    "about.facts.licenses.text": {
-      "values": ["2.0"],
-      "source": "Nome da licença Apache 2.0 — política de licenças da Logikos."
-    },
     "privacy.sections.legalBasis.text": {
       "values": ["7"],
       "source": "LGPD (Lei 13.709/2018), art. 7º — bases legais."
@@ -24,10 +12,6 @@
     "privacy.sections.rights.text": {
       "values": ["18"],
       "source": "LGPD (Lei 13.709/2018), art. 18 — direitos do titular."
-    },
-    "platform.compare.rows[4].edge": {
-      "values": ["24"],
-      "source": "Prazo da licença (24 meses) — brief do site, 01/10/2026."
     },
     "home.hero.yours.title": {
       "values": ["07"],
@@ -113,10 +97,6 @@
       "values": ["17"],
       "source": "NR-17 (Ergonomia), Norma Regulamentadora do MTE."
     },
-    "home.scenarios.items[0].source": {
-      "values": ["1"],
-      "source": "Nome do modelo próprio FireSet v1 (src/config/links.ts)."
-    },
     "home.scenarios.items[2].state": {
       "values": ["1"],
       "source": "Linha 1 mostrada no OSD/HUD do vídeo de qualidade, esboço v3."
@@ -132,6 +112,122 @@
     "home.contact.screen": {
       "values": ["07"],
       "source": "Câmera do visitante (\"CAM 07 · a sua\" no muro do herói), repetida no monitor do contato."
+    },
+    "pages.yours.title": {
+      "values": ["07"],
+      "source": "O mesmo \"CAM 07 · a sua\" do muro da home, no muro de /recognition e /demos."
+    },
+    "pages.close.screen": {
+      "values": ["07"],
+      "source": "O monitor do contato da home (\"CAM 07 · aguardando sinal\"), no fecho de cada página."
+    },
+    "pages.fireshow.label": {
+      "values": ["2026"],
+      "source": "Fireshow 2026 (6 a 8/10/2026), gravações próprias do estande — docs/provas/midia-home-v3.md."
+    },
+    "pages.fireshow.caption": {
+      "values": ["2026"],
+      "source": "Fireshow 2026 (6 a 8/10/2026), gravações próprias do estande — docs/provas/midia-home-v3.md."
+    },
+    "pages.license.biennial.text": {
+      "values": ["2"],
+      "source": "Licença bienal (2 anos), texto do Vitor na rodada 4 do feedback 11/11."
+    },
+    "about.vision.text": {
+      "values": ["4.0"],
+      "source": "Indústria 4.0 (nome do conceito), pedido do Vitor no item 26 do feedback 11/11."
+    },
+    "home.scenarios.twin.tab": {
+      "values": ["6"],
+      "source": "Número do canal (CH6, gêmeo digital) do carrossel da home, rodada 5 do feedback 11/11."
+    },
+    "home.scenarios.twin.solves": {
+      "values": ["100"],
+      "source": "Inspeção de 100 % (todas as peças), pedido do Vitor para o Twins na rodada 5 do feedback 11/11."
+    },
+    "twins.meta.description": {
+      "values": ["100"],
+      "source": "Inspeção de 100 % (todas as peças), pedido do Vitor para o Twins na rodada 5 do feedback 11/11."
+    },
+    "twins.features.parts.text": {
+      "values": ["100"],
+      "source": "Inspeção de 100 % (todas as peças), pedido do Vitor para o Twins na rodada 5 do feedback 11/11."
+    },
+    "home.scenarios.twin.gets": {
+      "values": ["3"],
+      "source": "Ambiente em 3D (nuvem de pontos do Twins), rodada 5 do feedback 11/11."
+    },
+    "recognition.cases[0].example.title": {
+      "values": ["03"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[0].example.body": {
+      "values": ["8"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[0].example.time": {
+      "values": ["14", "32"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[1].example.title": {
+      "values": ["02"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[1].example.body": {
+      "values": ["3"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[1].example.time": {
+      "values": ["14", "32"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[2].example.title": {
+      "values": ["04"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[2].example.body": {
+      "values": ["1"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[2].example.time": {
+      "values": ["14", "32"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[3].example.title": {
+      "values": ["05"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[3].example.body": {
+      "values": ["07", "412"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[3].example.time": {
+      "values": ["14", "32"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[4].example.title": {
+      "values": ["06"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[4].example.body": {
+      "values": ["38", "4"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[4].example.time": {
+      "values": ["14", "32"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[5].example.title": {
+      "values": ["01"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[5].example.time": {
+      "values": ["14", "32"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "twins.partsPoints[0].title": {
+      "values": ["100"],
+      "source": "Inspeção de 100 % (todas as peças), pedido do Vitor para o Twins."
     }
   }
 }

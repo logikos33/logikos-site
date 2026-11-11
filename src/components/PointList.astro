@@ -15,7 +15,7 @@ interface Props {
 const { rows, class: className } = Astro.props;
 ---
 
-<ul class:list={['points', className]} role="list">
+<ul class:list={['points', 'folha', className]} role="list">
   {rows.map((r) => (
     <li class="points__row">
       <strong class="points__term">{r.term}</strong>
@@ -25,13 +25,13 @@ const { rows, class: className } = Astro.props;
 </ul>
 
 <style>
+  /* Padding comes from the light sheet (.folha). */
   .points {
     list-style: none;
     margin: 0;
-    padding: 0;
     display: grid;
-    gap: var(--lk-space-3);
-    max-width: var(--lk-measure);
+    gap: var(--lk-space-4);
+    max-width: 47.5rem;
     color: var(--lk-text-2);
   }
 
@@ -51,15 +51,11 @@ const { rows, class: className } = Astro.props;
     background: var(--lk-line-strong);
   }
 
+  /* Label over content: the term reads first, the proof under it (scannable, short lines). */
   .points__term {
+    display: block;
     color: var(--lk-text);
     font-family: var(--lk-font-display);
-    font-weight: 500;
-  }
-
-  .points__term::after {
-    content: ' — ';
-    color: var(--lk-text-2);
-    font-weight: 400;
+    font-weight: 600;
   }
 </style>

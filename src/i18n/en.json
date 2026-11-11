@@ -9,7 +9,7 @@
     "mainNav": "Main navigation",
     "footerNav": "Footer",
     "menu": "Menu",
-    "home": "Logikos Soluções — home",
+    "home": "Logikos Vision — home",
     "langSwitch": "Language",
     "langCurrent": "current language",
     "externalWhatsapp": "opens WhatsApp",
@@ -62,6 +62,7 @@
   },
   "brand": {
     "wordmark": "LOGIKOS",
+    "product": "Logikos Vision",
     "label": "solutions",
     "tagline": "Where logic meets vision."
   },
@@ -141,13 +142,11 @@
     "hero": {
       "title": "Your camera is already in the plant. Now it understands what it sees.",
       "sub": "Fire, PPE, quality, counting and ergonomics on the IP cameras you already have. Processing in the cloud or inside the plant, and the alert arrives with the clip of the moment.",
-      "note": "In the browser, no sign-up.",
       "wallLabel": "Five cameras recognizing in real time and an invitation to try yours",
       "yours": {
         "title": "CAM 07 · yours",
         "text": "Open the demo on your phone and point it at anything."
       },
-      "legend": "real detection, run over stock footage · demonstration",
       "pause": "Pause motion",
       "resume": "Resume motion",
       "koda": "I’ll show you the readings."
@@ -160,7 +159,7 @@
     },
     "koda": {
       "title": "Meet Koda.",
-      "text": "Koda is the guide to the Logikos experience: in a few minutes he shows fire, PPE, counting and quality at work, right in your browser.",
+      "text": "Koda is the guide to the Logikos experience: in a few minutes he shows fire, PPE, counting and quality at work.",
       "cta": "Take the tour with Koda",
       "note": "No sign-up, nothing to install.",
       "alt": "Koda, the guide to the Logikos experience"
@@ -172,8 +171,13 @@
     },
     "scenarios": {
       "title": "Five readings. The same cameras.",
-      "text": "Pick a channel. The video shows the real detection, frame by frame.",
+      "text": "The channels cycle on their own; swipe or pick a channel for a closer look.",
       "tabsLabel": "Scenarios",
+      "roledescription": "carousel",
+      "slideRole": "channel",
+      "slide": "{n} of {total}",
+      "prev": "Previous channel",
+      "next": "Next channel",
       "camera": "camera",
       "when": "when",
       "evidence": "evidence",
@@ -192,7 +196,6 @@
           "who": "For fire brigades and site security: an early-stage fire is caught while it is still small, with the clip of the moment.",
           "cta": "Try the Fire scenario",
           "specialist": "Talk to a fire specialist",
-          "source": "model: FireSet v1 (YOLOX-S), trained by Logikos · stock footage",
           "wa": "Hi! I’d like to talk to a specialist about fire."
         },
         {
@@ -206,7 +209,6 @@
           "who": "For EHS: helmet, vest and restricted areas, person by person.",
           "cta": "Try the PPE scenario",
           "specialist": "Talk to a PPE specialist",
-          "source": "model: helmet detector trained for the demonstration · stock footage",
           "wa": "Hi! I’d like to talk to a specialist about PPE."
         },
         {
@@ -220,7 +222,6 @@
           "who": "For quality: every part checked on the line, and the off-spec ones set aside.",
           "cta": "Try the Quality scenario",
           "specialist": "Talk to a quality specialist",
-          "source": "model: general-purpose object detector, for the demonstration · stock footage",
           "wa": "Hi! I’d like to talk to a specialist about quality inspection."
         },
         {
@@ -234,7 +235,6 @@
           "who": "For operations and logistics: counting on the conveyor and load checks.",
           "cta": "Try the Counting scenario",
           "specialist": "Talk to a counting specialist",
-          "source": "model: open-vocabulary detector + ByteTrack tracking · stock footage",
           "wa": "Hi! I’d like to talk to a specialist about counting."
         },
         {
@@ -248,14 +248,24 @@
           "who": "For occupational health: risky postures when lifting loads, measured from the skeleton.",
           "cta": "Talk to an ergonomics specialist",
           "specialist": "Talk to an ergonomics specialist",
-          "source": "model: pose estimation, with the trunk angle computed on every frame · stock footage",
           "wa": "Hi! I’d like to talk to a specialist about ergonomics."
         }
-      ]
+      ],
+      "solves": "what it solves",
+      "gets": "what you get",
+      "twin": {
+        "tab": "CH6",
+        "name": "Digital twin",
+        "state": "DIGITAL TWIN · plant and part by part",
+        "solves": "A walkable plant from a phone video, to measure and annotate without going there; and a twin of every part, with 100 % inspection and the deviation from the design visible before it becomes a batch.",
+        "gets": "The site in 3D to measure and annotate, traceability of every part and its history, part by part.",
+        "cta": "Request your custom model"
+      }
     },
     "band": {
       "title": "Want to see this on your cameras?",
-      "text": "A specialist looks at your scenario with you, tells you what can be recognized with the cameras you already have and designs a guided pilot."
+      "text": "Open the demo on your phone, point the camera at anything and see the detection right away, no sign-up. For the cameras in your plant, a specialist designs the pilot with you.",
+      "cta": "Try it on your phone camera"
     },
     "how": {
       "title": "From camera to decision.",
@@ -302,19 +312,19 @@
       "demo": {
         "date": "now · on your phone",
         "title": "Try it with your own camera",
-        "text": "The demo runs in your phone’s browser. Nothing is uploaded.",
+        "text": "Point it at someone with and without a helmet and see the alert on the spot.",
         "cta": "Open the demo"
       }
     },
     "data": {
       "title": "You decide where the video stays.",
-      "text": "With the device in the plant, the continuous video never leaves it: only the alert and the event clip do. In the cloud, retention is set by contract. Either way, we monitor the condition, not who the person is.",
+      "text": "With the unit in the plant, the images stay with you: only the alert and the event clip leave. In the cloud, retention is agreed by contract. Either way, we monitor the condition, not who the person is.",
       "leaves": "leaves the plant",
       "stays": "stays in the plant",
       "rows": [
-        ["the alert", "the continuous video"],
+        ["the alert", "the day-to-day images"],
         ["the event clip", "the recordings"],
-        ["the marked frame", "the model and the hardware"]
+        ["the marked frame", "the model and the unit"]
       ]
     },
     "faq": {
@@ -357,7 +367,7 @@
     "pipeline": {
       "title": "From camera to decision, without leaving the plant.",
       "wall": "plant",
-      "note": "Only the alert and the clip cross the wall.",
+      "note": "Only the alert and the event clip leave the plant.",
       "cta": "See the architecture"
     },
     "next": {
@@ -384,8 +394,8 @@
       "text": "Works with the IP cameras already on site."
     },
     "device": {
-      "title": "Edge device in the plant",
-      "text": "An NVIDIA Jetson runs the analysis on site. It keeps working offline; continuous video stays out of the cloud by default."
+      "title": "Processing in the plant or in the cloud",
+      "text": "The Logikos proprietary model analyses the images in the plant or in the cloud, your choice. In the plant it keeps working offline and the images stay with you."
     },
     "verdict": {
       "title": "Verdict, evidence, alert",
@@ -398,39 +408,39 @@
   },
   "partnerPoints": {
     "brand": {
-      "title": "Your brand on the dashboard",
-      "text": "Your logo and colors on the dashboard your customer uses."
-    },
-    "license": {
-      "title": "Term license",
-      "text": "A 24-month term license."
+      "title": "You bring the case",
+      "text": "What your client needs to see on their cameras: the area, the risk, the part, the indicator."
     },
     "pilot": {
-      "title": "Pilot first",
-      "text": "A pilot at the customer's plant before rollout."
+      "title": "Logikos trains the model",
+      "text": "A proprietary model trained and validated on the client's images, with a guided pilot."
+    },
+    "license": {
+      "title": "Delivered to the operation",
+      "text": "In the cloud or in the plant, with a monthly, annual or biennial licence (biennial recommended)."
     },
     "support": {
-      "title": "Support and training",
-      "text": "Training for your team and technical support from Logikos."
+      "title": "Support and evolution",
+      "text": "Training for your team and model updates on Logikos."
     }
   },
   "recognition": {
     "meta": {
-      "title": "Recognition — edge computer vision for industry",
+      "title": "Recognition — computer vision for industry",
       "description": "Fire and smoke, PPE by body region, ergonomics, hazard zones and counting on the same camera. Processed inside the plant."
     },
     "hero": {
       "question": "what is it?",
-      "title": "Five readings on the cameras you already have.",
-      "text": "Fire and smoke, PPE by body region, ergonomics, risk zones and counting: one verdict per event, with its evidence clip. Pick a reading."
+      "title": "Six readings on the camera you already have.",
+      "text": "Fire and smoke, PPE, quality, counting, ergonomics and hazard zones: one alert per event, with the clip that proves what happened."
     },
     "epi": {
-      "title": "PPE with three states",
-      "text": "If the camera can't see a body region, the verdict is undetermined. No guessing.",
+      "title": "PPE without false alarms.",
+      "text": "If the camera cannot see the head or the hands, the system does not guess: it waits to see before it alerts.",
       "states": {
-        "ok": "PPE is present on the checked region.",
-        "alert": "PPE is missing on the checked region.",
-        "warn": "The region isn't visible enough to decide."
+        "ok": "Wearing the required PPE.",
+        "alert": "Missing the PPE: the alert goes out with the frame.",
+        "warn": "The region cannot be seen: no alert is raised."
       },
       "regions": {
         "head": "head",
@@ -457,7 +467,7 @@
       "next": "next step?"
     },
     "readings": {
-      "title": "One camera, five verdicts.",
+      "title": "One camera, six readings.",
       "fires": "What triggers it",
       "receives": "What the person receives",
       "not": "What it does not do"
@@ -490,31 +500,109 @@
     },
     "where": {
       "title": "Inside the plant.",
-      "text": "The existing IP cameras, an NVIDIA Jetson in the rack and a panel. Works without internet; only the alert and the clip cross the wall.",
+      "text": "The cameras you already have, the Logikos proprietary model and a dashboard. In the cloud or in the plant; in the plant, the images stay with you and only the alert leaves.",
       "cta": "See how it works"
     },
     "partners": {
-      "title": "Your brand on the dashboard, a guided pilot, a term license.",
-      "cta": "See the partner program"
+      "title": "For integrators: your client's custom model.",
+      "cta": "See how to build the model"
     },
     "demo": {
-      "title": "Run the model in your browser.",
-      "text": "Two open demos. Nothing is sent: the model runs on your device."
-    }
+      "title": "Try it on your phone camera.",
+      "text": "Point your phone at someone with and without a helmet and watch the alert show up on the spot."
+    },
+    "caseLabels": {
+      "solves": "What it solves",
+      "gets": "What you get",
+      "example": "App notification"
+    },
+    "cases": [
+      {
+        "name": "Fire and smoke",
+        "solves": "An early-stage fire seen before the ceiling detector, in yards, storage or open sheds.",
+        "gets": "An alert on the fire brigade's WhatsApp, with the clip and the marked frame.",
+        "example": {
+          "title": "Smoke · CAM 03 · Outdoor yard",
+          "body": "Early-stage fire in cardboard boxes. 8 s clip sent to the brigade.",
+          "time": "14:32"
+        },
+        "next": "Try the Fire scenario"
+      },
+      {
+        "name": "PPE",
+        "solves": "People without a helmet, vest or goggles where they are required, person by person.",
+        "gets": "An alert to the safety technician and the history per shift.",
+        "example": {
+          "title": "No helmet · CAM 02 · Warehouse",
+          "body": "Operator at dock 3. Frame sent to the safety technician.",
+          "time": "14:32"
+        },
+        "next": "Try the PPE scenario"
+      },
+      {
+        "name": "Quality",
+        "solves": "Out-of-spec parts pulled from the line, without inspecting item by item.",
+        "gets": "The frame of every rejected part and the count per batch.",
+        "example": {
+          "title": "Out-of-spec part · CAM 04 · Filling",
+          "body": "Crooked cap on line 1. Part marked for removal.",
+          "time": "14:32"
+        },
+        "next": "Try the Quality scenario"
+      },
+      {
+        "name": "Counting",
+        "solves": "Boxes counted on the conveyor or at the dock, without spreadsheets or double checks.",
+        "gets": "The total per period and per batch, on the dashboard.",
+        "example": {
+          "title": "Batch closed · CAM 05 · Shipping",
+          "body": "Batch 07 closed at 412 boxes.",
+          "time": "14:32"
+        },
+        "next": "Try the Counting scenario"
+      },
+      {
+        "name": "Ergonomics",
+        "solves": "A risky posture repeated in the same task, before it turns into sick leave.",
+        "gets": "Time in each posture per workstation, so the safety team can act.",
+        "example": {
+          "title": "Risky posture · CAM 06 · Picking",
+          "body": "Trunk bent for 38 % of the shift at station 4.",
+          "time": "14:32"
+        },
+        "next": "Talk to an ergonomics specialist"
+      },
+      {
+        "name": "Hazard zones",
+        "solves": "Someone in a forklift, press or suspended-load area, the moment they step in.",
+        "gets": "An immediate alert and the frame of whoever crossed the line.",
+        "example": {
+          "title": "Hazard zone · CAM 01 · Dock",
+          "body": "Person in the forklift lane. Shift lead notified.",
+          "time": "14:32"
+        },
+        "next": "Talk to a hazard-zone specialist"
+      }
+    ],
+    "custom": {
+      "title": "Bring your own indicators to the platform.",
+      "text": "Readings, alerts and dashboards tuned to your operation: your areas, your shifts, your targets and who gets each alert."
+    },
+    "app": "Logikos Vision"
   },
   "howItWorks": {
     "meta": {
-      "title": "How it works — camera, edge device, alert",
-      "description": "Existing cameras, offline-first processing on NVIDIA Jetson inside the plant, verdicts with evidence, and integration via dry contact, MQTT or webhooks."
+      "title": "How it works — camera, processing, alert",
+      "description": "Existing cameras, the Logikos proprietary model processing in the cloud or in the plant, verdicts with evidence, and integration via dry contact, MQTT or webhooks."
     },
     "hero": {
       "question": "how does it work?",
-      "title": "From the cameras you already have to an alert with evidence, without the video leaving the plant.",
-      "text": "A device in the rack reads the cameras, decides and keeps the evidence. Only the alert and the clip cross the plant wall."
+      "title": "From the cameras you already have to an alert with evidence.",
+      "text": "The Logikos proprietary model reads the cameras, decides and keeps the proof, in the cloud or in the plant. In the plant, the images stay with you and only the alert leaves."
     },
     "offline": {
-      "title": "Offline-first",
-      "text": "The device keeps analyzing and recording without internet. Events sync when the link is back."
+      "title": "In the plant, even offline",
+      "text": "If the internet drops, the unit keeps watching and storing the alerts. When the connection is back, everything reaches the dashboard."
     },
     "integrations": {
       "title": "Integrations",
@@ -532,47 +620,54 @@
       }
     },
     "license": {
-      "title": "Term license",
-      "text": "A 24-month term license."
+      "title": "Terms",
+      "text": "Monthly, annual or biennial. In every one, the model, the updates and the support come from Logikos."
     },
     "questions": {
       "offline": "and without internet?",
       "integrations": "how does it integrate?",
       "license": "how is it licensed?"
+    },
+    "box": {
+      "alt": "Open Logikos box: the unit, the network cable and the power supply",
+      "device": "Logikos unit",
+      "network": "Network cable",
+      "power": "Power supply",
+      "caption": "Arrives ready: plug it into power and the plant network."
     }
   },
   "partners": {
     "meta": {
-      "title": "Partners — Logikos integrator program",
-      "description": "A dashboard under the partner's brand, guided pilots, support and training for security and automation integrators."
+      "title": "Partners — a custom model with Logikos",
+      "description": "You bring your client's case; Logikos trains and delivers the custom model for their operation, with support."
     },
     "hero": {
       "question": "for whom?",
-      "title": "Sell Recognition under your brand.",
-      "text": "Logikos runs the platform and the support. For electronic security, automation and industrial IT integrators: a panel with your logo, a guided pilot at the client’s plant, a term licence."
+      "title": "Build your client's custom model with Logikos.",
+      "text": "For electronic security, automation and industrial IT integrators: you bring the case, Logikos trains the model and delivers it ready for your client's operation."
     },
     "model": {
-      "title": "Channel model",
-      "text": "The partner sells and installs. Logikos provides the platform and the support."
+      "title": "How it works",
+      "text": "From your client's case to the model running in their operation."
     },
     "form": {
-      "title": "Become a partner",
-      "text": "Tell us about your company. We'll come back with next steps."
+      "title": "I want to build a model",
+      "text": "Tell us your client's case. We come back with the next steps."
     },
     "questions": {
-      "model": "how does the channel work?",
+      "model": "how does it work?",
       "form": "how do I join?"
     }
   },
   "twins": {
     "meta": {
-      "title": "Twins — a digital twin from your phone",
-      "description": "Record a video on your phone, then walk through a point cloud of the space, with measurements and notes."
+      "title": "Twins — the digital twin of every part",
+      "description": "Every part on the line compared with its design: Logikos computer vision, hardware and software build the digital twin in your plant. And a walkable site from a phone."
     },
     "hero": {
       "question": "what is it?",
-      "title": "The space, navigable.",
-      "text": "Record a video on your phone. Twins turns it into a point cloud you can navigate, measure and annotate."
+      "title": "The digital twin of every part.",
+      "text": "Every part on the line compared with its design, automatically. Logikos builds the twin in your plant with its own computer vision, hardware and software, tuned to your part and your line."
     },
     "features": {
       "capture": {
@@ -586,6 +681,10 @@
       "annotate": {
         "title": "Notes",
         "text": "Pin points of interest right on the point cloud."
+      },
+      "parts": {
+        "title": "A twin of every part",
+        "text": "100 % inspection on the line, traceability of every part, the deviation from the design visible before it becomes a batch, and the history part by part."
       }
     },
     "questions": {
@@ -596,6 +695,65 @@
     "buy": {
       "title": "By project.",
       "text": "Each space is scoped from a video of yours. Talk to the team."
+    },
+    "parts": {
+      "question": "what does it guarantee?",
+      "title": "What it guarantees on the line.",
+      "text": "Quality followed part by part, not by sampling."
+    },
+    "partsPoints": [
+      {
+        "title": "100 % inspection",
+        "text": "Every part checked on the line, not a sample."
+      },
+      {
+        "title": "Traceability",
+        "text": "Every part with its own identity, start to finish."
+      },
+      {
+        "title": "Deviation before the batch",
+        "text": "The difference from the design shows up before it becomes a batch."
+      },
+      {
+        "title": "Part-by-part history",
+        "text": "The record of every part for audits and improvement."
+      }
+    ],
+    "process": {
+      "question": "how is it built?",
+      "title": "How the twin of every part is built",
+      "text": "From the camera frame to the part compared with its design, in six steps.",
+      "steps": [
+        {
+          "title": "Capture",
+          "text": "Industrial cameras record the part as it moves along the conveyor."
+        },
+        {
+          "title": "Laser line",
+          "text": "A laser scanner draws the surface; the system extracts that line in every frame."
+        },
+        {
+          "title": "Calibration",
+          "text": "Camera and laser calibrated to measure in millimetres, not pixels."
+        },
+        {
+          "title": "Point cloud",
+          "text": "The conveyor encoder gives the position of each line, and the part becomes a point cloud."
+        },
+        {
+          "title": "CAD comparison",
+          "text": "The cloud is compared with the part's design; the deviation shows where it is."
+        },
+        {
+          "title": "Viewer",
+          "text": "The team sees every part in three dimensions, with the deviation marked and its history."
+        }
+      ]
+    },
+    "phone": {
+      "question": "and the site?",
+      "title": "The site, from a phone.",
+      "text": "For the plant, no scanner: record a phone video and walk the site, measuring and annotating without going there."
     }
   },
   "robotics": {
@@ -621,6 +779,10 @@
       "project": {
         "title": "By project",
         "text": "Each application is scoped case by case, from your scenario."
+      },
+      "both": {
+        "title": "Drones and quadruped robots",
+        "text": "Inspection of wide, hard-to-reach or hazardous areas, with the same verdict as a fixed camera."
       }
     },
     "questions": {
@@ -644,58 +806,160 @@
       "text": "Recognition is built to support compliance with Brazil's LGPD inside the plant."
     },
     "items": {
+      "presence": {
+        "title": "Presence-based detection",
+        "text": "The system sees the condition — presence, posture, PPE — and never who the person is. Below, what that guarantees for your company and for the people in the plant."
+      },
+      "anon": {
+        "title": "No one is recognized",
+        "text": "No face, no name, no record of who appears: the alert is about the situation, not the person.",
+        "gives": "Privacy for whoever is on camera."
+      },
       "signage": {
-        "title": "Physical signage",
-        "text": "Signs tell people the area is monitored and why."
+        "title": "Signposted area",
+        "text": "Signs say the area is monitored and why, before anyone walks in.",
+        "gives": "Transparency for the people who work there."
       },
       "roles": {
-        "title": "Roles set by contract",
-        "text": "The customer is the controller. Logikos acts as processor, within the contract."
-      },
-      "presence": {
-        "title": "Presence, not identity",
-        "text": "The system detects presence, posture and PPE. It watches the condition; it does not identify who the person is."
+        "title": "Each with its role",
+        "text": "Your company decides what is monitored; Logikos only handles the data within what the contract allows.",
+        "gives": "Clear responsibilities, in writing."
       },
       "retention": {
-        "title": "Defined retention",
-        "text": "How long evidence is kept is set by contract. After that, the clip is deleted."
+        "title": "Evidence with an expiry date",
+        "text": "Evidence clips are kept for the agreed period and then deleted.",
+        "gives": "Nothing kept beyond what is needed."
       }
     },
     "note": "This summary does not replace the contract or the legal review of each installation.",
-    "cta": "See the privacy policy"
+    "cta": "See the privacy policy",
+    "gives": "Guarantees"
   },
   "about": {
     "meta": {
-      "title": "About Logikos Soluções",
-      "description": "Logikos Soluções, from Indaial, Brazil. Edge computer vision on NVIDIA Jetson, built on permissively licensed models."
+      "title": "About Logikos",
+      "description": "Logikos: computer vision for the people who decide in industry. The camera you already have starts to understand what it sees, with robotics, drones and digital twins in the same vision."
     },
     "hero": {
-      "question": "who makes it?",
+      "question": "who are we?",
       "title": "Reason and sight.",
-      "text": "ΛΟΓΙΚΟΣ is Greek for rational. Logikos Soluções builds computer vision for industry, with engineering that proves before it promises."
+      "text": "ΛΟΓΙΚΟΣ is Greek for rational. We are a team of born innovators who love technology, making the cameras industry already has understand what they see."
+    },
+    "cta": "Request your custom model",
+    "manifesto": {
+      "title": "Why we exist",
+      "text": "Every plant already has cameras, and almost nobody is looking at them when it matters. Logikos exists to turn that image into an alert for whoever decides: the early fire, the forgotten PPE, the out-of-spec part, with the proof attached."
+    },
+    "vision": {
+      "title": "Computer vision, no mystery",
+      "text": "The camera stays the same. What changes is that a model trained by Logikos starts to understand what it sees and tells whoever needs to act. Industry 4.0 in practice: real-time operations data and faster decisions, without replacing what already works."
+    },
+    "fronts": {
+      "title": "What we do",
+      "items": [
+        {
+          "name": "Recognition",
+          "text": "Six readings on the camera you already have: fire, PPE, quality, counting, ergonomics and hazard zones."
+        },
+        {
+          "name": "Robotics and drones",
+          "text": "The same recognition on the move, where a fixed camera cannot reach. Built per project."
+        },
+        {
+          "name": "Twins",
+          "text": "The digital twin of every part, compared with the design, and a walkable site from a phone.",
+          "specs": [
+            "Industrial cameras on the line",
+            "Line laser scanner",
+            "Conveyor encoder",
+            "Sensors and PLC via MQTT or OPC UA",
+            "Events to ERP and MES",
+            "Phone to capture the site"
+          ]
+        }
+      ],
+      "specsLabel": "Connects"
+    },
+    "how": {
+      "title": "How we work",
+      "items": [
+        {
+          "name": "Proof before promise",
+          "text": "We start with your cameras and show what can be recognized before any contract."
+        },
+        {
+          "name": "Guided pilot",
+          "text": "One area first, with our team alongside, until the alert reaches the right person the right way."
+        },
+        {
+          "name": "Built for your operation",
+          "text": "Readings, alerts and dashboards tuned to your areas, your shifts and your targets."
+        }
+      ],
+      "text": "Three steps, always in this order, until the alert reaches the right person the right way."
     },
     "facts": {
       "place": {
-        "title": "Indaial, Brazil",
-        "text": "Engineering and support from Santa Catarina."
+        "title": "From the first test to operation",
+        "text": "Model, engineering and support from Logikos itself, from the first test on your cameras to day-to-day operation."
       },
-      "nvidia": {
-        "title": "NVIDIA Jetson",
-        "text": "Edge processing on the Jetson platform."
+      "model": {
+        "title": "Logikos proprietary model",
+        "text": "Trained and validated by Logikos for each reading: fire, PPE, quality, counting, ergonomics and hazard zones."
       },
-      "licenses": {
-        "title": "Permissive licenses",
-        "text": "Third-party models under permissive licenses such as Apache 2.0, MIT and BSD."
+      "processing": {
+        "title": "In the cloud or in the plant",
+        "text": "The same alert either way. In the plant it keeps working offline and the images stay with you."
       }
     },
     "questions": {
-      "who": "who makes it?"
+      "who": "from test to operation?",
+      "why": "why do we exist?",
+      "vision": "what is computer vision?",
+      "fronts": "what do we do?",
+      "how": "how do we work?"
     }
   },
   "contact": {
+    "chat": {
+      "title": "Talk to Koda.",
+      "text": "He asks a few questions, one at a time, and hands everything to a Logikos specialist. It takes a minute.",
+      "label": "Conversation with Koda",
+      "koda": "Koda",
+      "you": "You",
+      "hello": "Hi! I'm Koda, from Logikos. I'll take down your details so a specialist can get in touch.",
+      "steps": {
+        "name": "What's your name?",
+        "company": "Nice to meet you, {nome}! Which company do you work for?",
+        "email": "Which email should we reply to?",
+        "phone": "And your WhatsApp, with area code?",
+        "role": "What's your role? Optional.",
+        "interests": "What would you like to solve? Pick as many as you like.",
+        "message": "Anything else you'd like to add? Also optional.",
+        "consent": "Last step: may I pass these details on to our team?"
+      },
+      "answer": "Reply",
+      "skip": "Skip",
+      "fix": "Edit",
+      "fixLabel": "Edit the answer: {pergunta}",
+      "skipped": "(skipped)",
+      "submit": "Send to the team",
+      "sending": "Sending…",
+      "thanks": "Thank you, {nome}! I've got everything. Our team will be in touch as soon as possible.",
+      "error": "I couldn't send it right now. Try again in a moment.",
+      "retry": "Try again",
+      "noscript": "The conversation with Koda needs JavaScript. Our email is in the footer.",
+      "errors": {
+        "required": "I need this answer to go on.",
+        "email": "That email doesn't look complete. Can you check?",
+        "phone": "Numbers only, with area code.",
+        "interests": "Pick at least one option.",
+        "consent": "Tick to allow us to get back to you."
+      }
+    },
     "meta": {
       "title": "Contact — Logikos Soluções",
-      "description": "Reach Logikos on WhatsApp or through the form.",
+      "description": "Talk to Koda: a few questions, one at a time, and a Logikos specialist gets back to you.",
       "descriptionNoWhatsapp": "Reach Logikos through the form. We reply by email or WhatsApp."
     },
     "hero": {
@@ -729,7 +993,7 @@
     "sections": {
       "controller": {
         "title": "Who handles your data",
-        "text": "Logikos Soluções, CNPJ {cnpj}, based in Indaial, Santa Catarina, Brazil, is the controller of the data sent through this website."
+        "text": "Logikos Soluções, CNPJ {cnpj}, is the controller of the data sent through this website."
       },
       "data": {
         "title": "What we collect",
@@ -749,11 +1013,11 @@
       },
       "antiAbuse": {
         "title": "Abuse protection",
-        "text": "The form uses Cloudflare Turnstile to tell people from bots. Turnstile receives technical browser signals and your IP address, only for that check."
+        "text": "The forms and the conversation with Koda are protected against bots by a hidden field and a per-network-address sending limit. No third-party service is called for it."
       },
       "retention": {
         "title": "How long we keep it",
-        "text": "For as long as the conversation lasts and for any period the law requires. Final term to be set."
+        "text": "For as long as the conversation lasts and for any period the law requires."
       },
       "rights": {
         "title": "Your rights",
@@ -761,7 +1025,7 @@
       },
       "contact": {
         "title": "How to reach us",
-        "text": "By email at {email}. Data protection officer: to be appointed."
+        "text": "By email at {email}."
       }
     }
   },
@@ -772,12 +1036,12 @@
     "email": "Email",
     "whatsapp": "WhatsApp",
     "whatsappHint": "With country and area code.",
-    "cameras": "How many cameras",
+    "cameras": "Number of cameras",
     "camerasHint": "An estimate is fine.",
     "mode": "Mode",
-    "modeEdge": "Edge (device in the plant)",
+    "modeEdge": "In the plant (Logikos unit)",
     "modeCloud": "Cloud (platform on a monthly plan)",
-    "interests": "Interests",
+    "interests": "Model of interest",
     "interestsHint": "Pick one or more.",
     "message": "Message",
     "consentBefore": "I have read the",
@@ -789,7 +1053,7 @@
     "sending": "Sending…",
     "success": "Received. We'll be in touch soon.",
     "successAccount": "Received. You get your access by email.",
-    "error": "We couldn't send it right now. Try again or write to {email}.",
+    "error": "Could not send right now. Try again in a moment.",
     "errorVerification": "We couldn't confirm you're not a bot. Reload the page and try again.",
     "invalid": "Please check the highlighted fields.",
     "options": {
@@ -800,7 +1064,9 @@
       "counting": "Counting",
       "twins": "Twins",
       "robotics": "Robotics",
-      "partnership": "Partnership"
+      "partnership": "Partnership",
+      "quality": "Quality",
+      "custom": "Custom model"
     },
     "honeypot": "Leave this field empty",
     "errors": {
@@ -810,18 +1076,20 @@
       "whatsapp": "Use digits, with country and area code.",
       "invalidServer": "This field was not accepted. Please check it.",
       "cameras": "Enter a number of cameras.",
-      "mode": "Pick a mode."
+      "mode": "Pick a mode.",
+      "interests": "Pick at least one model."
     },
     "offline": {
       "title": "The form is still being set up.",
       "text": "Write to {email} or message us on WhatsApp. We answer during business hours.",
       "textNoWhatsapp": "Write to {email}. We answer during business hours."
-    }
+    },
+    "contact": "Contact",
+    "whatsappOptional": "WhatsApp (optional)"
   },
   "footer": {
     "company": "Logikos Soluções",
     "cnpjLabel": "CNPJ",
-    "city": "Indaial, SC, Brazil",
     "rights": "All rights reserved."
   },
   "notFound": {
@@ -908,52 +1176,37 @@
   },
   "demos": {
     "meta": {
-      "title": "Demos — PPE and fire in your browser",
-      "description": "Two open Recognition demos: PPE and fire and smoke. The model runs in your browser; nothing is sent."
+      "title": "Demos — watch computer vision at work",
+      "description": "Open the demo on your phone and watch the camera start to understand what it sees: people, objects and situations marked on the spot."
     },
     "hero": {
       "question": "what will you see?",
-      "title": "Try the model now, in your browser.",
-      "text": "Point your device camera. The model runs locally and draws the verdict on the spot; nothing is sent."
+      "title": "Watch computer vision at work.",
+      "text": "Point your phone at whatever is in front of you: the camera starts to understand what it sees and marks it on the spot. The same principle runs on your plant's cameras, in any scenario."
     },
-    "questions": {
-      "epi": "what does the PPE demo show?",
-      "fire": "and the fire and smoke one?",
-      "note": "what is it not?"
+    "see": {
+      "question": "what shows up?",
+      "title": "What the camera starts to understand",
+      "text": "Two examples of what the same camera recognizes once it has a Logikos model."
     },
     "epi": {
-      "title": "PPE demo",
-      "see": "People and objects marked in real time, with the box and the chip.",
-      "verdict": "The chip says what was detected. Compliant, non-compliant and undetermined only appear in the product, with body regions.",
-      "note": "A generic detection demo. Not the plant's PPE model."
+      "title": "PPE",
+      "text": "People and what they are wearing, marked on the spot, with the camera and the time."
     },
     "fire": {
-      "title": "Fire and smoke demo",
-      "see": "Flame and smoke marked on your device camera.",
-      "verdict": "An alert when the model sees flame or smoke. The demo page publishes its measured false-alarm rate.",
-      "note": "A model trained only on public, permissively licensed data."
-    },
-    "status": {
-      "checking": "checking",
-      "up": "live",
-      "down": "down right now"
-    },
-    "clip": "Recorded clip",
-    "browser": "The model runs in your browser. Nothing is sent.",
-    "note": {
-      "title": "What these demos are not.",
-      "text": "They are open models running on your device, so you can watch a verdict happen. The product runs in the plant, on your cameras, with all five readings."
+      "title": "Fire and smoke",
+      "text": "An early-stage fire is marked while it is still small, with the clip of the moment."
     }
   },
   "platform": {
     "meta": {
-      "title": "Platform — Edge and Cloud",
-      "description": "Two ways to run Recognition: a device in the plant, no internet needed, term license; or the cloud platform on a monthly plan, with dashboard and evidence. No public pricing."
+      "title": "Platform — in the plant or in the cloud",
+      "description": "Two ways to run Recognition: a device in the plant, no internet needed, monthly, annual or biennial licence; or the cloud platform on a monthly plan, with dashboard and evidence. No public pricing."
     },
     "hero": {
-      "question": "edge or cloud?",
+      "question": "plant or cloud?",
       "title": "In the plant or in the cloud. The same verdict, with evidence.",
-      "text": "Edge: a device in the rack, works without internet, term licence. Cloud: a panel in the browser, monthly fee."
+      "text": "In the plant: a Logikos unit on the network, works without internet, monthly, annual or biennial licence. In the cloud: a panel in the browser, monthly fee."
     },
     "questions": {
       "account": "how do I get in?",
@@ -961,7 +1214,7 @@
     },
     "account": {
       "title": "Create an account",
-      "text": "Accounts are created by the Logikos team. Tell us how many cameras and which mode you prefer.",
+      "text": "The account is set up by the Logikos team. Tell us how many cameras you have and which model you are after.",
       "confirm": "You receive your access by email.",
       "cta": "Request access"
     },
@@ -973,17 +1226,17 @@
     "compare": {
       "title": "Side by side",
       "aspect": "Aspect",
-      "edge": "Edge",
+      "edge": "In the plant",
       "cloud": "Cloud",
       "rows": [
         {
           "term": "Where it runs",
-          "edge": "A device in the rack reads the existing cameras.",
+          "edge": "A Logikos unit on the plant network reads the existing cameras.",
           "cloud": "In Logikos' cloud; the cameras send the video."
         },
         {
           "term": "Internet",
-          "edge": "Works offline. The continuous video never leaves.",
+          "edge": "Keeps working without internet. The images stay in the plant.",
           "cloud": "Needs a connection. Panel from anywhere."
         },
         {
@@ -998,10 +1251,56 @@
         },
         {
           "term": "Contract",
-          "edge": "24-month term licence.",
+          "edge": "Monthly, annual or biennial licence.",
           "cloud": "Monthly fee. No public price: the proposal comes from the conversation."
         }
       ]
+    }
+  },
+  "pages": {
+    "connecting": "connecting…",
+    "cams": {
+      "fogo": "Fire and smoke",
+      "epi": "PPE",
+      "qualidade": "Quality",
+      "contagem": "Counting",
+      "ergonomia": "Ergonomics"
+    },
+    "wall": {
+      "label": "Readings of the Logikos proprietary model on sample cameras"
+    },
+    "yours": {
+      "title": "CAM 07 · yours",
+      "text": "try it on your phone camera"
+    },
+    "fireshow": {
+      "label": "Visitors trying the recognition at the Fireshow 2026 booth, faces blurred",
+      "caption": "the crowd · Fireshow 2026 · faces blurred"
+    },
+    "kodaAlt": "Koda, the Logikos assistant",
+    "close": {
+      "title": "Want to see this on your cameras?",
+      "text": "Open your phone camera and point it at anything: the Logikos proprietary model marks it on the spot. Or let the experience show the scenarios at work.",
+      "phone": "Try it on your phone camera",
+      "screen": "CAM 07 · waiting for signal",
+      "screenSub": "your camera goes here"
+    },
+    "license": {
+      "title": "Licence terms",
+      "text": "Pick the term. In every one, the model, the updates and the support come from Logikos.",
+      "monthly": {
+        "name": "Monthly",
+        "text": "To start with one line or a pilot."
+      },
+      "annual": {
+        "name": "Annual",
+        "text": "A year of operation, with Logikos support."
+      },
+      "biennial": {
+        "name": "Biennial",
+        "badge": "Recommended",
+        "text": "2 years without worrying about your models: constant updates on Logikos."
+      }
     }
   }
 }

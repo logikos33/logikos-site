@@ -23,6 +23,11 @@ export const ICON_PATHS = {
   zone: '<path d="M4 4h4M10 4h4M16 4h4v4M20 10v4M20 16v4h-4M14 20h-4M8 20H4v-4M4 14v-4M4 8V4"/>',
   counter: '<path d="M12 3.5v17"/><path d="M5 9l3.5 3L5 15M15.5 9l3.5 3-3.5 3"/>',
   bell: '<path d="M6 17V10a6 6 0 0 1 12 0v7"/><path d="M4 17h16"/><path d="M10 20h4"/>',
+  // Compliance (revisão final 2, q2): no one recognized, a signposted area, roles in a contract, a deadline.
+  eyeoff: '<path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z"/><path d="M9.5 12a2.5 2.5 0 0 0 5 0"/><path d="M4 4l16 16"/>',
+  sign: '<path d="M4 4h16v10H4z"/><path d="M12 14v6"/><path d="M8 20h8"/>',
+  doc: '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6"/><path d="M9 16h6"/>',
+  clock: '<path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17z"/><path d="M12 7.5V12l3 2"/>',
 } as const;
 
 export type IconName = keyof typeof ICON_PATHS;

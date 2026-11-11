@@ -2,14 +2,15 @@
 // Home v3 (approved 11/11/2026, SCRATCH/esboco rodada 3): dark, opening (Koda turns on the TV →
 // dive), wall of five live readings + "CAM 07 · yours", partners, Koda, problem, five channels,
 // specialist band, camera → decision, Fireshow, data, FAQ, contact. "Talk to a specialist" always
-// goes to WhatsApp (contact page while PUBLIC_WHATSAPP_NUMBER is unset). No video downloads before
+// opens the conversation with Koda on the contact page. No video downloads before
 // it is near the screen; reduced motion turns off the opening, carousel, pulse and autoplay.
+import Aguardando from '../components/Aguardando.astro';
 import Icon from '../components/Icon.astro';
 import { EXPERIENCE_URL, PHONE_DEMO_URL } from '../config/links';
-import { dict } from '../i18n';
+import { dict, fill } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
-import { CONTACT_EMAIL, whatsappHref } from '../lib/site';
+import { specialistHref, type ChatInterest } from '../lib/site';
 
 interface Props {
   locale: Locale;
@@ -25,20 +26,17 @@ const KODA = {
   peek: { src: `${M}koda-apontando.webp`, w: 240, h: 244 },
 };
 
-/** Specialist link: WhatsApp with a context message, or the contact page while there is no number. */
-function specialist(message: string) {
-  const wa = whatsappHref(message);
-  return { wa: Boolean(wa), attrs: wa ? { href: wa, target: '_blank', rel: 'noopener' } : { href: pathFor('contact', locale) } };
-}
-const general = specialist(h.wa);
+/** Specialist link: the conversation with Koda on the contact page (feedback 11/11, item 11). */
+const specialist = (interest?: ChatInterest) => ({ attrs: { href: specialistHref(locale, interest) } });
+const general = specialist();
 
 const SCENES = (
   [
-    { key: 'fogo', cenario: 'fogo', alert: true },
-    { key: 'epi', cenario: 'epi', alert: true },
-    { key: 'qualidade', cenario: 'qualidade', alert: false },
-    { key: 'contagem', cenario: 'contagem', alert: false },
-    { key: 'ergonomia', cenario: null, alert: true },
+    { key: 'fogo', cenario: 'fogo', alert: true, interest: 'fire' },
+    { key: 'epi', cenario: 'epi', alert: true, interest: 'epi' },
+    { key: 'qualidade', cenario: 'qualidade', alert: false, interest: 'quality' },
+    { key: 'contagem', cenario: 'contagem', alert: false, interest: 'counting' },
+    { key: 'ergonomia', cenario: null, alert: true, interest: 'ergonomics' },
   ] as const
 ).map((s, i) => {
   const text = h.scenarios.items[i];
@@ -48,18 +46,28 @@ const SCENES = (
     ...text,
     poster: `${M}v-${s.key}`,
     video: `${M}v-${s.key}.mp4`,
-    esp: specialist(text.wa),
+    esp: specialist(s.interest),
   };
 });
+// CH6 (feedback 11/11, round 5): the digital twin — of the plant and of every part. Its panel says
+// what it solves and what you get, and asks for a custom model.
+const TWIN = {
+  ...h.scenarios.twin,
+  key: 'gemeo',
+  poster: `${M}v-gemeo`,
+  video: `${M}v-gemeo.mp4`,
+  webm: `${M}v-gemeo.webm`,
+  esp: specialist('twins'),
+};
+const CHANNELS = SCENES.length + 1;
 
+// A still row, whole logos, no mask (feedback 11/11, item 15: the old sliding strip faded its
+// edges and showed the Visdec cut as it passed). `k` (tall / medium / wide mark) sets its height for equal visual weight.
 const LOGOS = [
-  { src: '/media/parceiros/l-brandschutz.webp', alt: h.partners.bs, w: 143, h: 38 },
-  { src: '/media/parceiros/l-visdec.webp', alt: h.partners.visdec, w: 153, h: 30 },
-  { src: '/media/parceiros/l-cath.webp', alt: h.partners.cath, w: 117, h: 48 },
+  { k: 'alta', src: '/media/parceiros/l-cath-v2.webp', alt: h.partners.cath, w: 117, h: 48 },
+  { k: 'media', src: '/media/parceiros/l-brandschutz.webp', alt: h.partners.bs, w: 143, h: 38 },
+  { k: 'larga', src: '/media/parceiros/l-visdec-v2.webp', alt: h.partners.visdec, w: 154, h: 30 },
 ];
-// The track is two identical halves (each half = the logos twice, wider than the strip at any
-// width); it slides by exactly one half, so the loop has no seam.
-const COPIES = [0, 1, 2, 3];
 const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, ${base}.webp 640w`;
 ---
 
@@ -102,10 +110,8 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
             <a class="btn btn--ghost" {...general.attrs}>
               <Icon name="chat" size={18} />
               {t.cta.specialist}
-              {general.wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
             </a>
           </div>
-          <p class="nota">{h.hero.note}</p>
         </div>
 
         <div class="muro-wrap">
@@ -125,13 +131,13 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
               </div>
             ))}
             <a class="cam cam--voce" href={PHONE_DEMO_URL}>
+              <Aguardando locale={locale} compact />
               <span>
                 <b>{h.hero.yours.title}</b>
                 {h.hero.yours.text}
               </span>
             </a>
             <div class="muro__legenda">
-              <span>{h.hero.legend}</span>
               <button type="button" class="parar" data-parar data-label-pause={h.hero.pause} data-label-resume={h.hero.resume}>
                 <Icon name="stop" size={16} class="parar__stop" />
                 <Icon name="play" size={16} class="parar__play" />
@@ -140,8 +146,8 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
             </div>
           </div>
           <a class="espia" href={EXPERIENCE_URL}>
-            <span class="espia__balao">{h.hero.koda}</span>
             <img src={KODA.peek.src} alt="" width={KODA.peek.w} height={KODA.peek.h} loading="lazy" />
+            <span class="espia__balao">{h.hero.koda}</span>
           </a>
         </div>
       </div>
@@ -150,17 +156,13 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     <div class="parceiros">
       <div class="wrap parceiros__linha">
         <p id="parceiros-titulo">{h.partners.label}</p>
-        <div class="marquee">
-          <ul aria-labelledby="parceiros-titulo">
-            {COPIES.map((c) =>
-              LOGOS.map((l) => (
-                <li {...(c ? { 'aria-hidden': 'true', 'data-copia': '' } : {})}>
-                  <img src={l.src} alt={c ? '' : l.alt} width={l.w} height={l.h} loading="lazy" />
-                </li>
-              )),
-            )}
-          </ul>
-        </div>
+        <ul class="logos" aria-labelledby="parceiros-titulo">
+          {LOGOS.map((l) => (
+            <li data-logo={l.k}>
+              <img src={l.src} alt={l.alt} width={l.w} height={l.h} loading="lazy" />
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
 
@@ -186,7 +188,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
         <h2 id="problema-title">
           {h.problem.title} <span>{h.problem.muted}</span>
         </h2>
-        <p class="lead">{h.problem.text}</p>
+        <p class="lead folha">{h.problem.text}</p>
       </div>
     </section>
 
@@ -196,72 +198,135 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
           <h2 id="cenarios-title">{h.scenarios.title}</h2>
           <p class="lead">{h.scenarios.text}</p>
         </div>
-        <div class="abas" role="tablist" aria-label={h.scenarios.tabsLabel} data-abas>
-          {SCENES.map((s, i) => (
-            <button
-              type="button"
-              role="tab"
-              id={`aba-${s.key}`}
-              aria-controls={`painel-${s.key}`}
-              aria-selected={i === 0 ? 'true' : 'false'}
-              tabindex={i === 0 ? 0 : -1}
-            >
-              <span class="abas__ch">{s.tab}</span>
-              {s.name}
-            </button>
-          ))}
-        </div>
-        {SCENES.map((s, i) => (
-          <div class="painel" role="tabpanel" id={`painel-${s.key}`} aria-labelledby={`aba-${s.key}`} hidden={i !== 0} data-painel>
-            <div>
-              <div class="monitor liga">
-                <div class="cam">
-                  <img src={`${s.poster}.webp`} alt="" width="640" height="360" loading="lazy" />
-                  <video data-src={s.video} data-lazy muted loop playsinline preload="none" aria-hidden="true" />
+        <!-- A real carousel (feedback 11/11, item 9): the slides sit side by side on a scroll-snap
+             track (native swipe/drag on touch), with discreet arrows and the channel names as the
+             indicator ruler (the selected one fills while it plays). Off-screen slides are inert. -->
+        <div
+          class="carrossel"
+          data-carrossel
+          role="region"
+          aria-roledescription={h.scenarios.roledescription}
+          aria-label={h.scenarios.tabsLabel}
+        >
+          <div class="trilho" data-trilho tabindex="-1">
+            {SCENES.map((s, i) => (
+              <div
+                class="slide"
+                role="group"
+                aria-roledescription={h.scenarios.slideRole}
+                aria-label={`${fill(h.scenarios.slide, { n: String(i + 1), total: String(CHANNELS) })}: ${s.name}`}
+                id={`painel-${s.key}`}
+                data-slide
+                inert={i !== 0}
+              >
+                <div>
+                  <div class="monitor liga">
+                    <div class="cam">
+                      <img src={`${s.poster}.webp`} alt="" width="640" height="360" loading="lazy" />
+                      <video data-src={s.video} data-lazy muted loop playsinline preload="none" aria-hidden="true" />
+                    </div>
+                  </div>
+                </div>
+                <div class="ticket">
+                  <p class:list={['estado', { 'estado--ok': !s.alert }]}>
+                    <Icon name={s.alert ? 'alert' : 'ok'} size={16} />
+                    {s.state}
+                  </p>
+                  <dl>
+                    <dt>{h.scenarios.camera}</dt>
+                    <dd>{s.cam}</dd>
+                    <dt>{h.scenarios.when}</dt>
+                    <dd class="mono">{h.scenarios.time}</dd>
+                    <dt>{h.scenarios.evidence}</dt>
+                    <dd>{s.evidence}</dd>
+                    <dt>{h.scenarios.norm}</dt>
+                    <dd>{s.norm}</dd>
+                    <dt>{h.scenarios.notified}</dt>
+                    <dd>{s.notified}</dd>
+                  </dl>
+                  <p class="quem">{s.who}</p>
+                  {s.cenario ? (
+                    <>
+                      <a class="btn" href={`${EXPERIENCE_URL}?cenario=${s.cenario}`}>
+                        {s.cta}
+                        <Icon name="arrow" size={18} />
+                      </a>
+                      <a class="link-esp" {...s.esp.attrs}>
+                        <Icon name="chat" size={16} />
+                        {s.specialist}
+                      </a>
+                    </>
+                  ) : (
+                    <a class="btn" {...s.esp.attrs}>
+                      <Icon name="chat" size={18} />
+                      {s.cta}
+                    </a>
+                  )}
                 </div>
               </div>
-              <p class="fonte">{s.source}</p>
-            </div>
-            <div class="ticket">
-              <p class:list={['estado', { 'estado--ok': !s.alert }]}>
-                <Icon name={s.alert ? 'alert' : 'ok'} size={16} />
-                {s.state}
-              </p>
-              <dl>
-                <dt>{h.scenarios.camera}</dt>
-                <dd>{s.cam}</dd>
-                <dt>{h.scenarios.when}</dt>
-                <dd class="mono">{h.scenarios.time}</dd>
-                <dt>{h.scenarios.evidence}</dt>
-                <dd>{s.evidence}</dd>
-                <dt>{h.scenarios.norm}</dt>
-                <dd>{s.norm}</dd>
-                <dt>{h.scenarios.notified}</dt>
-                <dd>{s.notified}</dd>
-              </dl>
-              <p class="quem">{s.who}</p>
-              {s.cenario ? (
-                <>
-                  <a class="btn" href={`${EXPERIENCE_URL}?cenario=${s.cenario}`}>
-                    {s.cta}
-                    <Icon name="arrow" size={18} />
-                  </a>
-                  <a class="link-esp" {...s.esp.attrs}>
-                    <Icon name="chat" size={16} />
-                    {s.specialist}
-                    {s.esp.wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
-                  </a>
-                </>
-              ) : (
-                <a class="btn" {...s.esp.attrs}>
+            ))}
+            <div
+              class="slide"
+              role="group"
+              aria-roledescription={h.scenarios.slideRole}
+              aria-label={`${fill(h.scenarios.slide, { n: String(CHANNELS), total: String(CHANNELS) })}: ${TWIN.name}`}
+              id="painel-gemeo"
+              data-slide
+              inert
+            >
+              <div>
+                <div class="monitor liga">
+                  <div class="cam">
+                    <img src={`${TWIN.poster}.webp`} alt="" width="640" height="360" loading="lazy" />
+                    <video data-src={TWIN.video} data-webm={TWIN.webm} data-lazy muted loop playsinline preload="none" aria-hidden="true" />
+                  </div>
+                </div>
+              </div>
+              <div class="ticket">
+                <p class="estado estado--ok">
+                  <Icon name="ok" size={16} />
+                  {TWIN.state}
+                </p>
+                <dl class="ticket__twin">
+                  <dt>{h.scenarios.solves}</dt>
+                  <dd>{TWIN.solves}</dd>
+                  <dt>{h.scenarios.gets}</dt>
+                  <dd>{TWIN.gets}</dd>
+                </dl>
+                <a class="btn" {...TWIN.esp.attrs}>
                   <Icon name="chat" size={18} />
-                  {s.cta}
-                  {s.esp.wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
+                  {TWIN.cta}
                 </a>
-              )}
+              </div>
             </div>
           </div>
-        ))}
+          <div class="controles">
+            <button type="button" class="seta" data-anterior aria-label={h.scenarios.prev}>
+              <Icon name="arrow" size={18} class="seta__esq" />
+            </button>
+            <ol class="regua" data-regua>
+              {SCENES.map((s, i) => (
+                <li>
+                  <button type="button" data-ir={i} aria-current={i === 0 ? 'true' : undefined} aria-controls={`painel-${s.key}`}>
+                    <span class="regua__ch">{s.tab}</span>
+                    <span class="regua__nome">{s.name}</span>
+                    <span class="regua__prog" aria-hidden="true"></span>
+                  </button>
+                </li>
+              ))}
+              <li>
+                <button type="button" data-ir={SCENES.length} aria-controls="painel-gemeo">
+                  <span class="regua__ch">{TWIN.tab}</span>
+                  <span class="regua__nome">{TWIN.name}</span>
+                  <span class="regua__prog" aria-hidden="true"></span>
+                </button>
+              </li>
+            </ol>
+            <button type="button" class="seta" data-proximo aria-label={h.scenarios.next}>
+              <Icon name="arrow" size={18} />
+            </button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -272,10 +337,13 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
           <p class="lead">{h.band.text}</p>
         </div>
         <div class="acoes" data-faixa-acoes>
-          <a class="btn" {...general.attrs}>
+          <a class="btn" href={PHONE_DEMO_URL}>
+            <Icon name="camera" size={18} />
+            {h.band.cta}
+          </a>
+          <a class="btn btn--ghost" {...general.attrs}>
             <Icon name="chat" size={18} />
             {t.cta.specialist}
-            {general.wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
           </a>
         </div>
       </div>
@@ -469,15 +537,11 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
                 <Icon name="arrow" size={18} />
               </a>
             </div>
-            {CONTACT_EMAIL && (
-              <a class="email mono" href={`mailto:${CONTACT_EMAIL}`}>
-                {CONTACT_EMAIL}
-              </a>
-            )}
           </div>
           <!-- The page ends where it began: one more camera on the wall, waiting for the visitor's signal. -->
           <div class="sinal">
             <div class="sinal__tela">
+              <Aguardando locale={locale} />
               <p class="sinal__osd mono">
                 <span class="sinal__rec" aria-hidden="true"></span>
                 {h.contact.screen}
@@ -486,7 +550,6 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
                 <a class="btn" {...general.attrs}>
                   <Icon name="chat" size={18} />
                   {t.cta.specialist}
-                  {general.wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
                 </a>
               </div>
               <p class="sinal__sub mono">{h.contact.screenSub}</p>
@@ -506,10 +569,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
       <a class="btn btn--ghost barra__esp" {...general.attrs}>
         <Icon name="chat" size={18} />
         <span aria-hidden="true">{h.bar.specialist}</span>
-        <span class="visually-hidden">
-          {t.cta.specialist}
-          {general.wa && <> ({t.a11y.externalWhatsapp})</>}
-        </span>
+        <span class="visually-hidden">{t.cta.specialist}</span>
       </a>
     </div>
 
@@ -529,9 +589,9 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   const root = document.documentElement;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // ---- Opening: Koda turns on the TV, the camera dives in, the site opens. Fail-safes: not playing
-  // within 1.2 s, stalled for 0.6 s, or still running at 5.5 s → the site opens at once. A scroll,
-  // a tap or a click anywhere skips it. The rest of the page is inert meanwhile.
+  // ---- Opening: Koda turns on the TV, the camera dives in, the site opens. It plays whole (or until
+  // "Pular", Esc or a tap). Fail-safes: not playable within 8 s, stalled for 3 s mid-clip, or
+  // past its length + 3 s → the site opens at once. The rest of the page is inert meanwhile.
   const opened = new Promise<void>((resolve) => {
     const ab = document.querySelector<HTMLElement>('[data-abertura]');
     const video = ab?.querySelector('video');
@@ -571,25 +631,43 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
       window.setTimeout(() => root.classList.add('lk-entrando'), 500);
       window.setTimeout(close, 1200);
     };
+    // The clock starts when the clip can play through, never at page load: a fast page with a cold
+    // cache used to hit the old 1.2 s / 0.6 s fail-safes while the clip was still downloading and
+    // cut the opening. The poster holds the screen meanwhile; "Pular" works the whole time.
     let stall = 0;
-    video.addEventListener('playing', () => {
+    let cap = 0;
+    const start = () => {
+      if (playing || done) return;
       playing = true;
-      window.clearTimeout(stall);
-    });
+      window.clearTimeout(boot);
+      video.play().catch(() => finish(true));
+      // Whole clip + 3 s of buffering slack, counted from the first frame.
+      cap = window.setTimeout(() => finish(false), ((video.duration || 5) + 3) * 1000);
+    };
+    // Nothing playable after 8 s (very slow network or a broken file): open the site.
+    const boot = window.setTimeout(() => finish(true), 8000);
+    video.addEventListener('playing', () => window.clearTimeout(stall));
+    // Mid-clip stalls wait for data (up to 3 s) instead of cutting the opening.
     const onStall = () => {
+      if (!playing) return;
       window.clearTimeout(stall);
-      stall = window.setTimeout(() => finish(true), 600);
+      stall = window.setTimeout(() => finish(true), 3000);
     };
     video.addEventListener('waiting', onStall);
     video.addEventListener('stalled', onStall);
-    video.addEventListener('ended', () => finish(false));
-    video.play().catch(() => finish(true));
-    window.setTimeout(() => !playing && finish(true), 1200);
-    window.setTimeout(() => finish(false), 5500);
+    video.addEventListener('ended', () => {
+      window.clearTimeout(cap);
+      finish(false);
+    });
+    video.addEventListener('canplaythrough', start);
+    video.preload = 'auto';
+    video.load();
+    if (video.readyState >= 4) start();
+    // Only deliberate gestures skip: the button, Esc or a tap on the opening. Scroll and touchmove
+    // no longer do (trackpad inertia right after load was cutting it).
     skip.addEventListener('click', () => finish(true));
     ab.addEventListener('keydown', (e) => e.key === 'Escape' && finish(true));
     ab.addEventListener('pointerdown', (e) => e.target !== skip && finish(true));
-    for (const type of ['wheel', 'touchmove']) window.addEventListener(type, () => finish(true), { once: true, passive: true });
   });
 
   // ---- Videos: nothing downloads before it is near the screen; off-screen ones pause; reduced
@@ -601,7 +679,9 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   let stopped = reduce || Boolean(conn?.saveData) || /(^|-)(2g|3g)$/.test(conn?.effectiveType ?? '');
   const play = (v: HTMLVideoElement) => {
     if (stopped) return;
-    if (!v.getAttribute('src')) v.src = v.dataset.src ?? '';
+    // WebM where the browser plays VP9 (lighter), MP4 everywhere else.
+    if (!v.getAttribute('src'))
+      v.src = (v.dataset.webm && v.canPlayType('video/webm; codecs="vp9"') ? v.dataset.webm : v.dataset.src) ?? '';
     v.play().catch(() => {});
   };
   const io = new IntersectionObserver(
@@ -637,31 +717,61 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     syncStop();
   });
 
-  // ---- Channels (tabs): arrows/Home/End move, the panel swaps in place.
-  const tabs = [...document.querySelectorAll<HTMLButtonElement>('[data-abas] [role="tab"]')];
-  const select = (tab: HTMLButtonElement) => {
-    for (const x of tabs) {
-      const on = x === tab;
-      x.setAttribute('aria-selected', String(on));
-      x.tabIndex = on ? 0 : -1;
-      const panel = document.getElementById(x.getAttribute('aria-controls') ?? '');
-      if (panel) panel.hidden = !on;
-      if (!on) panel?.querySelector('video')?.pause();
-    }
+  // ---- Channels: a real carousel. Slides sit side by side on a scroll-snap track, so touch swipe
+  // and trackpad drag are native; arrows and the ruler of channel names move it too. The ruler's
+  // fill is the timer (its animation ending moves to the next slide); it runs only while the
+  // carousel is on screen, not hovered or focused, and never under reduced motion or the stop
+  // control. Whatever moved it (swipe, arrow, ruler, timer), the slide that settles is the current
+  // one: the others are inert, so keyboard and screen readers stay on what is shown.
+  const carousel = document.querySelector<HTMLElement>('[data-carrossel]');
+  const track = carousel?.querySelector<HTMLElement>('[data-trilho]');
+  const slides = [...(carousel?.querySelectorAll<HTMLElement>('[data-slide]') ?? [])];
+  const marks = [...(carousel?.querySelectorAll<HTMLButtonElement>('[data-ir]') ?? [])];
+  let current = 0;
+  const mark = (i: number) => {
+    if (i === current && slides[i] && !slides[i].inert) return;
+    current = i;
+    slides.forEach((sl, k) => {
+      sl.inert = k !== i;
+      if (k !== i) sl.querySelector('video')?.pause();
+    });
+    marks.forEach((m, k) => (k === i ? m.setAttribute('aria-current', 'true') : m.removeAttribute('aria-current')));
   };
-  tabs.forEach((tab, i) => {
-    tab.addEventListener('click', () => select(tab));
-    tab.addEventListener('keydown', (e) => {
-      const n = tabs.length;
-      const to = { ArrowRight: (i + 1) % n, ArrowLeft: (i - 1 + n) % n, Home: 0, End: n - 1 }[e.key];
+  const go = (i: number) => {
+    const n = slides.length;
+    const to = ((i % n) + n) % n;
+    const sl = slides[to];
+    if (!track || !sl) return;
+    track.scrollTo({ left: sl.offsetLeft - track.offsetLeft, behavior: reduce ? 'auto' : 'smooth' });
+    mark(to);
+  };
+  if (carousel && track) {
+    // The slide that is mostly in view after a swipe becomes the current one.
+    const seen = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) if (e.isIntersecting) mark(slides.indexOf(e.target as HTMLElement));
+      },
+      { root: track, threshold: 0.6 },
+    );
+    slides.forEach((sl) => seen.observe(sl));
+    carousel.querySelector('[data-anterior]')?.addEventListener('click', () => go(current - 1));
+    carousel.querySelector('[data-proximo]')?.addEventListener('click', () => go(current + 1));
+    marks.forEach((m, i) => m.addEventListener('click', () => go(i)));
+    carousel.addEventListener('keydown', (e) => {
+      if ((e.target as Element).closest('input, textarea')) return;
+      const to = { ArrowRight: current + 1, ArrowLeft: current - 1 }[e.key];
       if (to === undefined) return;
       e.preventDefault();
-      const next = tabs[to];
-      if (!next) return;
-      select(next);
-      next.focus();
+      go(to);
     });
-  });
+    if (!reduce) {
+      carousel.dataset.gira = '';
+      new IntersectionObserver(([e]) => e && carousel.classList.toggle('em-tela', e.isIntersecting), { threshold: 0.35 }).observe(carousel);
+      carousel.addEventListener('animationend', (e) => {
+        if ((e.target as Element).classList.contains('regua__prog')) go(current + 1);
+      });
+    }
+  }
 
   // ---- One pair of CTAs on screen at a time. Desktop: the header's appear once the hero's
   // scrolled away. Phones: the shortcut bar is always there, except while the band's or the
@@ -691,21 +801,6 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   /* ---------- Header on the home: as wide as the page ---------- */
   :global(.site-header .site-header__bar) {
     max-width: 82.5rem;
-  }
-
-  /* At 1440 the wider bar has room for the full specialist label (measured: no overflow). */
-  @media (min-width: 90rem) {
-    :global(.site-header .site-header__tools .site-header__cta.site-header__cta--specialist) {
-      width: auto;
-      padding-inline: var(--lk-space-4);
-    }
-
-    :global(.site-header .site-header__tools .site-header__cta-label) {
-      position: static;
-      width: auto;
-      height: auto;
-      clip: auto;
-    }
   }
 
   /* One pair of calls to action on screen at a time: the header's wait until the hero's scroll
@@ -780,7 +875,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   }
 
   .home section:not(.heroi) {
-    padding-block: clamp(3.5rem, 9vw, 7.5rem);
+    padding-block: var(--lk-section-y);
     border-top: 1px solid var(--lk-line);
   }
 
@@ -957,45 +1052,71 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     color: var(--lk-accent);
   }
 
+  /* The stop control is not part of the picture: it stays off screen until the keyboard reaches it
+     (WCAG 2.2.2 keeps a way to stop the loops; reduced motion never starts them). */
+  .parar:not(:focus-visible) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
   .parar[aria-pressed='true'] :global(.parar__stop),
   .parar:not([aria-pressed='true']) :global(.parar__play) {
     display: none;
   }
 
-  /* Koda peeks over the bottom edge of the wall (behind it) and points at the experience. */
+  /* Koda stands whole under the wall and points at his balloon; nothing of him hides behind the
+     cameras. Only Koda and the balloon are the link. A desktop detail: on phones he stays out of
+     the way of the shortcut bar. */
   .espia {
     display: none;
   }
 
   @media (min-width: 37.5rem) {
     .espia {
-      position: relative;
-      z-index: -1;
       display: flex;
-      align-items: flex-start;
-      gap: var(--lk-space-2);
-      /* Only Koda and the balloon are the link; the rest of the strip stays inert. */
+      align-items: center;
+      gap: var(--lk-space-3);
       width: fit-content;
-      margin-top: -3.25rem;
-      margin-left: auto;
-      margin-right: 1.5rem;
+      margin-top: var(--lk-space-4);
       text-decoration: none;
       color: var(--lk-text);
     }
 
     .espia img {
-      width: 7rem;
+      width: clamp(5.5rem, 9vw, 8.5rem);
       height: auto;
+      filter: drop-shadow(0 10px 18px rgb(0 0 0 / 45%));
     }
 
     .espia__balao {
       position: relative;
-      margin-top: 4.25rem;
-      padding: 0.5rem 0.75rem;
+      padding: 0.6rem 0.9rem;
       background: var(--lk-surface);
       border: 1px solid var(--lk-field-border);
       border-radius: 6px;
-      font: 500 0.8125rem/1.3 var(--lk-font-body);
+      font: 500 clamp(0.875rem, 1.1vw, 1rem) / 1.3 var(--lk-font-body);
+    }
+
+    /* The tail points back at Koda's hand. */
+    .espia__balao::before {
+      content: '';
+      position: absolute;
+      left: -6px;
+      top: 50%;
+      width: 10px;
+      height: 10px;
+      background: inherit;
+      border: inherit;
+      border-width: 0 0 1px 1px;
+      transform: translateY(-50%) rotate(45deg);
     }
 
     .espia:hover .espia__balao {
@@ -1083,47 +1204,33 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     color: var(--lk-text-2);
   }
 
-  /* Short fade at the edges and wide gaps: a logo is either clearly in or on its way out. */
-  .marquee {
-    --gap: clamp(4.5rem, 10vw, 8rem);
-    flex: 1 1 26rem;
-    min-width: 0;
-    overflow: hidden;
-    mask-image: linear-gradient(90deg, #0000, #000 4%, #000 96%, #0000);
-  }
-
-  .marquee ul {
+  .logos {
     display: flex;
+    flex: 1 1 26rem;
+    flex-wrap: wrap;
     align-items: center;
-    width: max-content;
-    gap: var(--gap);
+    justify-content: space-around;
+    gap: var(--lk-space-5) clamp(2rem, 6vw, 5rem);
     margin: 0;
     padding: 0;
     list-style: none;
-    animation: corre 26s steps(520, end) infinite;
   }
 
-  .marquee:hover ul,
-  .marquee:focus-within ul,
-  :global(.lk-parado) .marquee ul {
-    animation-play-state: paused;
-  }
-
-  .marquee img {
-    height: clamp(1.6rem, 3.4vw, 2.4rem);
+  .logos img {
     width: auto;
+    height: clamp(1.7rem, 3.2vw, 2.3rem);
     filter: brightness(0) invert(1);
-    opacity: 0.8;
+    opacity: 0.85;
   }
 
-  .marquee li:nth-child(3n) img {
-    height: clamp(2.1rem, 4.4vw, 3rem);
+  /* Same visual weight (equal ink area, not equal height): the compact CATH a little taller,
+     the wide Visdec wordmark a little lower than BrandSchutz. */
+  .logos [data-logo='alta'] img {
+    height: clamp(2.1rem, 4vw, 2.9rem);
   }
 
-  @keyframes corre {
-    to {
-      transform: translateX(calc(-50% - var(--gap) / 2));
-    }
+  .logos [data-logo='larga'] img {
+    height: clamp(1.25rem, 2.4vw, 1.75rem);
   }
 
   /* ---------- Koda ---------- */
@@ -1157,13 +1264,16 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   }
 
   /* ---------- Problem ---------- */
+  /* Final review, item 7: title and text centred, the text on a light sheet (never loose on black). */
   .problema__grade {
     display: grid;
-    gap: var(--lk-space-5) clamp(1.5rem, 5vw, 4.5rem);
-    align-items: end;
+    justify-items: center;
+    gap: var(--lk-space-5);
+    text-align: center;
   }
 
   .problema h2 {
+    max-width: 22ch;
     font-size: clamp(1.9rem, 4.2vw, 3.4rem);
   }
 
@@ -1171,76 +1281,152 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     color: var(--lk-text-2);
   }
 
-  @media (min-width: 56.25rem) {
-    .problema__grade {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    }
+  .problema .lead.folha {
+    max-width: 46rem;
+    color: #3b3f46;
+    font-size: clamp(1.0625rem, 1.5vw, 1.2rem);
+    line-height: 1.55;
   }
 
-  /* ---------- Channels ---------- */
-  .abas {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: var(--lk-space-4);
+  /* ---------- Channels: carousel ---------- */
+  .carrossel {
+    position: relative;
   }
 
-  /* A tab is a channel selector, not a call to action: the selected one lights up like a
-     monitor input (cyan rule), never as the white fill reserved for buttons. */
-  .abas button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4em;
-    min-height: 2.75rem;
-    padding: 0 0.9rem;
-    background: var(--lk-surface);
-    border: 1px solid var(--lk-line-strong);
-    border-radius: var(--lk-radius);
-    color: var(--home-text-2);
-    font: 500 0.875rem var(--lk-font-mono);
-    cursor: pointer;
+  .trilho {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
+    gap: var(--lk-space-5);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    outline: none;
   }
 
-  .abas__ch {
-    color: var(--lk-text-2);
+  .trilho::-webkit-scrollbar {
+    display: none;
   }
 
-  .abas button:hover {
-    border-color: var(--lk-accent);
-    color: var(--lk-text);
-  }
-
-  .abas button[aria-selected='true'] {
-    color: var(--lk-text);
-    background: var(--home-screen);
-    border-color: var(--lk-accent);
-    box-shadow: inset 0 -2px 0 var(--lk-accent);
-  }
-
-  .abas button[aria-selected='true'] .abas__ch {
-    color: var(--lk-accent);
-  }
-
-  @media (max-width: 37.49rem) {
-    .abas {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .abas__ch {
-      display: none;
-    }
-  }
-
-  .painel {
+  .slide {
     display: grid;
     gap: var(--lk-space-5);
     align-items: start;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    min-width: 0;
   }
 
-  .painel[hidden] {
-    display: none;
+  .controles {
+    display: flex;
+    align-items: center;
+    gap: var(--lk-space-3);
+    margin-top: var(--lk-space-5);
+  }
+
+  .seta {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    background: none;
+    border: 1px solid var(--lk-line-strong);
+    border-radius: 50%;
+    color: var(--lk-text);
+    cursor: pointer;
+  }
+
+  .seta:hover {
+    border-color: var(--lk-accent);
+    color: var(--lk-accent);
+  }
+
+  .seta :global(.seta__esq) {
+    transform: scaleX(-1);
+  }
+
+  /* The ruler: one segment per channel, the name under it; the current one fills while it plays. */
+  .regua {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    flex: 1;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .regua button {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 0.4em;
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.7rem 0 0;
+    background: none;
+    border: 0;
+    color: var(--lk-text-2);
+    font: 500 0.8125rem/1.2 var(--lk-font-mono);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .regua button::before,
+  .regua__prog {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 2px;
+    background: var(--lk-line-strong);
+  }
+
+  .regua__prog {
+    background: var(--lk-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .regua button:hover,
+  .regua button[aria-current='true'] {
+    color: var(--lk-text);
+  }
+
+  .regua button[aria-current='true'] .regua__ch {
+    color: var(--lk-accent);
+  }
+
+  /* Without the timer (reduced motion), the current segment is simply lit. */
+  .regua button[aria-current='true'] .regua__prog {
+    transform: scaleX(1);
+  }
+
+  [data-gira] .regua button[aria-current='true'] .regua__prog {
+    transform: scaleX(0);
+    animation: progresso 3s linear forwards paused;
+  }
+
+  :global(html:not(.lk-parado)) [data-gira].em-tela:not(:hover, :focus-within) .regua button[aria-current='true'] .regua__prog {
+    animation-play-state: running;
+  }
+
+  @keyframes progresso {
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @media (max-width: 37.49rem) {
+    .regua__nome {
+      display: none;
+    }
+
+    .regua button {
+      justify-content: center;
+    }
   }
 
   .monitor {
@@ -1273,6 +1459,15 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
 
   .estado--ok {
     color: var(--lk-ok);
+  }
+
+  .ticket__twin {
+    grid-template-columns: 1fr !important;
+    gap: 0.15rem !important;
+  }
+
+  .ticket__twin dd + dt {
+    margin-top: var(--lk-space-3);
   }
 
   .ticket dl {
@@ -1317,7 +1512,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   }
 
   @media (min-width: 56.25rem) {
-    .painel {
+    .slide {
       grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
     }
   }
@@ -1505,7 +1700,6 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   .prova__grade {
     display: grid;
     gap: var(--lk-space-4);
-    align-items: start;
   }
 
   .prova figure {
@@ -1538,6 +1732,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     display: grid;
     gap: 0.4rem;
     align-content: start;
+    background: var(--lk-surface);
     padding: var(--lk-space-4);
     border: 1px solid var(--lk-line);
     border-radius: 6px;
@@ -1549,8 +1744,9 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   }
 
   .item p {
+    max-width: 46ch;
     color: var(--home-text-2);
-    font-size: 0.9375rem;
+    font-size: clamp(0.9375rem, 1.1vw, 1.0625rem);
   }
 
   .item a {
@@ -1559,17 +1755,49 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     min-height: 2.75rem;
   }
 
+  .item h3 {
+    font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+  }
+
   @media (min-width: 56.25rem) {
+    /* The clip sets the height (4:5); the cards stack beside it and split that height, each with
+       its text on top and its link at the bottom. The caption sits under the clip only. */
     .prova__grade {
       grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+      align-items: stretch;
+      gap: var(--lk-space-5);
     }
 
-    .vert .clip {
-      aspect-ratio: 9 / 14;
+    .prova figure {
+      align-content: start;
+    }
+
+    .lado {
+      align-content: stretch;
     }
 
     .itens {
-      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      padding-bottom: calc(1.5em + var(--lk-space-2));
+    }
+
+    /* Round 5 (r5-print-36): each card's content centred vertically, and the whole set (clip +
+       cards, with its heading) centred on the page. */
+    .prova .cab,
+    .prova__grade {
+      max-width: 60rem;
+      margin-inline: auto;
+    }
+
+    .item {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--lk-space-5) var(--lk-space-6);
+    }
+
+    .item h3 {
+      font-size: clamp(1.4rem, 2vw, 1.75rem);
     }
   }
 
@@ -1941,19 +2169,10 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
 
   /* ---------- Reduced motion: posters, a still strip, a static diagram ---------- */
   @media (prefers-reduced-motion: reduce) {
-    .marquee ul,
     .pulso,
     .opA,
     .opB {
       animation: none;
-    }
-
-    .marquee {
-      mask-image: none;
-    }
-
-    .marquee [data-copia] {
-      display: none;
     }
 
     .opB {

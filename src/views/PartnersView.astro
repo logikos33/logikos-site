@@ -1,8 +1,12 @@
 ---
-import LeadForm from '../components/LeadForm.astro';
+import Icon from '../components/Icon.astro';
+import CrmForm from '../components/CrmForm.astro';
+import PageClose from '../components/PageClose.astro';
+import PageHero from '../components/PageHero.astro';
 import PointList from '../components/PointList.astro';
 import Section from '../components/Section.astro';
-import WhatsAppButton from '../components/WhatsAppButton.astro';
+import Wall from '../components/Wall.astro';
+import SpecialistButton from '../components/SpecialistButton.astro';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
@@ -15,37 +19,35 @@ const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.partners;
 const pp = t.partnerPoints;
-const points = [pp.brand, pp.license, pp.pilot, pp.support].map((x) => ({ term: x.title, text: x.text }));
+const points = [pp.brand, pp.pilot, pp.license, pp.support].map((x) => ({ term: x.title, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="partners" title={p.meta.title} description={p.meta.description}>
-  <Section as="h1" cover id="hero-title" question={p.hero.question} title={p.hero.title} text={p.hero.text}>
-    <div class="btn-row after">
+  <PageHero locale={locale} id="hero-title" title={p.hero.title} text={p.hero.text}>
+    <Fragment slot="actions">
       <a class="btn" href="#parceria">
-        <span class="btn__mark" aria-hidden="true"></span>
         {t.cta.partner}
+        <Icon name="arrow" size={18} />
       </a>
-      <WhatsAppButton locale={locale} variant="ghost" message={t.cta.whatsappPartnerMessage} />
-    </div>
-  </Section>
+      <SpecialistButton locale={locale} variant="ghost" interest="partnership" />
+    </Fragment>
+    <!-- What the partner resells: the same readings the home shows, on the client's cameras. -->
+    <Wall locale={locale} clips={['fogo', 'epi', 'qualidade', 'contagem']} />
+  </PageHero>
 
   <Section id="model-title" question={p.questions.model} title={p.model.title} text={p.model.text}>
     <PointList rows={points} class="after" />
   </Section>
 
   <Section id="partner-form-title" question={p.questions.form} title={p.form.title} text={p.form.text}>
-    <div class="form-wrap after">
-      <LeadForm locale={locale} kind="partner" id="parceria" />
-    </div>
+    <CrmForm locale={locale} kind="integrador" id="parceria" />
   </Section>
+
+  <PageClose locale={locale} interest="partnership" />
 </Base>
 
 <style>
   .after {
     margin-top: var(--lk-space-6);
-  }
-
-  .form-wrap {
-    max-width: 52rem;
   }
 </style>

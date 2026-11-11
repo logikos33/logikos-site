@@ -1,0 +1,31 @@
+1440  /                  maior vazio  285 px (32 % da tela)
+1440  /recognition       maior vazio  306 px (34 % da tela) · metade vazia: where-title, partners-title, demo-title
+1440  /como-funciona     maior vazio  290 px (32 % da tela) · metade vazia: offline-title, integrations-title, license-title
+1440  /demos             maior vazio  306 px (34 % da tela) · metade vazia: demos-note
+1440  /plataforma        maior vazio  290 px (32 % da tela) · metade vazia: account-title
+1440  /integradores      maior vazio  290 px (32 % da tela) · metade vazia: model-title
+1440  /twins             maior vazio  306 px (34 % da tela) · metade vazia: how-title, buy-title
+1440  /robotica          maior vazio  306 px (34 % da tela) · metade vazia: how-title, buy-title
+1440  /conformidade      maior vazio  201 px (22 % da tela) · metade vazia: hero-title, items-title
+1440  /sobre             maior vazio  290 px (32 % da tela) · metade vazia: who-title
+1440  /contato           maior vazio   26 px (3 % da tela)
+1440  /privacidade       maior vazio  248 px (28 % da tela) · metade vazia: hero-title
+1440  /en/               maior vazio  285 px (32 % da tela)
+1440  /en/recognition    maior vazio  306 px (34 % da tela) · metade vazia: where-title, partners-title, demo-title
+1440  /en/about          maior vazio  290 px (32 % da tela) · metade vazia: who-title
+390   /                  maior vazio  180 px (21 % da tela)
+390   /recognition       maior vazio  150 px (18 % da tela)
+390   /como-funciona     maior vazio  134 px (16 % da tela)
+390   /demos             maior vazio  150 px (18 % da tela)
+390   /plataforma        maior vazio  134 px (16 % da tela)
+390   /integradores      maior vazio  134 px (16 % da tela)
+390   /twins             maior vazio  150 px (18 % da tela)
+390   /robotica          maior vazio  150 px (18 % da tela)
+390   /conformidade      maior vazio  105 px (12 % da tela)
+390   /sobre             maior vazio  134 px (16 % da tela)
+390   /contato           maior vazio   49 px (6 % da tela)
+390   /privacidade       maior vazio  152 px (18 % da tela)
+390   /en/               maior vazio  180 px (21 % da tela)
+390   /en/recognition    maior vazio  150 px (18 % da tela)
+390   /en/about          maior vazio  134 px (16 % da tela)
+pior faixa vazia: 34 % de uma tela

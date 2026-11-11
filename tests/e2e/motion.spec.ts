@@ -1,8 +1,4 @@
 import { expect, test } from '@playwright/test';
-import { stubTurnstile } from './helpers.ts';
-
-// Deterministic: Turnstile's real widget is exercised only by the form tests.
-test.beforeEach(async ({ page }) => stubTurnstile(page));
 
 const isVideo = (url: string) => /\.mp4(\?|$)/.test(url);
 
@@ -24,6 +20,29 @@ test('home opening: once per session, skippable, the rest of the page inert mean
   await page.goto('/');
   await expect(page.locator('[data-abertura]')).toHaveCount(0);
   await expect(page.locator('h1')).toBeVisible();
+});
+
+test('home opening: a clip slower than the page still plays whole (feedback 11/11, item 8)', async ({ page }) => {
+  // The page is ready at once; the clip only arrives 2.5 s later (cold cache on a busy network).
+  await page.route('**/media/home/abertura.mp4', async (route) => {
+    await new Promise((r) => setTimeout(r, 2500));
+    await route.continue();
+  });
+  await page.goto('/');
+  const opening = page.locator('[data-abertura]');
+  await page.waitForTimeout(2000);
+  await expect(opening, 'still on screen while the clip downloads').toBeVisible();
+  // It hands over only after the clip reached its end.
+  await expect
+    .poll(
+      () =>
+        page.evaluate(() => {
+          const v = document.querySelector<HTMLVideoElement>('[data-abertura] video');
+          return v ? (v.closest('.mergulha') ? v.currentTime >= v.duration - 0.2 : null) : 'gone';
+        }),
+      { timeout: 15_000 },
+    )
+    .toBe(true);
 });
 
 test('home opening: plays to the end, dives in and ends at rest (fail-safe if the video stalls)', async ({ page }) => {
@@ -48,9 +67,8 @@ test('home under reduced motion: no opening, posters only, no video downloaded, 
   expect(videos).toEqual([]);
   const running = await page.evaluate(() => document.getAnimations().filter((a) => a.playState === 'running').length);
   expect(running).toBe(0);
-  // The partner strip shows each logo once, still.
-  await expect(page.locator('.marquee li:not([data-copia])')).toHaveCount(3);
-  await expect(page.locator('.marquee [data-copia]').first()).toBeHidden();
+  // The partner row shows each logo once, still.
+  await expect(page.locator('.logos li')).toHaveCount(3);
   await ctx.close();
 });
 
@@ -67,19 +85,24 @@ test('home idle: wall videos load only after the opening and near the screen; th
   const h264 = await page.evaluate(() => document.createElement('video').canPlayType('video/mp4; codecs="avc1.4D401E"') !== '');
   const playing = () => wall.first().evaluate((v: HTMLVideoElement) => !v.paused);
   if (h264) await expect.poll(playing).toBe(true);
-  // WCAG 2.2.2: one visible control stops videos, the partner strip and the diagram pulse.
+  // WCAG 2.2.2: one control stops videos, the partner strip, the diagram pulse and the channels.
+  // It stays off the picture until the keyboard reaches it.
   const stop = page.locator('[data-parar]');
+  expect((await stop.boundingBox())?.width ?? 0).toBeLessThanOrEqual(1);
+  await stop.focus();
   await expect(stop).toBeVisible();
-  await stop.click();
+  expect((await stop.boundingBox())?.width ?? 0).toBeGreaterThan(40);
+  await stop.press('Enter');
   await expect(stop).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('html')).toHaveClass(/lk-parado/);
   expect(await wall.evaluateAll((vs) => vs.every((v) => (v as HTMLVideoElement).paused))).toBe(true);
   const running = await page.evaluate(
     () =>
+      // The stop control freezes the old-TV backdrop too: only the scroll-driven turn-on (liga) may run.
       document.getAnimations().filter((a) => a.playState === 'running' && !(a as CSSAnimation).animationName?.startsWith('liga')).length,
   );
   expect(running).toBe(0);
-  await stop.click();
+  await stop.press('Enter');
   await expect(stop).toHaveAttribute('aria-pressed', 'false');
   if (h264) {
     await expect.poll(playing).toBe(true);
@@ -90,8 +113,9 @@ test('home idle: wall videos load only after the opening and near the screen; th
 });
 
 test('HUD draws detection boxes in steps and rests on the last frame', async ({ page }) => {
-  await page.goto('/recognition');
-  const hud = page.locator('[data-hud]#rec-stage');
+  await page.goto('/_marca');
+  const hud = page.locator('[data-hud]#hud-epi');
+  await hud.scrollIntoViewIfNeeded();
   await expect(hud).toHaveAttribute('data-state', 'playing');
   await expect(hud.locator('.hud-box').first()).toBeVisible();
   // WCAG 2.2.2: while it moves, a visible Stop control exists.
@@ -110,8 +134,9 @@ test('HUD draws detection boxes in steps and rests on the last frame', async ({ 
 });
 
 test('Stop ends playback at rest and keeps keyboard focus on the control', async ({ page }) => {
-  await page.goto('/recognition');
-  const hud = page.locator('[data-hud]#rec-stage');
+  await page.goto('/_marca');
+  const hud = page.locator('[data-hud]#hud-epi');
+  await hud.scrollIntoViewIfNeeded();
   const control = hud.locator('[data-hud-play]');
   await expect(hud).toHaveAttribute('data-state', 'playing');
   await control.focus();
@@ -127,8 +152,9 @@ test('Stop ends playback at rest and keeps keyboard focus on the control', async
 test('reduced motion: HUD waits for play, then plays once', async ({ browser }) => {
   const ctx = await browser.newContext({ reducedMotion: 'reduce' });
   const page = await ctx.newPage();
-  await page.goto('/recognition');
-  const hud = page.locator('[data-hud]#rec-stage');
+  await page.goto('/_marca');
+  const hud = page.locator('[data-hud]#hud-epi');
+  await hud.scrollIntoViewIfNeeded();
   await expect(hud).toHaveAttribute('data-state', 'idle');
   // At rest the verdict is already there (last frame), nothing moves until the user plays.
   const atRest = await hud.locator('.hud__overlay .hud-box').count();
@@ -211,7 +237,12 @@ test('M4: the pipeline is revealed in order, once, and ends at rest; static when
   await expect(nodes).toHaveCount(4);
   for (let i = 0; i < 4; i++) await expect(nodes.nth(i)).toBeVisible({ timeout: 3000 });
   await page.waitForTimeout(1500);
-  const running = await page.evaluate(() => document.getAnimations().filter((a) => a.playState === 'running').length);
+  // The old-TV backdrop (crt-*) and the CAM 07 "waiting" loop (ag-*) are surfaces, not the pipeline.
+  const running = await page.evaluate(
+    () =>
+      document.getAnimations().filter((a) => a.playState === 'running' && !/^(crt|ag)-/.test((a as CSSAnimation).animationName ?? ''))
+        .length,
+  );
   expect(running).toBe(0);
   await ctx.close();
 
@@ -221,30 +252,4 @@ test('M4: the pipeline is revealed in order, once, and ends at rest; static when
   await expect(p2.locator('[data-pipeline]').first()).not.toHaveClass(/pipeline--armed/);
   await expect(p2.locator('[data-pipeline] .pipeline__node').first()).toBeVisible();
   await reduced.close();
-});
-
-test('M3: the pose selector moves a region out of frame and the verdict follows, without JavaScript', async ({ browser }) => {
-  const ctx = await browser.newContext({ javaScriptEnabled: false });
-  const page = await ctx.newPage();
-  await page.goto('/recognition');
-  const avatar = page.locator('[data-avatar]');
-  await avatar.scrollIntoViewIfNeeded();
-  const hands = avatar.locator('.avatar__row[data-region="hands"] .verdict:visible');
-  const feet = avatar.locator('.avatar__row[data-region="feet"] .verdict:visible');
-  const head = avatar.locator('.avatar__row[data-region="head"] .verdict:visible');
-  await expect(hands).toHaveClass(/verdict--warn/);
-  await expect(avatar.locator('.avatar__person:visible')).toHaveText(/nada enviado|nothing sent/);
-  await avatar.locator('input[value="crouching"]').check();
-  await expect(feet).toHaveClass(/verdict--warn/);
-  await expect(head).toHaveClass(/verdict--alert/);
-  await expect(avatar.locator('.avatar__person:visible')).toContainText(/alerta enviado|alert sent/);
-  await avatar.locator('input[value="half"]').check();
-  await expect(head).toHaveClass(/verdict--warn/);
-  await expect(avatar.locator('.avatar__person:visible')).toHaveText(/nada enviado|nothing sent/);
-  // Every visible chip carries icon + word (never color alone).
-  for (const chip of await avatar.locator('.verdict:visible').all()) {
-    await expect(chip.locator('svg')).toHaveCount(1);
-    await expect(chip).not.toHaveText('');
-  }
-  await ctx.close();
 });

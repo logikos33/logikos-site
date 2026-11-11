@@ -42,7 +42,6 @@ const INSIDE = ['camera', 'device', 'verdict'] as const;
       <p>{t.steps.person.text}</p>
     </li>
   </ol>
-  <p class="pipeline__note">{t.home.pipeline.note}</p>
 </div>
 
 <script>
@@ -131,22 +130,14 @@ const INSIDE = ['camera', 'device', 'verdict'] as const;
     background: var(--lk-text);
   }
 
-  .pipeline__note {
-    margin: 0;
-    font-size: 0.875rem;
-    color: var(--lk-text-2);
-  }
-
   /* M4: armed by the script; each node lands one step after the other and stays. */
   .pipeline--armed .pipeline__node,
-  .pipeline--armed .pipeline__cross,
-  .pipeline--armed .pipeline__note {
+  .pipeline--armed .pipeline__cross {
     visibility: hidden;
   }
 
   .pipeline--armed.is-seen .pipeline__node,
-  .pipeline--armed.is-seen .pipeline__cross,
-  .pipeline--armed.is-seen .pipeline__note {
+  .pipeline--armed.is-seen .pipeline__cross {
     animation: lk-land 1ms var(--lk-steps-1) forwards;
   }
 
@@ -166,8 +157,7 @@ const INSIDE = ['camera', 'device', 'verdict'] as const;
     animation-delay: calc(var(--lk-motion-seq) * 3);
   }
 
-  .pipeline--armed.is-seen .pipeline__outside .pipeline__node,
-  .pipeline--armed.is-seen .pipeline__note {
+  .pipeline--armed.is-seen .pipeline__outside .pipeline__node {
     animation-delay: calc(var(--lk-motion-seq) * 4);
   }
 
@@ -196,10 +186,6 @@ const INSIDE = ['camera', 'device', 'verdict'] as const;
 
     .pipeline__outside {
       padding-top: var(--lk-space-5);
-    }
-
-    .pipeline__note {
-      grid-column: 1 / -1;
     }
   }
 </style>

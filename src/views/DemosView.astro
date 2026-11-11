@@ -1,9 +1,14 @@
 ---
-import DemoStatus from '../components/DemoStatus.astro';
+// /demos (feedback 11/11, items 18 and 25c): one call — try it on your phone camera — and what shows
+// up on screen, on the real clips, side by side. No technical notes, no live-status chips.
+import Cam from '../components/Cam.astro';
+import Icon from '../components/Icon.astro';
+import PageClose from '../components/PageClose.astro';
+import PageHero from '../components/PageHero.astro';
 import Section from '../components/Section.astro';
-import { DEMOS } from '../config/links';
+import { EXPERIENCE_URL, PHONE_DEMO_URL } from '../config/links';
 import { dict } from '../i18n';
-import { pathFor, type Locale } from '../i18n/routes';
+import type { Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
 
 interface Props {
@@ -13,53 +18,83 @@ interface Props {
 const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.demos;
-const demos = ['epi', 'fire'] as const;
+const SEE = [
+  { clip: 'v-epi', name: t.pages.cams.epi, ...p.epi },
+  { clip: 'v-fogo', name: t.pages.cams.fogo, ...p.fire },
+];
 ---
 
 <Base locale={locale} routeKey="demos" title={p.meta.title} description={p.meta.description}>
-  <Section as="h1" cover question={p.hero.question} title={p.hero.title} text={p.hero.text} id="demos-title">
-    <!-- The real thing first, with its live state; the mock stage is gone (AUDITORIA-V2 F-14). -->
-    <div class="btn-row hero-actions">
-      {demos.map((k) => (
-        <DemoStatus locale={locale} demo={k} button primary />
+  <PageHero locale={locale} id="demos-title" title={p.hero.title} text={p.hero.text}>
+    <Fragment slot="actions">
+      <a class="btn" href={PHONE_DEMO_URL} data-cta="phone-demo">
+        <Icon name="camera" size={18} />
+        {t.pages.close.phone}
+      </a>
+      <a class="btn btn--ghost" href={EXPERIENCE_URL} data-cta="experience">
+        {t.cta.experience}
+        <Icon name="arrow" size={18} />
+      </a>
+    </Fragment>
+    <figure class="vert">
+      <Cam clip="fs-publico" vertical label={t.pages.fireshow.label} />
+      <figcaption class="mono">{t.pages.fireshow.caption}</figcaption>
+    </figure>
+  </PageHero>
+
+  <Section question={p.see.question} title={p.see.title} text={p.see.text} id="see-title" wide>
+    <ul class="ver" role="list">
+      {SEE.map((s) => (
+        <li>
+          <Cam clip={s.clip} name={s.name} />
+          <h3>{s.title}</h3>
+          <p>{s.text}</p>
+        </li>
       ))}
-    </div>
-    <p class="note">{p.browser}</p>
+    </ul>
   </Section>
 
-  {demos.map((k) => (
-    <Section question={p.questions[k]} title={p[k].title} text={p[k].see} id={`demo-${k}`}>
-      <p>{p[k].verdict}</p>
-      <p class="note">{p[k].note}</p>
-      <div class="btn-row">
-        <a class="btn" href={DEMOS[k]} rel="noopener" target="_blank">
-          <span class="btn__mark" aria-hidden="true" />
-          {t.cta.openDemo}
-          <span class="visually-hidden"> ({t.a11y.external})</span>
-        </a>
-      </div>
-    </Section>
-  ))}
-
-  <Section question={p.questions.note} title={p.note.title} text={p.note.text} id="demos-note">
-    <p>
-      <a href={pathFor('recognition', locale)}>{t.nav.recognition}</a>
-    </p>
-  </Section>
+  <PageClose locale={locale} />
 </Base>
 
 <style>
-  .hero-actions {
-    margin-top: var(--lk-space-5);
+  figure {
+    margin: 0;
   }
 
-  .hero-actions + .note {
-    margin-top: var(--lk-space-4);
-  }
-
-  .note {
+  figcaption {
+    margin-top: var(--lk-space-2);
+    font-size: 0.8125rem;
     color: var(--lk-text-2);
-    font-size: 0.9375rem;
-    max-width: var(--lk-measure);
+  }
+
+  /* Portrait clip: never taller than about half the screen on a phone. */
+  .vert {
+    width: min(100%, 18rem, 31svh);
+    margin-inline: auto;
+  }
+
+  .ver {
+    display: grid;
+    gap: var(--lk-space-5);
+    margin: var(--lk-space-5) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ver h3 {
+    margin: var(--lk-space-3) 0 var(--lk-space-1);
+    font-size: 1.15rem;
+  }
+
+  .ver p {
+    margin: 0;
+    color: var(--lk-text-lead, var(--lk-text-2));
+  }
+
+  @media (min-width: 48rem) {
+    .ver {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 </style>

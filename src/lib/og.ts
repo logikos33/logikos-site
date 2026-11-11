@@ -1,4 +1,4 @@
-// Build-time Open Graph card: plain light background, the official wordmark (src/lib/brand.ts)
+// Build-time Open Graph card: plain light background, the Logikos Vision lockup (src/lib/brand.ts)
 // inside the detection box with the mono label, the slogan below. No glitch. Rendered with
 // satori -> resvg (dev-only deps); the lockup goes in as an SVG data URI so no font can
 // approximate it.
@@ -6,7 +6,7 @@ import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { Resvg } from '@resvg/resvg-js';
 import satori from 'satori';
-import { WORDMARK_INNER, WORDMARK_RATIO, WORDMARK_VIEWBOX } from './brand';
+import { LOCKUP_INNER, LOCKUP_RATIO, LOCKUP_VIEWBOX } from './brand';
 
 const require = createRequire(import.meta.url);
 
@@ -23,12 +23,13 @@ const h = (type: string, style: Record<string, unknown>, children?: unknown): No
 const ACCENT = '#0091AD';
 const INK = '#0A0A0F';
 
-/** Lockup width on the card; its cap height (100 units of 115.22) is the protection area. */
-const MARK_W = 720;
-const MARK_H = Math.round(MARK_W / WORDMARK_RATIO);
-const PROTECT = Math.round((MARK_H * 100) / 115.22);
+/** Logikos Vision lockup (direction A) on the card; the LOGIKOS cap (100 of its 163.5 units) is
+ * the protection area. */
+const MARK_W = 640;
+const MARK_H = Math.round(MARK_W / LOCKUP_RATIO);
+const PROTECT = Math.round((MARK_H * 100) / 163.5);
 const markUri = `data:image/svg+xml;base64,${Buffer.from(
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${WORDMARK_VIEWBOX}" width="${MARK_W}" height="${MARK_H}" fill="${INK}">${WORDMARK_INNER}</svg>`,
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${LOCKUP_VIEWBOX}" width="${MARK_W}" height="${MARK_H}" fill="${INK}">${LOCKUP_INNER}</svg>`,
 ).toString('base64')}`;
 
 function corner(pos: Record<string, number>, borders: Record<string, string>): Node {

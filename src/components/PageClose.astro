@@ -1,0 +1,159 @@
+---
+// Every page ends like the home: one more monitor on the wall, waiting for the visitor's camera.
+// One click opens the phone demo; the experience and the specialist stay as secondary actions.
+import { EXPERIENCE_URL, PHONE_DEMO_URL } from '../config/links';
+import { dict } from '../i18n';
+import type { Locale } from '../i18n/routes';
+import type { ChatInterest } from '../lib/site';
+import Aguardando from './Aguardando.astro';
+import Icon from './Icon.astro';
+import SpecialistButton from './SpecialistButton.astro';
+
+interface Props {
+  locale: Locale;
+  /** Interest Koda picks in advance when the specialist button opens the conversation. */
+  interest?: ChatInterest;
+  /** Label for the specialist button (the About page asks for a custom model). */
+  label?: string;
+}
+
+const { locale, interest, label } = Astro.props;
+const t = dict(locale);
+const c = t.pages.close;
+---
+
+<section class="section fecho" aria-labelledby="fecho-title">
+  <div class="container">
+    <div class="cartao">
+      <div class="cartao__copy">
+        <h2 id="fecho-title">{c.title}</h2>
+        <p class="lede">{c.text}</p>
+        <div class="btn-row">
+          <a class="btn btn--ghost" href={EXPERIENCE_URL} data-cta="experience">
+            {t.cta.experience}
+            <Icon name="arrow" size={18} />
+          </a>
+          <SpecialistButton locale={locale} variant="ghost" {...(interest ? { interest } : {})} {...(label ? { label } : {})} />
+        </div>
+      </div>
+      <div class="sinal liga">
+        <div class="sinal__tela">
+          <Aguardando locale={locale} />
+          <p class="sinal__osd mono">
+            <span class="sinal__rec" aria-hidden="true"></span>
+            {c.screen}
+          </p>
+          <a class="btn" href={PHONE_DEMO_URL} data-cta="phone-demo">
+            <Icon name="camera" size={18} />
+            {c.phone}
+          </a>
+          <p class="sinal__sub mono">{c.screenSub}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cartao {
+    display: grid;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: center;
+    padding: clamp(1.25rem, 4vw, 3rem);
+    background: var(--lk-surface);
+    border: 1px solid var(--lk-line);
+    border-radius: 6px;
+  }
+
+  .cartao > * {
+    min-width: 0;
+  }
+
+  .cartao__copy {
+    display: grid;
+    gap: var(--lk-space-5);
+    justify-items: start;
+  }
+
+  .cartao h2 {
+    font-size: clamp(1.7rem, 3.4vw, 2.7rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  .cartao .lede {
+    margin: 0;
+  }
+
+  .sinal {
+    padding: 5px;
+    background: #050508;
+    border: 1px solid var(--lk-line-strong);
+    border-radius: 6px;
+  }
+
+  .sinal__tela {
+    position: relative;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: var(--lk-space-4);
+    min-height: 13rem;
+    padding: var(--lk-space-7) var(--lk-space-4) var(--lk-space-5);
+    overflow: hidden;
+    background:
+      repeating-linear-gradient(0deg, #0000 0 2px, #ffffff08 2px 3px), radial-gradient(ellipse at 50% 45%, #1b1b26 0%, #050508 75%);
+    border-radius: 2px;
+    text-align: center;
+  }
+
+  .sinal__osd {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--lk-text);
+  }
+
+  .sinal__rec {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--lk-alert);
+  }
+
+  .sinal__sub {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--lk-text-2);
+  }
+
+  @media (min-width: 37.5rem) {
+    .sinal__tela {
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  @media (min-width: 56.25rem) {
+    .cartao {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    }
+  }
+
+  @media (max-width: 56.24rem) {
+    .cartao__copy .btn-row,
+    .cartao__copy .btn-row :global(.btn) {
+      width: 100%;
+    }
+
+    .sinal :global(.btn) {
+      white-space: normal;
+      text-align: center;
+    }
+  }
+</style>

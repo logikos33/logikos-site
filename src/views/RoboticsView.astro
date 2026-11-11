@@ -1,8 +1,10 @@
 ---
 import DefList from '../components/DefList.astro';
-import HudVideo from '../components/HudVideo.astro';
+import Koda from '../components/Koda.astro';
+import SpecialistButton from '../components/SpecialistButton.astro';
+import PageClose from '../components/PageClose.astro';
+import PageHero from '../components/PageHero.astro';
 import Section from '../components/Section.astro';
-import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
@@ -15,38 +17,27 @@ const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.robotics;
 const pts = p.points;
-const uses = [pts.quadrupeds, pts.project].map((x) => ({ term: x.title, text: x.text }));
+const uses = [pts.drones, pts.quadrupeds, pts.project].map((x) => ({ term: x.title, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="robotics" title={p.meta.title} description={p.meta.description}>
-  <Section as="h1" cover id="hero-title" question={p.questions.what} title={p.hero.title} text={p.hero.text}>
-    <p class="after">
+  <!-- No robot footage of our own yet: Koda carries the hero instead of a mock clip (feedback 11/11, item 5). -->
+  <PageHero locale={locale} interest="robotics" id="hero-title" title={p.hero.title} text={p.hero.text}>
+    <!-- Final review, item 9: only this page's call. -->
+    <Fragment slot="actions">
+      <SpecialistButton locale={locale} interest="robotics" />
+    </Fragment>
+    <p slot="note">
       <span class="verdict verdict--outline">{p.chip}</span>
     </p>
-    <div class="btn-row after">
-      <WhatsAppButton locale={locale} />
-    </div>
+    <Koda locale={locale} pose="apontando" />
+  </PageHero>
+
+  <Section id="how-title" question={p.questions.how} title={pts.both.title} text={pts.both.text}>
+    <DefList rows={uses} />
   </Section>
 
-  <Section id="how-title" question={p.questions.how} title={pts.drones.title} text={pts.drones.text} wide>
-    <HudVideo locale={locale} clip="robotics" class="after" />
-    <p class="note">{t.hud.illustrative}</p>
-    <DefList rows={uses} class="after" />
-  </Section>
+  <Section id="buy-title" question={p.questions.buy} title={p.buy.title} text={p.buy.text} />
 
-  <Section id="buy-title" question={p.questions.buy} title={p.buy.title} text={p.buy.text}>
-    <div class="btn-row after">
-      <WhatsAppButton locale={locale} />
-    </div>
-  </Section>
+  <PageClose locale={locale} interest="robotics" />
 </Base>
-
-<style>
-  .after {
-    margin-top: var(--lk-space-6);
-  }
-
-  .note {
-    margin-top: var(--lk-space-3);
-  }
-</style>

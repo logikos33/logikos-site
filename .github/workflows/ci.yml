@@ -17,11 +17,10 @@ env:
   ASTRO_TELEMETRY_DISABLED: '1'
   WRANGLER_SEND_METRICS: 'false'
   # Public build-time values live in repository *variables* (not secrets).
-  PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL || 'https://logikosvision.com.br' }}
+  PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL || 'https://www.logikosvision.com.br' }}
   PUBLIC_WHATSAPP_NUMBER: ${{ vars.PUBLIC_WHATSAPP_NUMBER }}
   PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL }}
   PUBLIC_MEDIA_BASE_URL: ${{ vars.PUBLIC_MEDIA_BASE_URL }}
-  PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
   PUBLIC_CF_ANALYTICS_TOKEN: ${{ vars.PUBLIC_CF_ANALYTICS_TOKEN }}
 
 jobs:
@@ -87,7 +86,9 @@ jobs:
         with:
           name: dist
           path: dist
-      - run: pnpm exec playwright install --with-deps chromium
+      # The runner image already carries Chromium's system libraries; when apt cannot reach the Ubuntu
+      # mirrors (DNS failures seen on 11/11/2026), install the browser alone instead of failing the job.
+      - run: pnpm exec playwright install --with-deps chromium || pnpm exec playwright install chromium
       - run: pnpm test:e2e
       - uses: actions/upload-artifact@v4
         if: always()

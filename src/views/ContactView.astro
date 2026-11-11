@@ -1,11 +1,13 @@
 ---
-import LeadForm from '../components/LeadForm.astro';
-import Section from '../components/Section.astro';
-import WhatsAppButton from '../components/WhatsAppButton.astro';
+// /contato is the conversation with Koda (feedback 11/11, item 11): every "Talk to a specialist" on
+// the site lands here (#conversa), and the lead goes to the CRM. The email lives in the footer
+// only (round 5); WhatsApp shows beside the chat once the number is configured.
+import KodaChat from '../components/KodaChat.astro';
+import PageHero from '../components/PageHero.astro';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
-import { CONTACT_EMAIL, whatsappHref } from '../lib/site';
+import { whatsappHref } from '../lib/site';
 
 interface Props {
   locale: Locale;
@@ -14,82 +16,31 @@ interface Props {
 const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.contact;
-const hasWhatsapp = Boolean(whatsappHref(''));
+const c = p.chat;
+const wa = whatsappHref(t.cta.whatsappMessage);
 ---
 
-<Base locale={locale} routeKey="contact" title={p.meta.title} description={hasWhatsapp ? p.meta.description : p.meta.descriptionNoWhatsapp}>
-  <Section
-    as="h1"
-    cover
-    id="hero-title"
-    question={p.hero.question}
-    title={p.hero.title}
-    text={hasWhatsapp ? p.hero.text : p.hero.textNoWhatsapp}
-  />
-
-  <section class="section section--flush" aria-labelledby="hero-title">
-    <div class="container contact-grid">
-      <dl class="defs contact-channels">
-        {hasWhatsapp && (
-          <div class="defs__row">
-            <dt>{p.whatsapp.title}</dt>
-            <dd>
-              <p>{p.whatsapp.text}</p>
-              <WhatsAppButton locale={locale} />
-            </dd>
-          </div>
-        )}
-        {CONTACT_EMAIL && (
-          <div class="defs__row">
-            <dt>{p.email.title}</dt>
-            <dd>
-              <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-            </dd>
-          </div>
-        )}
-      </dl>
-      <div>
-        <h2 class="contact-form-title" id="form-title">
-          {p.form.title}
-        </h2>
-        <p class="contact-form-text">{p.form.text}</p>
-        <LeadForm locale={locale} kind="contact" id="formulario" />
-      </div>
-    </div>
-  </section>
+<Base locale={locale} routeKey="contact" title={p.meta.title} description={p.meta.description}>
+  <PageHero locale={locale} id="hero-title" title={c.title} text={c.text} quiet>
+    {wa && (
+      <p slot="note" class="alt">
+        <a href={wa} rel="noopener" target="_blank">
+          {p.whatsapp.title}
+          <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>
+        </a>
+      </p>
+    )}
+    <KodaChat locale={locale} />
+  </PageHero>
 </Base>
 
 <style>
-  .contact-grid {
-    display: grid;
-    gap: var(--lk-space-7);
-  }
-
-  .contact-grid > * {
-    min-width: 0;
-  }
-
-  .contact-channels {
-    align-content: start;
-  }
-
-  .contact-channels dd > p {
-    margin: 0 0 var(--lk-space-3);
-  }
-
-  .contact-form-title {
-    font-size: 1.25rem;
+  .alt {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
     margin: 0;
-  }
-
-  .contact-form-text {
     color: var(--lk-text-2);
-    margin: var(--lk-space-2) 0 var(--lk-space-5);
-  }
-
-  @media (min-width: 64rem) {
-    .contact-grid {
-      grid-template-columns: 1fr 2fr;
-    }
+    font-size: 0.9375rem;
   }
 </style>

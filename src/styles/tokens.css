@@ -3,7 +3,9 @@
    magenta exists only inside the glitch; state = color + icon + word. */
 
 :root,
-[data-theme='light'] {
+[data-theme='light'],
+/* A light sheet on the dark pages (feedback 11/11, item 13): dense data reads on paper. */
+.folha {
   color-scheme: light;
   --lk-bg: #f4f6f8;
   --lk-surface: #ffffff;
@@ -39,6 +41,8 @@
   --lk-surface: #14141c;
   --lk-text: #f4f6f8;
   --lk-text-2: #8a8f98;
+  /* Lead paragraphs, as on the home (--home-text-2). */
+  --lk-text-lead: #c9cdd3;
   --lk-accent: #00e5ff;
   --lk-accent-2: #0091ad;
   --lk-glitch-c: #00e5ff;
@@ -145,8 +149,11 @@
   --lk-space-9: 6rem;
 
   --lk-radius: 2px;
-  --lk-max: 72rem;
+  /* As wide as the home (v3): header, pages and footer line up on every route. */
+  --lk-max: 82.5rem;
   --lk-gutter: clamp(1rem, 4vw, 2rem);
+  /* Vertical rhythm between sections, the one value for every page (feedback 11/11, item 25a). */
+  --lk-section-y: clamp(2.5rem, 5vw, 4.5rem);
   /* Document grid: the section's question lives in this margin column from 64rem up. */
   --lk-margin: 11rem;
   --lk-measure: 62ch;

@@ -1,10 +1,8 @@
 import { expect, test } from '@playwright/test';
 import { HTML_LANG, LOCALES, ROUTES } from '../../src/i18n/routes.ts';
-import { ALL_ROUTES, SITE, skipOpening, stubTurnstile } from './helpers.ts';
+import { ALL_ROUTES, SITE, skipOpening } from './helpers.ts';
 
-// Deterministic: Turnstile's real widget is exercised only by the form tests.
 test.beforeEach(async ({ page }) => {
-  await stubTurnstile(page);
   await skipOpening(page);
 });
 
@@ -58,7 +56,7 @@ test('JSON-LD Organization carries the company facts', async ({ page }) => {
   expect(data.address.addressRegion).toBe('SC');
 });
 
-test('no third-party request besides Turnstile on any page', async ({ page }) => {
+test('no third-party request on any page (no Turnstile since feedback 11/11, item 20)', async ({ page }) => {
   const external = new Set<string>();
   page.on('request', (r) => {
     const u = new URL(r.url());
@@ -67,8 +65,8 @@ test('no third-party request besides Turnstile on any page', async ({ page }) =>
   for (const { path } of ALL_ROUTES) {
     await page.goto(path, { waitUntil: 'networkidle' });
   }
-  // Turnstile always may load; the Web Analytics beacon only when its token is configured.
-  const allowed = new Set(['challenges.cloudflare.com']);
+  // Only the Web Analytics beacon, and only when its token is configured.
+  const allowed = new Set<string>();
   if (process.env.PUBLIC_CF_ANALYTICS_TOKEN) ['static.cloudflareinsights.com', 'cloudflareinsights.com'].forEach((h) => allowed.add(h));
   const unexpected = [...external].filter((h) => !allowed.has(h));
   expect(unexpected).toEqual([]);

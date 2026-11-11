@@ -1,8 +1,10 @@
 ---
-import LeadForm from '../components/LeadForm.astro';
+import Cam from '../components/Cam.astro';
+import CrmForm from '../components/CrmForm.astro';
+import LicenseOptions from '../components/LicenseOptions.astro';
+import PageClose from '../components/PageClose.astro';
+import PageHero from '../components/PageHero.astro';
 import Section from '../components/Section.astro';
-import WhatsAppButton from '../components/WhatsAppButton.astro';
-import { LOGIN_URL } from '../config/links';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
@@ -17,66 +19,68 @@ const p = t.platform;
 ---
 
 <Base locale={locale} routeKey="platform" title={p.meta.title} description={p.meta.description}>
-  <Section as="h1" cover question={p.hero.question} title={p.hero.title} text={p.hero.text} id="platform-title">
-    <div class="btn-row hero-actions">
-      <WhatsAppButton locale={locale} label={t.cta.pilot} />
-      <a class="btn btn--ghost" href={LOGIN_URL} rel="noopener" target="_blank">
-        {p.login.cta}
-        <span class="visually-hidden"> ({t.a11y.external})</span>
-      </a>
-    </div>
-  </Section>
+  <PageHero locale={locale} id="platform-title" title={p.hero.title} text={p.hero.text}>
+    <!-- No "Sign in" until the new platform exists (feedback 11/11): the hero keeps the site's pair. -->
+    <figure class="fig">
+      <Cam clip="v-contagem" name={t.pages.cams.contagem} />
+    </figure>
+  </PageHero>
 
   <Section question={p.questions.compare} title={p.compare.title} id="compare-title" wide>
     <!-- The one place a table is the content: the two modes, aspect by aspect. -->
-    <table class="compare">
-      <caption class="visually-hidden">{p.compare.title}</caption>
-      <thead>
-        <tr>
-          <th scope="col">{p.compare.aspect}</th>
-          <th scope="col">{p.compare.edge}</th>
-          <th scope="col">{p.compare.cloud}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {p.compare.rows.map((r) => (
+    <div class="folha tabela">
+      <table class="compare">
+        <caption class="visually-hidden">{p.compare.title}</caption>
+        <thead>
           <tr>
-            <th scope="row">{r.term}</th>
-            <td data-edge={p.compare.edge}>{r.edge}</td>
-            <td data-cloud={p.compare.cloud}>{r.cloud}</td>
+            <th scope="col">{p.compare.aspect}</th>
+            <th scope="col">{p.compare.edge}</th>
+            <th scope="col">{p.compare.cloud}</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {p.compare.rows.map((r) => (
+            <tr>
+              <th scope="row">{r.term}</th>
+              <td data-edge={p.compare.edge}>{r.edge}</td>
+              <td data-cloud={p.compare.cloud}>{r.cloud}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   </Section>
 
-  <Section question={p.questions.account} title={p.account.title} text={p.account.text} id="account-title">
-    <p>{p.account.confirm}</p>
-    <div class="account-form">
-      <LeadForm locale={locale} kind="account" id="conta" />
-    </div>
-    <div class="login">
-      <h3>{p.login.title}</h3>
-      <p>{p.login.text}</p>
-      <div class="btn-row">
-        <a class="btn btn--ghost" href={LOGIN_URL} rel="noopener" target="_blank">
-          {p.login.cta}
-          <span class="visually-hidden"> ({t.a11y.external})</span>
-        </a>
-      </div>
-    </div>
+  <Section question={t.howItWorks.questions.license} title={t.pages.license.title} text={t.pages.license.text} id="license-title" wide>
+    <LicenseOptions locale={locale} />
   </Section>
+
+  <!-- The form sits beside its text on desktop (the section's right column). -->
+  <Section question={p.questions.account} title={p.account.title} text={`${p.account.text} ${p.account.confirm}`} id="account-title">
+    <CrmForm locale={locale} kind="conta" id="conta" />
+  </Section>
+
+  <PageClose locale={locale} />
 </Base>
 
 <style>
-  .hero-actions {
+  .fig {
+    margin: 0;
+  }
+
+  .fig figcaption {
+    margin-top: var(--lk-space-2);
+    font-size: 0.8125rem;
+    color: var(--lk-text-2);
+  }
+
+  .tabela {
     margin-top: var(--lk-space-5);
   }
 
   .compare {
     width: 100%;
     border-collapse: collapse;
-    margin-top: var(--lk-space-5);
   }
 
   .compare th,
@@ -140,26 +144,5 @@ const p = t.platform;
     .compare td:nth-child(3)::before {
       content: attr(data-cloud);
     }
-  }
-
-  .login {
-    margin-top: var(--lk-space-7);
-    padding-top: var(--lk-space-5);
-    border-top: 1px solid var(--lk-line);
-    max-width: var(--lk-measure);
-  }
-
-  .login h3 {
-    margin: 0 0 var(--lk-space-2);
-  }
-
-  .login p {
-    margin: 0 0 var(--lk-space-4);
-    color: var(--lk-text-2);
-  }
-
-  .account-form {
-    max-width: 52rem;
-    margin-top: var(--lk-space-5);
   }
 </style>
