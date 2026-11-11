@@ -54,14 +54,16 @@ metal. Clima calmo e preciso. Manter peça, pórtico e luz iguais à imagem.
 IA de imagem deforma logos, então a cena sai com **espaços lisos reservados** (placa preta no pórtico e a área
 plana da flange) e o **logo oficial** (`abertura-lockup.svg`, lockup aprovado) entra por cima com a perspectiva da
 cena:
+
 - **Placa do pórtico:** LOGIKOS VISION em branco, como impresso na placa (principal, bem legível).
 - **Flange da peça:** gravação a laser discreta (tom de metal mais escuro), pequena — "a peça já sai marcada".
-No vídeo (etapa 2), a placa e a peça estão no 1º/último quadro; a placa fica parada (logo segue nítido) e a
-gravação da peça acompanha o movimento — se a IA deformar a peça com o logo, o logo da peça entra no código.
+  No vídeo (etapa 2), a placa e a peça estão no 1º/último quadro; a placa fica parada (logo segue nítido) e a
+  gravação da peça acompanha o movimento — se a IA deformar a peça com o logo, o logo da peça entra no código.
 
 ## Lado direito — o gêmeo (no código, sem Artlist)
 
 Sincronizado com a varredura do laser, sobre fundo escuro com a textura de TV do site:
+
 1. Pontos ciano aparecem na ordem da varredura (de frente para trás) formando a nuvem da peça.
 2. A nuvem fecha numa malha (wireframe) ciano.
 3. Mapa de desvio em cor sobre a malha: verde (dentro da tolerância), um ponto amarelo na flange.
