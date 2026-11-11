@@ -58,3 +58,56 @@ CI do PR verde: lint, `astro check` 0, gates de texto/i18n/licença, unit 79, e2
 
 1. Vídeo real de robótica e de uma captura do Twins (hoje o Koda segura esses heróis).
 2. O resto continua como no `ESTADO.md`: número do WhatsApp, gravação original da Fireshow, vetor/autorização dos logos.
+
+---
+
+# Rodada 3 (itens 9 a 13 + pedidos sobre a prévia)
+
+Mesma PR #48, mesma prévia: https://pr-48.logikos-site.pages.dev/ . Capturas em [`rodada-3/`](rodada-3/).
+
+## 9. Canais da home: carrossel de verdade
+
+Os cinco canais (vídeo + painel do alerta) ficam lado a lado num trilho com _scroll-snap_: no celular se arrasta com o dedo, no notebook com o trackpad; setas discretas nas pontas e uma régua com os nomes (CH1 Fogo … CH5 Ergonomia) como indicador, que enche enquanto o canal toca. Troca sozinha a cada **3 s** (pedido do Vitor sobre a prévia), pausa com o mouse em cima, com o foco dentro ou fora da tela; com movimento reduzido não gira. Só o slide visível é alcançável pelo teclado e pelo leitor de tela (os outros ficam `inert`).
+
+## 10. Logos
+
+A Visdec estava cortada porque o WebP tinha perdido o símbolo e o "V" (o alfa começava no "I"). Refeita do arquivo original (`marca-visdec/visdec-horizontal-escuro.png`), e a CATH ganhou o alfa recalibrado (estava cinza-apagada). Alturas ajustadas por peso visual (mesma área de tinta, não a mesma altura). Os arquivos passaram a `l-visdec-v2.webp` e `l-cath-v2.webp`: a pasta tem cache de 7 dias, e o nome antigo segurava a versão cortada no navegador e na CDN.
+
+## 11. Contato = conversa com o Koda → CRM
+
+`/contato` agora é uma conversa: o Koda pergunta uma coisa por vez (nome → empresa → e-mail → WhatsApp → cargo opcional → o que quer resolver, em chips → mensagem opcional → consentimento com link da privacidade) e termina com "Obrigado, {nome}! Recebi tudo. Nossa equipe entra em contato assim que possível." Cada resposta tem "Corrigir"; Enter responde (Shift+Enter quebra linha na mensagem); o foco segue a pergunta e o leitor de tela ouve a nova fala do Koda; erros dizem o que corrigir.
+
+Envio: `POST https://brandschutz.logikosvision.com.br/api/lead`, `Content-Type: text/plain`, com `origem: "site-logikos-contato"`, nome, empresa, email, telefone (só dígitos), cargo, interesse (texto dos chips), notas, `consentimento: true`, `consentimento_em`, `consentimento_texto` (o texto exato do aceite), `event_id` (um por conversa; uma nova tentativa reusa o mesmo, o CRM deduplica), `pagina` e o honeypot `website`. Sem Turnstile na conversa (o CRM já tem honeypot e limite por IP). O CSP libera só esse host.
+
+Todo "Falar com especialista" do site (header, heróis, canais da home, fechos, faixa, barra do celular) leva para `/contato#conversa`, com o interesse da página já marcado (ex.: canal de fogo → chip "Fogo e fumaça"). O formulário antigo (KV) continua só em Integradores e Plataforma.
+
+## 12. Fundo de TV antiga
+
+Em todas as páginas: scanlines finas, grão (tile de 2,9 KB) e um flicker raro, como camadas fixas atrás do conteúdo que só animam transform/opacity (sem repintar a página). Depois do comentário do Vitor ("não percebi"), ficou mais visível: scanlines a 6 % e grão mais denso. Teste unitário garante AA do texto secundário sobre o fundo médio e do texto sobre o pixel mais claro. Parado com movimento reduzido e com o controle de parar da home.
+
+## 13. Blocos densos em folhas claras
+
+Listas e tabelas de dados saem do preto e vão para folhas claras (os tokens do tema claro, secundário #5C616B, AA): as cinco leituras do Recognition viram cinco cartões (ícone, nome e três pares rótulo/resposta; 3 colunas → 2 → 1 no celular), a legenda de EPI, a tabela "Lado a lado" da Plataforma e todas as listas de definição e de pontos (Integradores, Como funciona, LGPD, Sobre, Robótica, Twins).
+
+## Pedido extra: "Entrar" fora do site
+
+O link "Entrar" saiu do header (desktop e celular), do rodapé e da Plataforma, em PT e EN, até a plataforma nova existir. `/entrar`, `/login`, `/en/sign-in` e `/en/login` redirecionam (302) para a home.
+
+## Conferido na prévia publicada (pr-48, build `dc931e2`)
+
+| O quê          | Resultado                                                                                                                                                  |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Carrossel      | Trocas medidas: 3,06 s · 3,05 s · 3,00 s ([desktop](rodada-3/previa-carrossel-desktop.png), [celular](rodada-3/previa-carrossel-celular.png))              |
+| Logo da Visdec | `l-visdec-v2.webp` 200, 494×96, com o símbolo e o "V" ([print](rodada-3/previa-logos.png))                                                                 |
+| Fundo de TV    | Scanlines + grão (`ruido-v2`) presentes nas 14 páginas checadas (12 PT + `/en/` e `/en/platform`); [recorte ampliado](rodada-3/previa-fundo-tv-zoom.png)   |
+| "Entrar"       | 0 links de login nas 14 páginas (os 2 links Railway em Recognition e Demos são as demos de EPI e de fogo); `/entrar` → 302 `/`, `/en/sign-in` → 302 `/en/` |
+| CI             | lint, `astro check`, gates, unit 81, e2e (axe, conversa com o CRM interceptado, carrossel), Lighthouse mobile 12 páginas ≥ 0,95, deploy                    |
+
+Nenhuma requisição real foi feita ao CRM: todos os testes da conversa interceptam o endpoint. O envio real de ponta a ponta (CORS do CRM para `*.logikos-site.pages.dev`) não foi testado; o primeiro lead de verdade pela prévia confirma.
+
+O passo do CI que instala o Chromium agora cai na instalação sem pacotes do sistema quando o apt não alcança os espelhos do Ubuntu (três execuções seguidas falharam assim, antes de qualquer teste).
+
+## Depende do Vitor (rodada 3)
+
+1. Conferir o primeiro lead da conversa chegando no CRM como "Site Logikos".
+2. A página Plataforma ainda tem o formulário "Criar conta" (KV, "você recebe o acesso por e-mail"); com o "Entrar" fora, dizer se ele sai também até a plataforma nova.
