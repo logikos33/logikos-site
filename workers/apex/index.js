@@ -1,13 +1,13 @@
 // Roteador da raiz logikosvision.com.br.
 // O site institucional vem do Pages (logikos-site.pages.dev); o que já existe no domínio
-// segue para a origem de hoje sem mudança: /demo (túnel) e /bs (Single Redirect do QR da
+// segue para a origem de hoje sem mudança: /demo e /teste-no-seu-celular (túnel, demo de câmera) e /bs (Single Redirect do QR da
 // BrandSchutz, que roda antes deste Worker).
 // /experiencia: tenta a origem de hoje; se ela ainda não serve a experiência (404/5xx),
 // cai na publicação atual da experiência. Quando a rota própria logikosvision.com.br/experiencia*
 // existir, ela é mais específica e passa a valer sem tocar aqui.
 const PAGES = 'https://logikos-site.pages.dev';
 const EXPERIENCIA = 'https://previa.logikos-experiencia.pages.dev';
-const ORIGEM_ATUAL = [/^\/demo(\/|$)/, /^\/bs\/?$/];
+const ORIGEM_ATUAL = [/^\/demo(\/|$)/, /^\/teste-no-seu-celular(\/|$)/, /^\/bs\/?$/];
 const DA_EXPERIENCIA = /^\/experiencia(\/|$)/;
 
 async function proxy(base, url, req) {
