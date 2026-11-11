@@ -24,3 +24,11 @@ https://:project.pages.dev/*
 # Generated posters change only with a deploy; a day in cache is plenty.
 /media/posters/*
   Cache-Control: public, max-age=86400
+
+# Home media (clips, posters, Koda, partner logos). Not hashed: a week in cache, revalidated in
+# the background; a replaced file needs a new name to reach everyone at once.
+/media/home/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/media/parceiros/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400

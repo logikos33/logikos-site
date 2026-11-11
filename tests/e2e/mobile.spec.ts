@@ -1,17 +1,59 @@
 import { expect, test } from '@playwright/test';
-import { ALL_ROUTES, stubTurnstile } from './helpers.ts';
+import { ALL_ROUTES, skipOpening, stubTurnstile } from './helpers.ts';
 
 // Deterministic: Turnstile's real widget is exercised only by the form tests.
-test.beforeEach(async ({ page }) => stubTurnstile(page));
+test.beforeEach(async ({ page }) => {
+  await stubTurnstile(page);
+  await skipOpening(page);
+});
 
-test('mobile: hero text is visible before media, HUD waits for play, no horizontal scroll', async ({ page }) => {
+test('mobile: hero text first, the shortcut bar in reach from the start (one pair of CTAs), no horizontal scroll', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('h1')).toBeVisible();
-  const hud = page.locator('[data-hud][data-slot="hero"]');
-  await hud.scrollIntoViewIfNeeded();
-  await expect(hud).toHaveAttribute('data-state', 'idle');
+  await expect(page.locator('.muro .cam img').first()).toBeVisible();
+  // Koda's peek is a desktop detail; on a phone it stays out of the way.
+  await expect(page.locator('.espia')).toBeHidden();
+  // The bar is the hero's pair of buttons: visible on arrival, the hero's own are not rendered.
+  const bar = page.locator('[data-barra]');
+  await expect(bar).toBeVisible();
+  await expect(page.locator('[data-heroi-acoes]')).toBeHidden();
+  await expect(bar.locator('a').nth(1)).toContainText(/Especialista/);
+  for (const a of await bar.locator('a').all()) {
+    const box = await a.boundingBox();
+    expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+    expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
+    expect(await a.evaluate((el) => el.scrollWidth <= el.clientWidth + 1), 'label fits').toBe(true);
+  }
+  // It steps aside while the band's own button is on screen, then comes back.
+  await page.locator('[data-faixa-acoes]').scrollIntoViewIfNeeded();
+  await expect(bar).toBeHidden();
+  await page.locator('#como').scrollIntoViewIfNeeded();
+  await page.locator('.passos li').last().scrollIntoViewIfNeeded();
+  await expect(bar).toBeVisible();
+  for (const tab of await page.locator('[data-abas] [role="tab"]').all())
+    expect((await tab.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(44);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(0);
+});
+
+test('mobile: keyboard focus is never hidden under the shortcut bar (WCAG 2.4.11)', async ({ page }) => {
+  await page.goto('/');
+  const bar = page.locator('[data-barra]');
+  const hidden: string[] = [];
+  for (let i = 0; i < 70; i++) {
+    await page.keyboard.press('Tab');
+    const r = await page.evaluate(() => {
+      const el = document.activeElement as HTMLElement | null;
+      const b = document.querySelector('[data-barra]');
+      if (!el || !b || b.contains(el) || b.classList.contains('some')) return null;
+      const a = el.getBoundingClientRect();
+      const top = b.getBoundingClientRect().top;
+      return a.top >= top ? `${el.tagName} ${el.textContent?.trim().slice(0, 30)}` : null;
+    });
+    if (r) hidden.push(r);
+  }
+  await expect(bar).toBeAttached();
+  expect(hidden).toEqual([]);
 });
 
 test('mobile: menu opens, lists the pages and closes on Escape, focus-out and outside click', async ({ page }) => {
@@ -33,6 +75,7 @@ test('320 px: no horizontal scroll on any page (forms included, Turnstile at rea
   const ctx = await browser.newContext({ viewport: { width: 320, height: 720 } });
   const page = await ctx.newPage();
   await stubTurnstile(page);
+  await skipOpening(page);
   for (const { path } of ALL_ROUTES) {
     await page.goto(path, { waitUntil: 'networkidle' });
     await page.locator('footer').scrollIntoViewIfNeeded();

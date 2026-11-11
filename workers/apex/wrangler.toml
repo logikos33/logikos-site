@@ -1,0 +1,6 @@
+# Worker do domínio raiz. Deploy só pelo workflow cf-apex (modo apply).
+name = "logikos-apex"
+main = "index.js"
+compatibility_date = "2026-10-01"
+workers_dev = false
+routes = [{ pattern = "logikosvision.com.br/*", zone_name = "logikosvision.com.br" }]

@@ -1,9 +1,12 @@
 import { expect, test } from '@playwright/test';
 import { HTML_LANG, LOCALES, ROUTES } from '../../src/i18n/routes.ts';
-import { ALL_ROUTES, SITE, stubTurnstile } from './helpers.ts';
+import { ALL_ROUTES, SITE, skipOpening, stubTurnstile } from './helpers.ts';
 
 // Deterministic: Turnstile's real widget is exercised only by the form tests.
-test.beforeEach(async ({ page }) => stubTurnstile(page));
+test.beforeEach(async ({ page }) => {
+  await stubTurnstile(page);
+  await skipOpening(page);
+});
 
 test('sitemap lists all 24 pages, each with pt-BR, en and x-default alternates', async ({ request }) => {
   const index = await (await request.get('/sitemap-index.xml')).text();

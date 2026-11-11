@@ -14,9 +14,11 @@ interface Props {
   title: string;
   description: string;
   noindex?: boolean;
+  /** Fixed theme for this page (the v3 home is dark): no toggle, the saved choice is left alone. */
+  theme?: 'dark';
 }
 
-const { locale, routeKey, title, description, noindex = false } = Astro.props;
+const { locale, routeKey, title, description, noindex = false, theme } = Astro.props;
 const t = dict(locale);
 const site = Astro.site ?? new URL('https://logikosvision.com.br');
 const canonical = routeKey ? new URL(pathFor(routeKey, locale), site).href : undefined;
@@ -44,10 +46,10 @@ const organization = {
 ---
 
 <!doctype html>
-<html lang={HTML_LANG[locale]} data-theme="light">
+<html lang={HTML_LANG[locale]} data-theme={theme ?? 'light'}>
   <head>
     <meta charset="utf-8" />
-    <script is:inline>
+    {!theme && <script is:inline>
       (() => {
         let theme = 'light';
         try {
@@ -57,7 +59,7 @@ const organization = {
         }
         document.documentElement.setAttribute('data-theme', theme);
       })();
-    </script>
+    </script>}
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Display and body only: the mono swaps in later, off the critical path (captions and chips). -->
     <link rel="preload" href={spaceGrotesk} as="font" type="font/woff2" crossorigin />
@@ -72,7 +74,7 @@ const organization = {
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <meta name="theme-color" content="#F4F6F8" />
+    <meta name="theme-color" content={theme === 'dark' ? '#0A0A0F' : '#F4F6F8'} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={t.meta.siteName} />
     <meta property="og:title" content={title} />
@@ -92,11 +94,12 @@ const organization = {
     <a class="skip-link" href="#main">
       {t.a11y.skip}
     </a>
-    <Header locale={locale} {...(routeKey ? { routeKey } : {})} glitch={routeKey === 'home'} />
+    <Header locale={locale} {...(routeKey ? { routeKey } : {})} themeToggle={!theme} />
     <main id="main" tabindex="-1">
       <slot />
     </main>
     <Footer locale={locale} />
+    <slot name="after" />
     {CF_ANALYTICS_TOKEN && (
       <script
         is:inline

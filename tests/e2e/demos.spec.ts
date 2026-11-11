@@ -1,7 +1,10 @@
 import { expect, test } from '@playwright/test';
-import { stubTurnstile } from './helpers.ts';
+import { skipOpening, stubTurnstile } from './helpers.ts';
 
-test.beforeEach(async ({ page }) => stubTurnstile(page));
+test.beforeEach(async ({ page }) => {
+  await stubTurnstile(page);
+  await skipOpening(page);
+});
 
 test('/api/status answers from the server with one state per demo and a 60 s cache header', async ({ request }) => {
   const res = await request.get('/api/status');
@@ -40,7 +43,7 @@ test('M7: the demo chips flip once, in place, to the server state; the link neve
 
 test('M7: when the status request fails the chip stays "checking" (never a fake "live")', async ({ page }) => {
   await page.route('**/api/status', (route) => route.fulfill({ status: 500, body: 'x' }));
-  await page.goto('/');
+  await page.goto('/recognition');
   const chip = page.locator('[data-demo-status="epi"]').first();
   await page.waitForTimeout(500);
   await expect(chip).not.toHaveAttribute('data-state', /.+/);

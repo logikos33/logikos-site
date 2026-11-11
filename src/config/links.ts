@@ -24,3 +24,9 @@ export const DEMO_PROBES: Record<keyof typeof DEMOS, string> = {
  * Railway service domain is the only working production URL. Never DEV/staging environments.
  */
 export const LOGIN_URL = 'https://frontend-production-bf96.up.railway.app/login';
+
+/** The guided Logikos experience (Koda's tour of the scenarios). `?cenario=` takes fogo, epi, contagem, qualidade. */
+export const EXPERIENCE_URL = 'https://logikosvision.com.br/experiencia/';
+
+/** The phone demo: the visitor's own camera, model running in the browser. */
+export const PHONE_DEMO_URL = 'https://logikosvision.com.br/demo/';

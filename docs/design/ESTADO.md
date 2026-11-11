@@ -2,6 +2,21 @@
 
 Atualizado em 03/10/2026, fim da rodada v2.1. **O prompt de continuação lê este arquivo primeiro**, depois [`AUDITORIA-V2.md`](AUDITORIA-V2.md) (a auditoria e a re-auditoria, com a lista única F-01…F-25), [`PLANO-V2.md`](PLANO-V2.md) e [`BENCHMARK.md`](BENCHMARK.md).
 
+## v3 — home nova (11/11/2026)
+
+Branch `logikos33/site-institucional-v3`, a partir do esboço aprovado (rodada 3). O que mudou:
+
+- **Home escura fixa** (decisão 0028): abertura do Koda (TV → logo → mergulho; uma vez por sessão, `inert` no resto, foco no "Pular", fail-safe de 1,2 s, nunca com reduced motion/economia de dados/`?sem-abertura`), herói com muro 3×2 (fogo, EPI, qualidade, contagem, ergonomia + "CAM 06 · a sua" → `/demo/`) e o Koda espiando a borda do muro, parceiros em carrossel, **seção do Koda** ("Fazer o tour com o Koda" → `/experiencia/`), problema, cinco canais com cartão de alerta e NR, faixa do especialista, diagrama nuvem|planta, Fireshow, dados, FAQ e contato (sem Koda e sem formulário; `/contato` mantém o LeadForm).
+- **"Falar com especialista" vai para o WhatsApp** em todo lugar (header, herói, faixa, cada canal, contato, barra do celular), com mensagem por contexto; sem `PUBLIC_WHATSAPP_NUMBER` cai em `/contato`, como antes.
+- **Header**: "Falar com especialista" (secundário) + "Testar a experiência" (primário). Com a nav de seis itens, entre 72rem e 90rem só cabe um CTA (fica o primário; o especialista está logo abaixo, no herói); na home, cuja barra é larga como a página, os dois voltam a partir de 90rem. Nas outras páginas (barra de 72rem) o desktop mostra só o primário.
+- **Movimento idle aprovado**: muro em loop, carrossel e pulso do diagrama, com um botão "Pausar o movimento" (WCAG 2.2.2); vídeos só baixam perto da tela e depois da abertura, pausam fora dela; reduced motion = pôsteres e nada se move.
+- Mídia em `public/media/home/` e `public/media/parceiros/`, proveniência em [`docs/provas/midia-home-v3.md`](../provas/midia-home-v3.md). Lighthouse: a home tem orçamento próprio (mídia ≤ 210 KB, total ≤ 540 KB desde a rodada 2), porque o clipe da abertura toca em toda sessão nova; sem vídeo ela fica em ~310 KB.
+- Parceiros: o `text-gate` aceita só as frases aprovadas da home (decisão 0027).
+
+**Rodada 2 (11/11, crítica + auditoria do PR #45):** sistema único de botões (48 px, hover ciano, active, ghost com borda ≥ 3:1, ícone por destino: seta = experiência, balão = especialista); um par de CTAs por vez (header espera o herói; no celular a barra fica visível desde o início e o herói não repete os botões); abas como seletor de canal; Koda com alfa; contato fecha com o monitor "CAM 07 · aguardando sinal"; abertura em retrato maior, teto de 5,5 s e pula com rolagem/toque; loops com crossfade; cache de 7 dias para `/media/home` e `/media/parceiros`; foco nunca sob a barra (WCAG 2.4.11).
+
+**Depende do Vitor (v3):** (1) número do WhatsApp comercial (`PUBLIC_WHATSAPP_NUMBER`; hoje todos os botões caem em `/contato`); (2) gravação original da Fireshow (os clipes são recortes borrados do material do estande); (3) vetor da CATH (hoje é um PNG rasterizado em WebP); (4) autorização escrita do uso dos logos de BrandSchutz, Visdec e CATH; (5) número do canal "a sua" (o vídeo de ergonomia tem "CAM 06" no OSD, o mesmo do convite).
+
 ## Depende do Vitor (nesta ordem — nada disto é código)
 
 | #   | O quê                                                       | Destrava                                                                                                                                                                                                              | Como                                                                                                                                                                                                                                                                                                                          |

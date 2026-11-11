@@ -1,30 +1,66 @@
 import { expect, test } from '@playwright/test';
-import { ROUTES } from '../../src/i18n/routes.ts';
-import { ALL_ROUTES, stubTurnstile } from './helpers.ts';
+import { ALL_ROUTES, skipOpening, stubTurnstile } from './helpers.ts';
 
-test.beforeEach(async ({ page }) => stubTurnstile(page));
+test.beforeEach(async ({ page }) => {
+  await stubTurnstile(page);
+  await skipOpening(page);
+});
 
-test('home has exactly six sections, each with its question for screen readers and in the margin', async ({ page }) => {
+test('home v3: sections in the approved order, Koda right after the partners, leading to the experience', async ({ page }) => {
+  for (const path of ['/', '/en/']) {
+    await page.goto(path);
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    const order = await page
+      .locator('main section[aria-labelledby], main .parceiros')
+      .evaluateAll((els) => els.map((e) => (e.classList.contains('parceiros') ? 'parceiros' : (e.getAttribute('aria-labelledby') ?? ''))));
+    expect(order, path).toEqual([
+      'hero-title',
+      'parceiros',
+      'koda-title',
+      'problema-title',
+      'cenarios-title',
+      'faixa-title',
+      'como-title',
+      'prova-title',
+      'dados-title',
+      'faq-title',
+      'contato-title',
+    ]);
+    // Koda: own section with the tour CTA, peeking at the wall in the hero, and out of the contact card.
+    await expect(page.locator('section.koda a.btn')).toHaveAttribute('href', 'https://logikosvision.com.br/experiencia/');
+    await expect(page.locator('.espia')).toHaveAttribute('href', 'https://logikosvision.com.br/experiencia/');
+    await expect(page.locator('#contato img')).toHaveCount(0);
+    // No lead form on the home any more; the wall's sixth tile is the phone demo.
+    await expect(page.locator('main form')).toHaveCount(0);
+    await expect(page.locator('.cam--voce')).toHaveAttribute('href', 'https://logikosvision.com.br/demo/');
+  }
+});
+
+test('home: every "talk to a specialist" goes to WhatsApp, or to the contact page while there is no number', async ({ page }) => {
   await page.goto('/');
-  const sections = page.locator('main > section');
-  await expect(sections).toHaveCount(6);
-  for (let i = 0; i < 6; i++) {
-    const s = sections.nth(i);
-    await expect(s.locator('.q')).toHaveCount(1);
-    await expect(s.locator('.q')).toHaveText(/\?$|funcionando$/);
-    await expect(s.locator('h1, h2').first()).toBeVisible();
+  const hrefs = await page
+    .locator('a[data-cta="whatsapp"], main a, .barra a')
+    .evaluateAll((els) =>
+      els
+        .filter((e) => /especialista|ergonomia/i.test(e.textContent ?? '') && !/experiencia\//.test(e.getAttribute('href') ?? ''))
+        .map((e) => ({ href: e.getAttribute('href') ?? '', target: e.getAttribute('target') ?? '' })),
+    );
+  expect(hrefs.length).toBeGreaterThanOrEqual(8);
+  for (const { href, target } of hrefs) {
+    if (href.startsWith('https://wa.me/')) expect(target).toBe('_blank');
+    else expect(href).toBe('/contato');
   }
 });
 
 test('the margin question is visible on desktop and hidden (but readable) on narrow screens', async ({ browser }) => {
   const wide = await browser.newContext({ viewport: { width: 1280, height: 800 } });
   const w = await wide.newPage();
-  await w.goto('/');
+  await w.goto('/sobre');
   await expect(w.locator('main > section .q').first()).toBeVisible();
   await wide.close();
   const narrow = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const n = await narrow.newPage();
-  await n.goto('/');
+  await n.goto('/sobre');
   await expect(n.locator('main > section .q').first()).toBeHidden();
   await expect(n.locator('main > section .q-sr').first()).toHaveText(/\?/);
   await narrow.close();
@@ -45,25 +81,40 @@ test('no generic tells in the built pages: arrows in links, decorative eyebrows,
     const arrows = await page.locator('a, button').evaluateAll((els) => els.filter((e) => /→|&rarr;/.test(e.textContent ?? '')).length);
     expect(arrows, `${path}: arrows`).toBe(0);
     const eyebrows = await page.locator('.eyebrow').count();
-    // Only the two doors on the home (audience) and the 404 (code) may carry an eyebrow.
-    expect(eyebrows, `${path}: eyebrows`).toBeLessThanOrEqual(path === ROUTES.home['pt-br'] || path === ROUTES.home.en ? 2 : 0);
+    // Only the 404 (code) may carry an eyebrow.
+    expect(eyebrows, `${path}: eyebrows`).toBe(0);
     expect(await page.locator('.card').count(), `${path}: cards`).toBe(0);
     expect(await page.locator('.grid--5, .grid--3').count(), `${path}: grids`).toBe(0);
   }
 });
 
-test('the stage swaps reading, clip and caption on the same figure', async ({ page }) => {
-  await page.goto('/');
-  const stage = page.locator('[data-hud]#stage');
-  await stage.scrollIntoViewIfNeeded();
+test('the stage swaps reading, clip and caption on the same figure (Recognition)', async ({ page }) => {
+  await page.goto('/recognition');
+  const stage = page.locator('[data-hud]#rec-stage');
   await expect(stage).toHaveAttribute('data-slot', 'fire');
   const before = await stage.locator('[data-hud-machine]').textContent();
-  await page.locator('[data-hud-readings="stage"] input[value="counting"]').check();
+  await page.locator('[data-hud-readings="rec-stage"] input[value="counting"]').check();
   await expect(stage).toHaveAttribute('data-slot', 'counting');
   await expect(stage.locator('[data-hud-machine]')).not.toHaveText(before ?? '');
   await expect(stage.locator('[data-hud-person-text]')).toHaveText(/nada enviado|nothing sent/);
-  await expect(page.locator('[data-alert-card][data-slot="counting"]')).toBeVisible();
-  await expect(page.locator('[data-alert-card][data-slot="fire"]')).toBeHidden();
+  await expect(page.locator('[data-reading-text][data-slot="counting"]')).toBeVisible();
+  await expect(page.locator('[data-reading-text][data-slot="fire"]')).toBeHidden();
+});
+
+test('home channels: tabs swap the panel in place, by click and by arrow keys', async ({ page }) => {
+  await page.goto('/');
+  const tabs = page.locator('[data-abas] [role="tab"]');
+  await expect(tabs).toHaveCount(5);
+  await expect(page.locator('#painel-fogo')).toBeVisible();
+  await tabs.nth(3).click();
+  await expect(tabs.nth(3)).toHaveAttribute('aria-selected', 'true');
+  await expect(page.locator('#painel-contagem')).toBeVisible();
+  await expect(page.locator('#painel-fogo')).toBeHidden();
+  await page.keyboard.press('ArrowRight');
+  await expect(tabs.nth(4)).toBeFocused();
+  await expect(page.locator('#painel-ergonomia')).toBeVisible();
+  // Every panel names its NR or check, and the fire one links to its scenario in the experience.
+  await expect(page.locator('#painel-fogo a.btn')).toHaveAttribute('href', /experiencia\/\?cenario=fogo$/);
 });
 
 test('every HUD figure carries a two-cell caption (machine | person) and the poster already shows the verdict', async ({ page }) => {
@@ -82,4 +133,32 @@ test('every HUD figure carries a two-cell caption (machine | person) and the pos
   const plain = await (await page.request.get('/media/posters/pt-br/fire-plain.svg')).text();
   expect(verdict).toContain('hud-pbox');
   expect(plain).not.toContain('hud-pbox');
+});
+
+test('buttons: one size, a visible hover (cyan as state), and one pair of CTAs on screen at a time', async ({ page }) => {
+  for (const path of ['/', '/en/']) {
+    await page.goto(path);
+    // Every call to action on the home is 48 px; the header uses the compact 44 px size.
+    const heights = await page
+      .locator('main .btn, .barra .btn')
+      .evaluateAll((els) => [
+        ...new Set(els.filter((e) => e.getClientRects().length).map((e) => Math.round(e.getBoundingClientRect().height))),
+      ]);
+    expect(heights, path).toEqual([48]);
+    // Header CTAs wait while the hero's are on screen, then appear.
+    const headerCta = page.locator('.site-header__cta[data-cta="experience"]');
+    await expect(headerCta).toBeHidden();
+    await page.locator('#cenarios').scrollIntoViewIfNeeded();
+    await expect(headerCta).toBeVisible();
+    // Hover changes the primary button (never a dead button), from white to the accent.
+    const btn = page.locator('#painel-fogo a.btn');
+    const rest = await btn.evaluate((e) => getComputedStyle(e).backgroundColor);
+    await btn.hover();
+    await expect.poll(() => btn.evaluate((e) => getComputedStyle(e).backgroundColor)).toBe('rgb(0, 229, 255)');
+    expect(rest).not.toBe('rgb(0, 229, 255)');
+  }
+  // Koda's link is only Koda and the balloon, not an invisible strip under the wall.
+  await page.goto('/');
+  const peek = await page.locator('.espia').boundingBox();
+  expect(peek?.width ?? 999).toBeLessThan(320);
 });
