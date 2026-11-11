@@ -87,7 +87,9 @@ jobs:
         with:
           name: dist
           path: dist
-      - run: pnpm exec playwright install --with-deps chromium
+      # The runner image already carries Chromium's system libraries; when apt cannot reach the Ubuntu
+      # mirrors (DNS failures seen on 11/11/2026), install the browser alone instead of failing the job.
+      - run: pnpm exec playwright install --with-deps chromium || pnpm exec playwright install chromium
       - run: pnpm test:e2e
       - uses: actions/upload-artifact@v4
         if: always()
