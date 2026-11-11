@@ -7,11 +7,11 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: inventory | apply | verify | rollback
+        description: inventory | apply | verify | rollback | ponte | ponte-rollback
         required: true
         default: inventory
         type: choice
-        options: [inventory, apply, verify, rollback]
+        options: [inventory, apply, verify, rollback, ponte, ponte-rollback]
 
 permissions:
   contents: read
