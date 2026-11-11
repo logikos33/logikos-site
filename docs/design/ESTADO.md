@@ -2,6 +2,19 @@
 
 Atualizado em 03/10/2026, fim da rodada v2.1. **O prompt de continuação lê este arquivo primeiro**, depois [`AUDITORIA-V2.md`](AUDITORIA-V2.md) (a auditoria e a re-auditoria, com a lista única F-01…F-25), [`PLANO-V2.md`](PLANO-V2.md) e [`BENCHMARK.md`](BENCHMARK.md).
 
+## v3 — home nova (11/11/2026)
+
+Branch `logikos33/site-institucional-v3`, a partir do esboço aprovado (rodada 3). O que mudou:
+
+- **Home escura fixa** (decisão 0028): abertura do Koda (TV → logo → mergulho; uma vez por sessão, `inert` no resto, foco no "Pular", fail-safe de 1,2 s, nunca com reduced motion/economia de dados/`?sem-abertura`), herói com muro 3×2 (fogo, EPI, qualidade, contagem, ergonomia + "CAM 06 · a sua" → `/demo/`) e o Koda espiando a borda do muro, parceiros em carrossel, **seção do Koda** ("Fazer o tour com o Koda" → `/experiencia/`), problema, cinco canais com cartão de alerta e NR, faixa do especialista, diagrama nuvem|planta, Fireshow, dados, FAQ e contato (sem Koda e sem formulário; `/contato` mantém o LeadForm).
+- **"Falar com especialista" vai para o WhatsApp** em todo lugar (header, herói, faixa, cada canal, contato, barra do celular), com mensagem por contexto; sem `PUBLIC_WHATSAPP_NUMBER` cai em `/contato`, como antes.
+- **Header**: "Falar com especialista" (secundário) + "Testar a experiência" (primário) até 72rem; com a nav de seis itens só cabe um CTA (medido: os dois estouram 139 px a 1440), então no desktop fica o primário e o especialista está logo abaixo, no herói.
+- **Movimento idle aprovado**: muro em loop, carrossel e pulso do diagrama, com um botão "Pausar o movimento" (WCAG 2.2.2); vídeos só baixam perto da tela e depois da abertura, pausam fora dela; reduced motion = pôsteres e nada se move.
+- Mídia em `public/media/home/` e `public/media/parceiros/`, proveniência em [`docs/provas/midia-home-v3.md`](../provas/midia-home-v3.md). Lighthouse: a home tem orçamento próprio (mídia ≤ 210 KB, total ≤ 510 KB), porque o clipe da abertura toca em toda sessão nova; sem vídeo ela fica em ~290 KB.
+- Parceiros: o `text-gate` aceita só as frases aprovadas da home (decisão 0027).
+
+**Depende do Vitor (v3):** (1) número do WhatsApp comercial (`PUBLIC_WHATSAPP_NUMBER`; hoje todos os botões caem em `/contato`); (2) gravação original da Fireshow (os clipes são recortes borrados do material do estande); (3) vetor da CATH (hoje é um PNG rasterizado em WebP); (4) autorização escrita do uso dos logos de BrandSchutz, Visdec e CATH; (5) número do canal "a sua" (o vídeo de ergonomia tem "CAM 06" no OSD, o mesmo do convite).
+
 ## Depende do Vitor (nesta ordem — nada disto é código)
 
 | #   | O quê                                                       | Destrava                                                                                                                                                                                                              | Como                                                                                                                                                                                                                                                                                                                          |
