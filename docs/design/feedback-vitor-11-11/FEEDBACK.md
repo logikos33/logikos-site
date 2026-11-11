@@ -90,7 +90,7 @@ Entrar, Como funciona, Plataforma, Twins, LGPD, Contato).
     **animação da caixa Logikos abrindo**, mostrando o equipamento, o cabo de rede e o cabo de energia; toca
     **uma vez** quando a seção entra na tela pela primeira vez (IntersectionObserver), parada em reduced-motion.
     Reaproveite as fotos/sequência da caixa da experiência Logikos (`~/logikos/cvw-wt/unificada/public/experiencia/
-    logikos/` — caixa-frente, caixa-aberta, equipamento; e a lógica de abertura em sequência da E2) — sem Artlist.
+logikos/` — caixa-frente, caixa-aberta, equipamento; e a lógica de abertura em sequência da E2) — sem Artlist.
 17. **Plataforma (r4-print-19):** reduzir os vazios grandes entre seções. **Licença** vira condições: mensal,
     anual ou **bienal**, com a bienal em destaque como recomendada: "2 anos sem se preocupar com os seus modelos:
     atualizações constantes por conta da Logikos" (sem preço; texto curto, cartões lado a lado, bienal destacada).
@@ -108,50 +108,45 @@ Entrar, Como funciona, Plataforma, Twins, LGPD, Contato).
     `src/config/links.ts` e os links "Abrir a demo"/"Teste na câmera do seu celular" para esse endereço.
 
 Use o impeccable em tudo. Mesma PR #48; espere a prévia publicar e confira cada item nela (com print) antes de
-responder.
-22. **LGPD/Privacidade:** remover "Encarregado (DPO): a definir." (e qualquer "a definir" visível ao público) em
-    PT e EN. Deixar só "Pelo e-mail vitor@logikosvision.com.br."
-23. **Monitores "CAM 07 · aguardando sinal" (r4-print-27, e o "CAM 07 · a sua" do hero):** não deixar o
-    quadro preto. Colocar um **loop de "aguardando conexão"** estilo monitor de CFTV/TV antiga: estática/chuvisco
-    suave, barras de sincronia ou varredura passando, um indicador "conectando…" pulsando, timestamp correndo —
-    leve (CSS/canvas pequeno, sem vídeo pesado), legível por cima (botão e texto com contraste AA), parado em
-    reduced-motion. Aplicar em todos os monitores CAM 07 do site.
-24. **"Uma câmera, cinco vereditos" (r4-print-28, Recognition):** melhorar o conteúdo dos cartões com o
-    impeccable — linguagem de benefício para quem decide (o que muda na operação), menos jargão ("veredito por
-    região", "indeterminado"), mais concreto (exemplo de alerta/indicador de cada um), hierarquia melhor (rótulos
-    mono pequenos estão fracos). O grid 3+2 deixa um buraco: usar o 6º espaço para um **cartão de chamada**
-    (não em todos os cartões): **"Traga os seus indicadores para a plataforma"** — sinalizando que leituras,
-    alertas e painéis são customizáveis para a operação do cliente, com CTA "Falar com especialista" (leva à
-    conversa com o Koda, interesse "customização"). Visual diferente dos demais (destaque da marca), AA.
-25. **O Vitor está repetindo feedback (r4-print-29, Recognition: "Painel na sua marca…" e "Rode o modelo no seu
-    navegador").** Pare de corrigir página por página: faça uma **varredura GLOBAL** e trate como regra do site:
-    a. **Espaçamento vertical:** reduzir o padding/gap entre seções no token/componente compartilhado (não por
-       página). Nenhuma seção pode ter faixa vazia maior que ~1 tela de respiro; meça em 1440×900 e 390 em TODAS as
-       páginas e mostre antes/depois.
-    b. **Metade direita vazia:** toda seção de texto que ocupa só a coluna esquerda no desktop ganha conteúdo ao
-       lado (imagem real, card, monitor, animação existente) ou vira layout de largura cheia. Nada de meia tela
-       preta.
-    c. **Sem detalhe técnico para o público:** tirar frases como "Rode o modelo no seu navegador", "o modelo roda no
-       seu aparelho", "Nada é enviado", "Duas demos abertas", selos "no ar", "chip", "demo genérica de detecção",
-       "taxa de alarme falso medida" e afins. Fale de benefício e do que a pessoa vê. As demos viram UMA chamada:
-       "Teste na câmera do seu celular" (vai para /teste-no-seu-celular/ quando eu liberar).
-    d. **Licença:** em TODO o site (Recognition, Plataforma, Integradores, i18n), "Licença por prazo de 24 meses"
-       vira as condições mensal / anual / **bienal destacada** ("2 anos sem se preocupar com os seus modelos:
-       atualizações constantes por conta da Logikos").
-    e. **Páginas de modelo/produto incompletas:** cada cenário (fogo, EPI, contagem, qualidade, ergonomia, zonas)
-       precisa dizer o que resolve, o que a pessoa recebe, um exemplo concreto e o próximo passo — sem nomes técnicos.
-    Antes de responder, abra CADA página da prévia publicada em 1440 e 390, e confira os itens 9 a 25 um a um numa
-    tabela (ok/corrigido + print). Não declare pronto sem essa conferência.
-26. **Página Sobre (r4-print-30) — está rasa, precisa de sentimento:**
-    a. CTA secundário do herói: trocar "Falar com especialista" por **"Solicite seu modelo customizado"** (leva à
-       conversa com o Koda com interesse "modelo customizado").
-    b. **Enriquecer o texto** (impeccable, tom humano, PT e EN, sem nome técnico de modelo/hardware): quem somos e
-       por que existimos; **visão computacional** explicada para quem decide (a câmera que já existe passa a
-       entender o que vê); **Indústria 4.0** (dados da operação em tempo real, decisões mais rápidas); as outras
-       frentes da Logikos — **robótica, drones**, gêmeos digitais — como parte da mesma visão; e o sentimento:
-       **inovadores natos, apaixonados por tecnologia**, engenharia que prova antes de prometer, feito em
-       Indaial/SC, no Vale do Itajaí. Estrutura sugerida: manifesto curto → o que fazemos (cartões por frente) →
-       como trabalhamos (piloto acompanhado, prova antes) → onde estamos → CTA "Solicite seu modelo customizado".
-       Nada inventado: sem números, clientes ou prêmios que não estejam no repo/docs; o que faltar vira pergunta.
-    c. Aplicar a regra do item 25 aqui também (espaço vazio grande entre seções, metade direita vazia na seção
-       Indaial/SC; "o vídeo contínuo não sai" é detalhe técnico — reescrever como benefício).
+responder. 22. **LGPD/Privacidade:** remover "Encarregado (DPO): a definir." (e qualquer "a definir" visível ao público) em
+PT e EN. Deixar só "Pelo e-mail vitor@logikosvision.com.br." 23. **Monitores "CAM 07 · aguardando sinal" (r4-print-27, e o "CAM 07 · a sua" do hero):** não deixar o
+quadro preto. Colocar um **loop de "aguardando conexão"** estilo monitor de CFTV/TV antiga: estática/chuvisco
+suave, barras de sincronia ou varredura passando, um indicador "conectando…" pulsando, timestamp correndo —
+leve (CSS/canvas pequeno, sem vídeo pesado), legível por cima (botão e texto com contraste AA), parado em
+reduced-motion. Aplicar em todos os monitores CAM 07 do site. 24. **"Uma câmera, cinco vereditos" (r4-print-28, Recognition):** melhorar o conteúdo dos cartões com o
+impeccable — linguagem de benefício para quem decide (o que muda na operação), menos jargão ("veredito por
+região", "indeterminado"), mais concreto (exemplo de alerta/indicador de cada um), hierarquia melhor (rótulos
+mono pequenos estão fracos). O grid 3+2 deixa um buraco: usar o 6º espaço para um **cartão de chamada**
+(não em todos os cartões): **"Traga os seus indicadores para a plataforma"** — sinalizando que leituras,
+alertas e painéis são customizáveis para a operação do cliente, com CTA "Falar com especialista" (leva à
+conversa com o Koda, interesse "customização"). Visual diferente dos demais (destaque da marca), AA. 25. **O Vitor está repetindo feedback (r4-print-29, Recognition: "Painel na sua marca…" e "Rode o modelo no seu
+navegador").** Pare de corrigir página por página: faça uma **varredura GLOBAL** e trate como regra do site:
+a. **Espaçamento vertical:** reduzir o padding/gap entre seções no token/componente compartilhado (não por
+página). Nenhuma seção pode ter faixa vazia maior que ~1 tela de respiro; meça em 1440×900 e 390 em TODAS as
+páginas e mostre antes/depois.
+b. **Metade direita vazia:** toda seção de texto que ocupa só a coluna esquerda no desktop ganha conteúdo ao
+lado (imagem real, card, monitor, animação existente) ou vira layout de largura cheia. Nada de meia tela
+preta.
+c. **Sem detalhe técnico para o público:** tirar frases como "Rode o modelo no seu navegador", "o modelo roda no
+seu aparelho", "Nada é enviado", "Duas demos abertas", selos "no ar", "chip", "demo genérica de detecção",
+"taxa de alarme falso medida" e afins. Fale de benefício e do que a pessoa vê. As demos viram UMA chamada:
+"Teste na câmera do seu celular" (vai para /teste-no-seu-celular/ quando eu liberar).
+d. **Licença:** em TODO o site (Recognition, Plataforma, Integradores, i18n), "Licença por prazo de 24 meses"
+vira as condições mensal / anual / **bienal destacada** ("2 anos sem se preocupar com os seus modelos:
+atualizações constantes por conta da Logikos").
+e. **Páginas de modelo/produto incompletas:** cada cenário (fogo, EPI, contagem, qualidade, ergonomia, zonas)
+precisa dizer o que resolve, o que a pessoa recebe, um exemplo concreto e o próximo passo — sem nomes técnicos.
+Antes de responder, abra CADA página da prévia publicada em 1440 e 390, e confira os itens 9 a 25 um a um numa
+tabela (ok/corrigido + print). Não declare pronto sem essa conferência. 26. **Página Sobre (r4-print-30) — está rasa, precisa de sentimento:**
+a. CTA secundário do herói: trocar "Falar com especialista" por **"Solicite seu modelo customizado"** (leva à
+conversa com o Koda com interesse "modelo customizado").
+b. **Enriquecer o texto** (impeccable, tom humano, PT e EN, sem nome técnico de modelo/hardware): quem somos e
+por que existimos; **visão computacional** explicada para quem decide (a câmera que já existe passa a
+entender o que vê); **Indústria 4.0** (dados da operação em tempo real, decisões mais rápidas); as outras
+frentes da Logikos — **robótica, drones**, gêmeos digitais — como parte da mesma visão; e o sentimento:
+**inovadores natos, apaixonados por tecnologia**, engenharia que prova antes de prometer, feito em
+Indaial/SC, no Vale do Itajaí. Estrutura sugerida: manifesto curto → o que fazemos (cartões por frente) →
+como trabalhamos (piloto acompanhado, prova antes) → onde estamos → CTA "Solicite seu modelo customizado".
+Nada inventado: sem números, clientes ou prêmios que não estejam no repo/docs; o que faltar vira pergunta.
+c. Aplicar a regra do item 25 aqui também (espaço vazio grande entre seções, metade direita vazia na seção
+Indaial/SC; "o vídeo contínuo não sai" é detalhe técnico — reescrever como benefício).
