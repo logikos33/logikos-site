@@ -1,0 +1,33 @@
+name: cf-apex
+
+# Manual only. Raiz logikosvision.com.br -> site institucional via Worker "logikos-apex".
+# Não toca DNS, túnel, Pages nem regras. Padrão: inventory (só leitura).
+# /demo, /experiencia e /bs continuam indo para a origem de hoje.
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: inventory | apply | verify | rollback
+        required: true
+        default: inventory
+        type: choice
+        options: [inventory, apply, verify, rollback]
+
+permissions:
+  contents: read
+
+jobs:
+  apex:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+      - name: run (${{ inputs.mode }})
+        env:
+          CF_ZONE_TOKEN: ${{ secrets.CLOUDFLARE_ZONE_TOKEN }}
+          CF_DEPLOY_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WRANGLER_SEND_METRICS: 'false'
+        run: scripts/cf/apex.sh "${{ inputs.mode }}"
