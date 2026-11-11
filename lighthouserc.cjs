@@ -49,12 +49,14 @@ module.exports = {
           },
         },
         {
-          // Home v3: the same 300 KB without video, plus the opening clip (a fresh Lighthouse
-          // session always plays it). The wall videos only load after the opening, near the screen.
+          // Home v3: ~310 KB without video, plus the opening clip (a fresh Lighthouse session always
+          // plays it). The wall videos only load after the opening, near the screen. 510 → 540 KB on
+          // 11/11/2026: Koda with alpha (+17 KB even after resizing) and the contact monitor's CSS;
+          // measured 518 KB.
           matchingUrlPattern: HOME_RE,
           assertions: {
             'resource-summary:media:size': ['error', { maxNumericValue: 210 * 1024, aggregationMethod: 'median-run' }],
-            'total-byte-weight': ['error', { maxNumericValue: 510 * 1024, aggregationMethod: 'median-run' }],
+            'total-byte-weight': ['error', { maxNumericValue: 540 * 1024, aggregationMethod: 'median-run' }],
           },
         },
       ],
