@@ -143,7 +143,7 @@
     "hero": {
       "title": "Your camera is already in the plant. Now it understands what it sees.",
       "sub": "Fire, PPE, quality, counting and ergonomics on the IP cameras you already have. Processing in the cloud or inside the plant, and the alert arrives with the clip of the moment.",
-      "note": "In the browser, no sign-up.",
+      "note": "Nothing to install, no sign-up.",
       "wallLabel": "Five cameras recognizing in real time and an invitation to try yours",
       "yours": {
         "title": "CAM 07 · yours",
@@ -162,7 +162,7 @@
     },
     "koda": {
       "title": "Meet Koda.",
-      "text": "Koda is the guide to the Logikos experience: in a few minutes he shows fire, PPE, counting and quality at work, right in your browser.",
+      "text": "Koda is the guide to the Logikos experience: in a few minutes he shows fire, PPE, counting and quality at work.",
       "cta": "Take the tour with Koda",
       "note": "No sign-up, nothing to install.",
       "alt": "Koda, the guide to the Logikos experience"

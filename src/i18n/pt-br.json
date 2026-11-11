@@ -143,7 +143,7 @@
     "hero": {
       "title": "Sua câmera já está na planta. Agora ela entende o que vê.",
       "sub": "Fogo, EPI, qualidade, contagem e ergonomia nas câmeras IP que você já tem. Processamento na nuvem ou dentro da planta, e o alerta chega com o clipe do momento.",
-      "note": "No navegador, sem cadastro.",
+      "note": "Sem instalar nada, sem cadastro.",
       "wallLabel": "Cinco câmeras reconhecendo em tempo real e um convite para testar a sua",
       "yours": {
         "title": "CAM 07 · a sua",
@@ -162,7 +162,7 @@
     },
     "koda": {
       "title": "Conheça o Koda.",
-      "text": "O Koda é o guia da experiência Logikos: em poucos minutos ele mostra fogo, EPI, contagem e qualidade funcionando, direto no navegador.",
+      "text": "O Koda é o guia da experiência Logikos: em poucos minutos ele mostra fogo, EPI, contagem e qualidade funcionando.",
       "cta": "Fazer o tour com o Koda",
       "note": "Sem cadastro e sem instalar nada.",
       "alt": "Koda, o guia da experiência Logikos"
