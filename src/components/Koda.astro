@@ -1,0 +1,32 @@
+---
+// Koda (approved mascot, alpha WebP from the home) on a page hero, standing on a lit floor.
+import { dict } from '../i18n';
+import type { Locale } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+  pose?: 'apresentando' | 'apontando';
+}
+
+const { locale, pose = 'apresentando' } = Astro.props;
+const t = dict(locale);
+const [w, h] = pose === 'apresentando' ? [400, 365] : [240, 244];
+---
+
+<div class="koda">
+  <img src={`/media/home/koda-${pose}.webp`} alt={t.pages.kodaAlt} width={w} height={h} loading="lazy" />
+</div>
+
+<style>
+  .koda {
+    display: grid;
+    place-items: end center;
+    padding-top: var(--lk-space-5);
+    background: radial-gradient(ellipse 60% 22% at 50% 96%, #00d4ff1f, #0000 70%);
+  }
+
+  .koda img {
+    width: min(100%, 22rem);
+    height: auto;
+  }
+</style>

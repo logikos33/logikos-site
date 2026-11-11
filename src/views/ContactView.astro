@@ -1,6 +1,7 @@
 ---
+import Koda from '../components/Koda.astro';
 import LeadForm from '../components/LeadForm.astro';
-import Section from '../components/Section.astro';
+import PageHero from '../components/PageHero.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
@@ -18,14 +19,10 @@ const hasWhatsapp = Boolean(whatsappHref(''));
 ---
 
 <Base locale={locale} routeKey="contact" title={p.meta.title} description={hasWhatsapp ? p.meta.description : p.meta.descriptionNoWhatsapp}>
-  <Section
-    as="h1"
-    cover
-    id="hero-title"
-    question={p.hero.question}
-    title={p.hero.title}
-    text={hasWhatsapp ? p.hero.text : p.hero.textNoWhatsapp}
-  />
+  <!-- The page's own actions are the channels and the form below: a quiet hero, Koda beside it. -->
+  <PageHero locale={locale} id="hero-title" title={p.hero.title} text={hasWhatsapp ? p.hero.text : p.hero.textNoWhatsapp} quiet>
+    <Koda locale={locale} pose="apontando" />
+  </PageHero>
 
   <section class="section section--flush" aria-labelledby="hero-title">
     <div class="container contact-grid">

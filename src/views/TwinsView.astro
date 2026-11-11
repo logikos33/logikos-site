@@ -1,8 +1,9 @@
 ---
 import DefList from '../components/DefList.astro';
-import HudVideo from '../components/HudVideo.astro';
+import Koda from '../components/Koda.astro';
+import PageClose from '../components/PageClose.astro';
+import PageHero from '../components/PageHero.astro';
 import Section from '../components/Section.astro';
-import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
@@ -19,22 +20,18 @@ const uses = [f.measure, f.annotate].map((x) => ({ term: x.title, text: x.text }
 ---
 
 <Base locale={locale} routeKey="twins" title={p.meta.title} description={p.meta.description}>
-  <Section as="h1" cover id="hero-title" question={p.questions.what} title={p.hero.title} text={p.hero.text}>
-    <div class="btn-row after">
-      <WhatsAppButton locale={locale} />
-    </div>
-  </Section>
+  <!-- No point-cloud capture of our own to show yet: Koda carries the hero instead of a mock clip. -->
+  <PageHero locale={locale} id="hero-title" title={p.hero.title} text={p.hero.text}>
+    <Koda locale={locale} />
+  </PageHero>
 
-  <Section id="how-title" question={p.questions.how} title={f.capture.title} text={f.capture.text} wide>
-    <HudVideo locale={locale} clip="twins" class="after" />
+  <Section id="how-title" question={p.questions.how} title={f.capture.title} text={f.capture.text}>
     <DefList rows={uses} class="after" />
   </Section>
 
-  <Section id="buy-title" question={p.questions.buy} title={p.buy.title} text={p.buy.text}>
-    <div class="btn-row after">
-      <WhatsAppButton locale={locale} />
-    </div>
-  </Section>
+  <Section id="buy-title" question={p.questions.buy} title={p.buy.title} text={p.buy.text} />
+
+  <PageClose locale={locale} />
 </Base>
 
 <style>

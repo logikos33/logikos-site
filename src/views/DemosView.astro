@@ -1,7 +1,11 @@
 ---
+import Cam from '../components/Cam.astro';
 import DemoStatus from '../components/DemoStatus.astro';
+import Icon from '../components/Icon.astro';
+import PageClose from '../components/PageClose.astro';
+import PageHero from '../components/PageHero.astro';
 import Section from '../components/Section.astro';
-import { DEMOS } from '../config/links';
+import { EXPERIENCE_URL, PHONE_DEMO_URL } from '../config/links';
 import { dict } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
@@ -13,30 +17,48 @@ interface Props {
 const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.demos;
-const demos = ['epi', 'fire'] as const;
+const demos = [
+  ['epi', 'v-epi', t.pages.cams.epi],
+  ['fire', 'v-fogo', t.pages.cams.fogo],
+] as const;
 ---
 
 <Base locale={locale} routeKey="demos" title={p.meta.title} description={p.meta.description}>
-  <Section as="h1" cover question={p.hero.question} title={p.hero.title} text={p.hero.text} id="demos-title">
-    <!-- The real thing first, with its live state; the mock stage is gone (AUDITORIA-V2 F-14). -->
-    <div class="btn-row hero-actions">
-      {demos.map((k) => (
-        <DemoStatus locale={locale} demo={k} button primary />
-      ))}
-    </div>
-    <p class="note">{p.browser}</p>
-  </Section>
+  <PageHero locale={locale} id="demos-title" title={p.hero.title} text={p.hero.text}>
+    <!-- One click to the phone demo (the same as the home's "CAM 07 · yours"), each open demo shows its live state below. -->
+    <Fragment slot="actions">
+      <a class="btn" href={PHONE_DEMO_URL} data-cta="phone-demo">
+        <Icon name="camera" size={18} />
+        {t.pages.close.phone}
+      </a>
+      <a class="btn btn--ghost" href={EXPERIENCE_URL} data-cta="experience">
+        {t.cta.experience}
+        <Icon name="arrow" size={18} />
+      </a>
+    </Fragment>
+    <p slot="note" class="note">
+      {p.browser}
+    </p>
+    <figure class="vert">
+      <Cam clip="fs-publico" vertical label={t.pages.fireshow.label} />
+      <figcaption class="mono">{t.pages.fireshow.caption}</figcaption>
+    </figure>
+  </PageHero>
 
-  {demos.map((k) => (
-    <Section question={p.questions[k]} title={p[k].title} text={p[k].see} id={`demo-${k}`}>
-      <p>{p[k].verdict}</p>
-      <p class="note">{p[k].note}</p>
-      <div class="btn-row">
-        <a class="btn" href={DEMOS[k]} rel="noopener" target="_blank">
-          <span class="btn__mark" aria-hidden="true" />
-          {t.cta.openDemo}
-          <span class="visually-hidden"> ({t.a11y.external})</span>
-        </a>
+  {demos.map(([k, clip, name]) => (
+    <Section question={p.questions[k]} title={p[k].title} text={p[k].see} id={`demo-${k}`} wide>
+      <div class="split">
+        <figure>
+          <Cam clip={clip} name={name} />
+          <figcaption class="mono">{t.pages.clipNote}</figcaption>
+        </figure>
+        <div class="texto">
+          <p>{p[k].verdict}</p>
+          <p class="note">{p[k].note}</p>
+          <div class="btn-row">
+            <DemoStatus locale={locale} demo={k} primary label={t.cta.openDemo} />
+          </div>
+        </div>
       </div>
     </Section>
   ))}
@@ -46,20 +68,51 @@ const demos = ['epi', 'fire'] as const;
       <a href={pathFor('recognition', locale)}>{t.nav.recognition}</a>
     </p>
   </Section>
+
+  <PageClose locale={locale} />
 </Base>
 
 <style>
-  .hero-actions {
-    margin-top: var(--lk-space-5);
-  }
-
-  .hero-actions + .note {
-    margin-top: var(--lk-space-4);
-  }
-
   .note {
-    color: var(--lk-text-2);
-    font-size: 0.9375rem;
     max-width: var(--lk-measure);
+  }
+
+  figure {
+    margin: 0;
+  }
+
+  figcaption {
+    margin-top: var(--lk-space-2);
+    font-size: 0.8125rem;
+    color: var(--lk-text-2);
+  }
+
+  /* The Fireshow clip is portrait: keep it a phone-sized column, centred in the media cell. */
+  .vert {
+    /* Portrait clip: never taller than about half the screen on a phone. */
+    width: min(100%, 20rem, 31svh);
+    margin-inline: auto;
+  }
+
+  .split {
+    display: grid;
+    gap: var(--lk-space-6);
+    align-items: center;
+    margin-top: var(--lk-space-6);
+  }
+
+  .texto {
+    display: grid;
+    gap: var(--lk-space-4);
+  }
+
+  .texto p {
+    margin: 0;
+  }
+
+  @media (min-width: 64rem) {
+    .split {
+      grid-template-columns: 1.1fr 0.9fr;
+    }
   }
 </style>

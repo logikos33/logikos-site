@@ -1,0 +1,85 @@
+---
+// The home's monitor wall, sized for each page: real clips (Cam) on a dark bezel, optionally the
+// visitor's own channel ("CAM 07 · yours" → phone demo), and the footage legend underneath.
+import { PHONE_DEMO_URL } from '../config/links';
+import { dict } from '../i18n';
+import type { Locale } from '../i18n/routes';
+import Cam from './Cam.astro';
+
+type Clip = 'fogo' | 'epi' | 'qualidade' | 'contagem' | 'ergonomia';
+
+interface Props {
+  locale: Locale;
+  clips: Clip[];
+  /** Adds the visitor's channel, linked to the phone demo. */
+  yours?: boolean;
+}
+
+const { locale, clips, yours = false } = Astro.props;
+const t = dict(locale);
+const p = t.pages;
+---
+
+<div class="muro" role="group" aria-label={p.wall.label}>
+  {clips.map((c) => (
+    <Cam clip={`v-${c}`} name={p.cams[c]} sizes="(max-width: 56rem) 50vw, 25vw" />
+  ))}
+  {yours && (
+    <a class="voce" href={PHONE_DEMO_URL} data-cta="phone-demo">
+      <span>
+        <b>{p.yours.title}</b>
+        {p.yours.text}
+      </span>
+    </a>
+  )}
+  <p class="muro__legenda mono">{p.wall.legend}</p>
+</div>
+
+<style>
+  .muro {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+    padding: 5px;
+    background: #050508;
+    border: 1px solid var(--lk-line-strong);
+    border-radius: 6px;
+  }
+
+  .muro :global(.cam) {
+    border: 0;
+  }
+
+  .voce {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 9;
+    padding: var(--lk-space-2);
+    background: var(--lk-surface);
+    border-radius: 2px;
+    text-align: center;
+    text-decoration: none;
+    font: 500 0.8rem / 1.35 var(--lk-font-mono);
+    color: var(--lk-text-2);
+  }
+
+  .voce b {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--lk-accent);
+    font-weight: 500;
+  }
+
+  .voce:hover b {
+    text-decoration: underline;
+  }
+
+  .muro__legenda {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 0.15rem 0.15rem 0;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--lk-text-2);
+  }
+</style>

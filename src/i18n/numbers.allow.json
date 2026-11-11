@@ -124,6 +124,22 @@
     "home.contact.screen": {
       "values": ["07"],
       "source": "Câmera do visitante (\"CAM 07 · a sua\" no muro do herói), repetida no monitor do contato."
+    },
+    "pages.yours.title": {
+      "values": ["07"],
+      "source": "O mesmo \"CAM 07 · a sua\" do muro da home, no muro de /recognition e /demos."
+    },
+    "pages.close.screen": {
+      "values": ["07"],
+      "source": "O monitor do contato da home (\"CAM 07 · aguardando sinal\"), no fecho de cada página."
+    },
+    "pages.fireshow.label": {
+      "values": ["2026"],
+      "source": "Fireshow 2026 (6 a 8/10/2026), gravações próprias do estande — docs/provas/midia-home-v3.md."
+    },
+    "pages.fireshow.caption": {
+      "values": ["2026"],
+      "source": "Fireshow 2026 (6 a 8/10/2026), gravações próprias do estande — docs/provas/midia-home-v3.md."
     }
   }
 }

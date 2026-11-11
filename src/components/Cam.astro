@@ -1,0 +1,106 @@
+---
+// A camera tile of the home (v3) for every page: the real clip's poster under a lazy, muted loop,
+// scanlines and the channel name as OSD. Media lives in /media/home (provenance in
+// docs/provas/midia-home-v3.md). Nothing downloads before the tile is near the screen; reduced
+// motion, data saver and 2G/3G keep the poster.
+interface Props {
+  /** File stem in /media/home: v-fogo, v-epi, v-qualidade, v-contagem, v-ergonomia, fs-publico. */
+  clip: string;
+  /** OSD label; omit for a bare frame. */
+  name?: string;
+  /** Accessible name when the clip carries content (otherwise decorative). */
+  label?: string;
+  /** Vertical clip (fs-publico, 464×832). */
+  vertical?: boolean;
+  sizes?: string;
+  class?: string;
+}
+
+const { clip, name, label, vertical = false, sizes = '(max-width: 56rem) 100vw, 40vw', class: className } = Astro.props;
+const base = `/media/home/${clip}`;
+// The five scenario clips ship 320/480/640 posters; the Fireshow clip has one.
+const srcset = vertical ? undefined : `${base}-320.webp 320w, ${base}-480.webp 480w, ${base}.webp 640w`;
+const [w, h] = vertical ? [464, 832] : [640, 360];
+---
+
+<div class:list={['cam', 'liga', { 'cam--vert': vertical }, className]}>
+  <img src={`${base}.webp`} srcset={srcset} sizes={srcset ? sizes : undefined} alt="" width={w} height={h} loading="lazy" />
+  <video
+    data-src={`${base}.mp4`}
+    data-cam
+    muted
+    loop
+    playsinline
+    preload="none"
+    {...(label ? { 'aria-label': label } : { 'aria-hidden': 'true' })}
+  ></video>
+  {name && <span class="cam__nome">{name}</span>}
+</div>
+
+<script>
+  const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+  const still =
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+    Boolean(conn?.saveData) ||
+    /(^|-)(2g|3g)$/.test(conn?.effectiveType ?? '');
+  if (!still) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          const v = e.target as HTMLVideoElement;
+          if (e.isIntersecting) {
+            if (!v.getAttribute('src')) v.src = v.dataset.src ?? '';
+            v.play().catch(() => {});
+          } else if (v.getAttribute('src')) v.pause();
+        }
+      },
+      { rootMargin: '200px' },
+    );
+    document.querySelectorAll<HTMLVideoElement>('video[data-cam]').forEach((v) => io.observe(v));
+  }
+</script>
+
+<style>
+  .cam {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border: 1px solid var(--lk-line-strong);
+    border-radius: 2px;
+  }
+
+  .cam--vert {
+    aspect-ratio: 464 / 832;
+  }
+
+  .cam img,
+  .cam video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+  }
+
+  /* Scanlines: the subject's own surface (a CCTV monitor), as on the home. */
+  .cam::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, #0000 0 2px, #0000002e 2px 3px);
+    pointer-events: none;
+  }
+
+  .cam__nome {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 2;
+    padding: 0.9rem 0.6rem 0.35rem;
+    background: linear-gradient(#0000, #000c);
+    font: 500 0.75rem var(--lk-font-mono);
+    text-transform: uppercase;
+    color: #fff;
+  }
+</style>

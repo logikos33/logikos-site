@@ -5,6 +5,7 @@
 import { DEMOS } from '../config/links';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
+import Icon from './Icon.astro';
 
 interface Props {
   locale: Locale;
@@ -23,8 +24,8 @@ const text = label ?? (demo === 'epi' ? t.demos.epi.title : t.demos.fire.title);
 
 <span class="demo-status" data-demo={demo}>
   <a class:list={primary ? ['btn'] : button ? ['btn', 'btn--ghost'] : []} href={DEMOS[demo]} rel="noopener" target="_blank">
-    {primary && <span class="btn__mark" aria-hidden="true" />}
     {text}
+    {(button || primary) && <Icon name="arrow" size={18} />}
     <span class="visually-hidden"> ({t.a11y.external})</span>
   </a>
   <span

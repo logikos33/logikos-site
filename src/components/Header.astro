@@ -9,11 +9,9 @@ import Logo from './Logo.astro';
 interface Props {
   locale: Locale;
   routeKey?: RouteKey;
-  /** False on pages with a fixed theme (the dark home). */
-  themeToggle?: boolean;
 }
 
-const { locale, routeKey, themeToggle = true } = Astro.props;
+const { locale, routeKey } = Astro.props;
 const t = dict(locale);
 // Six items. Twins and Robotics are secondary (home §6 and footer).
 const NAV: RouteKey[] = ['recognition', 'howItWorks', 'demos', 'platform', 'partners', 'about'];
@@ -60,13 +58,6 @@ const ctaHref = wa ?? pathFor('contact', locale);
           </li>
         ))}
       </ul>
-
-      {themeToggle && (
-        <button type="button" class="theme-toggle" data-theme-toggle aria-label={t.a11y.themeDark} aria-pressed="false">
-          <Icon name="moon" class="theme-toggle__moon" />
-          <Icon name="sun" class="theme-toggle__sun" />
-        </button>
-      )}
 
       <a class="site-header__login" href={LOGIN_URL} rel="noopener" target="_blank" data-login>
         {t.nav.login}
@@ -153,25 +144,6 @@ const ctaHref = wa ?? pathFor('contact', locale);
     });
     document.addEventListener('click', (event) => {
       if (menu.open && !menu.contains(event.target as Node)) menu.open = false;
-    });
-  }
-
-  const STORAGE_KEY = 'lk-theme';
-  const root = document.documentElement;
-
-  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
-    // Fixed name ("Dark theme") + aria-pressed: the state is announced, never contradicted.
-    const sync = () => button.setAttribute('aria-pressed', String(root.getAttribute('data-theme') === 'dark'));
-    sync();
-    button.addEventListener('click', () => {
-      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      try {
-        localStorage.setItem(STORAGE_KEY, next);
-      } catch {
-        // Storage blocked: the choice lasts for this page view only.
-      }
-      sync();
     });
   }
 </script>
@@ -283,7 +255,6 @@ const ctaHref = wa ?? pathFor('contact', locale);
     font-weight: 700;
   }
 
-  .theme-toggle,
   .mobile-nav summary {
     display: inline-flex;
     align-items: center;
@@ -297,14 +268,8 @@ const ctaHref = wa ?? pathFor('contact', locale);
     cursor: pointer;
   }
 
-  .theme-toggle:hover,
   .mobile-nav summary:hover {
     border-color: var(--lk-line-strong);
-  }
-
-  :global([data-theme='light']) .theme-toggle__sun,
-  :global([data-theme='dark']) .theme-toggle__moon {
-    display: none;
   }
 
   .site-header__login,
@@ -431,5 +396,26 @@ const ctaHref = wa ?? pathFor('contact', locale);
     .mobile-nav {
       display: none;
     }
+  }
+
+  /* From 90rem the 82.5rem bar has room for the full specialist label (measured: no overflow). */
+  @media (min-width: 90rem) {
+    .site-header__cta--specialist {
+      width: auto;
+      padding-inline: var(--lk-space-4);
+    }
+
+    .site-header__cta-label {
+      position: static;
+      width: auto;
+      height: auto;
+      clip: auto;
+    }
+  }
+
+  /* One pair of calls to action on screen at a time: the header's wait until the page hero's
+     scroll away (the hero toggles .lk-heroi-acoes, on the home and on every page). */
+  :global(.lk-heroi-acoes) .site-header__cta {
+    visibility: hidden;
   }
 </style>

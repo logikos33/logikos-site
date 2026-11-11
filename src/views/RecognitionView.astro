@@ -1,19 +1,21 @@
 ---
-// /recognition — PLANO-V2 §5: cover · five readings (stage) · EPI in three states · the alert,
-// inside · where it runs · partners · demos · next step. The region avatar (M3) and the live
-// demo chips (M7) arrive in the motion round; the structure they hook into is built here.
+// /recognition in the home's language (feedback 11/11, item 5): the hero is the monitor wall with
+// the real clips; then the five readings side by side, EPI with its three states on the real EPI
+// clip, the alert as it arrives, where it runs, partners, demos and the phone-camera close.
 import AlertCard from '../components/AlertCard.astro';
-import Avatar from '../components/Avatar.astro';
+import Cam from '../components/Cam.astro';
 import DefList from '../components/DefList.astro';
 import DemoStatus from '../components/DemoStatus.astro';
-import PointList from '../components/PointList.astro';
-import HudVideo from '../components/HudVideo.astro';
 import Icon from '../components/Icon.astro';
+import PageClose from '../components/PageClose.astro';
+import PageHero from '../components/PageHero.astro';
+import PointList from '../components/PointList.astro';
 import Section from '../components/Section.astro';
-import WhatsAppButton from '../components/WhatsAppButton.astro';
+import Wall from '../components/Wall.astro';
 import { dict } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
+import type { IconName } from '../lib/icons';
 
 interface Props {
   locale: Locale;
@@ -24,57 +26,69 @@ const t = dict(locale);
 const p = t.recognition;
 const q = p.questions;
 
-const READINGS = ['fire', 'epi', 'ergonomics', 'zones', 'counting'] as const;
+const READINGS: [keyof typeof t.readings, IconName][] = [
+  ['fire', 'flame'],
+  ['epi', 'helmet'],
+  ['ergonomics', 'posture'],
+  ['zones', 'zone'],
+  ['counting', 'counter'],
+];
 const STATES = ['ok', 'alert', 'warn'] as const;
 const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoints.license].map((x) => ({ term: x.title, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="recognition" title={p.meta.title} description={p.meta.description}>
-  <Section cover as="h1" question={p.hero.question} title={p.hero.title} text={p.hero.text} id="page-title" wide>
-    <!-- The page's proof is its hero: the stage with the five readings (AUDITORIA-V2 F-10, F-15). -->
-    <HudVideo locale={locale} clip="fire" readings id="rec-stage" class="hero-stage" />
-    <div class="reading-texts">
-      {READINGS.map((k) => (
-        <div data-reading-text data-slot={k} hidden={k !== 'fire'}>
-          <dl class="defs">
-            <div class="defs__row">
+  <PageHero locale={locale} id="page-title" title={p.hero.title} text={p.hero.text}>
+    <Wall locale={locale} clips={['fogo', 'epi', 'qualidade', 'contagem', 'ergonomia']} yours />
+  </PageHero>
+
+  <Section question={p.hero.question} title={p.readings.title} id="readings-title" wide>
+    <ul class="leituras" role="list">
+      {READINGS.map(([k, icon]) => (
+        <li class="leitura">
+          <h3>
+            <Icon name={icon} size={22} />
+            {t.readings[k].title}
+          </h3>
+          <dl>
+            <div>
               <dt>{p.readings.fires}</dt>
               <dd>{t.readings[k].fires}</dd>
             </div>
-            <div class="defs__row">
+            <div>
               <dt>{p.readings.receives}</dt>
               <dd>{t.readings[k].receives}</dd>
             </div>
-            <div class="defs__row">
+            <div>
               <dt>{p.readings.not}</dt>
               <dd>{t.readings[k].not}</dd>
             </div>
           </dl>
-        </div>
+        </li>
       ))}
-    </div>
-    <div class="btn-row hero-actions">
-      <WhatsAppButton locale={locale} label={t.cta.pilot} />
-      <DemoStatus locale={locale} demo="epi" button label={t.cta.demo} />
-    </div>
+    </ul>
   </Section>
 
   <Section question={q.epi} title={p.epi.title} text={p.epi.text} id="epi-title" wide>
-    <Avatar locale={locale} />
-    <dl class="defs legend">
-      {STATES.map((s) => (
-        <div class="defs__row">
-          <dt>
-            <span class:list={['verdict', `verdict--${s}`]}>
-              <Icon name={s} size={12} />
-              {t.states[s]}
-            </span>
-          </dt>
-          <dd>{p.epi.states[s]}</dd>
-        </div>
-      ))}
-    </dl>
-    <HudVideo locale={locale} clip="epi" />
+    <div class="split">
+      <figure>
+        <Cam clip="v-epi" name={t.pages.cams.epi} />
+        <figcaption class="mono">{t.pages.clipNote}</figcaption>
+      </figure>
+      <dl class="defs legend">
+        {STATES.map((s) => (
+          <div class="defs__row">
+            <dt>
+              <span class:list={['verdict', `verdict--${s}`]}>
+                <Icon name={s} size={12} />
+                {t.states[s]}
+              </span>
+            </dt>
+            <dd>{p.epi.states[s]}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
   </Section>
 
   <Section question={q.alert} title={p.alertAnatomy.title} text={p.alertAnatomy.text} id="alert-title" wide>
@@ -107,53 +121,83 @@ const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoin
     </p>
   </Section>
 
-  <Section question={q.next} title={t.home.next.title} id="next-title">
-    <div class="btn-row">
-      <WhatsAppButton locale={locale} label={t.cta.pilot} />
-      <a class="btn btn--ghost" href={pathFor('partners', locale)}>
-        {t.cta.partner}
-      </a>
-    </div>
-  </Section>
+  <PageClose locale={locale} />
 </Base>
 
-<script>
-  // Stage: the reading list on the HUD drives which trio of definition rows is shown.
-  const list = document.querySelector<HTMLFieldSetElement>('[data-hud-readings="rec-stage"]');
-  list?.addEventListener('change', () => {
-    const slot = list.querySelector<HTMLInputElement>('input:checked')?.value;
-    for (const el of document.querySelectorAll<HTMLElement>('[data-reading-text]')) el.hidden = el.dataset.slot !== slot;
-  });
-</script>
-
 <style>
-  .hero-stage {
-    margin-top: var(--lk-space-5);
+  .leituras {
+    display: grid;
+    margin: var(--lk-space-6) 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--lk-line);
   }
 
-  .hero-actions {
-    margin-top: var(--lk-space-5);
+  .leitura {
+    display: grid;
+    gap: var(--lk-space-3);
+    padding-block: var(--lk-space-5);
+    border-bottom: 1px solid var(--lk-line);
   }
 
-  .reading-texts {
-    margin-top: var(--lk-space-5);
+  .leitura h3 {
+    display: flex;
+    align-items: center;
+    gap: var(--lk-space-3);
+    margin: 0;
+    font-size: 1.15rem;
   }
 
-  .reading-texts [hidden] {
-    display: none;
+  .leitura h3 :global(svg) {
+    color: var(--lk-accent);
+  }
+
+  .leitura dl {
+    display: grid;
+    gap: var(--lk-space-3);
+    margin: 0;
+  }
+
+  .leitura dt {
+    font: 500 0.75rem/1.4 var(--lk-font-mono);
+    color: var(--lk-text-2);
+  }
+
+  .leitura dd {
+    margin: 0;
   }
 
   .split {
     display: grid;
     gap: var(--lk-space-6);
     align-items: start;
+    margin-top: var(--lk-space-6);
   }
 
-  .legend {
-    margin-top: var(--lk-space-5);
+  figure {
+    margin: 0;
+  }
+
+  figcaption {
+    margin-top: var(--lk-space-2);
+    font-size: 0.8125rem;
+    color: var(--lk-text-2);
+  }
+
+  @media (min-width: 48rem) {
+    .leitura dl {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--lk-space-5);
+    }
   }
 
   @media (min-width: 64rem) {
+    .leitura {
+      grid-template-columns: 14rem minmax(0, 1fr);
+      gap: var(--lk-space-6);
+      align-items: start;
+    }
+
     .split {
       grid-template-columns: 1fr 1fr;
     }

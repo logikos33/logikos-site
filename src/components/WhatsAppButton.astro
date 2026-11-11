@@ -1,9 +1,11 @@
 ---
-// Primary CTA. While PUBLIC_WHATSAPP_NUMBER is unset it becomes "talk to the team" -> contact page,
-// so no button ever promises a WhatsApp channel that does not exist.
+// "Talk to a specialist", as on the home: chat icon, WhatsApp with a context message. While
+// PUBLIC_WHATSAPP_NUMBER is unset it goes to the contact page with the same words, so no button
+// ever promises a WhatsApp channel that does not exist.
 import { dict } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
 import { whatsappHref } from '../lib/site';
+import Icon from './Icon.astro';
 
 interface Props {
   locale: Locale;
@@ -23,7 +25,7 @@ const href = whatsappHref(message ?? t.cta.whatsappMessage);
   data-cta="whatsapp"
   {...(href ? { rel: 'noopener', target: '_blank' } : {})}
 >
-  <span class="btn__mark" aria-hidden="true"></span>
-  {href ? (label ?? t.cta.whatsapp) : t.cta.contactFallback}
+  <Icon name="chat" size={18} />
+  {label ?? t.cta.specialist}
   {href && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
 </a>

@@ -1,7 +1,9 @@
 ---
+import Cam from '../components/Cam.astro';
 import DefList from '../components/DefList.astro';
+import PageClose from '../components/PageClose.astro';
+import PageHero from '../components/PageHero.astro';
 import Section from '../components/Section.astro';
-import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
@@ -18,18 +20,35 @@ const facts = [f.model, f.processing].map((x) => ({ term: x.title, text: x.text 
 ---
 
 <Base locale={locale} routeKey="about" title={p.meta.title} description={p.meta.description}>
-  <Section as="h1" cover id="hero-title" question={p.hero.question} title={p.hero.title} text={p.hero.text} />
+  <!-- "Engineering that proves before it promises": the proof is the crowd testing it at Fireshow 2026. -->
+  <PageHero locale={locale} id="hero-title" title={p.hero.title} text={p.hero.text}>
+    <figure class="vert">
+      <Cam clip="fs-publico" vertical label={t.pages.fireshow.label} />
+      <figcaption class="mono">{t.pages.fireshow.caption}</figcaption>
+    </figure>
+  </PageHero>
 
   <Section id="who-title" question={p.questions.who} title={f.place.title} text={f.place.text}>
     <DefList rows={facts} class="after" />
-    <div class="btn-row after">
-      <WhatsAppButton locale={locale} />
-    </div>
   </Section>
+
+  <PageClose locale={locale} />
 </Base>
 
 <style>
   .after {
     margin-top: var(--lk-space-6);
+  }
+
+  .vert {
+    /* Portrait clip: never taller than about half the screen on a phone. */
+    width: min(100%, 20rem, 31svh);
+    margin: 0 auto;
+  }
+
+  figcaption {
+    margin-top: var(--lk-space-2);
+    font-size: 0.8125rem;
+    color: var(--lk-text-2);
   }
 </style>

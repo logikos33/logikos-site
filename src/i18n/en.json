@@ -422,7 +422,7 @@
     "hero": {
       "question": "what is it?",
       "title": "Five readings on the cameras you already have.",
-      "text": "Fire and smoke, PPE by body region, ergonomics, risk zones and counting: one verdict per event, with its evidence clip. Pick a reading."
+      "text": "Fire and smoke, PPE by body region, ergonomics, risk zones and counting: one verdict per event, with its evidence clip."
     },
     "epi": {
       "title": "PPE with three states",
@@ -509,11 +509,11 @@
     },
     "hero": {
       "question": "how does it work?",
-      "title": "From the cameras you already have to an alert with evidence, without the video leaving the plant.",
-      "text": "A device in the rack reads the cameras, decides and keeps the evidence. Only the alert and the clip cross the plant wall."
+      "title": "From the cameras you already have to an alert with evidence.",
+      "text": "The Logikos proprietary model reads the cameras, decides and keeps the evidence, processing in the cloud or in the plant. In the plant, only the alert and the clip cross the wall."
     },
     "offline": {
-      "title": "Offline-first",
+      "title": "In the plant, even offline",
       "text": "The device keeps analyzing and recording without internet. Events sync when the link is back."
     },
     "integrations": {
@@ -942,7 +942,7 @@
     "browser": "The model runs in your browser. Nothing is sent.",
     "note": {
       "title": "What these demos are not.",
-      "text": "They are open models running on your device, so you can watch a verdict happen. The product runs in the plant, on your cameras, with all five readings."
+      "text": "They are demo versions running on your device, so you can watch a verdict happen. The product runs on your cameras, processing in the cloud or in the plant, with all five readings."
     }
   },
   "platform": {
@@ -1002,6 +1002,36 @@
           "cloud": "Monthly fee. No public price: the proposal comes from the conversation."
         }
       ]
+    }
+  },
+  "pages": {
+    "cams": {
+      "fogo": "Fire and smoke",
+      "epi": "PPE",
+      "qualidade": "Quality",
+      "contagem": "Counting",
+      "ergonomia": "Ergonomics"
+    },
+    "wall": {
+      "label": "Readings of the Logikos proprietary model on sample cameras",
+      "legend": "stock footage · Logikos proprietary model reading"
+    },
+    "yours": {
+      "title": "CAM 07 · yours",
+      "text": "try it on your phone camera"
+    },
+    "clipNote": "stock footage · Logikos proprietary model reading",
+    "fireshow": {
+      "label": "Visitors trying the recognition at the Fireshow 2026 booth, faces blurred",
+      "caption": "the crowd · Fireshow 2026 · faces blurred"
+    },
+    "kodaAlt": "Koda, the Logikos assistant",
+    "close": {
+      "title": "Want to see this on your cameras?",
+      "text": "Open the demo on your phone and point it at anything: the Logikos proprietary model marks it on the spot, sending nothing. Or let the experience show the scenarios at work.",
+      "phone": "Try it on your phone camera",
+      "screen": "CAM 07 · waiting for signal",
+      "screenSub": "your camera goes here"
     }
   }
 }
