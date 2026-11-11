@@ -172,8 +172,13 @@
     },
     "scenarios": {
       "title": "Five readings. The same cameras.",
-      "text": "The channels cycle on their own; tap one for a closer look. The video shows real detection, frame by frame.",
+      "text": "The channels cycle on their own; swipe or pick a channel for a closer look. The video shows real detection, frame by frame.",
       "tabsLabel": "Scenarios",
+      "roledescription": "carousel",
+      "slideRole": "channel",
+      "slide": "{n} of {total}",
+      "prev": "Previous channel",
+      "next": "Next channel",
       "camera": "camera",
       "when": "when",
       "evidence": "evidence",
@@ -694,9 +699,46 @@
     }
   },
   "contact": {
+    "chat": {
+      "title": "Talk to Koda.",
+      "text": "He asks a few questions, one at a time, and hands everything to a Logikos specialist. It takes a minute.",
+      "alt": "Rather write?",
+      "label": "Conversation with Koda",
+      "koda": "Koda",
+      "you": "You",
+      "hello": "Hi! I'm Koda, from Logikos. I'll take down your details so a specialist can get in touch.",
+      "steps": {
+        "name": "What's your name?",
+        "company": "Nice to meet you, {nome}! Which company do you work for?",
+        "email": "Which email should we reply to?",
+        "phone": "And your WhatsApp, with area code?",
+        "role": "What's your role? Optional.",
+        "interests": "What would you like to solve? Pick as many as you like.",
+        "message": "Anything else you'd like to add? Also optional.",
+        "consent": "Last step: may I pass these details on to our team?"
+      },
+      "answer": "Reply",
+      "skip": "Skip",
+      "fix": "Edit",
+      "fixLabel": "Edit the answer: {pergunta}",
+      "skipped": "(skipped)",
+      "submit": "Send to the team",
+      "sending": "Sending…",
+      "thanks": "Thank you, {nome}! I've got everything. Our team will be in touch as soon as possible.",
+      "error": "I couldn't send it right now. Try again in a moment or write to {email}.",
+      "retry": "Try again",
+      "noscript": "The conversation with Koda needs JavaScript. Write to {email}.",
+      "errors": {
+        "required": "I need this answer to go on.",
+        "email": "That email doesn't look complete. Can you check?",
+        "phone": "Numbers only, with area code.",
+        "interests": "Pick at least one option.",
+        "consent": "Tick to allow us to get back to you."
+      }
+    },
     "meta": {
       "title": "Contact — Logikos Soluções",
-      "description": "Reach Logikos on WhatsApp or through the form.",
+      "description": "Talk to Koda: a few questions, one at a time, and a Logikos specialist gets back to you.",
       "descriptionNoWhatsapp": "Reach Logikos through the form. We reply by email or WhatsApp."
     },
     "hero": {
@@ -801,7 +843,8 @@
       "counting": "Counting",
       "twins": "Twins",
       "robotics": "Robotics",
-      "partnership": "Partnership"
+      "partnership": "Partnership",
+      "quality": "Quality"
     },
     "honeypot": "Leave this field empty",
     "errors": {

@@ -1,5 +1,5 @@
 ---
-// Definition rows: term on the left (display face), proof on the right, a rule between rows.
+// Definition rows on a light sheet (.folha): term on the left (display face), proof on the right.
 // The one list shape of the site — doors, gains, integrations, edge/cloud, next steps.
 interface Row {
   term: string;
@@ -14,7 +14,7 @@ interface Props {
 const { rows, class: className } = Astro.props;
 ---
 
-<dl class:list={['defs', className]}>
+<dl class:list={['defs', 'folha', className]}>
   {rows.map((r) => (
     <div class="defs__row">
       <dt>{r.term}</dt>

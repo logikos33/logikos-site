@@ -58,7 +58,10 @@ const APPROVED = {
     'booth of our partner brandschutz',
   ],
 };
-const approvedFor = (file) => (/^(?:en\/)?index\.html$/.test(relative(ROOT, file)) ? APPROVED['index.html'] : []);
+// The CRM's intake host (src/config/links.ts CRM_LEAD_URL), on any page: a machine address, never
+// copy. Only this exact URL is allowed; the name in text still fails.
+const EVERYWHERE = ['https://brandschutz.logikosvision.com.br/api/lead', 'https://brandschutz.logikosvision.com.br'];
+const approvedFor = (file) => [...EVERYWHERE, ...(/^(?:en\/)?index\.html$/.test(relative(ROOT, file)) ? APPROVED['index.html'] : [])];
 
 const TEXT_EXT = new Set(['.html', '.xml', '.json', '.svg', '.txt', '.css', '.js', '.webmanifest']);
 

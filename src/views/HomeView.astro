@@ -2,14 +2,14 @@
 // Home v3 (approved 11/11/2026, SCRATCH/esboco rodada 3): dark, opening (Koda turns on the TV →
 // dive), wall of five live readings + "CAM 07 · yours", partners, Koda, problem, five channels,
 // specialist band, camera → decision, Fireshow, data, FAQ, contact. "Talk to a specialist" always
-// goes to WhatsApp (contact page while PUBLIC_WHATSAPP_NUMBER is unset). No video downloads before
+// opens the conversation with Koda on the contact page. No video downloads before
 // it is near the screen; reduced motion turns off the opening, carousel, pulse and autoplay.
 import Icon from '../components/Icon.astro';
 import { EXPERIENCE_URL, PHONE_DEMO_URL } from '../config/links';
-import { dict } from '../i18n';
+import { dict, fill } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
-import { CONTACT_EMAIL, whatsappHref } from '../lib/site';
+import { CONTACT_EMAIL, specialistHref, type ChatInterest } from '../lib/site';
 
 interface Props {
   locale: Locale;
@@ -25,20 +25,17 @@ const KODA = {
   peek: { src: `${M}koda-apontando.webp`, w: 240, h: 244 },
 };
 
-/** Specialist link: WhatsApp with a context message, or the contact page while there is no number. */
-function specialist(message: string) {
-  const wa = whatsappHref(message);
-  return { wa: Boolean(wa), attrs: wa ? { href: wa, target: '_blank', rel: 'noopener' } : { href: pathFor('contact', locale) } };
-}
-const general = specialist(h.wa);
+/** Specialist link: the conversation with Koda on the contact page (feedback 11/11, item 11). */
+const specialist = (interest?: ChatInterest) => ({ attrs: { href: specialistHref(locale, interest) } });
+const general = specialist();
 
 const SCENES = (
   [
-    { key: 'fogo', cenario: 'fogo', alert: true },
-    { key: 'epi', cenario: 'epi', alert: true },
-    { key: 'qualidade', cenario: 'qualidade', alert: false },
-    { key: 'contagem', cenario: 'contagem', alert: false },
-    { key: 'ergonomia', cenario: null, alert: true },
+    { key: 'fogo', cenario: 'fogo', alert: true, interest: 'fire' },
+    { key: 'epi', cenario: 'epi', alert: true, interest: 'epi' },
+    { key: 'qualidade', cenario: 'qualidade', alert: false, interest: 'quality' },
+    { key: 'contagem', cenario: 'contagem', alert: false, interest: 'counting' },
+    { key: 'ergonomia', cenario: null, alert: true, interest: 'ergonomics' },
   ] as const
 ).map((s, i) => {
   const text = h.scenarios.items[i];
@@ -48,13 +45,13 @@ const SCENES = (
     ...text,
     poster: `${M}v-${s.key}`,
     video: `${M}v-${s.key}.mp4`,
-    esp: specialist(text.wa),
+    esp: specialist(s.interest),
   };
 });
 
 const LOGOS = [
   { src: '/media/parceiros/l-brandschutz.webp', alt: h.partners.bs, w: 143, h: 38 },
-  { src: '/media/parceiros/l-visdec.webp', alt: h.partners.visdec, w: 153, h: 30 },
+  { src: '/media/parceiros/l-visdec.webp', alt: h.partners.visdec, w: 154, h: 30 },
   { src: '/media/parceiros/l-cath.webp', alt: h.partners.cath, w: 117, h: 48 },
 ];
 // The track is two identical halves (each half = the logos twice, wider than the strip at any
@@ -102,7 +99,6 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
             <a class="btn btn--ghost" {...general.attrs}>
               <Icon name="chat" size={18} />
               {t.cta.specialist}
-              {general.wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
             </a>
           </div>
           <p class="nota">{h.hero.note}</p>
@@ -190,79 +186,101 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
       </div>
     </section>
 
-    <section class="cenarios" id="cenarios" aria-labelledby="cenarios-title" data-carrossel>
+    <section class="cenarios" id="cenarios" aria-labelledby="cenarios-title">
       <div class="wrap">
         <div class="cab">
           <h2 id="cenarios-title">{h.scenarios.title}</h2>
           <p class="lead">{h.scenarios.text}</p>
         </div>
-        <div class="abas" role="tablist" aria-label={h.scenarios.tabsLabel} data-abas>
-          {SCENES.map((s, i) => (
-            <button
-              type="button"
-              role="tab"
-              id={`aba-${s.key}`}
-              aria-controls={`painel-${s.key}`}
-              aria-selected={i === 0 ? 'true' : 'false'}
-              tabindex={i === 0 ? 0 : -1}
-            >
-              <span class="abas__ch">{s.tab}</span>
-              {s.name}
-              <span class="abas__prog" aria-hidden="true"></span>
-            </button>
-          ))}
-        </div>
-        {SCENES.map((s, i) => (
-          <div class="painel" role="tabpanel" id={`painel-${s.key}`} aria-labelledby={`aba-${s.key}`} hidden={i !== 0} data-painel>
-            <div>
-              <div class="monitor liga">
-                <div class="cam">
-                  <img src={`${s.poster}.webp`} alt="" width="640" height="360" loading="lazy" />
-                  <video data-src={s.video} data-lazy muted loop playsinline preload="none" aria-hidden="true" />
+        <!-- A real carousel (feedback 11/11, item 9): the slides sit side by side on a scroll-snap
+             track (native swipe/drag on touch), with discreet arrows and the channel names as the
+             indicator ruler (the selected one fills while it plays). Off-screen slides are inert. -->
+        <div
+          class="carrossel"
+          data-carrossel
+          role="region"
+          aria-roledescription={h.scenarios.roledescription}
+          aria-label={h.scenarios.tabsLabel}
+        >
+          <div class="trilho" data-trilho tabindex="-1">
+            {SCENES.map((s, i) => (
+              <div
+                class="slide"
+                role="group"
+                aria-roledescription={h.scenarios.slideRole}
+                aria-label={`${fill(h.scenarios.slide, { n: String(i + 1), total: String(SCENES.length) })}: ${s.name}`}
+                id={`painel-${s.key}`}
+                data-slide
+                inert={i !== 0}
+              >
+                <div>
+                  <div class="monitor liga">
+                    <div class="cam">
+                      <img src={`${s.poster}.webp`} alt="" width="640" height="360" loading="lazy" />
+                      <video data-src={s.video} data-lazy muted loop playsinline preload="none" aria-hidden="true" />
+                    </div>
+                  </div>
+                  <p class="fonte">{s.source}</p>
+                </div>
+                <div class="ticket">
+                  <p class:list={['estado', { 'estado--ok': !s.alert }]}>
+                    <Icon name={s.alert ? 'alert' : 'ok'} size={16} />
+                    {s.state}
+                  </p>
+                  <dl>
+                    <dt>{h.scenarios.camera}</dt>
+                    <dd>{s.cam}</dd>
+                    <dt>{h.scenarios.when}</dt>
+                    <dd class="mono">{h.scenarios.time}</dd>
+                    <dt>{h.scenarios.evidence}</dt>
+                    <dd>{s.evidence}</dd>
+                    <dt>{h.scenarios.norm}</dt>
+                    <dd>{s.norm}</dd>
+                    <dt>{h.scenarios.notified}</dt>
+                    <dd>{s.notified}</dd>
+                  </dl>
+                  <p class="quem">{s.who}</p>
+                  {s.cenario ? (
+                    <>
+                      <a class="btn" href={`${EXPERIENCE_URL}?cenario=${s.cenario}`}>
+                        {s.cta}
+                        <Icon name="arrow" size={18} />
+                      </a>
+                      <a class="link-esp" {...s.esp.attrs}>
+                        <Icon name="chat" size={16} />
+                        {s.specialist}
+                      </a>
+                    </>
+                  ) : (
+                    <a class="btn" {...s.esp.attrs}>
+                      <Icon name="chat" size={18} />
+                      {s.cta}
+                    </a>
+                  )}
                 </div>
               </div>
-              <p class="fonte">{s.source}</p>
-            </div>
-            <div class="ticket">
-              <p class:list={['estado', { 'estado--ok': !s.alert }]}>
-                <Icon name={s.alert ? 'alert' : 'ok'} size={16} />
-                {s.state}
-              </p>
-              <dl>
-                <dt>{h.scenarios.camera}</dt>
-                <dd>{s.cam}</dd>
-                <dt>{h.scenarios.when}</dt>
-                <dd class="mono">{h.scenarios.time}</dd>
-                <dt>{h.scenarios.evidence}</dt>
-                <dd>{s.evidence}</dd>
-                <dt>{h.scenarios.norm}</dt>
-                <dd>{s.norm}</dd>
-                <dt>{h.scenarios.notified}</dt>
-                <dd>{s.notified}</dd>
-              </dl>
-              <p class="quem">{s.who}</p>
-              {s.cenario ? (
-                <>
-                  <a class="btn" href={`${EXPERIENCE_URL}?cenario=${s.cenario}`}>
-                    {s.cta}
-                    <Icon name="arrow" size={18} />
-                  </a>
-                  <a class="link-esp" {...s.esp.attrs}>
-                    <Icon name="chat" size={16} />
-                    {s.specialist}
-                    {s.esp.wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
-                  </a>
-                </>
-              ) : (
-                <a class="btn" {...s.esp.attrs}>
-                  <Icon name="chat" size={18} />
-                  {s.cta}
-                  {s.esp.wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
-                </a>
-              )}
-            </div>
+            ))}
           </div>
-        ))}
+          <div class="controles">
+            <button type="button" class="seta" data-anterior aria-label={h.scenarios.prev}>
+              <Icon name="arrow" size={18} class="seta__esq" />
+            </button>
+            <ol class="regua" data-regua>
+              {SCENES.map((s, i) => (
+                <li>
+                  <button type="button" data-ir={i} aria-current={i === 0 ? 'true' : undefined} aria-controls={`painel-${s.key}`}>
+                    <span class="regua__ch">{s.tab}</span>
+                    <span class="regua__nome">{s.name}</span>
+                    <span class="regua__prog" aria-hidden="true"></span>
+                  </button>
+                </li>
+              ))}
+            </ol>
+            <button type="button" class="seta" data-proximo aria-label={h.scenarios.next}>
+              <Icon name="arrow" size={18} />
+            </button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -280,7 +298,6 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
           <a class="btn btn--ghost" {...general.attrs}>
             <Icon name="chat" size={18} />
             {t.cta.specialist}
-            {general.wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
           </a>
         </div>
       </div>
@@ -491,7 +508,6 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
                 <a class="btn" {...general.attrs}>
                   <Icon name="chat" size={18} />
                   {t.cta.specialist}
-                  {general.wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
                 </a>
               </div>
               <p class="sinal__sub mono">{h.contact.screenSub}</p>
@@ -511,10 +527,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
       <a class="btn btn--ghost barra__esp" {...general.attrs}>
         <Icon name="chat" size={18} />
         <span aria-hidden="true">{h.bar.specialist}</span>
-        <span class="visually-hidden">
-          {t.cta.specialist}
-          {general.wa && <> ({t.a11y.externalWhatsapp})</>}
-        </span>
+        <span class="visually-hidden">{t.cta.specialist}</span>
       </a>
     </div>
 
@@ -660,46 +673,61 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     syncStop();
   });
 
-  // ---- Channels: a carousel of tabs. It advances on its own while on screen (the progress rule on
-  // the selected tab is the timer: its animation ending moves to the next channel); hover or focus
-  // inside pauses it (CSS), and so do reduced motion and the stop control. Click/arrows/Home/End move.
-  const tabs = [...document.querySelectorAll<HTMLButtonElement>('[data-abas] [role="tab"]')];
-  const select = (tab: HTMLButtonElement) => {
-    for (const x of tabs) {
-      const on = x === tab;
-      x.setAttribute('aria-selected', String(on));
-      x.tabIndex = on ? 0 : -1;
-      const panel = document.getElementById(x.getAttribute('aria-controls') ?? '');
-      if (panel) panel.hidden = !on;
-      // Only a channel change animates in (never the first paint).
-      if (on) panel?.classList.add('entra');
-      if (!on) panel?.querySelector('video')?.pause();
-    }
-  };
+  // ---- Channels: a real carousel. Slides sit side by side on a scroll-snap track, so touch swipe
+  // and trackpad drag are native; arrows and the ruler of channel names move it too. The ruler's
+  // fill is the timer (its animation ending moves to the next slide); it runs only while the
+  // carousel is on screen, not hovered or focused, and never under reduced motion or the stop
+  // control. Whatever moved it (swipe, arrow, ruler, timer), the slide that settles is the current
+  // one: the others are inert, so keyboard and screen readers stay on what is shown.
   const carousel = document.querySelector<HTMLElement>('[data-carrossel]');
-  if (carousel && !reduce) {
-    carousel.dataset.gira = '';
-    new IntersectionObserver(([e]) => e && carousel.classList.toggle('em-tela', e.isIntersecting), { threshold: 0.35 }).observe(carousel);
-    carousel.addEventListener('animationend', (e) => {
-      if (!(e.target as Element).classList.contains('abas__prog')) return;
-      const at = tabs.findIndex((x) => x.getAttribute('aria-selected') === 'true');
-      const next = tabs[(at + 1) % tabs.length];
-      if (next) select(next);
+  const track = carousel?.querySelector<HTMLElement>('[data-trilho]');
+  const slides = [...(carousel?.querySelectorAll<HTMLElement>('[data-slide]') ?? [])];
+  const marks = [...(carousel?.querySelectorAll<HTMLButtonElement>('[data-ir]') ?? [])];
+  let current = 0;
+  const mark = (i: number) => {
+    if (i === current && slides[i] && !slides[i].inert) return;
+    current = i;
+    slides.forEach((sl, k) => {
+      sl.inert = k !== i;
+      if (k !== i) sl.querySelector('video')?.pause();
     });
-  }
-  tabs.forEach((tab, i) => {
-    tab.addEventListener('click', () => select(tab));
-    tab.addEventListener('keydown', (e) => {
-      const n = tabs.length;
-      const to = { ArrowRight: (i + 1) % n, ArrowLeft: (i - 1 + n) % n, Home: 0, End: n - 1 }[e.key];
+    marks.forEach((m, k) => (k === i ? m.setAttribute('aria-current', 'true') : m.removeAttribute('aria-current')));
+  };
+  const go = (i: number) => {
+    const n = slides.length;
+    const to = ((i % n) + n) % n;
+    const sl = slides[to];
+    if (!track || !sl) return;
+    track.scrollTo({ left: sl.offsetLeft - track.offsetLeft, behavior: reduce ? 'auto' : 'smooth' });
+    mark(to);
+  };
+  if (carousel && track) {
+    // The slide that is mostly in view after a swipe becomes the current one.
+    const seen = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) if (e.isIntersecting) mark(slides.indexOf(e.target as HTMLElement));
+      },
+      { root: track, threshold: 0.6 },
+    );
+    slides.forEach((sl) => seen.observe(sl));
+    carousel.querySelector('[data-anterior]')?.addEventListener('click', () => go(current - 1));
+    carousel.querySelector('[data-proximo]')?.addEventListener('click', () => go(current + 1));
+    marks.forEach((m, i) => m.addEventListener('click', () => go(i)));
+    carousel.addEventListener('keydown', (e) => {
+      if ((e.target as Element).closest('input, textarea')) return;
+      const to = { ArrowRight: current + 1, ArrowLeft: current - 1 }[e.key];
       if (to === undefined) return;
       e.preventDefault();
-      const next = tabs[to];
-      if (!next) return;
-      select(next);
-      next.focus();
+      go(to);
     });
-  });
+    if (!reduce) {
+      carousel.dataset.gira = '';
+      new IntersectionObserver(([e]) => e && carousel.classList.toggle('em-tela', e.isIntersecting), { threshold: 0.35 }).observe(carousel);
+      carousel.addEventListener('animationend', (e) => {
+        if ((e.target as Element).classList.contains('regua__prog')) go(current + 1);
+      });
+    }
+  }
 
   // ---- One pair of CTAs on screen at a time. Desktop: the header's appear once the hero's
   // scrolled away. Phones: the shortcut bar is always there, except while the band's or the
@@ -1184,6 +1212,12 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     height: clamp(2.1rem, 4.4vw, 3rem);
   }
 
+  /* Same visual weight for the three marks (equal ink area, not equal height): the wide Visdec
+     wordmark runs a little lower than BrandSchutz, the compact CATH a little taller. */
+  .marquee li:nth-child(3n + 2) img {
+    height: clamp(1.25rem, 2.5vw, 1.8rem);
+  }
+
   @keyframes corre {
     to {
       transform: translateX(calc(-50% - var(--gap) / 2));
@@ -1241,53 +1275,128 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     }
   }
 
-  /* ---------- Channels ---------- */
-  .abas {
+  /* ---------- Channels: carousel ---------- */
+  .carrossel {
+    position: relative;
+  }
+
+  .trilho {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
+    gap: var(--lk-space-5);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    outline: none;
+  }
+
+  .trilho::-webkit-scrollbar {
+    display: none;
+  }
+
+  .slide {
+    display: grid;
+    gap: var(--lk-space-5);
+    align-items: start;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    min-width: 0;
+  }
+
+  .controles {
+    display: flex;
+    align-items: center;
+    gap: var(--lk-space-3);
+    margin-top: var(--lk-space-5);
+  }
+
+  .seta {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    background: none;
+    border: 1px solid var(--lk-line-strong);
+    border-radius: 50%;
+    color: var(--lk-text);
+    cursor: pointer;
+  }
+
+  .seta:hover {
+    border-color: var(--lk-accent);
+    color: var(--lk-accent);
+  }
+
+  .seta :global(.seta__esq) {
+    transform: scaleX(-1);
+  }
+
+  /* The ruler: one segment per channel, the name under it; the current one fills while it plays. */
+  .regua {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    flex: 1;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .regua button {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: var(--lk-space-4);
-  }
-
-  /* A tab is a channel selector, not a call to action: the selected one lights up like a
-     monitor input (cyan rule), never as the white fill reserved for buttons. */
-  .abas button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4em;
+    align-items: baseline;
+    gap: 0 0.4em;
+    width: 100%;
     min-height: 2.75rem;
-    padding: 0 0.9rem;
-    background: var(--lk-surface);
-    border: 1px solid var(--lk-line-strong);
-    border-radius: var(--lk-radius);
-    color: var(--home-text-2);
-    font: 500 0.875rem var(--lk-font-mono);
+    padding: 0.7rem 0 0;
+    background: none;
+    border: 0;
+    color: var(--lk-text-2);
+    font: 500 0.8125rem/1.2 var(--lk-font-mono);
+    text-align: left;
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
   }
 
-  /* Progress of the selected channel: it fills, then the next channel comes in. Paused while the
-     section is off screen, hovered or holds focus, and under the stop control. */
-  .abas__prog {
+  .regua button::before,
+  .regua__prog {
+    content: '';
     position: absolute;
-    inset: auto 0 0;
+    inset: 0 0 auto;
     height: 2px;
+    background: var(--lk-line-strong);
+  }
+
+  .regua__prog {
     background: var(--lk-accent);
     transform: scaleX(0);
     transform-origin: left;
   }
 
-  [data-gira] .abas button[aria-selected='true'] {
-    box-shadow: inset 0 -2px 0 var(--lk-line-strong);
+  .regua button:hover,
+  .regua button[aria-current='true'] {
+    color: var(--lk-text);
   }
 
-  [data-gira] .abas button[aria-selected='true'] .abas__prog {
+  .regua button[aria-current='true'] .regua__ch {
+    color: var(--lk-accent);
+  }
+
+  /* Without the timer (reduced motion), the current segment is simply lit. */
+  .regua button[aria-current='true'] .regua__prog {
+    transform: scaleX(1);
+  }
+
+  [data-gira] .regua button[aria-current='true'] .regua__prog {
+    transform: scaleX(0);
     animation: progresso 7s linear forwards paused;
   }
 
-  :global(html:not(.lk-parado)) [data-gira].em-tela:not(:hover, :focus-within) .abas button[aria-selected='true'] .abas__prog {
+  :global(html:not(.lk-parado)) [data-gira].em-tela:not(:hover, :focus-within) .regua button[aria-current='true'] .regua__prog {
     animation-play-state: running;
   }
 
@@ -1297,58 +1406,14 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     }
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    .painel.entra:not([hidden]) {
-      animation: painel-entra 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-  }
-
-  @keyframes painel-entra {
-    from {
-      opacity: 0;
-      transform: translateY(6px);
-    }
-  }
-
-  .abas__ch {
-    color: var(--lk-text-2);
-  }
-
-  .abas button:hover {
-    border-color: var(--lk-accent);
-    color: var(--lk-text);
-  }
-
-  .abas button[aria-selected='true'] {
-    color: var(--lk-text);
-    background: var(--home-screen);
-    border-color: var(--lk-accent);
-    box-shadow: inset 0 -2px 0 var(--lk-accent);
-  }
-
-  .abas button[aria-selected='true'] .abas__ch {
-    color: var(--lk-accent);
-  }
-
   @media (max-width: 37.49rem) {
-    .abas {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .abas__ch {
+    .regua__nome {
       display: none;
     }
-  }
 
-  .painel {
-    display: grid;
-    gap: var(--lk-space-5);
-    align-items: start;
-  }
-
-  .painel[hidden] {
-    display: none;
+    .regua button {
+      justify-content: center;
+    }
   }
 
   .monitor {
@@ -1425,7 +1490,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   }
 
   @media (min-width: 56.25rem) {
-    .painel {
+    .slide {
       grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
     }
   }

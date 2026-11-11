@@ -30,3 +30,10 @@ export const EXPERIENCE_URL = 'https://logikosvision.com.br/experiencia/';
 
 /** The phone demo: the visitor's own camera, model running in the browser. */
 export const PHONE_DEMO_URL = 'https://logikosvision.com.br/demo/';
+
+/**
+ * Logikos CRM lead intake (receberLead in the CRM repo): JSON as text/plain (a "simple" request, no
+ * preflight), CORS open to logikosvision.com.br and *.logikos-site.pages.dev. Honeypot + per-IP limit
+ * on the server; `event_id` dedupes retries. Origin "site-logikos-contato" is labelled "Site Logikos".
+ */
+export const CRM_LEAD_URL = 'https://brandschutz.logikosvision.com.br/api/lead';

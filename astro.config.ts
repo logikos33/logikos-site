@@ -60,8 +60,9 @@ export default defineConfig({
         "font-src 'self'",
         `media-src 'self'${mediaOrigin ? ` ${mediaOrigin}` : ''}`,
         `frame-src ${TURNSTILE}`,
-        // HUD JSON is fetched from the media origin when PUBLIC_MEDIA_BASE_URL is set.
-        `connect-src 'self'${mediaOrigin ? ` ${mediaOrigin}` : ''}${ANALYTICS ? ' https://cloudflareinsights.com' : ''}`,
+        // HUD JSON is fetched from the media origin when PUBLIC_MEDIA_BASE_URL is set; the contact
+        // conversation posts to the CRM (src/config/links.ts CRM_LEAD_URL).
+        `connect-src 'self' https://brandschutz.logikosvision.com.br${mediaOrigin ? ` ${mediaOrigin}` : ''}${ANALYTICS ? ' https://cloudflareinsights.com' : ''}`,
       ],
       scriptDirective: { resources: scriptSources },
     },

@@ -4,7 +4,7 @@ import { pathFor, type Locale } from '../i18n/routes';
 import Icon from './Icon.astro';
 import { EMAIL_PATTERN, LEAD_INTERESTS, LEAD_MODES, LIMITS, MAX_CAMERAS, PHONE_PATTERN, type LeadKind } from '../lib/lead';
 import { CONTACT_EMAIL, TURNSTILE_SITE_KEY, TURNSTILE_TEST_SITE_KEY, whatsappHref } from '../lib/site';
-import WhatsAppButton from './WhatsAppButton.astro';
+import SpecialistButton from './SpecialistButton.astro';
 
 interface Props {
   locale: Locale;
@@ -38,7 +38,7 @@ const wa = whatsappHref(t.cta.whatsappMessage);
       />
       {wa && (
         <div class="btn-row">
-          <WhatsAppButton locale={locale} />
+          <SpecialistButton locale={locale} />
         </div>
       )}
     </div>

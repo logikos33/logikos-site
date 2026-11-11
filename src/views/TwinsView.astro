@@ -21,7 +21,7 @@ const uses = [f.measure, f.annotate].map((x) => ({ term: x.title, text: x.text }
 
 <Base locale={locale} routeKey="twins" title={p.meta.title} description={p.meta.description}>
   <!-- No point-cloud capture of our own to show yet: Koda carries the hero instead of a mock clip. -->
-  <PageHero locale={locale} id="hero-title" title={p.hero.title} text={p.hero.text}>
+  <PageHero locale={locale} interest="twins" id="hero-title" title={p.hero.title} text={p.hero.text}>
     <Koda locale={locale} />
   </PageHero>
 
@@ -31,7 +31,7 @@ const uses = [f.measure, f.annotate].map((x) => ({ term: x.title, text: x.text }
 
   <Section id="buy-title" question={p.questions.buy} title={p.buy.title} text={p.buy.text} />
 
-  <PageClose locale={locale} />
+  <PageClose locale={locale} interest="twins" />
 </Base>
 
 <style>

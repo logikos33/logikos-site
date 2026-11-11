@@ -1,6 +1,8 @@
 // Build-time site facts. Company facts are fixed; channel facts come from env
 // so they can change without a code edit (see .env.example).
 
+import { pathFor, type Locale } from '../i18n/routes';
+
 const env = import.meta.env;
 
 export const COMPANY = {
@@ -33,4 +35,16 @@ export function whatsappHref(message: string): string | undefined {
 
 export function mediaUrl(file: string): string {
   return MEDIA_BASE_URL ? `${MEDIA_BASE_URL}/${file}` : `/media/${file}`;
+}
+
+/** Interests Koda offers as chips in the contact conversation (sent to the CRM as text). */
+export const CHAT_INTERESTS = ['fire', 'epi', 'quality', 'counting', 'ergonomics', 'zones', 'twins', 'robotics', 'partnership'] as const;
+export type ChatInterest = (typeof CHAT_INTERESTS)[number];
+
+/**
+ * "Talk to a specialist", everywhere on the site: the conversation with Koda on the contact page
+ * (feedback 11/11, item 11), with the page's interest already picked when there is one.
+ */
+export function specialistHref(locale: Locale, interest?: ChatInterest): string {
+  return `${pathFor('contact', locale)}${interest ? `?interesse=${interest}` : ''}#conversa`;
 }

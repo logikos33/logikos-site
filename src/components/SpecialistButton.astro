@@ -1,0 +1,23 @@
+---
+// "Talk to a specialist", as on the home: chat icon, to the conversation with Koda on the contact
+// page (feedback 11/11, item 11), with this page's interest already picked when there is one.
+import { dict } from '../i18n';
+import type { Locale } from '../i18n/routes';
+import { specialistHref, type ChatInterest } from '../lib/site';
+import Icon from './Icon.astro';
+
+interface Props {
+  locale: Locale;
+  label?: string;
+  interest?: ChatInterest;
+  variant?: 'solid' | 'ghost';
+}
+
+const { locale, label, interest, variant = 'solid' } = Astro.props;
+const t = dict(locale);
+---
+
+<a class:list={['btn', { 'btn--ghost': variant === 'ghost' }]} href={specialistHref(locale, interest)} data-cta="specialist">
+  <Icon name="chat" size={18} />
+  {label ?? t.cta.specialist}
+</a>

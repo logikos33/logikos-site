@@ -2,7 +2,7 @@
 import { EXPERIENCE_URL, LOGIN_URL } from '../config/links';
 import { dict } from '../i18n';
 import { HTML_LANG, LOCALES, pathFor, type Locale, type RouteKey } from '../i18n/routes';
-import { whatsappHref } from '../lib/site';
+import { specialistHref } from '../lib/site';
 import Icon from './Icon.astro';
 import Logo from './Logo.astro';
 
@@ -15,9 +15,8 @@ const { locale, routeKey } = Astro.props;
 const t = dict(locale);
 // Six items. Twins and Robotics are secondary (home §6 and footer).
 const NAV: RouteKey[] = ['recognition', 'howItWorks', 'demos', 'platform', 'partners', 'about'];
-// "Talk to a specialist" opens WhatsApp; without a configured number it falls back to the contact page.
-const wa = whatsappHref(t.home.wa);
-const ctaHref = wa ?? pathFor('contact', locale);
+// "Talk to a specialist" opens the conversation with Koda on the contact page (feedback 11/11, item 11).
+const ctaHref = specialistHref(locale);
 ---
 
 <header class="site-header">
@@ -68,15 +67,9 @@ const ctaHref = wa ?? pathFor('contact', locale);
       </a>
 
       <!-- Button system: specialist = chat icon on the left (ghost), experience = arrow on the right (solid). -->
-      <a
-        class="btn btn--ghost btn--md site-header__cta site-header__cta--specialist"
-        href={ctaHref}
-        {...(wa ? { rel: 'noopener', target: '_blank' } : {})}
-        data-cta="whatsapp"
-      >
+      <a class="btn btn--ghost btn--md site-header__cta site-header__cta--specialist" href={ctaHref} data-cta="specialist">
         <Icon name="chat" size={18} />
         <span class="site-header__cta-label">{t.cta.specialist}</span>
-        {wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
       </a>
       <a class="btn btn--md site-header__cta" href={EXPERIENCE_URL} data-cta="experience">
         {t.cta.experience}
@@ -117,10 +110,9 @@ const ctaHref = wa ?? pathFor('contact', locale);
               {t.cta.experience}
               <Icon name="arrow" size={18} />
             </a>
-            <a class="btn btn--ghost" href={ctaHref} {...(wa ? { rel: 'noopener', target: '_blank' } : {})}>
+            <a class="btn btn--ghost" href={ctaHref}>
               <Icon name="chat" size={18} />
               {t.cta.specialist}
-              {wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
             </a>
           </div>
         </div>

@@ -1,0 +1,542 @@
+---
+// The contact form as a conversation with Koda (feedback 11/11, item 11): one question at a time
+// (name → company → email → WhatsApp → role? → interests → message? → consent), every answer can be
+// edited, and the lead goes straight to the CRM. Keyboard and screen readers: the current question
+// is the input's label, Koda's new line is announced in a status region, focus follows the step.
+// Without JavaScript the email link stands in.
+import { CRM_LEAD_URL } from '../config/links';
+import { dict, fill } from '../i18n';
+import { pathFor, type Locale } from '../i18n/routes';
+import { CHAT_INTERESTS, CONTACT_EMAIL } from '../lib/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dict(locale);
+const c = t.contact.chat;
+const f = t.form;
+const texts = {
+  ...c,
+  email: CONTACT_EMAIL,
+  interests: CHAT_INTERESTS.map((k) => ({ k, label: f.options[k] })),
+  consent: { before: f.consentBefore, link: f.consentLink, after: f.consentAfter, href: pathFor('privacy', locale) },
+};
+---
+
+<div class="chat" id="conversa" data-chat data-endpoint={CRM_LEAD_URL} data-textos={JSON.stringify(texts)}>
+  <div class="chat__cab">
+    <img src="/media/home/koda-apontando.webp" alt="" width="240" height="244" />
+    <p>
+      <b>{c.koda}</b>
+      <span class="mono">{c.label}</span>
+    </p>
+  </div>
+  <ol class="chat__log" data-log aria-label={c.label}>
+    <li class="msg msg--koda">{c.hello}</li>
+  </ol>
+  <p class="visually-hidden" role="status" data-aviso></p>
+  <form class="chat__entrada" data-entrada novalidate hidden>
+    <div data-campo></div>
+    <p class="chat__erro" id="chat-erro" data-erro></p>
+    <div class="chat__acoes">
+      <button type="button" class="btn btn--ghost" data-pular hidden>
+        {c.skip}
+      </button>
+      <button type="submit" class="btn" data-enviar>
+        {c.answer}
+      </button>
+    </div>
+    <!-- Honeypot: people never see or fill it; the CRM drops anything that arrives with it. -->
+    <div class="chat__mel" aria-hidden="true">
+      <label>
+        {f.honeypot}
+        <input type="text" name="website" tabindex="-1" autocomplete="off" data-mel />
+      </label>
+    </div>
+  </form>
+  <noscript>
+    <p class="msg msg--koda">{fill(c.noscript, { email: CONTACT_EMAIL })}</p>
+  </noscript>
+</div>
+
+<script>
+  type Texts = {
+    hello: string;
+    you: string;
+    koda: string;
+    steps: Record<string, string>;
+    answer: string;
+    skip: string;
+    fix: string;
+    fixLabel: string;
+    skipped: string;
+    submit: string;
+    sending: string;
+    thanks: string;
+    error: string;
+    retry: string;
+    email: string;
+    errors: Record<'required' | 'email' | 'phone' | 'interests' | 'consent', string>;
+    interests: { k: string; label: string }[];
+    consent: { before: string; link: string; after: string; href: string };
+  };
+  type Step = { k: string; q: string; kind: 'text' | 'email' | 'tel' | 'chips' | 'area' | 'consent'; optional?: boolean; ac?: string };
+
+  const STEPS: Step[] = [
+    { k: 'nome', q: 'name', kind: 'text', ac: 'name' },
+    { k: 'empresa', q: 'company', kind: 'text', ac: 'organization' },
+    { k: 'email', q: 'email', kind: 'email', ac: 'email' },
+    { k: 'telefone', q: 'phone', kind: 'tel', ac: 'tel' },
+    { k: 'cargo', q: 'role', kind: 'text', optional: true, ac: 'organization-title' },
+    { k: 'interesse', q: 'interests', kind: 'chips' },
+    { k: 'notas', q: 'message', kind: 'area', optional: true },
+    { k: 'consent', q: 'consent', kind: 'consent' },
+  ];
+  const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  const root = document.querySelector<HTMLElement>('[data-chat]');
+  const log = root?.querySelector<HTMLOListElement>('[data-log]');
+  const form = root?.querySelector<HTMLFormElement>('[data-entrada]');
+  const slot = root?.querySelector<HTMLElement>('[data-campo]');
+  const error = root?.querySelector<HTMLElement>('[data-erro]');
+  const skip = root?.querySelector<HTMLButtonElement>('[data-pular]');
+  const send = root?.querySelector<HTMLButtonElement>('[data-enviar]');
+  const status = root?.querySelector<HTMLElement>('[data-aviso]');
+  const honey = root?.querySelector<HTMLInputElement>('[data-mel]');
+  if (root && log && form && slot && error && skip && send && status && honey) {
+    const T = JSON.parse(root.dataset.textos ?? '{}') as Texts;
+    const endpoint = root.dataset.endpoint ?? '';
+
+    const answers: Record<string, string | string[] | null> = {};
+    // The interest from "Talk to a specialist" on a page (?interesse=fire) comes pre-picked.
+    const pre = new URLSearchParams(location.search).get('interesse');
+    const picked = new Set<string>(T.interests.some((i) => i.k === pre) && pre ? [pre] : []);
+    const eventId = crypto.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    let at = 0;
+    let busy = false;
+
+    const question = (s: Step) => (T.steps[s.q] ?? '').replace('{nome}', String(answers.nome ?? '').split(' ')[0] ?? '');
+    const shown = (s: Step) => {
+      const v = answers[s.k];
+      if (Array.isArray(v))
+        return T.interests
+          .filter((i) => v.includes(i.k))
+          .map((i) => i.label)
+          .join(', ');
+      return v ? v : T.skipped;
+    };
+    const bubble = (who: 'koda' | 'voce', text: string) => {
+      const li = document.createElement('li');
+      li.className = `msg msg--${who}`;
+      li.textContent = text;
+      return li;
+    };
+    const firstOpen = () => {
+      const i = STEPS.findIndex((s) => !(s.k in answers));
+      return i < 0 ? STEPS.length - 1 : i;
+    };
+
+    // The log is redrawn from the answers: Koda's question and the visitor's reply, with "Edit".
+    const draw = () => {
+      log.replaceChildren(bubble('koda', T.hello));
+      STEPS.forEach((s, i) => {
+        if (i === at || !(s.k in answers) || s.kind === 'consent') return;
+        log.append(bubble('koda', question(s)));
+        const you = bubble('voce', shown(s));
+        const fix = document.createElement('button');
+        fix.type = 'button';
+        fix.className = 'msg__corrigir';
+        fix.textContent = T.fix;
+        fix.setAttribute('aria-label', T.fixLabel.replace('{pergunta}', question(s)));
+        fix.addEventListener('click', () => ask(i));
+        you.append(fix);
+        log.append(you);
+      });
+      const now = STEPS[at];
+      if (now) log.append(bubble('koda', question(now)));
+      log.scrollTop = log.scrollHeight;
+    };
+
+    const field = (s: Step) => {
+      const id = `chat-${s.k}`;
+      const label = document.createElement('label');
+      label.className = 'visually-hidden';
+      label.htmlFor = id;
+      label.textContent = question(s);
+      const prev = answers[s.k];
+      if (s.kind === 'chips') {
+        const group = document.createElement('div');
+        group.className = 'chips';
+        group.setAttribute('role', 'group');
+        group.setAttribute('aria-label', question(s));
+        group.setAttribute('aria-describedby', 'chat-erro');
+        for (const it of T.interests) {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'chip-op';
+          b.textContent = it.label;
+          b.setAttribute('aria-pressed', String(picked.has(it.k)));
+          b.addEventListener('click', () => {
+            if (picked.has(it.k)) picked.delete(it.k);
+            else picked.add(it.k);
+            b.setAttribute('aria-pressed', String(picked.has(it.k)));
+          });
+          group.append(b);
+        }
+        return [group];
+      }
+      if (s.kind === 'consent') {
+        const box = document.createElement('label');
+        box.className = 'consent';
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.id = id;
+        input.setAttribute('aria-describedby', 'chat-erro');
+        const a = document.createElement('a');
+        a.href = T.consent.href;
+        a.target = '_blank';
+        a.textContent = T.consent.link;
+        const span = document.createElement('span');
+        span.append(`${T.consent.before} `, a, ` ${T.consent.after}`);
+        box.append(input, span);
+        return [box];
+      }
+      const input = document.createElement(s.kind === 'area' ? 'textarea' : 'input') as HTMLInputElement;
+      input.id = id;
+      input.name = s.k;
+      if (s.kind !== 'area') input.type = s.kind;
+      if (s.ac) input.autocomplete = s.ac as AutoFill;
+      if (s.kind === 'tel') input.inputMode = 'tel';
+      input.setAttribute('aria-describedby', 'chat-erro');
+      if (!s.optional) input.required = true;
+      input.value = typeof prev === 'string' ? prev : '';
+      // As in any chat: Enter sends, Shift+Enter breaks the line.
+      if (s.kind === 'area')
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            form.requestSubmit();
+          }
+        });
+      return [label, input];
+    };
+
+    const focusField = () => slot.querySelector<HTMLElement>('input, textarea, button')?.focus();
+
+    const ask = (i: number, focus = true) => {
+      const s = STEPS[i];
+      if (!s) return;
+      at = i;
+      error.textContent = '';
+      slot.replaceChildren(...field(s));
+      skip.hidden = !s.optional;
+      send.textContent = s.kind === 'consent' ? T.submit : T.answer;
+      send.disabled = false;
+      form.hidden = false;
+      draw();
+      status.textContent = question(s);
+      if (focus) focusField();
+    };
+
+    const invalid = (msg: string) => {
+      error.textContent = msg;
+      slot.querySelector('input, textarea, [role="group"]')?.setAttribute('aria-invalid', 'true');
+      focusField();
+    };
+
+    const submit = async () => {
+      if (busy) return;
+      busy = true;
+      send.disabled = true;
+      send.textContent = T.sending;
+      status.textContent = T.sending;
+      const consentText = `${T.consent.before} ${T.consent.link} ${T.consent.after}`;
+      const lead = {
+        origem: 'site-logikos-contato',
+        nome: answers.nome,
+        empresa: answers.empresa,
+        email: answers.email,
+        telefone: answers.telefone,
+        cargo: answers.cargo || '',
+        interesse: T.interests
+          .filter((i) => (answers.interesse as string[]).includes(i.k))
+          .map((i) => i.label)
+          .join(', '),
+        notas: answers.notas || '',
+        consentimento: true,
+        consentimento_em: new Date().toISOString(),
+        consentimento_texto: consentText,
+        event_id: eventId,
+        pagina: location.href,
+        website: honey.value,
+      };
+      let ok: boolean;
+      try {
+        const r = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(lead),
+          keepalive: true,
+        });
+        ok = r.ok && ((await r.json()) as { ok?: boolean }).ok === true;
+      } catch {
+        ok = false;
+      }
+      busy = false;
+      if (ok) {
+        form.hidden = true;
+        at = STEPS.length;
+        draw();
+        const thanks = bubble('koda', T.thanks.replace('{nome}', String(answers.nome ?? '').split(' ')[0] ?? ''));
+        thanks.tabIndex = -1;
+        thanks.classList.add('msg--fim');
+        log.append(thanks);
+        log.scrollTop = log.scrollHeight;
+        status.textContent = thanks.textContent ?? '';
+        thanks.focus();
+        return;
+      }
+      send.disabled = false;
+      send.textContent = T.retry;
+      error.textContent = T.error.replace('{email}', T.email);
+      status.textContent = error.textContent;
+    };
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const s = STEPS[at];
+      if (!s) return;
+      if (s.kind === 'consent') {
+        const box = slot.querySelector<HTMLInputElement>('input[type="checkbox"]');
+        if (!box?.checked) return invalid(T.errors.consent);
+        void submit();
+        return;
+      }
+      if (s.kind === 'chips') {
+        if (!picked.size) return invalid(T.errors.interests);
+        answers[s.k] = [...picked];
+      } else {
+        const v = (slot.querySelector<HTMLInputElement>('input, textarea')?.value ?? '').trim();
+        if (!v && !s.optional) return invalid(T.errors.required);
+        if (s.kind === 'email' && !EMAIL.test(v)) return invalid(T.errors.email);
+        const digits = v.replace(/\D/g, '');
+        if (s.kind === 'tel' && (digits.length < 10 || digits.length > 13)) return invalid(T.errors.phone);
+        answers[s.k] = s.kind === 'tel' ? digits : v || null;
+      }
+      ask(firstOpen());
+    });
+    skip.addEventListener('click', () => {
+      const s = STEPS[at];
+      if (s) answers[s.k] = null;
+      ask(firstOpen());
+    });
+
+    // Never steals focus on load (the phone keyboard would jump up): the first question waits.
+    ask(0, false);
+  }
+</script>
+
+<style>
+  .chat {
+    display: grid;
+    gap: var(--lk-space-4);
+    padding: clamp(1rem, 3vw, 1.5rem);
+    background: var(--lk-surface);
+    border: 1px solid var(--lk-line);
+    border-radius: 12px;
+    box-shadow: 0 18px 50px -20px #000c;
+    scroll-margin-top: 5rem;
+  }
+
+  .chat__cab {
+    display: flex;
+    align-items: center;
+    gap: var(--lk-space-3);
+    padding-bottom: var(--lk-space-3);
+    border-bottom: 1px solid var(--lk-line);
+  }
+
+  .chat__cab img {
+    width: 2.75rem;
+    height: 2.75rem;
+    object-fit: cover;
+    object-position: 50% 18%;
+    background: #050508;
+    border: 1px solid var(--lk-accent);
+    border-radius: 50%;
+  }
+
+  .chat__cab p {
+    display: grid;
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .chat__cab .mono {
+    font-size: 0.75rem;
+    color: var(--lk-text-2);
+  }
+
+  /* The history scrolls inside the card (newest at the bottom), so the card stays one screen tall. */
+  .chat__log {
+    display: grid;
+    align-content: start;
+    gap: var(--lk-space-3);
+    max-height: min(26rem, 52svh);
+    margin: 0;
+    padding: 0 0.25rem 0 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    list-style: none;
+    scrollbar-width: thin;
+  }
+
+  .chat__log :global(.msg),
+  .msg {
+    max-width: 34rem;
+    margin: 0;
+    padding: 0.7rem 0.95rem;
+    border-radius: 14px;
+    font-size: 0.9875rem;
+    line-height: 1.45;
+  }
+
+  .chat__log :global(.msg--koda),
+  .msg--koda {
+    justify-self: start;
+    background: #1d1d28;
+    border-bottom-left-radius: 4px;
+    color: var(--lk-text);
+  }
+
+  .chat__log :global(.msg--voce) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: 0.2rem 0.75rem;
+    justify-self: end;
+    background: var(--lk-text);
+    border-bottom-right-radius: 4px;
+    color: #0a0a0f;
+  }
+
+  .chat__log :global(.msg--fim) {
+    border: 1px solid var(--lk-accent);
+  }
+
+  .chat__log :global(.msg__corrigir) {
+    min-height: 1.75rem;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: #0b5c73;
+    font: 600 0.8125rem var(--lk-font-body);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+  }
+
+  .chat__entrada {
+    display: grid;
+    gap: var(--lk-space-3);
+  }
+
+  .chat__entrada :global(input:not([type='checkbox'])),
+  .chat__entrada :global(textarea) {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.7rem 0.9rem;
+    background: var(--lk-bg);
+    border: 1px solid var(--lk-field-border);
+    border-radius: var(--lk-radius);
+    color: var(--lk-text);
+    font: inherit;
+  }
+
+  .chat__entrada :global(textarea) {
+    min-height: 6rem;
+    resize: vertical;
+  }
+
+  .chat__entrada :global(input:focus-visible),
+  .chat__entrada :global(textarea:focus-visible) {
+    outline: 2px solid var(--lk-focus);
+    outline-offset: 1px;
+  }
+
+  .chat__entrada :global(.chips) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--lk-space-2);
+  }
+
+  .chat__entrada :global(.chip-op) {
+    min-height: 2.75rem;
+    padding: 0 1rem;
+    background: transparent;
+    border: 1px solid var(--lk-field-border);
+    border-radius: 999px;
+    color: var(--lk-text);
+    font: 500 0.9375rem var(--lk-font-body);
+    cursor: pointer;
+  }
+
+  .chat__entrada :global(.chip-op:hover) {
+    border-color: var(--lk-accent);
+  }
+
+  .chat__entrada :global(.chip-op[aria-pressed='true']) {
+    background: var(--lk-accent);
+    border-color: var(--lk-accent);
+    color: #0a0a0f;
+  }
+
+  .chat__entrada :global(.consent) {
+    display: flex;
+    gap: var(--lk-space-3);
+    align-items: flex-start;
+    font-size: 0.9375rem;
+  }
+
+  .chat__entrada :global(.consent input) {
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: 0.1rem 0 0;
+    accent-color: var(--lk-accent);
+  }
+
+  .chat__erro {
+    margin: 0;
+    color: var(--lk-alert);
+    font-size: 0.875rem;
+  }
+
+  .chat__erro:empty {
+    display: none;
+  }
+
+  .chat__acoes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--lk-space-3);
+  }
+
+  .chat__mel {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  @media (max-width: 37.49rem) {
+    .chat__acoes :global(.btn) {
+      flex: 1 1 auto;
+    }
+  }
+</style>

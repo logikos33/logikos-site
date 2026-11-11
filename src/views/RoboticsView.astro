@@ -21,7 +21,7 @@ const uses = [pts.quadrupeds, pts.project].map((x) => ({ term: x.title, text: x.
 
 <Base locale={locale} routeKey="robotics" title={p.meta.title} description={p.meta.description}>
   <!-- No robot footage of our own yet: Koda carries the hero instead of a mock clip (feedback 11/11, item 5). -->
-  <PageHero locale={locale} id="hero-title" title={p.hero.title} text={p.hero.text}>
+  <PageHero locale={locale} interest="robotics" id="hero-title" title={p.hero.title} text={p.hero.text}>
     <p slot="note">
       <span class="verdict verdict--outline">{p.chip}</span>
     </p>
@@ -34,7 +34,7 @@ const uses = [pts.quadrupeds, pts.project].map((x) => ({ term: x.title, text: x.
 
   <Section id="buy-title" question={p.questions.buy} title={p.buy.title} text={p.buy.text} />
 
-  <PageClose locale={locale} />
+  <PageClose locale={locale} interest="robotics" />
 </Base>
 
 <style>

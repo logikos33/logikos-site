@@ -45,7 +45,7 @@ const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoin
   <Section question={p.hero.question} title={p.readings.title} id="readings-title" wide>
     <ul class="leituras" role="list">
       {READINGS.map(([k, icon]) => (
-        <li class="leitura">
+        <li class="leitura folha">
           <h3>
             <Icon name={icon} size={22} />
             {t.readings[k].title}
@@ -75,7 +75,7 @@ const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoin
         <Cam clip="v-epi" name={t.pages.cams.epi} />
         <figcaption class="mono">{t.pages.clipNote}</figcaption>
       </figure>
-      <dl class="defs legend">
+      <dl class="defs folha legend">
         {STATES.map((s) => (
           <div class="defs__row">
             <dt>
@@ -125,19 +125,20 @@ const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoin
 </Base>
 
 <style>
+  /* One card per reading (feedback 11/11, item 13): icon + name, then three short label/answer
+     pairs. Three columns from 64rem, two from 40rem, stacked on phones. */
   .leituras {
     display: grid;
+    gap: var(--lk-space-4);
     margin: var(--lk-space-6) 0 0;
     padding: 0;
     list-style: none;
-    border-top: 1px solid var(--lk-line);
   }
 
   .leitura {
     display: grid;
-    gap: var(--lk-space-3);
-    padding-block: var(--lk-space-5);
-    border-bottom: 1px solid var(--lk-line);
+    align-content: start;
+    gap: var(--lk-space-4);
   }
 
   .leitura h3 {
@@ -149,7 +150,12 @@ const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoin
   }
 
   .leitura h3 :global(svg) {
-    color: var(--lk-accent);
+    flex: none;
+    box-sizing: content-box;
+    padding: 0.4rem;
+    background: #0a0a0f;
+    border-radius: 8px;
+    color: #00d4ff;
   }
 
   .leitura dl {
@@ -158,13 +164,20 @@ const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoin
     margin: 0;
   }
 
+  .leitura dl > div {
+    padding-top: var(--lk-space-3);
+    border-top: 1px solid var(--lk-line);
+  }
+
   .leitura dt {
-    font: 500 0.75rem/1.4 var(--lk-font-mono);
+    font: 600 0.75rem/1.4 var(--lk-font-mono);
     color: var(--lk-text-2);
   }
 
   .leitura dd {
-    margin: 0;
+    margin: 0.15rem 0 0;
+    font-size: 0.9875rem;
+    line-height: 1.45;
   }
 
   .split {
@@ -184,18 +197,15 @@ const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoin
     color: var(--lk-text-2);
   }
 
-  @media (min-width: 48rem) {
-    .leitura dl {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--lk-space-5);
+  @media (min-width: 40rem) {
+    .leituras {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
   @media (min-width: 64rem) {
-    .leitura {
-      grid-template-columns: 14rem minmax(0, 1fr);
-      gap: var(--lk-space-6);
-      align-items: start;
+    .leituras {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
     .split {

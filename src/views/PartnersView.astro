@@ -6,7 +6,7 @@ import PageHero from '../components/PageHero.astro';
 import PointList from '../components/PointList.astro';
 import Section from '../components/Section.astro';
 import Wall from '../components/Wall.astro';
-import WhatsAppButton from '../components/WhatsAppButton.astro';
+import SpecialistButton from '../components/SpecialistButton.astro';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
@@ -29,7 +29,7 @@ const points = [pp.brand, pp.license, pp.pilot, pp.support].map((x) => ({ term: 
         {t.cta.partner}
         <Icon name="arrow" size={18} />
       </a>
-      <WhatsAppButton locale={locale} variant="ghost" message={t.cta.whatsappPartnerMessage} />
+      <SpecialistButton locale={locale} variant="ghost" interest="partnership" />
     </Fragment>
     <!-- What the partner resells: the same readings the home shows, on the client's cameras. -->
     <Wall locale={locale} clips={['fogo', 'epi', 'qualidade', 'contagem']} />
@@ -45,7 +45,7 @@ const points = [pp.brand, pp.license, pp.pilot, pp.support].map((x) => ({ term: 
     </div>
   </Section>
 
-  <PageClose locale={locale} message={t.cta.whatsappPartnerMessage} />
+  <PageClose locale={locale} interest="partnership" />
 </Base>
 
 <style>

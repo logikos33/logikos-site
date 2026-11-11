@@ -3,7 +3,9 @@
    magenta exists only inside the glitch; state = color + icon + word. */
 
 :root,
-[data-theme='light'] {
+[data-theme='light'],
+/* A light sheet on the dark pages (feedback 11/11, item 13): dense data reads on paper. */
+.folha {
   color-scheme: light;
   --lk-bg: #f4f6f8;
   --lk-surface: #ffffff;

@@ -4,16 +4,17 @@
 import { EXPERIENCE_URL, PHONE_DEMO_URL } from '../config/links';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
+import type { ChatInterest } from '../lib/site';
 import Icon from './Icon.astro';
-import WhatsAppButton from './WhatsAppButton.astro';
+import SpecialistButton from './SpecialistButton.astro';
 
 interface Props {
   locale: Locale;
-  /** WhatsApp message for this page's specialist button. */
-  message?: string;
+  /** Interest Koda picks in advance when the specialist button opens the conversation. */
+  interest?: ChatInterest;
 }
 
-const { locale, message } = Astro.props;
+const { locale, interest } = Astro.props;
 const t = dict(locale);
 const c = t.pages.close;
 ---
@@ -29,7 +30,7 @@ const c = t.pages.close;
             {t.cta.experience}
             <Icon name="arrow" size={18} />
           </a>
-          <WhatsAppButton locale={locale} variant="ghost" {...(message ? { message } : {})} />
+          <SpecialistButton locale={locale} variant="ghost" {...(interest ? { interest } : {})} />
         </div>
       </div>
       <div class="sinal liga">
