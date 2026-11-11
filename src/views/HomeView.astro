@@ -378,21 +378,6 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
             <figcaption>{h.proof.publicCaption}</figcaption>
           </figure>
           <div class="lado">
-            <figure class="hor liga">
-              <div class="clip">
-                <img src={`${M}fs-camera.webp`} alt="" width="960" height="508" loading="lazy" />
-                <video
-                  data-src={`${M}fs-camera.mp4`}
-                  data-lazy
-                  muted
-                  loop
-                  playsinline
-                  preload="none"
-                  aria-label={h.proof.cameraLabel}
-                ></video>
-              </div>
-              <figcaption>{h.proof.cameraCaption}</figcaption>
-            </figure>
             <div class="itens">
               <div class="item">
                 <span class="item__data">{h.proof.event.date}</span>
