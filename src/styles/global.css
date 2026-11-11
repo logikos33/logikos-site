@@ -424,34 +424,89 @@ kbd {
   align-items: center;
   justify-content: center;
   gap: var(--lk-space-2);
-  min-height: 2.875rem;
+  /* One size for every call to action (48 px); the header uses the compact .btn--md (44 px). */
+  min-height: 3rem;
   padding: 0 var(--lk-space-5);
   border: 1px solid var(--btn-line);
   border-radius: var(--lk-radius);
   background: var(--btn-bg);
   color: var(--btn-fg);
   font: 600 1rem/1 var(--lk-font-body);
+  white-space: nowrap;
   text-decoration: none;
   cursor: pointer;
   transition:
     background-color var(--lk-motion-fast) var(--lk-steps-2),
+    border-color var(--lk-motion-fast) var(--lk-steps-2),
     color var(--lk-motion-fast) var(--lk-steps-2);
 }
 
+.btn svg {
+  flex: none;
+}
+
+.btn--md {
+  min-height: 2.75rem;
+  padding-inline: var(--lk-space-4);
+  font-size: 0.9375rem;
+}
+
+/* Interaction state is the one place cyan fills a surface (tokens.css: cyan = interactive). */
 .btn:hover {
-  --btn-bg: var(--lk-text);
   text-decoration: none;
+}
+
+@media (hover: hover) {
+  .btn:not(.btn--ghost):hover {
+    --btn-bg: var(--lk-accent);
+    --btn-line: var(--lk-accent);
+    --btn-fg: #0a0a0f;
+  }
+
+  [data-theme='light'] .btn:not(.btn--ghost):hover {
+    --btn-bg: var(--lk-accent-2);
+    --btn-line: var(--lk-accent-2);
+    --btn-fg: #ffffff;
+  }
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:not(.btn--ghost):active {
+  --btn-bg: var(--lk-accent-2);
+  --btn-line: var(--lk-accent-2);
+  --btn-fg: #ffffff;
 }
 
 .btn--ghost {
   --btn-bg: transparent;
   --btn-fg: var(--lk-text);
-  --btn-line: var(--lk-line-strong);
+  /* ≥ 3:1 against the page in both themes: the outline reads as a button, not loose text. */
+  --btn-line: var(--lk-field-border);
 }
 
-.btn--ghost:hover {
+@media (hover: hover) {
+  .btn--ghost:hover {
+    --btn-bg: var(--lk-surface);
+    --btn-line: var(--lk-accent);
+  }
+
+  [data-theme='light'] .btn--ghost:hover {
+    --btn-line: var(--lk-accent-2);
+  }
+}
+
+.btn--ghost:active {
   --btn-bg: var(--lk-surface);
-  --btn-line: var(--lk-text);
+  --btn-line: var(--lk-accent-2);
+}
+
+@media (max-width: 22.49rem) {
+  .btn {
+    padding-inline: var(--lk-space-4);
+  }
 }
 
 .btn__mark {
