@@ -4,61 +4,94 @@ import { stubTurnstile } from './helpers.ts';
 // Deterministic: Turnstile's real widget is exercised only by the form tests.
 test.beforeEach(async ({ page }) => stubTurnstile(page));
 
-test('glitch runs once on a fresh home load and ends clean', async ({ page }, info) => {
+const isVideo = (url: string) => /\.mp4(\?|$)/.test(url);
+
+test('home opening: once per session, skippable, the rest of the page inert meanwhile', async ({ page }) => {
   await page.goto('/');
-  const mark = page.locator('.lk-glitch--armed');
-  await expect(mark).toHaveAttribute('data-glitch', /run|done/);
-  // Mid-animation evidence (the effect is 0.5 s).
-  await page.waitForTimeout(120);
-  await info.attach('glitch-mid.png', { body: await page.locator('.site-header__logo').screenshot(), contentType: 'image/png' });
-  await expect(mark).toHaveAttribute('data-glitch', 'done', { timeout: 3000 });
-  await expect(mark).not.toHaveClass(/is-glitching/);
-  const animations = await mark.evaluate((el) => el.getAnimations({ subtree: true }).length);
-  expect(animations).toBe(0);
-  await info.attach('glitch-rest.png', { body: await page.locator('.site-header__logo').screenshot(), contentType: 'image/png' });
+  const opening = page.locator('[data-abertura]');
+  await expect(opening).toBeVisible();
+  await expect(page.locator('html')).toHaveClass(/lk-abre/);
+  // Focus is on Skip; header and main cannot be reached while it plays.
+  await expect(page.locator('[data-pular]')).toBeFocused();
+  expect(await page.locator('main').evaluate((el) => (el as HTMLElement).inert)).toBe(true);
+  await page.locator('[data-pular]').click();
+  await expect(opening).toHaveCount(0);
+  await expect(page.locator('html')).not.toHaveClass(/lk-abre/);
+  expect(await page.locator('main').evaluate((el) => (el as HTMLElement).inert)).toBe(false);
+  await expect(page.locator('.site-header__logo')).toBeFocused();
+  // Same session: no second opening.
+  await page.goto('about:blank');
+  await page.goto('/');
+  await expect(page.locator('[data-abertura]')).toHaveCount(0);
+  await expect(page.locator('h1')).toBeVisible();
 });
 
-test('glitch never runs under prefers-reduced-motion', async ({ browser }, info) => {
+test('home opening: plays to the end, dives in and ends at rest (fail-safe if the video stalls)', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('[data-abertura]')).toBeVisible();
+  // Either the clip ended and the dive ran, or it never started and the 1.2 s fail-safe opened the site.
+  await expect(page.locator('[data-abertura]')).toHaveCount(0, { timeout: 12_000 });
+  await expect(page.locator('html')).not.toHaveClass(/lk-abre|lk-entrando/);
+  await expect(page.locator('h1')).toBeVisible();
+});
+
+test('home under reduced motion: no opening, posters only, no video downloaded, nothing moves', async ({ browser }) => {
   const ctx = await browser.newContext({ reducedMotion: 'reduce' });
   const page = await ctx.newPage();
+  const videos: string[] = [];
+  page.on('request', (r) => isVideo(r.url()) && videos.push(r.url()));
   await page.goto('/');
-  const mark = page.locator('.lk-glitch--armed');
-  await expect(mark).toHaveAttribute('data-glitch', 'off-reduced-motion');
-  await expect(mark).not.toHaveClass(/is-glitching/);
-  const animations = await mark.evaluate((el) => el.getAnimations({ subtree: true }).length);
-  expect(animations).toBe(0);
-  await info.attach('glitch-reduced-motion.png', { body: await page.locator('.site-header__logo').screenshot(), contentType: 'image/png' });
+  await expect(page.locator('[data-abertura]')).toHaveCount(0);
+  await page.locator('#cenarios').scrollIntoViewIfNeeded();
+  await page.locator('#prova').scrollIntoViewIfNeeded();
+  await page.waitForTimeout(1500);
+  expect(videos).toEqual([]);
+  const running = await page.evaluate(() => document.getAnimations().filter((a) => a.playState === 'running').length);
+  expect(running).toBe(0);
+  // The partner strip shows each logo once, still.
+  await expect(page.locator('.marquee li:not([data-copia])')).toHaveCount(3);
+  await expect(page.locator('.marquee [data-copia]').first()).toBeHidden();
   await ctx.close();
 });
 
-test('glitch does not repeat on internal navigation back to home', async ({ page }) => {
-  await page.goto('/sobre');
-  await page.locator('.site-header__logo').click();
-  await expect(page).toHaveURL(/\/$/);
-  await expect(page.locator('.lk-glitch--armed')).toHaveAttribute('data-glitch', 'off-internal-navigation');
-});
-
-test('glitch does not repeat on Back navigation to home', async ({ page }) => {
-  await page.goto('/', { referer: 'https://www.google.com/' });
-  await expect(page.locator('.lk-glitch--armed')).toHaveAttribute('data-glitch', 'done', { timeout: 5000 });
-  await page.locator('.site-nav a[href="/sobre"]').click();
-  await expect(page).toHaveURL(/\/sobre$/);
-  await page.goBack();
-  const state = await page.locator('.lk-glitch--armed').getAttribute('data-glitch');
-  // Restored from bfcache (no script re-run) keeps "done"; a fresh load must skip (same session or internal).
-  expect(['done', 'off-session', 'off-internal-navigation']).toContain(state);
-});
-
-test('no continuous animation anywhere on the home page after it settles', async ({ page }) => {
-  await page.goto('/');
-  await page.waitForTimeout(8000);
-  const running = await page.evaluate(() => document.getAnimations().filter((a) => a.playState === 'running').length);
+test('home idle: wall videos load only after the opening and near the screen; the Stop control halts every loop', async ({ page }) => {
+  const videos: string[] = [];
+  page.on('request', (r) => isVideo(r.url()) && videos.push(new URL(r.url()).pathname));
+  await page.goto('/?sem-abertura');
+  const wall = page.locator('.muro video');
+  // The wall clips get their source once visible; nothing below the fold (Fireshow) is requested.
+  await expect.poll(() => wall.evaluateAll((vs) => vs.filter((v) => v.getAttribute('src')).length)).toBe(5);
+  expect(videos.some((v) => v.includes('/fs-'))).toBe(false);
+  await expect(page.locator('.prova video').first()).not.toHaveAttribute('src', /.+/);
+  // Bundled Chromium has no H.264; where the codec exists the loop really plays and pauses.
+  const h264 = await page.evaluate(() => document.createElement('video').canPlayType('video/mp4; codecs="avc1.4D401E"') !== '');
+  const playing = () => wall.first().evaluate((v: HTMLVideoElement) => !v.paused);
+  if (h264) await expect.poll(playing).toBe(true);
+  // WCAG 2.2.2: one visible control stops videos, the partner strip and the diagram pulse.
+  const stop = page.locator('[data-parar]');
+  await expect(stop).toBeVisible();
+  await stop.click();
+  await expect(stop).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('html')).toHaveClass(/lk-parado/);
+  expect(await wall.evaluateAll((vs) => vs.every((v) => (v as HTMLVideoElement).paused))).toBe(true);
+  const running = await page.evaluate(
+    () =>
+      document.getAnimations().filter((a) => a.playState === 'running' && !(a as CSSAnimation).animationName?.startsWith('liga')).length,
+  );
   expect(running).toBe(0);
+  await stop.click();
+  await expect(stop).toHaveAttribute('aria-pressed', 'false');
+  if (h264) {
+    await expect.poll(playing).toBe(true);
+    // Off-screen videos pause.
+    await page.locator('footer').scrollIntoViewIfNeeded();
+    await expect.poll(() => wall.first().evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
+  }
 });
 
 test('HUD draws detection boxes in steps and rests on the last frame', async ({ page }) => {
-  await page.goto('/');
-  const hud = page.locator('[data-hud][data-slot="hero"]');
+  await page.goto('/recognition');
+  const hud = page.locator('[data-hud]#rec-stage');
   await expect(hud).toHaveAttribute('data-state', 'playing');
   await expect(hud.locator('.hud-box').first()).toBeVisible();
   // WCAG 2.2.2: while it moves, a visible Stop control exists.
@@ -77,8 +110,8 @@ test('HUD draws detection boxes in steps and rests on the last frame', async ({ 
 });
 
 test('Stop ends playback at rest and keeps keyboard focus on the control', async ({ page }) => {
-  await page.goto('/');
-  const hud = page.locator('[data-hud][data-slot="hero"]');
+  await page.goto('/recognition');
+  const hud = page.locator('[data-hud]#rec-stage');
   const control = hud.locator('[data-hud-play]');
   await expect(hud).toHaveAttribute('data-state', 'playing');
   await control.focus();
@@ -94,8 +127,8 @@ test('Stop ends playback at rest and keeps keyboard focus on the control', async
 test('reduced motion: HUD waits for play, then plays once', async ({ browser }) => {
   const ctx = await browser.newContext({ reducedMotion: 'reduce' });
   const page = await ctx.newPage();
-  await page.goto('/');
-  const hud = page.locator('[data-hud][data-slot="hero"]');
+  await page.goto('/recognition');
+  const hud = page.locator('[data-hud]#rec-stage');
   await expect(hud).toHaveAttribute('data-state', 'idle');
   // At rest the verdict is already there (last frame), nothing moves until the user plays.
   const atRest = await hud.locator('.hud__overlay .hud-box').count();
@@ -110,13 +143,13 @@ test('reduced motion: HUD waits for play, then plays once', async ({ browser }) 
   await ctx.close();
 });
 
-test('glitch slices never cross the two O letters (keyhole), at desktop and phone widths', async ({ browser }) => {
+test('glitch slices never cross the two O letters (keyhole), at desktop and phone widths (/_marca)', async ({ browser }) => {
   for (const width of [1440, 360]) {
     const ctx = await browser.newContext({ viewport: { width, height: 800 }, reducedMotion: 'reduce' });
     const page = await ctx.newPage();
-    await page.goto('/');
+    await page.goto('/_marca');
     const { problems: overlaps, checked } = await page.evaluate(() => {
-      const el = document.querySelector<HTMLElement>('.lk-glitch--armed');
+      const el = document.querySelector<HTMLElement>('[data-brand-box] .lk-glitch');
       const mark = el?.querySelector<SVGSVGElement>('svg[data-brand="wordmark"]');
       if (!el || !mark) return { problems: ['wordmark not found'], checked: 0 };
       const box = mark.getBoundingClientRect();
@@ -166,27 +199,10 @@ test('glitch slices never cross the two O letters (keyhole), at desktop and phon
   }
 });
 
-test('M1: the glitch runs once per session and hands over to the hero HUD', async ({ browser }) => {
-  const ctx = await browser.newContext();
-  const page = await ctx.newPage();
-  await page.goto('/');
-  const mark = page.locator('.lk-glitch--armed');
-  await expect(mark).toHaveAttribute('data-glitch', 'done', { timeout: 5000 });
-  const hud = page.locator('[data-hud][data-slot="hero"]');
-  await expect(hud).toHaveAttribute('data-state', /playing|ended/, { timeout: 5000 });
-  // Same session, fresh external load: no second glitch, the HUD still starts.
-  await page.goto('about:blank');
-  await page.goto('/');
-  await expect(mark).toHaveAttribute('data-glitch', 'off-session');
-  await expect(mark).not.toHaveClass(/is-glitching/);
-  await expect(page.locator('[data-hud][data-slot="hero"]')).toHaveAttribute('data-state', /playing|ended/, { timeout: 5000 });
-  await ctx.close();
-});
-
 test('M4: the pipeline is revealed in order, once, and ends at rest; static when reduced motion', async ({ browser }) => {
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
   const page = await ctx.newPage();
-  await page.goto('/');
+  await page.goto('/como-funciona');
   const pipe = page.locator('[data-pipeline]').first();
   await expect(pipe).toHaveClass(/pipeline--armed/);
   await pipe.scrollIntoViewIfNeeded();
@@ -201,7 +217,7 @@ test('M4: the pipeline is revealed in order, once, and ends at rest; static when
 
   const reduced = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 1280, height: 800 } });
   const p2 = await reduced.newPage();
-  await p2.goto('/');
+  await p2.goto('/como-funciona');
   await expect(p2.locator('[data-pipeline]').first()).not.toHaveClass(/pipeline--armed/);
   await expect(p2.locator('[data-pipeline] .pipeline__node').first()).toBeVisible();
   await reduced.close();

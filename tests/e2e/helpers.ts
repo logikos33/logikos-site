@@ -52,3 +52,14 @@ export function wranglerLog(): string {
 export async function expectNoConsoleErrors(errors: string[]): Promise<void> {
   expect(errors, errors.join('\n')).toEqual([]);
 }
+
+/** Marks the home opening as seen for this tab (it plays once per session); only motion.spec exercises it. */
+export async function skipOpening(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    try {
+      sessionStorage.setItem('lk-abertura', '1');
+    } catch {
+      // ignore
+    }
+  });
+}

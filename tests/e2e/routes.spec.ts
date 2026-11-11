@@ -1,9 +1,12 @@
 import { expect, test } from '@playwright/test';
 import { HTML_LANG, LOCALES, ROUTES } from '../../src/i18n/routes.ts';
-import { ALL_ROUTES, SITE, expectNoConsoleErrors, stubTurnstile, trackConsole } from './helpers.ts';
+import { ALL_ROUTES, SITE, expectNoConsoleErrors, skipOpening, stubTurnstile, trackConsole } from './helpers.ts';
 
 // Deterministic: Turnstile's real widget is exercised only by the form tests.
-test.beforeEach(async ({ page }) => stubTurnstile(page));
+test.beforeEach(async ({ page }) => {
+  await stubTurnstile(page);
+  await skipOpening(page);
+});
 
 test('the route map has 12 pages per language', () => {
   expect(ALL_ROUTES).toHaveLength(24);

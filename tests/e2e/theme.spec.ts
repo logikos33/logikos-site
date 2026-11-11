@@ -1,20 +1,32 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
-import { ALL_ROUTES, setTheme, stubTurnstile } from './helpers.ts';
+import { ALL_ROUTES, setTheme, skipOpening, stubTurnstile } from './helpers.ts';
 
 // Deterministic: Turnstile's real widget is exercised only by the form tests.
-test.beforeEach(async ({ page }) => stubTurnstile(page));
+test.beforeEach(async ({ page }) => {
+  await stubTurnstile(page);
+  await skipOpening(page);
+});
 
 test('light theme by default, even when the OS prefers dark', async ({ browser }) => {
   const ctx = await browser.newContext({ colorScheme: 'dark' });
   const page = await ctx.newPage();
-  await page.goto('/');
+  await page.goto('/sobre');
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   await ctx.close();
 });
 
-test('theme toggle persists across reload and navigation', async ({ page }) => {
+test('the home is always dark, has no toggle and leaves the saved choice alone', async ({ page }) => {
+  await setTheme(page, 'light');
   await page.goto('/');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await expect(page.locator('[data-theme-toggle]')).toHaveCount(0);
+  await page.goto('/sobre');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+});
+
+test('theme toggle persists across reload and navigation', async ({ page }) => {
+  await page.goto('/sobre');
   const toggle = page.locator('[data-theme-toggle]');
   await expect(toggle).toHaveAttribute('aria-pressed', 'false');
   const name = await toggle.getAttribute('aria-label');
@@ -41,7 +53,7 @@ test('no flash of the wrong theme: data-theme is set before first paint', async 
       (window as unknown as { reportTheme: (t: string) => void }).reportTheme(document.documentElement.getAttribute('data-theme') ?? '');
     });
   });
-  await page.goto('/');
+  await page.goto('/sobre');
   expect(seen).toEqual(['dark']);
 });
 
@@ -64,7 +76,7 @@ for (const theme of ['light', 'dark'] as const) {
 }
 
 test('icon swaps show exactly one icon (theme toggle, mobile menu)', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/sobre');
   const visibleIcons = (sel: string) =>
     page.locator(`${sel} svg`).evaluateAll((els) => els.filter((e) => getComputedStyle(e).display !== 'none').length);
   expect(await visibleIcons('[data-theme-toggle]')).toBe(1);
@@ -79,11 +91,21 @@ test('icon swaps show exactly one icon (theme toggle, mobile menu)', async ({ pa
 test('header wordmark keeps at least 90 px of ink (brand minimum)', async ({ page }) => {
   for (const width of [1440, 360]) {
     await page.setViewportSize({ width, height: 800 });
-    await page.goto('/');
+    await page.goto('/sobre');
     const ink = await page
       .locator('.site-header__logo svg[data-brand="wordmark"]')
       .first()
       .evaluate((el) => el.getBoundingClientRect().width);
     expect(ink, `width ${width}`).toBeGreaterThanOrEqual(90);
   }
+});
+
+test('axe: the home opening (dialog over an inert page) has zero violations', async ({ browser }) => {
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  await page.goto('/');
+  await expect(page.locator('[data-abertura]')).toBeVisible();
+  const result = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+  expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+  await ctx.close();
 });
