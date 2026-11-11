@@ -90,9 +90,12 @@ test('item 16: with reduced motion the box rests open with the markers', async (
   await ctx.close();
 });
 
-test('item 14: header shows LOGIKOS | VISION (direction B), footer the stacked lockup (direction A)', async ({ page }) => {
+test('item 14: header and footer show the Logikos Vision lockup, direction A, VISION legible', async ({ page }) => {
   await page.goto('/sobre');
-  await expect(page.locator('.site-header__vision')).toHaveText('VISION');
+  const lockup = page.locator('.site-header__logo svg[data-brand="lockup"]');
+  // VISION's cap is 36 of the lockup's 163.5 units: at least ~11 px on desktop.
+  expect(((await lockup.boundingBox())?.height ?? 0) * (36 / 163.5)).toBeGreaterThanOrEqual(11);
+  expect(await lockup.evaluate((el) => getComputedStyle(el).filter)).toContain('drop-shadow');
   await expect(page.locator('.site-header__logo')).toHaveAttribute('aria-label', /Logikos Vision/);
   await expect(page.locator('.site-footer svg[data-brand="lockup"]')).toHaveAttribute('aria-label', 'Logikos Vision');
 });

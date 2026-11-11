@@ -665,7 +665,7 @@ kbd {
   --btn-line: var(--lk-accent-2);
 }
 
-@media (max-width: 22.49rem) {
+@media (max-width: 29.99rem) {
   /* A long label (e.g. "Solicite seu modelo customizado") wraps instead of widening the page. */
   .btn {
     padding-inline: var(--lk-space-4);

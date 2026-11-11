@@ -77,10 +77,22 @@ const width = Math.round(size * ratio);
     }
   }
 
+  /* Logikos Vision lockup (direction A): white with the soft glow of the approved Artlist
+     refinement, drawn in CSS so the vector stays crisp at any size. */
+  .lk-mark--lockup {
+    filter: drop-shadow(0 0 1px rgb(255 255 255 / 0.55)) drop-shadow(0 0 7px rgb(255 255 255 / 0.28));
+  }
+
   /* Brand minimum is 90 px wide: the 20 px header mark is 130 px. The 64 px cover mark is
      fluid (36–64 px tall, i.e. 234–417 px wide) and keeps the lockup's proportion. */
   .lk-mark--wordmark[data-size='64'] {
     width: clamp(234px, 58.6vw, 417px);
+    height: auto;
+  }
+
+  /* Cover lockup (404): fluid, VISION legible at every width. */
+  .lk-mark--lockup[data-size='88'] {
+    width: clamp(240px, 60vw, 404px);
     height: auto;
   }
 </style>

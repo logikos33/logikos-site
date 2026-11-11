@@ -67,7 +67,7 @@ test('header wordmark keeps at least 90 px of ink (brand minimum)', async ({ pag
     await page.setViewportSize({ width, height: 800 });
     await page.goto('/sobre');
     const ink = await page
-      .locator('.site-header__logo svg[data-brand="wordmark"]')
+      .locator('.site-header__logo svg[data-brand="lockup"]')
       .first()
       .evaluate((el) => el.getBoundingClientRect().width);
     expect(ink, `width ${width}`).toBeGreaterThanOrEqual(90);
