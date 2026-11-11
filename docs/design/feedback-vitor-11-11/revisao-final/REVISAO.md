@@ -3,45 +3,59 @@
 Cada recorte mostra o ponto marcado (círculo ciano) no print da prévia pr-48 de 11/11 (960 px de largura = 1440 real).
 
 ## 1. privacidade — "remove a sede daqui"
-![](p01-privacidade.jpg)  (posição: x 62%, y 22% da página inteira)
+
+![](p01-privacidade.jpg) (posição: x 62%, y 22% da página inteira)
 
 ## 2. sobre — "centraliza esse texto aqui em relaçao ao por que existimos"
-![](p02-sobre.jpg)  (posição: x 58%, y 25% da página inteira)
+
+![](p02-sobre.jpg) (posição: x 58%, y 25% da página inteira)
 
 ## 3. twins — "Falta incluir os gemeos digitais por peça aqui também"
-![](p03-twins.jpg)  (posição: x 30%, y 58% da página inteira)
+
+![](p03-twins.jpg) (posição: x 30%, y 58% da página inteira)
 
 ## 4. demos — "Aqui nao é sobre reconhecimento de EPi é sobre mostrar como a visao computacional funnciona precisa mudar esse texto"
-![](p04-demos.jpg)  (posição: x 15%, y 17% da página inteira)
+
+![](p04-demos.jpg) (posição: x 15%, y 17% da página inteira)
 
 ## 5. sobre — "Remove o testar experiencia daqui"
-![](p05-sobre.jpg)  (posição: x 12%, y 14% da página inteira)
+
+![](p05-sobre.jpg) (posição: x 12%, y 14% da página inteira)
 
 ## 6. como-funciona — "Remove esse comentario"
-![](p06-como-funciona.jpg)  (posição: x 20%, y 29% da página inteira)
+
+![](p06-como-funciona.jpg) (posição: x 20%, y 29% da página inteira)
 
 ## 7. home — "coloca o fundo branco nesse texto aqui pra ele nao ficar ao vento e centraliza"
-![](p07-home.jpg)  (posição: x 52%, y 22% da página inteira)
+
+![](p07-home.jpg) (posição: x 52%, y 22% da página inteira)
 
 ## 8. integradores — "Na pagina de integradores nao vamos falar de vender o recognition vamos falar de criar o modelo customizado"
-![](p08-integradores.jpg)  (posição: x 15%, y 10% da página inteira)
+
+![](p08-integradores.jpg) (posição: x 15%, y 10% da página inteira)
 
 ## 9. robotica — "Pode remover o testar experiencia aqui"
-![](p09-robotica.jpg)  (posição: x 14%, y 21% da página inteira)
+
+![](p09-robotica.jpg) (posição: x 14%, y 21% da página inteira)
 
 ## 10. home — "Aqui deve levar para a visao direto da camera sem ir para a lading page de usar o modelo"
-![](p10-home.jpg)  (posição: x 10%, y 8% da página inteira)
+
+![](p10-home.jpg) (posição: x 10%, y 8% da página inteira)
 
 ## 11. como-funciona — "Coloca um pouco pra cima esse quadro"
-![](p11-como-funciona.jpg)  (posição: x 28%, y 24% da página inteira)
+
+![](p11-como-funciona.jpg) (posição: x 28%, y 24% da página inteira)
 
 ## 12. recognition — "coloca aqui as notificaçoes do ap nao essas notifcaçoes em preto"
-![](p12-recognition.jpg)  (posição: x 20%, y 25% da página inteira)
+
+![](p12-recognition.jpg) (posição: x 20%, y 25% da página inteira)
 
 ## 13. recognition — "Replica isso em todos os cards de colocar a imagem da notificação"
-![](p13-recognition.jpg)  (posição: x 54%, y 24% da página inteira)
+
+![](p13-recognition.jpg) (posição: x 54%, y 24% da página inteira)
 
 ## Leitura combinada com o Vitor (como interpretar)
+
 - **1 privacidade:** tirar a sede/endereço (já vale a regra de tirar a cidade em todo o site).
 - **2 sobre:** o bloco de texto ao lado de "Por que existimos" centralizado verticalmente em relação ao título.
 - **3 twins:** incluir o gêmeo digital por PEÇA (qualidade peça a peça) nessa seção — junto do vídeo do gêmeo quando chegar.
