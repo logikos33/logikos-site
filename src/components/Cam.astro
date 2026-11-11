@@ -43,7 +43,11 @@ const [w, h] = vertical ? [464, 832] : [640, 360];
     window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
     Boolean(conn?.saveData) ||
     /(^|-)(2g|3g)$/.test(conn?.effectiveType ?? '');
-  if (!still) {
+  // Videos arm on the visitor's first gesture (pointer, touch, scroll or key): until then the real
+  // posters hold the frame, so a page opened and left from WhatsApp costs no video, and the page
+  // stays inside its 300 KB budget (lighthouserc.cjs). Visitors move within a second anyway.
+  const arm = () => {
+    for (const type of GESTURES) window.removeEventListener(type, arm);
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
@@ -57,7 +61,9 @@ const [w, h] = vertical ? [464, 832] : [640, 360];
       { rootMargin: '200px' },
     );
     document.querySelectorAll<HTMLVideoElement>('video[data-cam]').forEach((v) => io.observe(v));
-  }
+  };
+  const GESTURES = ['pointermove', 'pointerdown', 'touchstart', 'scroll', 'wheel', 'keydown'];
+  if (!still) for (const type of GESTURES) window.addEventListener(type, arm, { passive: true });
 </script>
 
 <style>
