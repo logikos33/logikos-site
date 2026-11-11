@@ -3,7 +3,7 @@
 // Commercial rule + LGPD / PL 2.338: no client names, installed base, camera counts,
 // prices, person identification, AGPL tooling, or filler text.
 import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { extname, join } from 'node:path';
+import { extname, join, relative } from 'node:path';
 
 const ROOT = process.argv[2] ?? 'dist';
 
@@ -34,6 +34,21 @@ const RULES = [
   ['EPI Monitor', /\bepi\s*monitor\b|\bepimonitor\b/],
   ['YOLOv8', /\byolo\s*v?8\b/],
 ];
+
+// Partner mentions approved by Vitor for the home only (decision 0027): the partner strip and the
+// Fireshow card. Exact (normalized) phrases, removed before the rules run; anywhere else, or in any
+// other wording, the names still fail.
+const APPROVED = {
+  'index.html': [
+    '/media/parceiros/l-brandschutz.svg',
+    '/media/parceiros/l-cath.webp',
+    'alt="brandschutz"',
+    'alt="cath projetos e seguranca"',
+    'estande da parceira brandschutz',
+    'booth of our partner brandschutz',
+  ],
+};
+const approvedFor = (file) => (/^(?:en\/)?index\.html$/.test(relative(ROOT, file)) ? APPROVED['index.html'] : []);
 
 const TEXT_EXT = new Set(['.html', '.xml', '.json', '.svg', '.txt', '.css', '.js', '.webmanifest']);
 
@@ -74,7 +89,8 @@ for (const file of walk(ROOT)) {
   const ext = extname(file);
   if (!TEXT_EXT.has(ext)) continue;
   files++;
-  const text = normalize(scrub(readFileSync(file, 'utf8'), ext));
+  let text = normalize(scrub(readFileSync(file, 'utf8'), ext));
+  for (const phrase of approvedFor(file)) text = text.split(phrase).join(' ');
   for (const [label, re] of RULES) {
     // In minified JS, `R$` can be an identifier; there it only counts before a number.
     const rule = ext === '.js' && label === 'R$' ? /r\$\s?\d/ : re;
