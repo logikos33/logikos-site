@@ -221,3 +221,22 @@ test('final review 14: header — ≥ 40 px before the menu, centred, balanced a
     await ctx.close();
   }
 });
+
+// Final review, round 2 (q1-q5).
+test('final review 2: steps, guarantees, part-twin first, drones and quadrupeds, Twins connections', async ({ page }) => {
+  await page.goto('/sobre');
+  await expect(page.locator('section[aria-labelledby="how-title"] .passo')).toHaveCount(3);
+  await expect(page.locator('.frentes .specs li')).toHaveCount(6);
+  await page.goto('/conformidade');
+  await expect(page.locator('.garantia')).toHaveCount(4);
+  await expect(page.locator('.garantia svg')).toHaveCount(4);
+  await expect(page.locator('.aviso')).toHaveCSS('font-size', '13px');
+  await page.goto('/twins');
+  await expect(page.locator('h1')).toHaveText('O gêmeo digital de cada peça.');
+  await expect(page.locator('section[aria-labelledby="process-title"] .passo')).toHaveCount(6);
+  // The phone capture is a topic further down, never in the hero.
+  await expect(page.locator('.ph')).not.toContainText('celular');
+  await expect(page.locator('#phone-title')).toBeVisible();
+  await page.goto('/robotica');
+  await expect(page.locator('#how-title')).toHaveText('Drones e robôs quadrúpedes');
+});

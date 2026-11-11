@@ -661,13 +661,13 @@
   },
   "twins": {
     "meta": {
-      "title": "Twins — a digital twin from your phone",
-      "description": "The digital twin of the plant, from a phone video, and of every part: 100 % inspection, traceability and the deviation from the design before it becomes a batch."
+      "title": "Twins — the digital twin of every part",
+      "description": "Every part on the line compared with its design: Logikos computer vision, hardware and software build the digital twin in your plant. And a walkable site from a phone."
     },
     "hero": {
       "question": "what is it?",
-      "title": "The space, navigable.",
-      "text": "Record a phone video and Twins turns the site into a point cloud you can walk, measure and annotate. And not just the plant: every part gets its own twin, to follow quality part by part."
+      "title": "The digital twin of every part.",
+      "text": "Every part on the line compared with its design, automatically. Logikos builds the twin in your plant with its own computer vision, hardware and software, tuned to your part and your line."
     },
     "features": {
       "capture": {
@@ -697,9 +697,9 @@
       "text": "Each space is scoped from a video of yours. Talk to the team."
     },
     "parts": {
-      "question": "and every part?",
-      "title": "A digital twin of every part.",
-      "text": "Every part on the line gets its own twin: quality followed part by part, not by sampling."
+      "question": "what does it guarantee?",
+      "title": "What it guarantees on the line.",
+      "text": "Quality followed part by part, not by sampling."
     },
     "partsPoints": [
       {
@@ -718,7 +718,43 @@
         "title": "Part-by-part history",
         "text": "The record of every part for audits and improvement."
       }
-    ]
+    ],
+    "process": {
+      "question": "how is it built?",
+      "title": "How the twin of every part is built",
+      "text": "From the camera frame to the part compared with its design, in six steps.",
+      "steps": [
+        {
+          "title": "Capture",
+          "text": "Industrial cameras record the part as it moves along the conveyor."
+        },
+        {
+          "title": "Laser line",
+          "text": "A laser scanner draws the surface; the system extracts that line in every frame."
+        },
+        {
+          "title": "Calibration",
+          "text": "Camera and laser calibrated to measure in millimetres, not pixels."
+        },
+        {
+          "title": "Point cloud",
+          "text": "The conveyor encoder gives the position of each line, and the part becomes a point cloud."
+        },
+        {
+          "title": "CAD comparison",
+          "text": "The cloud is compared with the part's design; the deviation shows where it is."
+        },
+        {
+          "title": "Viewer",
+          "text": "The team sees every part in three dimensions, with the deviation marked and its history."
+        }
+      ]
+    },
+    "phone": {
+      "question": "and the site?",
+      "title": "The site, from a phone.",
+      "text": "For the plant, no scanner: record a phone video and walk the site, measuring and annotating without going there."
+    }
   },
   "robotics": {
     "meta": {
@@ -743,6 +779,10 @@
       "project": {
         "title": "By project",
         "text": "Each application is scoped case by case, from your scenario."
+      },
+      "both": {
+        "title": "Drones and quadruped robots",
+        "text": "Inspection of wide, hard-to-reach or hazardous areas, with the same verdict as a fixed camera."
       }
     },
     "questions": {
@@ -753,7 +793,8 @@
     "buy": {
       "title": "By project.",
       "text": "Each application is scoped case by case, from your scenario."
-    }
+    },
+    "loopLabel": "Aerial drone and quadruped robot on inspection"
   },
   "compliance": {
     "meta": {
@@ -766,25 +807,34 @@
       "text": "Recognition is built to support compliance with Brazil's LGPD inside the plant."
     },
     "items": {
+      "presence": {
+        "title": "Presence-based detection",
+        "text": "The system sees the condition — presence, posture, PPE — and never who the person is. Below, what that guarantees for your company and for the people in the plant."
+      },
+      "anon": {
+        "title": "No one is recognized",
+        "text": "No face, no name, no record of who appears: the alert is about the situation, not the person.",
+        "gives": "Privacy for whoever is on camera."
+      },
       "signage": {
-        "title": "Physical signage",
-        "text": "Signs tell people the area is monitored and why."
+        "title": "Signposted area",
+        "text": "Signs say the area is monitored and why, before anyone walks in.",
+        "gives": "Transparency for the people who work there."
       },
       "roles": {
-        "title": "Roles set by contract",
-        "text": "The customer is the controller. Logikos acts as processor, within the contract."
-      },
-      "presence": {
-        "title": "Presence, not identity",
-        "text": "The system detects presence, posture and PPE. It watches the condition; it does not identify who the person is."
+        "title": "Each with its role",
+        "text": "Your company decides what is monitored; Logikos only handles the data within what the contract allows.",
+        "gives": "Clear responsibilities, in writing."
       },
       "retention": {
-        "title": "Defined retention",
-        "text": "How long evidence is kept is set by contract. After that, the clip is deleted."
+        "title": "Evidence with an expiry date",
+        "text": "Evidence clips are kept for the agreed period and then deleted.",
+        "gives": "Nothing kept beyond what is needed."
       }
     },
     "note": "This summary does not replace the contract or the legal review of each installation.",
-    "cta": "See the privacy policy"
+    "cta": "See the privacy policy",
+    "gives": "Guarantees"
   },
   "about": {
     "meta": {
@@ -818,9 +868,18 @@
         },
         {
           "name": "Twins",
-          "text": "A walkable model of the site from a phone video, to measure and annotate without going there."
+          "text": "The digital twin of every part, compared with the design, and a walkable site from a phone.",
+          "specs": [
+            "Industrial cameras on the line",
+            "Line laser scanner",
+            "Conveyor encoder",
+            "Sensors and PLC via MQTT or OPC UA",
+            "Events to ERP and MES",
+            "Phone to capture the site"
+          ]
         }
-      ]
+      ],
+      "specsLabel": "Connects"
     },
     "how": {
       "title": "How we work",
@@ -837,7 +896,8 @@
           "name": "Built for your operation",
           "text": "Readings, alerts and dashboards tuned to your areas, your shifts and your targets."
         }
-      ]
+      ],
+      "text": "Three steps, always in this order, until the alert reaches the right person the right way."
     },
     "facts": {
       "place": {

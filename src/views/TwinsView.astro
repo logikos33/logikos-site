@@ -1,5 +1,6 @@
 ---
 import DefList from '../components/DefList.astro';
+import Passos from '../components/Passos.astro';
 import PointList from '../components/PointList.astro';
 import Cam from '../components/Cam.astro';
 import PageClose from '../components/PageClose.astro';
@@ -17,7 +18,8 @@ const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.twins;
 const f = p.features;
-const uses = [f.measure, f.annotate].map((x) => ({ term: x.title, text: x.text }));
+// Revisão final 2, q3: the part twin leads; the phone capture of the site is a topic further down.
+const phone = [f.capture, f.measure, f.annotate].map((x) => ({ term: x.title, text: x.text }));
 // Final review, item 3: the twin of every part gets its own section.
 const parts = p.partsPoints.map((x) => ({ term: x.title, text: x.text }));
 ---
@@ -30,12 +32,16 @@ const parts = p.partsPoints.map((x) => ({ term: x.title, text: x.text }));
     </figure>
   </PageHero>
 
-  <Section id="how-title" question={p.questions.how} title={f.capture.title} text={f.capture.text}>
-    <DefList rows={uses} class="after" />
+  <Section id="process-title" question={p.process.question} title={p.process.title} text={p.process.text} wide class="section--perto">
+    <Passos steps={p.process.steps} />
   </Section>
 
   <Section id="parts-title" question={p.parts.question} title={p.parts.title} text={p.parts.text}>
     <PointList rows={parts} />
+  </Section>
+
+  <Section id="phone-title" question={p.phone.question} title={p.phone.title} text={p.phone.text}>
+    <DefList rows={phone} />
   </Section>
 
   <Section id="buy-title" question={p.questions.buy} title={p.buy.title} text={p.buy.text} />
@@ -44,10 +50,6 @@ const parts = p.partsPoints.map((x) => ({ term: x.title, text: x.text }));
 </Base>
 
 <style>
-  .after {
-    margin-top: var(--lk-space-6);
-  }
-
   .fig {
     margin: 0;
   }

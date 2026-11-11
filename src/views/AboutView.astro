@@ -5,6 +5,7 @@ import Cam from '../components/Cam.astro';
 import DefList from '../components/DefList.astro';
 import PageClose from '../components/PageClose.astro';
 import PageHero from '../components/PageHero.astro';
+import Passos from '../components/Passos.astro';
 import Section from '../components/Section.astro';
 import SpecialistButton from '../components/SpecialistButton.astro';
 import { dict } from '../i18n';
@@ -20,8 +21,9 @@ const t = dict(locale);
 const p = t.about;
 const f = p.facts;
 const facts = [f.model, f.processing].map((x) => ({ term: x.title, text: x.text }));
-const FRONTS = (['recognition', 'robotics', 'twins'] as const).map((key, i) => ({ key, ...p.fronts.items[i] }));
-const how = p.how.items.map((x) => ({ term: x.name, text: x.text }));
+const KEYS = ['recognition', 'robotics', 'twins'] as const;
+const FRONTS = p.fronts.items.map((item, i) => ({ ...item, key: KEYS[i] ?? 'recognition' }));
+const how = p.how.items.map((x) => ({ title: x.name, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="about" title={p.meta.title} description={p.meta.description}>
@@ -49,13 +51,24 @@ const how = p.how.items.map((x) => ({ term: x.name, text: x.text }));
             <a href={pathFor(fr.key, locale)}>{fr.name}</a>
           </h3>
           <p>{fr.text}</p>
+          {'specs' in fr && fr.specs && (
+            <div class="specs">
+              <p class="specs__rotulo">{p.fronts.specsLabel}</p>
+              <ul role="list">
+                {fr.specs.map((s) => (
+                  <li>{s}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </li>
       ))}
     </ul>
   </Section>
 
-  <Section id="how-title" question={p.questions.how} title={p.how.title}>
-    <DefList rows={how} />
+  <!-- Revisão final 2, q1: the three steps as the sequence they are. -->
+  <Section id="how-title" question={p.questions.how} title={p.how.title} text={p.how.text} wide>
+    <Passos steps={how} />
   </Section>
 
   <Section id="who-title" question={p.questions.who} title={f.place.title} text={f.place.text}>
@@ -98,6 +111,46 @@ const how = p.how.items.map((x) => ({ term: x.name, text: x.text }));
   .frentes p {
     margin: 0;
     color: var(--lk-text-2);
+  }
+
+  /* Revisão final 2, q5: what Twins connects, short and in topics. */
+  .specs {
+    margin-top: var(--lk-space-4);
+    padding-top: var(--lk-space-3);
+    border-top: 1px solid var(--lk-line);
+  }
+
+  .specs__rotulo {
+    margin: 0 0 var(--lk-space-2) !important;
+    font: 600 0.75rem/1.3 var(--lk-font-body);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--lk-text-2);
+  }
+
+  .specs ul {
+    display: grid;
+    gap: 0.3rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .specs li {
+    position: relative;
+    padding-left: 1rem;
+    font-size: 0.9375rem;
+    color: var(--lk-text);
+  }
+
+  .specs li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 0.4rem;
+    height: 0.4rem;
+    background: #0091ad;
   }
 
   @media (min-width: 48rem) {

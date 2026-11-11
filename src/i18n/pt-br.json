@@ -661,13 +661,13 @@
   },
   "twins": {
     "meta": {
-      "title": "Twins — gêmeo digital pelo celular",
-      "description": "O gêmeo digital da planta, a partir de um vídeo do celular, e o de cada peça: inspeção de 100 %, rastreabilidade e o desvio em relação ao projeto antes de virar lote."
+      "title": "Twins — o gêmeo digital de cada peça",
+      "description": "Cada peça da linha comparada com o projeto: visão computacional, hardware e software da Logikos montam o gêmeo digital na sua planta. E o ambiente navegável a partir do celular."
     },
     "hero": {
       "question": "o que é?",
-      "title": "O ambiente, navegável.",
-      "text": "Grave um vídeo com o celular e o Twins transforma o ambiente em uma nuvem de pontos que você navega, mede e anota. E não é só a planta: cada peça ganha o seu gêmeo, para acompanhar a qualidade peça a peça."
+      "title": "O gêmeo digital de cada peça.",
+      "text": "Cada peça da linha comparada com o projeto, automaticamente. A Logikos monta o gêmeo na sua planta com visão computacional, hardware e software próprios, ajustados à sua peça e à sua linha."
     },
     "features": {
       "capture": {
@@ -697,9 +697,9 @@
       "text": "Cada ambiente é dimensionado a partir de um vídeo seu. Fale com a equipe."
     },
     "parts": {
-      "question": "e cada peça?",
-      "title": "O gêmeo digital de cada peça.",
-      "text": "Cada peça que passa pela linha ganha o seu gêmeo: a qualidade acompanhada peça a peça, não por amostragem."
+      "question": "o que garante?",
+      "title": "O que isso garante na linha.",
+      "text": "A qualidade acompanhada peça a peça, não por amostragem."
     },
     "partsPoints": [
       {
@@ -718,7 +718,43 @@
         "title": "Histórico peça a peça",
         "text": "O registro de cada peça para auditoria e melhoria."
       }
-    ]
+    ],
+    "process": {
+      "question": "como é montado?",
+      "title": "Como o gêmeo de cada peça é montado",
+      "text": "Do quadro da câmera à peça comparada com o projeto, em seis passos.",
+      "steps": [
+        {
+          "title": "Captura",
+          "text": "Câmeras industriais registram a peça passando na esteira."
+        },
+        {
+          "title": "Linha do laser",
+          "text": "Um scanner a laser desenha a superfície; o sistema extrai essa linha em cada quadro."
+        },
+        {
+          "title": "Calibração",
+          "text": "Câmera e laser calibrados para medir em milímetros, não em pixels."
+        },
+        {
+          "title": "Nuvem de pontos",
+          "text": "O encoder da esteira dá a posição de cada linha, e a peça vira uma nuvem de pontos."
+        },
+        {
+          "title": "Comparação com o CAD",
+          "text": "A nuvem é comparada com o projeto da peça; o desvio aparece onde está."
+        },
+        {
+          "title": "Visualizador",
+          "text": "A equipe vê cada peça em três dimensões, com o desvio marcado e o histórico."
+        }
+      ]
+    },
+    "phone": {
+      "question": "e o ambiente?",
+      "title": "O ambiente, pelo celular.",
+      "text": "Para a planta, sem scanner: grave um vídeo com o celular e navegue pelo ambiente, medindo e anotando sem ir até lá."
+    }
   },
   "robotics": {
     "meta": {
@@ -743,6 +779,10 @@
       "project": {
         "title": "Sob projeto",
         "text": "Cada aplicação é dimensionada caso a caso, a partir do seu cenário."
+      },
+      "both": {
+        "title": "Drones e robôs quadrúpedes",
+        "text": "Inspeção de áreas amplas, de difícil acesso ou de risco, com o mesmo veredito da câmera fixa."
       }
     },
     "questions": {
@@ -753,7 +793,8 @@
     "buy": {
       "title": "Por projeto.",
       "text": "Cada aplicação é dimensionada caso a caso, a partir do seu cenário."
-    }
+    },
+    "loopLabel": "Drone aéreo e robô quadrúpede em inspeção"
   },
   "compliance": {
     "meta": {
@@ -766,25 +807,34 @@
       "text": "O Recognition foi projetado para apoiar a conformidade com a LGPD dentro da planta."
     },
     "items": {
-      "signage": {
-        "title": "Sinalização física",
-        "text": "Placas informam que a área é monitorada e para qual finalidade."
-      },
-      "roles": {
-        "title": "Papéis em contrato",
-        "text": "O cliente é o controlador. A Logikos atua como operadora, nos limites do contrato."
-      },
       "presence": {
         "title": "Detecção por presença",
-        "text": "O sistema detecta presença, postura e EPI. Monitora a condição; não identifica quem é a pessoa."
+        "text": "O sistema vê a condição — presença, postura, EPI — e nunca quem é a pessoa. Abaixo, o que isso garante para a sua empresa e para quem trabalha na planta."
+      },
+      "anon": {
+        "title": "Ninguém é reconhecido",
+        "text": "Sem rosto, sem nome, sem cadastro de quem aparece: o alerta fala da situação, não da pessoa.",
+        "gives": "Privacidade para quem aparece na câmera."
+      },
+      "signage": {
+        "title": "Área sinalizada",
+        "text": "Placas avisam que a área é monitorada e para quê, antes de alguém entrar.",
+        "gives": "Transparência para quem trabalha ali."
+      },
+      "roles": {
+        "title": "Cada um com o seu papel",
+        "text": "A sua empresa decide o que é monitorado; a Logikos só trata os dados dentro do que o contrato permite.",
+        "gives": "Responsabilidades claras, por escrito."
       },
       "retention": {
-        "title": "Retenção definida",
-        "text": "O prazo de guarda das evidências é definido em contrato. Depois dele, o clipe é apagado."
+        "title": "Prova com prazo",
+        "text": "Os clipes de evidência ficam guardados pelo prazo combinado e depois são apagados.",
+        "gives": "Nada guardado além do necessário."
       }
     },
     "note": "Este resumo não substitui o contrato nem a avaliação jurídica de cada instalação.",
-    "cta": "Ver a política de privacidade"
+    "cta": "Ver a política de privacidade",
+    "gives": "Garante"
   },
   "about": {
     "meta": {
@@ -818,9 +868,18 @@
         },
         {
           "name": "Twins",
-          "text": "O ambiente navegável a partir de um vídeo do celular, para medir e anotar sem ir até lá."
+          "text": "O gêmeo digital de cada peça, comparada com o projeto, e o ambiente navegável a partir do celular.",
+          "specs": [
+            "Câmeras industriais na linha",
+            "Scanner a laser de linha",
+            "Encoder da esteira",
+            "Sensores e CLP via MQTT ou OPC UA",
+            "Eventos para ERP e MES",
+            "Celular para capturar o ambiente"
+          ]
         }
-      ]
+      ],
+      "specsLabel": "Conecta"
     },
     "how": {
       "title": "Como trabalhamos",
@@ -837,7 +896,8 @@
           "name": "Feito para a sua operação",
           "text": "Leituras, alertas e painéis ajustados às suas áreas, aos seus turnos e às suas metas."
         }
-      ]
+      ],
+      "text": "Três passos, sempre nesta ordem, até o alerta chegar certo para quem decide."
     },
     "facts": {
       "place": {

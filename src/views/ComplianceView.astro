@@ -1,10 +1,14 @@
 ---
-import DefList from '../components/DefList.astro';
+// /conformidade (revisão final 2, q2): plain language for whoever decides — four guarantees, each
+// with an icon, what it means and what it guarantees (for the company and for the people) — and
+// the legal note, small, under them.
+import Icon from '../components/Icon.astro';
 import PageHero from '../components/PageHero.astro';
 import Section from '../components/Section.astro';
 import { dict } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
+import type { IconName } from '../lib/icons';
 
 interface Props {
   locale: Locale;
@@ -14,31 +18,109 @@ const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.compliance;
 const i = p.items;
-const items = [i.signage, i.roles, i.retention].map((x) => ({ term: x.title, text: x.text }));
+const ITEMS: { icon: IconName; item: { title: string; text: string; gives: string } }[] = [
+  { icon: 'eyeoff', item: i.anon },
+  { icon: 'sign', item: i.signage },
+  { icon: 'doc', item: i.roles },
+  { icon: 'clock', item: i.retention },
+];
 ---
 
 <Base locale={locale} routeKey="compliance" title={p.meta.title} description={p.meta.description}>
   <PageHero locale={locale} id="hero-title" title={p.hero.title} text={p.hero.text} quiet />
 
-  <Section id="items-title" question={p.hero.question} title={i.presence.title} text={i.presence.text}>
-    <DefList rows={items} class="after" />
-    <p class="note after">{p.note}</p>
-    <p class="after">
-      <a href={pathFor('privacy', locale)}>{p.cta}</a>
-    </p>
+  <Section id="items-title" question={p.hero.question} title={i.presence.title} text={i.presence.text} wide>
+    <ul class="garantias" role="list">
+      {ITEMS.map(({ icon, item }) => (
+        <li class="garantia folha">
+          <span class="garantia__icone" aria-hidden="true">
+            <Icon name={icon} size={22} />
+          </span>
+          <h3>{item.title}</h3>
+          <p>{item.text}</p>
+          <p class="garantia__da">
+            <b>{p.gives}:</b> {item.gives}
+          </p>
+        </li>
+      ))}
+    </ul>
+    <div class="rodape">
+      <a class="btn btn--ghost" href={pathFor('privacy', locale)}>
+        {p.cta}
+        <Icon name="arrow" size={18} />
+      </a>
+      <p class="aviso">{p.note}</p>
+    </div>
   </Section>
 </Base>
 
 <style>
-  .after {
-    margin-top: var(--lk-space-6);
+  .garantias {
+    display: grid;
+    gap: var(--lk-space-4);
+    margin: var(--lk-space-5) 0 0;
+    padding: 0;
+    list-style: none;
   }
 
-  .note.after {
+  .garantia {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: var(--lk-space-2);
+  }
+
+  .garantia__icone {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    background: #0a0a0f;
+    border-radius: 10px;
+    color: #00d4ff;
+  }
+
+  .garantia h3 {
+    margin: var(--lk-space-2) 0 0;
+    font-size: 1.15rem;
+  }
+
+  .garantia p {
+    margin: 0;
+    color: var(--lk-text-2);
+  }
+
+  .garantia__da {
+    padding-top: var(--lk-space-3);
+    border-top: 1px solid var(--lk-line);
+    font-size: 0.9375rem;
+    color: var(--lk-text) !important;
+  }
+
+  .rodape {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--lk-space-3) var(--lk-space-5);
     margin-top: var(--lk-space-5);
   }
 
-  .note + .after {
-    margin-top: var(--lk-space-4);
+  /* The legal note: small and quiet, under the guarantees, never a box of its own. */
+  .aviso {
+    margin: 0;
+    max-width: 52ch;
+    font-size: 0.8125rem;
+    color: var(--lk-text-2);
+  }
+
+  @media (min-width: 40rem) {
+    .garantias {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .garantias {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
   }
 </style>

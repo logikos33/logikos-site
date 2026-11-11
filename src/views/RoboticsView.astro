@@ -1,4 +1,7 @@
 ---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import Cam from '../components/Cam.astro';
 import DefList from '../components/DefList.astro';
 import Koda from '../components/Koda.astro';
 import SpecialistButton from '../components/SpecialistButton.astro';
@@ -17,7 +20,10 @@ const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.robotics;
 const pts = p.points;
-const uses = [pts.quadrupeds, pts.project].map((x) => ({ term: x.title, text: x.text }));
+const uses = [pts.drones, pts.quadrupeds, pts.project].map((x) => ({ term: x.title, text: x.text }));
+// Revisão final 2, q4: the drone + quadruped loop takes the right column as soon as its files are in
+// public/media/robotica/ (drones-loop.mp4/.webm + drones-loop.webp poster); until then, the uses.
+const LOOP = existsSync(join(process.cwd(), 'public/media/robotica/drones-loop.mp4'));
 ---
 
 <Base locale={locale} routeKey="robotics" title={p.meta.title} description={p.meta.description}>
@@ -33,8 +39,9 @@ const uses = [pts.quadrupeds, pts.project].map((x) => ({ term: x.title, text: x.
     <Koda locale={locale} pose="apontando" />
   </PageHero>
 
-  <Section id="how-title" question={p.questions.how} title={pts.drones.title} text={pts.drones.text}>
-    <DefList rows={uses} class="after" />
+  <Section id="how-title" question={p.questions.how} title={pts.both.title} text={pts.both.text}>
+    {LOOP && <Cam clip="drones-loop" dir="robotica" webm label={p.loopLabel} class="loop" />}
+    <DefList rows={uses} />
   </Section>
 
   <Section id="buy-title" question={p.questions.buy} title={p.buy.title} text={p.buy.text} />
@@ -43,7 +50,7 @@ const uses = [pts.quadrupeds, pts.project].map((x) => ({ term: x.title, text: x.
 </Base>
 
 <style>
-  .after {
-    margin-top: var(--lk-space-6);
+  :global(.q-content .loop) {
+    margin-bottom: var(--lk-space-4);
   }
 </style>
