@@ -52,18 +52,30 @@ test('home: every "talk to a specialist" goes to WhatsApp, or to the contact pag
   }
 });
 
-test('the margin question is visible on desktop and hidden (but readable) on narrow screens', async ({ browser }) => {
-  const wide = await browser.newContext({ viewport: { width: 1280, height: 800 } });
-  const w = await wide.newPage();
-  await w.goto('/sobre');
-  await expect(w.locator('main > section .q').first()).toBeVisible();
-  await wide.close();
-  const narrow = await browser.newContext({ viewport: { width: 390, height: 844 } });
-  const n = await narrow.newPage();
-  await n.goto('/sobre');
-  await expect(n.locator('main > section .q').first()).toBeHidden();
-  await expect(n.locator('main > section .q-sr').first()).toHaveText(/\?/);
-  await narrow.close();
+test('section heads speak for themselves: the question is for screen readers only, at every width', async ({ browser }) => {
+  for (const width of [1440, 390]) {
+    const ctx = await browser.newContext({ viewport: { width, height: 844 } });
+    const page = await ctx.newPage();
+    await page.goto('/sobre');
+    await expect(page.locator('main > section .q').first()).toBeHidden();
+    await expect(page.locator('main > section .q-sr').first()).toHaveText(/\?/);
+    await ctx.close();
+  }
+});
+
+// Feedback 11/11, item 5: every footer page in the home's language — real clips (no generated
+// poster), the same CTA pair in the hero and the phone-camera close.
+test('footer pages: real media, the hero CTA pair and the phone-camera close', async ({ page }) => {
+  const MEDIA = ['/recognition', '/demos', '/integradores', '/robotica', '/sobre', '/como-funciona', '/plataforma', '/twins'];
+  for (const path of [...MEDIA, '/conformidade', '/contato', '/privacidade']) {
+    await page.goto(path);
+    await expect(page.locator('html'), path).toHaveAttribute('data-theme', 'dark');
+    await expect(page.locator('img[src*="/media/posters/"]'), `${path}: generated poster`).toHaveCount(0);
+    if (!MEDIA.includes(path)) continue;
+    await expect(page.locator('.ph__media img[src^="/media/home/"]').first(), `${path}: real media`).toBeVisible();
+    await expect(page.locator('.ph [data-heroi-acoes] .btn'), `${path}: hero CTAs`).toHaveCount(2);
+    await expect(page.locator('.fecho a[href="https://logikosvision.com.br/demo/"]'), `${path}: phone demo`).toHaveCount(1);
+  }
 });
 
 test('nav has six items plus sign-in (production login, new tab) and the CTA', async ({ page }) => {
@@ -88,19 +100,6 @@ test('no generic tells in the built pages: arrows in links, decorative eyebrows,
   }
 });
 
-test('the stage swaps reading, clip and caption on the same figure (Recognition)', async ({ page }) => {
-  await page.goto('/recognition');
-  const stage = page.locator('[data-hud]#rec-stage');
-  await expect(stage).toHaveAttribute('data-slot', 'fire');
-  const before = await stage.locator('[data-hud-machine]').textContent();
-  await page.locator('[data-hud-readings="rec-stage"] input[value="counting"]').check();
-  await expect(stage).toHaveAttribute('data-slot', 'counting');
-  await expect(stage.locator('[data-hud-machine]')).not.toHaveText(before ?? '');
-  await expect(stage.locator('[data-hud-person-text]')).toHaveText(/nada enviado|nothing sent/);
-  await expect(page.locator('[data-reading-text][data-slot="counting"]')).toBeVisible();
-  await expect(page.locator('[data-reading-text][data-slot="fire"]')).toBeHidden();
-});
-
 test('home channels: tabs swap the panel in place, by click and by arrow keys', async ({ page }) => {
   await page.goto('/');
   const tabs = page.locator('[data-abas] [role="tab"]');
@@ -118,7 +117,8 @@ test('home channels: tabs swap the panel in place, by click and by arrow keys', 
 });
 
 test('every HUD figure carries a two-cell caption (machine | person) and the poster already shows the verdict', async ({ page }) => {
-  await page.goto('/recognition');
+  // The simulated HUD left the public pages (feedback 11/11); it is kept on the internal brand page.
+  await page.goto('/_marca');
   const figs = page.locator('[data-hud]');
   expect(await figs.count()).toBeGreaterThan(0);
   for (let i = 0; i < (await figs.count()); i++) {

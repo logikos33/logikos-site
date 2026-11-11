@@ -22,15 +22,11 @@ test('every route shows the vector wordmark in the header and the symbol in the 
   }
 });
 
-test('the wordmark is black on light and white on dark (currentColor), at its 90 px minimum', async ({ page }) => {
+test('the wordmark is white on the dark pages (currentColor), at its 90 px minimum', async ({ page }) => {
   await page.goto('/sobre');
   const mark = page.locator('.site-header__logo svg[data-brand="wordmark"]').first();
   expect((await mark.boundingBox())?.width ?? 0).toBeGreaterThanOrEqual(90);
-  const light = await mark.evaluate((el) => getComputedStyle(el).color);
-  await page.locator('[data-theme-toggle]').click();
-  const dark = await mark.evaluate((el) => getComputedStyle(el).color);
-  expect(light).toBe('rgb(10, 10, 15)');
-  expect(dark).toBe('rgb(244, 246, 248)');
+  expect(await mark.evaluate((el) => getComputedStyle(el).color)).toBe('rgb(244, 246, 248)');
 });
 
 test('favicon and OG card are built from the official symbol and lockup', async ({ request }) => {
