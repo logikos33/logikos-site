@@ -56,7 +56,9 @@
     "openDemo": "Open the demo",
     "requestAccess": "Request access",
     "pilot": "Request a pilot",
-    "seeDemos": "Open the demos"
+    "seeDemos": "Open the demos",
+    "specialist": "Talk to a specialist",
+    "experience": "Try the experience"
   },
   "brand": {
     "wordmark": "LOGIKOS",
@@ -129,83 +131,234 @@
   },
   "home": {
     "meta": {
-      "title": "Logikos Soluções — Industrial computer vision",
-      "description": "Fire, PPE and ergonomics from the same camera, inside the plant. Edge computer vision for industry, with evidence clips and WhatsApp alerts."
+      "title": "Logikos Vision — computer vision on your plant’s cameras",
+      "description": "Fire, PPE, quality, counting and ergonomics on the IP cameras your plant already has. Processing in the cloud or inside the plant, and the alert arrives with the clip of the moment."
+    },
+    "opening": {
+      "label": "Opening: Koda turns on the TV with the Logikos logo and the camera dives into the screen",
+      "skip": "Skip opening"
     },
     "hero": {
-      "title": "Fire, PPE and ergonomics on the cameras your plant already has.",
-      "sub": "The verdict arrives with its evidence clip, on WhatsApp or the panel. The continuous video never leaves the plant."
-    },
-    "doors": {
-      "title": "What you gain",
-      "plant": {
-        "eyebrow": "For your plant",
-        "title": "Safety you can see, on the cameras you already have.",
-        "rows": [
-          {
-            "term": "No new cameras",
-            "text": "Runs on the IP cameras your plant already has."
-          },
-          {
-            "term": "No internet needed",
-            "text": "The device stays in the plant. Continuous video never leaves."
-          },
-          {
-            "term": "Proof, not a notice",
-            "text": "Every alert carries the clip of the moment and the marked frame."
-          }
-        ],
-        "cta": "Talk to the team"
+      "title": "Your camera is already in the plant. Now it understands what it sees.",
+      "sub": "Fire, PPE, quality, counting and ergonomics on the IP cameras you already have. Processing in the cloud or inside the plant, and the alert arrives with the clip of the moment.",
+      "note": "In the browser, no sign-up.",
+      "wallLabel": "Five cameras recognizing in real time and an invitation to try yours",
+      "yours": {
+        "title": "CAM 06 · yours",
+        "text": "Open the demo on your phone and point it at anything."
       },
-      "partner": {
-        "eyebrow": "For integrators",
-        "title": "Bring Recognition to your customers.",
-        "rows": [
-          {
-            "term": "Your brand on the dashboard",
-            "text": "Your logo and colors on the dashboard your customer uses."
-          },
-          {
-            "term": "A finished product",
-            "text": "You sell and deploy. Platform and support are on Logikos."
-          },
-          {
-            "term": "Guided pilot",
-            "text": "At the customer's plant, before rollout."
-          }
-        ],
-        "cta": "See the program"
+      "legend": "real detection, run over stock footage · demonstration",
+      "pause": "Pause motion",
+      "resume": "Resume motion",
+      "koda": "I’ll show you the readings."
+    },
+    "partners": {
+      "label": "Companies that trust our work",
+      "bs": "BrandSchutz",
+      "visdec": "Visdec",
+      "cath": "CATH Projetos e Segurança"
+    },
+    "koda": {
+      "title": "Meet Koda.",
+      "text": "Koda is the guide to the Logikos experience: in a few minutes he shows fire, PPE, counting and quality at work, right in your browser.",
+      "cta": "Take the tour with Koda",
+      "note": "No sign-up, nothing to install.",
+      "alt": "Koda, the guide to the Logikos experience"
+    },
+    "problem": {
+      "title": "Your plant has cameras.",
+      "muted": "Most of the time, they only record.",
+      "text": "Nobody watches 24 hours of video. Logikos puts a reading on every camera and only calls someone when there is something to decide: a flame, someone without a helmet, a part out of spec, a missing box, a risky posture."
+    },
+    "scenarios": {
+      "title": "Five readings. The same cameras.",
+      "text": "Pick a channel. The video shows the real detection, frame by frame.",
+      "tabsLabel": "Scenarios",
+      "camera": "camera",
+      "when": "when",
+      "evidence": "evidence",
+      "norm": "standard",
+      "notified": "notified",
+      "time": "14:32:08",
+      "items": [
+        {
+          "tab": "CH1 Fire",
+          "name": "Fire",
+          "state": "ALERT · fire detected",
+          "cam": "CAM 03 · Warehouse",
+          "evidence": "8 s clip + marked frame",
+          "norm": "NR-23 · fire protection (Brazil)",
+          "notified": "emergency brigade, on WhatsApp",
+          "who": "For fire brigades and site security: flame and smoke caught early, with the clip of the moment.",
+          "cta": "Try the Fire scenario",
+          "specialist": "Talk to a fire specialist",
+          "source": "model: FireSet v1 (YOLOX-S), trained by Logikos · stock footage",
+          "wa": "Hi! I’d like to talk to a specialist about fire."
+        },
+        {
+          "tab": "CH2 PPE",
+          "name": "PPE",
+          "state": "ALERT · no helmet",
+          "cam": "CAM 02 · Storage",
+          "evidence": "8 s clip + marked frame",
+          "norm": "NR-6 · personal protective equipment (Brazil)",
+          "notified": "safety technician, on WhatsApp",
+          "who": "For EHS: helmet, vest and restricted areas, person by person.",
+          "cta": "Try the PPE scenario",
+          "specialist": "Talk to a PPE specialist",
+          "source": "model: helmet detector trained for the demonstration · stock footage",
+          "wa": "Hi! I’d like to talk to a specialist about PPE."
+        },
+        {
+          "tab": "CH3 Quality",
+          "name": "Quality",
+          "state": "INSPECTION · line 1",
+          "cam": "CAM 04 · Filling",
+          "evidence": "a frame of every part",
+          "norm": "in-line inspection",
+          "notified": "quality inspector",
+          "who": "For quality: every part checked on the line, and the off-spec ones set aside.",
+          "cta": "Try the Quality scenario",
+          "specialist": "Talk to a quality specialist",
+          "source": "model: general-purpose object detector, for the demonstration · stock footage",
+          "wa": "Hi! I’d like to talk to a specialist about quality inspection."
+        },
+        {
+          "tab": "CH4 Counting",
+          "name": "Counting",
+          "state": "COUNT · batch 07",
+          "cam": "CAM 05 · Shipping",
+          "evidence": "count per batch + a frame of every pass",
+          "norm": "shipping check",
+          "notified": "shipping dashboard",
+          "who": "For operations and logistics: counting on the conveyor and load checks.",
+          "cta": "Try the Counting scenario",
+          "specialist": "Talk to a counting specialist",
+          "source": "model: open-vocabulary detector + ByteTrack tracking · stock footage",
+          "wa": "Hi! I’d like to talk to a specialist about counting."
+        },
+        {
+          "tab": "CH5 Ergonomics",
+          "name": "Ergonomics",
+          "state": "ALERT · trunk bent past 45°",
+          "cam": "CAM 06 · Storage",
+          "evidence": "clip + measured trunk angle",
+          "norm": "NR-17 · ergonomics (Brazil)",
+          "notified": "occupational health team, in the shift report",
+          "who": "For occupational health: risky postures when lifting loads, measured from the skeleton.",
+          "cta": "Talk about ergonomics",
+          "specialist": "Talk to an ergonomics specialist",
+          "source": "model: pose estimation, with the trunk angle computed on every frame · stock footage",
+          "wa": "Hi! I’d like to talk to a specialist about ergonomics."
+        }
+      ]
+    },
+    "band": {
+      "title": "Want to see this on your cameras?",
+      "text": "A specialist looks at your scenario with you, tells you what can be recognized with the cameras you already have and designs a guided pilot."
+    },
+    "how": {
+      "title": "From camera to decision.",
+      "diagram": "The camera sends the video to the cloud or to a device in the plant; the alert arrives on the phone or the dashboard",
+      "choose": "you choose where to process and receive",
+      "camera": "Camera",
+      "cameraSub": "the one you have",
+      "cloud": "Cloud",
+      "cloudSub": "nothing to install",
+      "plant": "In the plant",
+      "plantSub": "no internet needed",
+      "phone": "Phone",
+      "phoneSub": "alert + clip",
+      "dashboard": "Dashboard",
+      "dashboardSub": "history",
+      "steps": [
+        {
+          "title": "The camera you already have",
+          "text": "Regular IP cameras, Intelbras, Hikvision or ONVIF. Nothing to replace on the ceiling."
+        },
+        {
+          "title": "In the cloud or in the plant",
+          "text": "The video is processed in the cloud, with nothing to install, or on a device inside the plant that works without internet."
+        },
+        {
+          "title": "A verdict with evidence",
+          "text": "Every event becomes an alert with the clip and the marked frame."
+        },
+        {
+          "title": "Phone or dashboard",
+          "text": "The alert reaches the phone of whoever decides, and the history stays on the dashboard. Whoever receives it confirms, dismisses or corrects it."
+        }
+      ]
+    },
+    "proof": {
+      "title": "Working in front of everyone.",
+      "publicLabel": "Visitors around the screen at the Fireshow 2026 booth, faces blurred",
+      "publicCaption": "the crowd · Fireshow 2026 · faces blurred",
+      "cameraLabel": "The booth camera detecting the flame of a blowtorch",
+      "cameraCaption": "the booth camera · blowtorch flame detected by FireSet",
+      "event": {
+        "date": "6 to 8/10/2026 · Fireshow",
+        "title": "Fire and PPE, live",
+        "text": "Three days of trade show with visitors testing in front of the camera, at the booth of our partner BrandSchutz."
+      },
+      "demo": {
+        "date": "now · on your phone",
+        "title": "Try it with your own camera",
+        "text": "The demo runs in your phone’s browser. Nothing is uploaded.",
+        "cta": "Open the demo"
       }
     },
-    "questions": {
-      "what": "what is it?",
-      "gain": "what do I gain?",
-      "how": "how does it work?",
-      "see": "see it working",
-      "data": "what happens to my data?",
-      "next": "next step?"
+    "data": {
+      "title": "You decide where the video stays.",
+      "text": "With the device in the plant, the continuous video never leaves it: only the alert and the event clip do. In the cloud, retention is set by contract. Either way, we monitor the condition, not who the person is.",
+      "leaves": "leaves the plant",
+      "stays": "stays in the plant",
+      "rows": [
+        ["the alert", "the continuous video"],
+        ["the event clip", "the recordings"],
+        ["the marked frame", "the model and the hardware"]
+      ]
     },
+    "faq": {
+      "title": "What everyone asks before the pilot.",
+      "items": [
+        {
+          "q": "Does it work with the cameras I already have?",
+          "a": "It works with regular IP cameras: Intelbras, Hikvision and any ONVIF-compatible one. What matters is angle and light, and the specialist checks that with you before you start."
+        },
+        {
+          "q": "Do I need internet in the plant?",
+          "a": "No, if processing runs on the device in the plant: the reading happens inside, without internet. In the cloud, the camera needs an outbound internet connection."
+        },
+        {
+          "q": "Cloud or device: which one?",
+          "a": "The cloud needs no hardware in the plant. The device in the plant keeps the video inside and does not depend on internet. The specialist helps you choose for your scenario."
+        },
+        {
+          "q": "How does the pilot work?",
+          "a": "We pick one or two cameras and a scenario, turn the reading on and follow the alerts with your team until the rule works the way the operation needs."
+        },
+        {
+          "q": "What about privacy (LGPD)?",
+          "a": "We monitor the condition (helmet, flame, posture), not the identity. Clip retention is set by contract."
+        }
+      ],
+      "privacy": "Read the privacy policy"
+    },
+    "contact": {
+      "title": "Talk to a specialist.",
+      "text": "The specialist looks at your cameras with you, tells you what can be recognized and, if it makes sense, sets up a guided pilot. If you would rather see it first, the experience shows the scenarios at work.",
+      "solo": "I’d rather try it myself"
+    },
+    "bar": {
+      "label": "Shortcuts"
+    },
+    "wa": "Hi! I’d like to talk to a specialist about computer vision in my plant.",
     "pipeline": {
       "title": "From camera to decision, without leaving the plant.",
       "wall": "plant",
       "note": "Only the alert and the clip cross the wall.",
       "cta": "See the architecture"
-    },
-    "stage": {
-      "title": "Five readings on the same camera.",
-      "text": "Pick a reading. Same video, different verdict.",
-      "demosLine": "Run it in your browser:",
-      "demoEpi": "PPE demo",
-      "demoFire": "Fire demo"
-    },
-    "data": {
-      "title": "Continuous video never leaves the plant.",
-      "leaves": "leaves the plant",
-      "stays": "stays in the plant",
-      "leavesRows": ["the alert", "the event clip", "the marked frame"],
-      "staysRows": ["continuous video", "recordings", "the model and the device"],
-      "retention": "Evidence retention is set by contract. It watches the condition; it does not identify who the person is.",
-      "cta": "How we handle data"
     },
     "next": {
       "title": "Start with a guided pilot.",

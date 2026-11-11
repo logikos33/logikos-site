@@ -56,7 +56,9 @@
     "openDemo": "Abrir a demo",
     "requestAccess": "Pedir acesso",
     "pilot": "Pedir piloto",
-    "seeDemos": "Abrir as demos"
+    "seeDemos": "Abrir as demos",
+    "specialist": "Falar com especialista",
+    "experience": "Testar a experiência"
   },
   "brand": {
     "wordmark": "LOGIKOS",
@@ -129,83 +131,234 @@
   },
   "home": {
     "meta": {
-      "title": "Logikos Soluções — Visão computacional industrial",
-      "description": "Fogo, EPI e ergonomia pela mesma câmera, dentro da planta. Visão computacional na borda para indústria, com evidência em clipe e alerta no WhatsApp."
+      "title": "Logikos Vision — visão computacional nas câmeras da sua planta",
+      "description": "Fogo, EPI, qualidade, contagem e ergonomia nas câmeras IP que a planta já tem. Processamento na nuvem ou dentro da planta, e o alerta chega com o clipe do momento."
+    },
+    "opening": {
+      "label": "Abertura: o Koda liga a TV com o logo da Logikos e a câmera entra na tela",
+      "skip": "Pular abertura"
     },
     "hero": {
-      "title": "Fogo, EPI e ergonomia na câmera que a planta já tem.",
-      "sub": "O veredito chega com o clipe de evidência, no WhatsApp ou no painel. O vídeo contínuo não sai da planta."
-    },
-    "doors": {
-      "title": "O que você ganha",
-      "plant": {
-        "eyebrow": "Para a sua planta",
-        "title": "Segurança visível, sem trocar câmera.",
-        "rows": [
-          {
-            "term": "Sem câmera nova",
-            "text": "Usa as câmeras IP que a planta já tem."
-          },
-          {
-            "term": "Sem internet",
-            "text": "O dispositivo fica na planta. O vídeo contínuo não sai."
-          },
-          {
-            "term": "Prova, não aviso",
-            "text": "Cada alerta vem com o clipe do momento e o quadro marcado."
-          }
-        ],
-        "cta": "Falar com a equipe"
+      "title": "Sua câmera já está na planta. Agora ela entende o que vê.",
+      "sub": "Fogo, EPI, qualidade, contagem e ergonomia nas câmeras IP que você já tem. Processamento na nuvem ou dentro da planta, e o alerta chega com o clipe do momento.",
+      "note": "No navegador, sem cadastro.",
+      "wallLabel": "Cinco câmeras reconhecendo em tempo real e um convite para testar a sua",
+      "yours": {
+        "title": "CAM 06 · a sua",
+        "text": "Abra a demo no celular e aponte para o que quiser."
       },
-      "partner": {
-        "eyebrow": "Para integradores",
-        "title": "Leve o Recognition aos seus clientes.",
-        "rows": [
-          {
-            "term": "Painel na sua marca",
-            "text": "Seu logo e suas cores no painel que o cliente usa."
-          },
-          {
-            "term": "Produto pronto",
-            "text": "Você vende e implanta. Plataforma e suporte são da Logikos."
-          },
-          {
-            "term": "Piloto acompanhado",
-            "text": "Na planta do cliente, antes da implantação."
-          }
-        ],
-        "cta": "Conhecer o programa"
+      "legend": "detecção real, rodada por cima de vídeos de banco · demonstração",
+      "pause": "Pausar o movimento",
+      "resume": "Retomar o movimento",
+      "koda": "Eu te mostro as leituras."
+    },
+    "partners": {
+      "label": "Empresas que confiam no nosso trabalho",
+      "bs": "BrandSchutz",
+      "visdec": "Visdec",
+      "cath": "CATH Projetos e Segurança"
+    },
+    "koda": {
+      "title": "Conheça o Koda.",
+      "text": "O Koda é o guia da experiência Logikos: em poucos minutos ele mostra fogo, EPI, contagem e qualidade funcionando, direto no navegador.",
+      "cta": "Fazer o tour com o Koda",
+      "note": "Sem cadastro e sem instalar nada.",
+      "alt": "Koda, o guia da experiência Logikos"
+    },
+    "problem": {
+      "title": "A planta tem câmeras.",
+      "muted": "Quase sempre, elas só gravam.",
+      "text": "Ninguém assiste a 24 horas de vídeo. A Logikos coloca uma leitura em cada câmera e só chama alguém quando há algo para decidir: uma chama, alguém sem capacete, uma peça fora do padrão, uma caixa a menos, uma postura de risco."
+    },
+    "scenarios": {
+      "title": "Cinco leituras. As mesmas câmeras.",
+      "text": "Escolha um canal. O vídeo mostra a detecção de verdade, quadro a quadro.",
+      "tabsLabel": "Cenários",
+      "camera": "câmera",
+      "when": "quando",
+      "evidence": "evidência",
+      "norm": "norma",
+      "notified": "avisado",
+      "time": "14:32:08",
+      "items": [
+        {
+          "tab": "CH1 Fogo",
+          "name": "Fogo",
+          "state": "ALERTA · fogo detectado",
+          "cam": "CAM 03 · Galpão",
+          "evidence": "clipe de 8 s + quadro marcado",
+          "norm": "NR-23 · proteção contra incêndios",
+          "notified": "brigada de emergência, no WhatsApp",
+          "who": "Para brigada e patrimonial: chama e fumaça detectadas cedo, com o clipe do momento.",
+          "cta": "Testar o cenário Fogo",
+          "specialist": "Falar com um especialista em fogo",
+          "source": "modelo: FireSet v1 (YOLOX-S), treinado pela Logikos · vídeo de banco",
+          "wa": "Olá! Quero falar com um especialista sobre fogo."
+        },
+        {
+          "tab": "CH2 EPI",
+          "name": "EPI",
+          "state": "ALERTA · sem capacete",
+          "cam": "CAM 02 · Armazém",
+          "evidence": "clipe de 8 s + quadro marcado",
+          "norm": "NR-6 · equipamento de proteção individual",
+          "notified": "técnico de segurança, no WhatsApp",
+          "who": "Para EHS: capacete, colete e área restrita, por pessoa.",
+          "cta": "Testar o cenário EPI",
+          "specialist": "Falar com um especialista em EPI",
+          "source": "modelo: detector de capacete treinado para a demonstração · vídeo de banco",
+          "wa": "Olá! Quero falar com um especialista sobre EPI."
+        },
+        {
+          "tab": "CH3 Qualidade",
+          "name": "Qualidade",
+          "state": "INSPEÇÃO · linha 1",
+          "cam": "CAM 04 · Envase",
+          "evidence": "quadro de cada peça",
+          "norm": "inspeção na linha",
+          "notified": "inspetor de qualidade",
+          "who": "Para qualidade: cada peça conferida na linha, e a fora do padrão separada.",
+          "cta": "Testar o cenário Qualidade",
+          "specialist": "Falar com um especialista em qualidade",
+          "source": "modelo: detector de objetos de uso geral, para a demonstração · vídeo de banco",
+          "wa": "Olá! Quero falar com um especialista sobre inspeção de qualidade."
+        },
+        {
+          "tab": "CH4 Contagem",
+          "name": "Contagem",
+          "state": "CONTAGEM · lote 07",
+          "cam": "CAM 05 · Expedição",
+          "evidence": "contagem por lote + quadro de cada passagem",
+          "norm": "conferência de expedição",
+          "notified": "painel da expedição",
+          "who": "Para operação e logística: contagem na esteira e conferência de carga.",
+          "cta": "Testar o cenário Contagem",
+          "specialist": "Falar com um especialista em contagem",
+          "source": "modelo: detector de vocabulário aberto + rastreamento ByteTrack · vídeo de banco",
+          "wa": "Olá! Quero falar com um especialista sobre contagem."
+        },
+        {
+          "tab": "CH5 Ergonomia",
+          "name": "Ergonomia",
+          "state": "ALERTA · tronco acima de 45°",
+          "cam": "CAM 06 · Armazém",
+          "evidence": "clipe + ângulo do tronco medido",
+          "norm": "NR-17 · ergonomia",
+          "notified": "SESMT, no relatório do turno",
+          "who": "Para SESMT: posturas de risco no levantamento de carga, medidas pelo esqueleto.",
+          "cta": "Falar sobre ergonomia",
+          "specialist": "Falar com um especialista em ergonomia",
+          "source": "modelo: estimativa de pose, com o ângulo do tronco calculado a cada quadro · vídeo de banco",
+          "wa": "Olá! Quero falar com um especialista sobre ergonomia."
+        }
+      ]
+    },
+    "band": {
+      "title": "Quer ver isso nas suas câmeras?",
+      "text": "Um especialista olha o seu cenário com você, diz o que dá para reconhecer com as câmeras que já existem e desenha um piloto acompanhado."
+    },
+    "how": {
+      "title": "Da câmera à decisão.",
+      "diagram": "A câmera envia o vídeo para a nuvem ou para um dispositivo na planta; o alerta chega no celular ou no dashboard",
+      "choose": "você escolhe onde processar e receber",
+      "camera": "Câmera",
+      "cameraSub": "a que já existe",
+      "cloud": "Nuvem",
+      "cloudSub": "sem instalar nada",
+      "plant": "Na planta",
+      "plantSub": "sem internet",
+      "phone": "Celular",
+      "phoneSub": "alerta + clipe",
+      "dashboard": "Dashboard",
+      "dashboardSub": "histórico",
+      "steps": [
+        {
+          "title": "A câmera que já existe",
+          "text": "Câmeras IP comuns, Intelbras, Hikvision ou ONVIF. Nada para trocar no teto."
+        },
+        {
+          "title": "Na nuvem ou na planta",
+          "text": "O vídeo é processado na nuvem, sem instalar nada, ou num dispositivo dentro da planta, que funciona sem internet."
+        },
+        {
+          "title": "Veredito com evidência",
+          "text": "Cada evento vira um alerta com o clipe e o quadro marcado."
+        },
+        {
+          "title": "Celular ou dashboard",
+          "text": "O alerta chega no celular de quem decide, e o histórico fica no dashboard. Quem recebe confirma, descarta ou corrige."
+        }
+      ]
+    },
+    "proof": {
+      "title": "Funcionando na frente de todo mundo.",
+      "publicLabel": "Visitantes em volta da tela no estande da Fireshow 2026, rostos borrados",
+      "publicCaption": "o público · Fireshow 2026 · rostos borrados",
+      "cameraLabel": "A câmera do estande detectando a chama de um maçarico",
+      "cameraCaption": "a câmera do estande · chama do maçarico detectada pelo FireSet",
+      "event": {
+        "date": "6 a 8/10/2026 · Fireshow",
+        "title": "Fogo e EPI ao vivo",
+        "text": "Três dias de feira com o público testando na frente da câmera, no estande da parceira BrandSchutz."
+      },
+      "demo": {
+        "date": "agora · no seu celular",
+        "title": "Teste com a sua câmera",
+        "text": "A demo roda no navegador do celular. Nada é enviado.",
+        "cta": "Abrir a demo"
       }
     },
-    "questions": {
-      "what": "o que é?",
-      "gain": "o que eu ganho?",
-      "how": "como funciona?",
-      "see": "veja funcionando",
-      "data": "o que acontece com meus dados?",
-      "next": "próximo passo?"
+    "data": {
+      "title": "Você decide onde o vídeo fica.",
+      "text": "No dispositivo na planta, o vídeo contínuo não sai de lá: só o alerta e o clipe do evento. Na nuvem, a retenção é definida em contrato. Nos dois casos, monitoramos a condição, não quem é a pessoa.",
+      "leaves": "sai da planta",
+      "stays": "fica na planta",
+      "rows": [
+        ["o alerta", "o vídeo contínuo"],
+        ["o clipe do evento", "as gravações"],
+        ["o quadro marcado", "o modelo e o equipamento"]
+      ]
     },
+    "faq": {
+      "title": "O que todo mundo pergunta antes do piloto.",
+      "items": [
+        {
+          "q": "Funciona com as câmeras que eu já tenho?",
+          "a": "Funciona com câmeras IP comuns: Intelbras, Hikvision e qualquer uma compatível com ONVIF. O que importa é o ângulo e a luz, e isso o especialista confere com você antes de começar."
+        },
+        {
+          "q": "Preciso de internet na planta?",
+          "a": "Não, se o processamento for no dispositivo na planta: a leitura acontece lá dentro, sem internet. Na nuvem, a câmera precisa de saída para a internet."
+        },
+        {
+          "q": "Nuvem ou dispositivo: qual escolher?",
+          "a": "Nuvem não exige equipamento na planta. O dispositivo na planta mantém o vídeo lá dentro e não depende de internet. O especialista ajuda a escolher pelo seu cenário."
+        },
+        {
+          "q": "Como funciona o piloto?",
+          "a": "Escolhemos uma ou duas câmeras e um cenário, ligamos a leitura e acompanhamos os alertas com a sua equipe até a regra ficar do jeito que a operação precisa."
+        },
+        {
+          "q": "E a LGPD?",
+          "a": "Monitoramos a condição (capacete, chama, postura), não a identidade. A retenção do clipe é definida em contrato."
+        }
+      ],
+      "privacy": "Ver a política de privacidade"
+    },
+    "contact": {
+      "title": "Fale com um especialista.",
+      "text": "O especialista olha as suas câmeras com você, diz o que dá para reconhecer e, se fizer sentido, monta um piloto acompanhado. Se preferir ver antes, a experiência mostra os cenários funcionando.",
+      "solo": "Prefiro testar sozinho"
+    },
+    "bar": {
+      "label": "Atalhos"
+    },
+    "wa": "Olá! Quero falar com um especialista sobre visão computacional na minha planta.",
     "pipeline": {
       "title": "Da câmera à decisão, sem sair da planta.",
       "wall": "planta",
       "note": "Só o alerta e o clipe atravessam o muro.",
       "cta": "Ver a arquitetura"
-    },
-    "stage": {
-      "title": "Cinco leituras na mesma câmera.",
-      "text": "Escolha uma leitura. O mesmo vídeo, outro veredito.",
-      "demosLine": "Rode no seu navegador:",
-      "demoEpi": "Demo de EPI",
-      "demoFire": "Demo de fogo"
-    },
-    "data": {
-      "title": "O vídeo contínuo nunca sai da planta.",
-      "leaves": "sai da planta",
-      "stays": "fica na planta",
-      "leavesRows": ["o alerta", "o clipe do evento", "o quadro marcado"],
-      "staysRows": ["o vídeo contínuo", "as gravações", "o modelo e o dispositivo"],
-      "retention": "A retenção da evidência é definida em contrato. Monitora a condição; não identifica quem é a pessoa.",
-      "cta": "Ver como tratamos dados"
     },
     "next": {
       "title": "Comece com um piloto acompanhado.",

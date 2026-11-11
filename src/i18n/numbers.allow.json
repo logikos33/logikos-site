@@ -28,6 +28,106 @@
     "platform.compare.rows[4].edge": {
       "values": ["24"],
       "source": "Prazo da licença (24 meses) — brief do site, 01/10/2026."
+    },
+    "home.hero.yours.title": {
+      "values": ["06"],
+      "source": "Rótulo do muro de câmeras da home (\"CAM 06 · a sua\"), aprovado pelo Vitor em 11/11/2026."
+    },
+    "home.problem.text": {
+      "values": ["24"],
+      "source": "Expressão \"24 horas de vídeo\" (um dia de gravação), texto aprovado no esboço v3, 11/11/2026."
+    },
+    "home.proof.event.date": {
+      "values": ["6", "8", "10", "2026"],
+      "source": "Fireshow 2026, 6 a 8/10/2026, estande da BrandSchutz — INVENTARIO (11/11/2026)."
+    },
+    "home.proof.publicCaption": {
+      "values": ["2026"],
+      "source": "Fireshow 2026 — nome do evento."
+    },
+    "home.proof.publicLabel": {
+      "values": ["2026"],
+      "source": "Fireshow 2026 — nome do evento."
+    },
+    "home.scenarios.time": {
+      "values": ["14", "32", "08"],
+      "source": "Hora mostrada no cartão de alerta de exemplo (OSD dos vídeos da home), esboço v3."
+    },
+    "home.scenarios.items[0].tab": {
+      "values": ["1"],
+      "source": "Número do canal (CH1–CH5) das abas de cenário, esboço v3."
+    },
+    "home.scenarios.items[1].tab": {
+      "values": ["2"],
+      "source": "Número do canal (CH1–CH5) das abas de cenário, esboço v3."
+    },
+    "home.scenarios.items[2].tab": {
+      "values": ["3"],
+      "source": "Número do canal (CH1–CH5) das abas de cenário, esboço v3."
+    },
+    "home.scenarios.items[3].tab": {
+      "values": ["4"],
+      "source": "Número do canal (CH1–CH5) das abas de cenário, esboço v3."
+    },
+    "home.scenarios.items[4].tab": {
+      "values": ["5"],
+      "source": "Número do canal (CH1–CH5) das abas de cenário, esboço v3."
+    },
+    "home.scenarios.items[0].cam": {
+      "values": ["03"],
+      "source": "Identificação da câmera gravada no OSD do vídeo da home (SCRATCH/esboco/a, rodada 3 aprovada em 11/11/2026)."
+    },
+    "home.scenarios.items[1].cam": {
+      "values": ["02"],
+      "source": "Identificação da câmera gravada no OSD do vídeo da home (SCRATCH/esboco/a, rodada 3 aprovada em 11/11/2026)."
+    },
+    "home.scenarios.items[2].cam": {
+      "values": ["04"],
+      "source": "Identificação da câmera gravada no OSD do vídeo da home (SCRATCH/esboco/a, rodada 3 aprovada em 11/11/2026)."
+    },
+    "home.scenarios.items[3].cam": {
+      "values": ["05"],
+      "source": "Identificação da câmera gravada no OSD do vídeo da home (SCRATCH/esboco/a, rodada 3 aprovada em 11/11/2026)."
+    },
+    "home.scenarios.items[4].cam": {
+      "values": ["06"],
+      "source": "Identificação da câmera gravada no OSD do vídeo da home (SCRATCH/esboco/a, rodada 3 aprovada em 11/11/2026)."
+    },
+    "home.scenarios.items[0].evidence": {
+      "values": ["8"],
+      "source": "Duração do clipe de evidência do alerta (8 s), esboço v3."
+    },
+    "home.scenarios.items[1].evidence": {
+      "values": ["8"],
+      "source": "Duração do clipe de evidência do alerta (8 s), esboço v3."
+    },
+    "home.scenarios.items[0].norm": {
+      "values": ["23"],
+      "source": "NR-23 (Proteção contra incêndios), Norma Regulamentadora do MTE."
+    },
+    "home.scenarios.items[1].norm": {
+      "values": ["6"],
+      "source": "NR-6 (Equipamento de Proteção Individual), Norma Regulamentadora do MTE."
+    },
+    "home.scenarios.items[4].norm": {
+      "values": ["17"],
+      "source": "NR-17 (Ergonomia), Norma Regulamentadora do MTE."
+    },
+    "home.scenarios.items[0].source": {
+      "values": ["1"],
+      "source": "Nome do modelo próprio FireSet v1 (src/config/links.ts)."
+    },
+    "home.scenarios.items[2].state": {
+      "values": ["1"],
+      "source": "Linha 1 mostrada no OSD/HUD do vídeo de qualidade, esboço v3."
+    },
+    "home.scenarios.items[3].state": {
+      "values": ["07"],
+      "source": "Lote 07 mostrado no HUD do vídeo de contagem, esboço v3."
+    },
+    "home.scenarios.items[4].state": {
+      "values": ["45"],
+      "source": "Limiar de flexão de tronco (45°) desenhado no vídeo de ergonomia, esboço v3."
     }
   }
 }
