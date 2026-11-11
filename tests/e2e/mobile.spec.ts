@@ -1,9 +1,7 @@
 import { expect, test } from '@playwright/test';
-import { ALL_ROUTES, skipOpening, stubTurnstile } from './helpers.ts';
+import { ALL_ROUTES, skipOpening } from './helpers.ts';
 
-// Deterministic: Turnstile's real widget is exercised only by the form tests.
 test.beforeEach(async ({ page }) => {
-  await stubTurnstile(page);
   await skipOpening(page);
 });
 
@@ -71,10 +69,9 @@ test('mobile: menu opens, lists the pages and closes on Escape, focus-out and ou
   await expect(menu).not.toHaveAttribute('open', '');
 });
 
-test('320 px: no horizontal scroll on any page (forms included, Turnstile at real size)', async ({ browser }) => {
+test('320 px: no horizontal scroll on any page (forms included)', async ({ browser }) => {
   const ctx = await browser.newContext({ viewport: { width: 320, height: 720 } });
   const page = await ctx.newPage();
-  await stubTurnstile(page);
   await skipOpening(page);
   for (const { path } of ALL_ROUTES) {
     await page.goto(path, { waitUntil: 'networkidle' });

@@ -1,8 +1,7 @@
 import { expect, test } from '@playwright/test';
-import { ALL_ROUTES, skipOpening, stubTurnstile } from './helpers.ts';
+import { ALL_ROUTES, skipOpening } from './helpers.ts';
 
 test.beforeEach(async ({ page }) => {
-  await stubTurnstile(page);
   await skipOpening(page);
 });
 
@@ -32,7 +31,7 @@ test('home v3: sections in the approved order, Koda right after the partners, le
     await expect(page.locator('#contato img')).toHaveCount(0);
     // No lead form on the home any more; the wall's sixth tile is the phone demo.
     await expect(page.locator('main form')).toHaveCount(0);
-    await expect(page.locator('.cam--voce')).toHaveAttribute('href', 'https://logikosvision.com.br/demo/');
+    await expect(page.locator('.cam--voce')).toHaveAttribute('href', 'https://logikosvision.com.br/teste-no-seu-celular/');
   }
 });
 
@@ -71,7 +70,7 @@ test('footer pages: real media, the hero CTA pair and the phone-camera close', a
     if (!MEDIA.includes(path)) continue;
     await expect(page.locator('.ph__media img[src^="/media/home/"]').first(), `${path}: real media`).toBeVisible();
     await expect(page.locator('.ph [data-heroi-acoes] .btn'), `${path}: hero CTAs`).toHaveCount(2);
-    await expect(page.locator('.fecho a[href="https://logikosvision.com.br/demo/"]'), `${path}: phone demo`).toHaveCount(1);
+    await expect(page.locator('.fecho a[href="https://logikosvision.com.br/teste-no-seu-celular/"]'), `${path}: phone demo`).toHaveCount(1);
   }
 });
 
@@ -186,4 +185,38 @@ test('buttons: one size, a visible hover (cyan as state), and one pair of CTAs o
   await page.goto('/');
   const peek = await page.locator('.espia').boundingBox();
   expect(peek?.width ?? 999).toBeLessThan(420);
+});
+
+// Feedback 11/11, item 15: CATH, BrandSchutz, Visdec in a still row, whole (no mask, nothing past the
+// row's edges), at desktop and phone widths.
+test('partner logos: a still row of three whole logos, no mask', async ({ browser }) => {
+  for (const viewport of [
+    { width: 1440, height: 900 },
+    { width: 390, height: 844 },
+  ]) {
+    const ctx = await browser.newContext({ viewport });
+    await ctx.addInitScript(() => sessionStorage.setItem('lk-abertura', '1'));
+    const page = await ctx.newPage();
+    await page.goto('/');
+    const row = page.locator('.logos');
+    await row.scrollIntoViewIfNeeded();
+    await expect(row.locator('img')).toHaveCount(3);
+    expect(await row.locator('img').evaluateAll((is) => is.map((i) => i.getAttribute('src')?.split('/').pop()))).toEqual([
+      'l-cath-v2.webp',
+      'l-brandschutz.webp',
+      'l-visdec-v2.webp',
+    ]);
+    const clipped = await row.evaluate((ul) => {
+      const r = ul.getBoundingClientRect();
+      const masked = getComputedStyle(ul).maskImage !== 'none' || getComputedStyle(ul.parentElement as Element).maskImage !== 'none';
+      const out = [...ul.querySelectorAll('img')].some((i) => {
+        const b = i.getBoundingClientRect();
+        return b.left < r.left - 1 || b.right > r.right + 1 || b.right > window.innerWidth || i.naturalWidth === 0;
+      });
+      return masked || out;
+    });
+    expect(clipped, `${viewport.width}px`).toBe(false);
+    expect(await page.evaluate(() => document.getAnimations().some((a) => (a as CSSAnimation).animationName === 'corre'))).toBe(false);
+    await ctx.close();
+  }
 });

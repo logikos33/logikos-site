@@ -1,14 +1,15 @@
 // Brand regression: the official lockup (L on the Λ angle, O-keyhole) is on every page, as
 // vectors — a text "LOGIKOS" in the header, footer, 404 or OG is a failure (AUDITORIA-V2 F-01).
 import { expect, test } from '@playwright/test';
-import { ALL_ROUTES, skipOpening, stubTurnstile } from './helpers.ts';
+import { ALL_ROUTES, skipOpening } from './helpers.ts';
 
 test.beforeEach(async ({ page }) => {
-  await stubTurnstile(page);
   await skipOpening(page);
 });
 
-test('every route shows the vector wordmark in the header and the symbol in the footer, never text', async ({ page }) => {
+test('every route shows the vector wordmark (+ VISION) in the header and the Logikos Vision lockup in the footer, never text', async ({
+  page,
+}) => {
   for (const { path } of [...ALL_ROUTES, { path: '/nao-existe' }]) {
     await page.goto(path);
     const header = page.locator('.site-header__logo');
@@ -17,7 +18,7 @@ test('every route shows the vector wordmark in the header and the symbol in the 
     await expect(header.locator('svg[data-brand="wordmark"] [data-glyph="L"]'), path).toHaveCount(copies);
     await expect(header.locator('svg[data-brand="wordmark"] [data-glyph="O"]'), path).toHaveCount(copies);
     expect((await header.innerText()).toUpperCase(), `${path}: header text`).not.toContain('LOGIKOS');
-    await expect(page.locator('.site-footer svg[data-brand="symbol"]'), path).toHaveCount(1);
+    await expect(page.locator('.site-footer svg[data-brand="lockup"]'), path).toHaveCount(1);
     expect(await page.locator('.lk-wordmark').count(), `${path}: legacy text wordmark`).toBe(0);
   }
 });

@@ -1,8 +1,4 @@
 import { expect, test } from '@playwright/test';
-import { stubTurnstile } from './helpers.ts';
-
-// Deterministic: Turnstile's real widget is exercised only by the form tests.
-test.beforeEach(async ({ page }) => stubTurnstile(page));
 
 const isVideo = (url: string) => /\.mp4(\?|$)/.test(url);
 
@@ -71,9 +67,8 @@ test('home under reduced motion: no opening, posters only, no video downloaded, 
   expect(videos).toEqual([]);
   const running = await page.evaluate(() => document.getAnimations().filter((a) => a.playState === 'running').length);
   expect(running).toBe(0);
-  // The partner strip shows each logo once, still.
-  await expect(page.locator('.marquee li:not([data-copia])')).toHaveCount(3);
-  await expect(page.locator('.marquee [data-copia]').first()).toBeHidden();
+  // The partner row shows each logo once, still.
+  await expect(page.locator('.logos li')).toHaveCount(3);
   await ctx.close();
 });
 
@@ -242,10 +237,11 @@ test('M4: the pipeline is revealed in order, once, and ends at rest; static when
   await expect(nodes).toHaveCount(4);
   for (let i = 0; i < 4; i++) await expect(nodes.nth(i)).toBeVisible({ timeout: 3000 });
   await page.waitForTimeout(1500);
-  // The old-TV backdrop (crt-*) is the page's surface, not the pipeline: it is left out.
+  // The old-TV backdrop (crt-*) and the CAM 07 "waiting" loop (ag-*) are surfaces, not the pipeline.
   const running = await page.evaluate(
     () =>
-      document.getAnimations().filter((a) => a.playState === 'running' && !(a as CSSAnimation).animationName?.startsWith('crt-')).length,
+      document.getAnimations().filter((a) => a.playState === 'running' && !/^(crt|ag)-/.test((a as CSSAnimation).animationName ?? ''))
+        .length,
   );
   expect(running).toBe(0);
   await ctx.close();

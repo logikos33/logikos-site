@@ -1,10 +1,8 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
-import { ALL_ROUTES, setTheme, skipOpening, stubTurnstile } from './helpers.ts';
+import { ALL_ROUTES, setTheme, skipOpening } from './helpers.ts';
 
-// Deterministic: Turnstile's real widget is exercised only by the form tests.
 test.beforeEach(async ({ page }) => {
-  await stubTurnstile(page);
   await skipOpening(page);
 });
 
