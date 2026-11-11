@@ -19,8 +19,11 @@ const { locale } = Astro.props;
 const t = dict(locale);
 const h = t.home;
 const M = '/media/home/';
-// Swap for a higher-resolution Koda here when it arrives.
-const KODA = { section: `${M}koda-apresentando.webp`, peek: `${M}koda-apontando.webp`, w: 448, h: 600 };
+// Koda with alpha; swap the files (and their sizes, so nothing shifts) when a higher-resolution one arrives.
+const KODA = {
+  section: { src: `${M}koda-apresentando.webp`, w: 480, h: 438 },
+  peek: { src: `${M}koda-apontando.webp`, w: 474, h: 480 },
+};
 
 /** Specialist link: WhatsApp with a context message, or the contact page while there is no number. */
 function specialist(message: string) {
@@ -54,7 +57,8 @@ const LOGOS = [
   { src: '/media/parceiros/l-visdec.webp', alt: h.partners.visdec, w: 153, h: 30 },
   { src: '/media/parceiros/l-cath.webp', alt: h.partners.cath, w: 117, h: 48 },
 ];
-// Four copies so the track is always wider than the strip; the moving half repeats exactly.
+// The track is two identical halves (each half = the logos twice, wider than the strip at any
+// width); it slides by exactly one half, so the loop has no seam.
 const COPIES = [0, 1, 2, 3];
 const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, ${base}.webp 640w`;
 ---
@@ -137,7 +141,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
           </div>
           <a class="espia" href={EXPERIENCE_URL}>
             <span class="espia__balao">{h.hero.koda}</span>
-            <img src={KODA.peek} alt="" width={KODA.w} height={KODA.h} loading="lazy" />
+            <img src={KODA.peek.src} alt="" width={KODA.peek.w} height={KODA.peek.h} loading="lazy" />
           </a>
         </div>
       </div>
@@ -162,7 +166,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
 
     <section class="koda" aria-labelledby="koda-title">
       <div class="wrap koda__grade">
-        <img class="koda__img" src={KODA.section} alt={h.koda.alt} width={KODA.w} height={KODA.h} loading="lazy" />
+        <img class="koda__img" src={KODA.section.src} alt={h.koda.alt} width={KODA.section.w} height={KODA.section.h} loading="lazy" />
         <div class="koda__copy">
           <h2 id="koda-title">{h.koda.title}</h2>
           <p class="lead">{h.koda.text}</p>
@@ -202,7 +206,8 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
               aria-selected={i === 0 ? 'true' : 'false'}
               tabindex={i === 0 ? 0 : -1}
             >
-              {s.tab}
+              <span class="abas__ch">{s.tab}</span>
+              {s.name}
             </button>
           ))}
         </div>
@@ -239,14 +244,17 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
                 <>
                   <a class="btn" href={`${EXPERIENCE_URL}?cenario=${s.cenario}`}>
                     {s.cta}
+                    <Icon name="arrow" size={18} />
                   </a>
                   <a class="link-esp" {...s.esp.attrs}>
+                    <Icon name="chat" size={16} />
                     {s.specialist}
                     {s.esp.wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
                   </a>
                 </>
               ) : (
                 <a class="btn" {...s.esp.attrs}>
+                  <Icon name="chat" size={18} />
                   {s.cta}
                   {s.esp.wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
                 </a>
@@ -263,7 +271,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
           <h2 id="faixa-title">{h.band.title}</h2>
           <p class="lead">{h.band.text}</p>
         </div>
-        <div class="acoes">
+        <div class="acoes" data-faixa-acoes>
           <a class="btn" {...general.attrs}>
             <Icon name="chat" size={18} />
             {t.cta.specialist}
@@ -340,7 +348,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
             <text class="opB" x="462" y="258">
               {h.how.dashboardSub}
             </text>
-            <text x="40" y="52">
+            <text class="escolha" x="40" y="52">
               {h.how.choose}
             </text>
           </svg>
@@ -430,7 +438,10 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
         <div>
           {h.faq.items.map((f, i) => (
             <details open={i === 0}>
-              <summary>{f.q}</summary>
+              <summary>
+                {f.q}
+                <Icon name="plus" size={20} class="faq__mais" />
+              </summary>
               <p>
                 {f.a}
                 {i === h.faq.items.length - 1 && (
@@ -449,35 +460,52 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     <section class="contato" id="contato" aria-labelledby="contato-title">
       <div class="wrap">
         <div class="cartao">
-          <h2 id="contato-title">{h.contact.title}</h2>
-          <p class="lead">{h.contact.text}</p>
-          <div class="acoes">
-            <a class="btn" {...general.attrs}>
-              <Icon name="chat" size={18} />
-              {t.cta.specialist}
-              {general.wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
-            </a>
-            <a class="btn btn--ghost" href={EXPERIENCE_URL}>
-              {h.contact.solo}
-            </a>
+          <div class="cartao__copy">
+            <h2 id="contato-title">{h.contact.title}</h2>
+            <p class="lead">{h.contact.text}</p>
+            <div class="acoes">
+              <a class="btn btn--ghost" href={EXPERIENCE_URL}>
+                {t.cta.experience}
+                <Icon name="arrow" size={18} />
+              </a>
+            </div>
+            {CONTACT_EMAIL && (
+              <a class="email mono" href={`mailto:${CONTACT_EMAIL}`}>
+                {CONTACT_EMAIL}
+              </a>
+            )}
           </div>
-          {CONTACT_EMAIL && (
-            <a class="email mono" href={`mailto:${CONTACT_EMAIL}`}>
-              {CONTACT_EMAIL}
-            </a>
-          )}
+          <!-- The page ends where it began: one more camera on the wall, waiting for the visitor's signal. -->
+          <div class="sinal">
+            <div class="sinal__tela">
+              <p class="sinal__osd mono">
+                <span class="sinal__rec" aria-hidden="true"></span>
+                {h.contact.screen}
+              </p>
+              <div class="acoes" data-contato-acoes>
+                <a class="btn" {...general.attrs}>
+                  <Icon name="chat" size={18} />
+                  {t.cta.specialist}
+                  {general.wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
+                </a>
+              </div>
+              <p class="sinal__sub mono">{h.contact.screenSub}</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   </div>
 
   <Fragment slot="after">
-    <div class="barra some" role="region" aria-label={h.bar.label} data-barra>
+    <div class="barra" role="region" aria-label={h.bar.label} data-barra>
       <a class="btn" href={EXPERIENCE_URL}>
         {t.cta.experience}
+        <Icon name="arrow" size={18} />
       </a>
       <a class="btn btn--ghost barra__esp" {...general.attrs}>
-        <Icon name="chat" size={20} />
+        <Icon name="chat" size={18} />
+        <span aria-hidden="true">{h.bar.specialist}</span>
         <span class="visually-hidden">
           {t.cta.specialist}
           {general.wa && <> ({t.a11y.externalWhatsapp})</>}
@@ -501,8 +529,9 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   const root = document.documentElement;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // ---- Opening: Koda turns on the TV, the camera dives in, the site opens. Fail-safe: if the
-  // video is not playing within 1.2 s the site opens at once; the rest of the page is inert meanwhile.
+  // ---- Opening: Koda turns on the TV, the camera dives in, the site opens. Fail-safes: not playing
+  // within 1.2 s, stalled for 0.6 s, or still running at 5.5 s → the site opens at once. A scroll,
+  // a tap or a click anywhere skips it. The rest of the page is inert meanwhile.
   const opened = new Promise<void>((resolve) => {
     const ab = document.querySelector<HTMLElement>('[data-abertura]');
     const video = ab?.querySelector('video');
@@ -515,7 +544,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     const rest = [...document.body.children].filter((e): e is HTMLElement => e !== ab && e instanceof HTMLElement);
     rest.forEach((e) => (e.inert = true));
     video.src = video.dataset.src ?? '';
-    skip.focus();
+    skip.focus({ focusVisible: false } as FocusOptions);
     let done = false;
     let playing = false;
     const close = () => {
@@ -532,30 +561,44 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
         // Storage blocked: it may play again next load.
       }
       rest.forEach((e) => (e.inert = false));
+      // Focus moves to the start of the page either way (never left on <body>).
+      document.querySelector<HTMLElement>('.site-header__logo')?.focus({ preventScroll: true, focusVisible: false } as FocusOptions);
       if (skipped) {
         close();
-        document.querySelector<HTMLElement>('.site-header__logo')?.focus({ preventScroll: true });
         return;
       }
-      (document.activeElement as HTMLElement | null)?.blur();
       ab.classList.add('mergulha');
       window.setTimeout(() => root.classList.add('lk-entrando'), 500);
       window.setTimeout(close, 1200);
     };
-    video.addEventListener('playing', () => (playing = true));
+    let stall = 0;
+    video.addEventListener('playing', () => {
+      playing = true;
+      window.clearTimeout(stall);
+    });
+    const onStall = () => {
+      window.clearTimeout(stall);
+      stall = window.setTimeout(() => finish(true), 600);
+    };
+    video.addEventListener('waiting', onStall);
+    video.addEventListener('stalled', onStall);
     video.addEventListener('ended', () => finish(false));
     video.play().catch(() => finish(true));
     window.setTimeout(() => !playing && finish(true), 1200);
-    window.setTimeout(() => finish(false), 8000);
+    window.setTimeout(() => finish(false), 5500);
     skip.addEventListener('click', () => finish(true));
     ab.addEventListener('keydown', (e) => e.key === 'Escape' && finish(true));
+    ab.addEventListener('pointerdown', (e) => e.target !== skip && finish(true));
+    for (const type of ['wheel', 'touchmove']) window.addEventListener(type, () => finish(true), { once: true, passive: true });
   });
 
   // ---- Videos: nothing downloads before it is near the screen; off-screen ones pause; reduced
   // motion keeps the posters. One visible control stops every moving thing (WCAG 2.2.2).
   const videos = [...document.querySelectorAll<HTMLVideoElement>('video[data-lazy]')];
   const near = new Set<HTMLVideoElement>();
-  let stopped = reduce;
+  // Data saver or a slow connection starts paused on the posters; "Resume" opts in.
+  const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+  let stopped = reduce || Boolean(conn?.saveData) || /(^|-)(2g|3g)$/.test(conn?.effectiveType ?? '');
   const play = (v: HTMLVideoElement) => {
     if (stopped) return;
     if (!v.getAttribute('src')) v.src = v.dataset.src ?? '';
@@ -620,13 +663,27 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     });
   });
 
-  // ---- Phone shortcut bar: shows once the hero buttons scrolled away.
-  const bar = document.querySelector<HTMLElement>('[data-barra]');
+  // ---- One pair of CTAs on screen at a time. Desktop: the header's appear once the hero's
+  // scrolled away. Phones: the shortcut bar is always there, except while the band's or the
+  // contact's own buttons are on screen.
   const heroActions = document.querySelector('[data-heroi-acoes]');
-  if (bar && heroActions) {
+  if (heroActions) {
     new IntersectionObserver(([e]) => {
-      if (e) bar.classList.toggle('some', e.isIntersecting || e.boundingClientRect.top > 0);
+      if (e) root.classList.toggle('lk-heroi-acoes', e.isIntersecting);
     }).observe(heroActions);
+  }
+  const bar = document.querySelector<HTMLElement>('[data-barra]');
+  const own = [...document.querySelectorAll('[data-faixa-acoes], [data-contato-acoes]')];
+  if (bar && own.length) {
+    const showing = new Set<Element>();
+    const watch = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) showing.add(e.target);
+        else showing.delete(e.target);
+      }
+      bar.classList.toggle('some', showing.size > 0);
+    });
+    own.forEach((el) => watch.observe(el));
   }
 </script>
 
@@ -636,11 +693,36 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     max-width: 82.5rem;
   }
 
-  /* At 1440 the wider bar has room for both CTAs (measured in hdr checks). */
+  /* At 1440 the wider bar has room for the full specialist label (measured: no overflow). */
   @media (min-width: 90rem) {
-    :global(.site-header__tools .site-header__cta.site-header__cta--specialist) {
-      display: inline-flex;
+    :global(.site-header .site-header__tools .site-header__cta.site-header__cta--specialist) {
+      width: auto;
+      padding-inline: var(--lk-space-4);
     }
+
+    :global(.site-header .site-header__tools .site-header__cta-label) {
+      position: static;
+      width: auto;
+      height: auto;
+      clip: auto;
+    }
+  }
+
+  /* One pair of calls to action on screen at a time: the header's wait until the hero's scroll
+     away (desktop); on phones the shortcut bar carries them, so the header keeps only the menu. */
+  :global(.lk-heroi-acoes .site-header__cta) {
+    visibility: hidden;
+  }
+
+  @media (max-width: 56.24rem) {
+    :global(.site-header .site-header__tools .site-header__cta) {
+      display: none;
+    }
+  }
+
+  /* The footer lines up with the page, like the header. */
+  :global(.site-footer .container) {
+    max-width: 82.5rem;
   }
 
   /* ---------- Shared bits of the home ---------- */
@@ -679,10 +761,15 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     max-width: 58ch;
   }
 
-  .nota,
+  /* Mono is for machine data (captions, model names, camera labels); notes are plain text. */
   .fonte,
   figcaption {
     font: 400 0.8125rem/1.5 var(--lk-font-mono);
+    color: var(--lk-text-2);
+  }
+
+  .nota {
+    font-size: 0.875rem;
     color: var(--lk-text-2);
   }
 
@@ -690,10 +777,6 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     display: flex;
     flex-wrap: wrap;
     gap: var(--lk-space-3);
-  }
-
-  .acoes .btn {
-    min-height: 3rem;
   }
 
   .home section:not(.heroi) {
@@ -860,6 +943,8 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     align-items: center;
     gap: 0.4rem;
     min-height: 2.75rem;
+    min-width: 2.75rem;
+    margin-inline: -0.5rem;
     padding: 0 0.5rem;
     background: none;
     border: 0;
@@ -888,9 +973,11 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
       z-index: -1;
       display: flex;
       align-items: flex-start;
-      justify-content: flex-end;
       gap: var(--lk-space-2);
+      /* Only Koda and the balloon are the link; the rest of the strip stays inert. */
+      width: fit-content;
       margin-top: -3.25rem;
+      margin-left: auto;
       margin-right: 1.5rem;
       text-decoration: none;
       color: var(--lk-text);
@@ -906,7 +993,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
       margin-top: 4.25rem;
       padding: 0.5rem 0.75rem;
       background: var(--lk-surface);
-      border: 1px solid var(--lk-line-strong);
+      border: 1px solid var(--lk-field-border);
       border-radius: 6px;
       font: 500 0.8125rem/1.3 var(--lk-font-body);
     }
@@ -919,9 +1006,28 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
 
   @media (min-width: 56.25rem) {
     .heroi__grade {
-      grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
       gap: clamp(1.5rem, 4vw, 3.5rem);
       align-items: center;
+    }
+
+    /* Narrow column: the two buttons stack at the same width. */
+    .heroi .acoes {
+      display: inline-grid;
+      grid-template-columns: 1fr;
+      justify-self: start;
+    }
+  }
+
+  /* From 80rem the column holds both side by side, on one line. */
+  @media (min-width: 80rem) {
+    .heroi .acoes {
+      display: flex;
+      flex-wrap: nowrap;
+    }
+
+    .heroi .acoes .btn {
+      padding-inline: 1.25rem;
     }
 
     .muro {
@@ -946,16 +1052,13 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
       order: 3;
     }
 
+    /* On phones the shortcut bar is the hero's pair of buttons, in thumb reach from the start. */
     .heroi .acoes {
-      order: 4;
+      display: none;
     }
 
     .heroi .nota {
-      order: 5;
-    }
-
-    .heroi .acoes .btn {
-      flex: 1 1 100%;
+      order: 4;
     }
   }
 
@@ -975,22 +1078,25 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   .parceiros p {
     flex: 1 1 11rem;
     max-width: 14rem;
-    font: 500 0.8125rem/1.4 var(--lk-font-mono);
+    font-size: 0.875rem;
+    line-height: 1.4;
     color: var(--lk-text-2);
   }
 
+  /* Short fade at the edges and wide gaps: a logo is either clearly in or on its way out. */
   .marquee {
+    --gap: clamp(4.5rem, 10vw, 8rem);
     flex: 1 1 26rem;
     min-width: 0;
     overflow: hidden;
-    mask-image: linear-gradient(90deg, #0000, #000 12%, #000 88%, #0000);
+    mask-image: linear-gradient(90deg, #0000, #000 4%, #000 96%, #0000);
   }
 
   .marquee ul {
     display: flex;
     align-items: center;
     width: max-content;
-    gap: clamp(3rem, 7vw, 5.5rem);
+    gap: var(--gap);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -1016,7 +1122,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
 
   @keyframes corre {
     to {
-      transform: translateX(calc(-50% - clamp(1.5rem, 3.5vw, 2.75rem)));
+      transform: translateX(calc(-50% - var(--gap) / 2));
     }
   }
 
@@ -1079,25 +1185,52 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     margin-bottom: var(--lk-space-4);
   }
 
+  /* A tab is a channel selector, not a call to action: the selected one lights up like a
+     monitor input (cyan rule), never as the white fill reserved for buttons. */
   .abas button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4em;
     min-height: 2.75rem;
     padding: 0 0.9rem;
     background: var(--lk-surface);
     border: 1px solid var(--lk-line-strong);
-    border-radius: 4px;
+    border-radius: var(--lk-radius);
     color: var(--home-text-2);
     font: 500 0.875rem var(--lk-font-mono);
     cursor: pointer;
   }
 
+  .abas__ch {
+    color: var(--lk-text-2);
+  }
+
   .abas button:hover {
     border-color: var(--lk-accent);
+    color: var(--lk-text);
   }
 
   .abas button[aria-selected='true'] {
-    color: var(--lk-bg);
-    background: var(--lk-text);
-    border-color: var(--lk-text);
+    color: var(--lk-text);
+    background: var(--home-screen);
+    border-color: var(--lk-accent);
+    box-shadow: inset 0 -2px 0 var(--lk-accent);
+  }
+
+  .abas button[aria-selected='true'] .abas__ch {
+    color: var(--lk-accent);
+  }
+
+  @media (max-width: 37.49rem) {
+    .abas {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .abas__ch {
+      display: none;
+    }
   }
 
   .painel {
@@ -1171,9 +1304,16 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 0.4rem;
     min-height: 2.75rem;
     font-size: 0.9375rem;
     text-align: center;
+  }
+
+  .link-esp:hover,
+  .email:hover {
+    text-decoration-thickness: 2px;
+    color: var(--lk-text);
   }
 
   @media (min-width: 56.25rem) {
@@ -1244,6 +1384,21 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   .diagrama text {
     font: 500 17px var(--lk-font-mono);
     fill: var(--home-text-2);
+  }
+
+  /* Phones: the 620-unit drawing shrinks to ~340 px, so only the names stay, at a readable size. */
+  @media (max-width: 37.49rem) {
+    .diagrama text:not(.t, .escolha) {
+      display: none;
+    }
+
+    .diagrama .t.t {
+      font-size: 26px;
+    }
+
+    .diagrama .escolha {
+      font-size: 24px;
+    }
   }
 
   .diagrama .t {
@@ -1480,14 +1635,18 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     display: none;
   }
 
-  .faq summary::after {
-    content: '+';
-    font: 500 1.2rem var(--lk-font-mono);
+  .faq summary:hover {
     color: var(--lk-accent);
   }
 
-  .faq details[open] summary::after {
-    content: '−';
+  .faq :global(.faq__mais) {
+    flex: none;
+    color: var(--lk-accent);
+  }
+
+  /* Open: the vertical stroke goes, the plus reads as a minus. */
+  .faq details[open] :global(.faq__mais path:first-child) {
+    opacity: 0;
   }
 
   .faq details p {
@@ -1502,15 +1661,22 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     }
   }
 
-  /* ---------- Contact ---------- */
+  /* ---------- Contact: one more monitor on the wall, waiting for the visitor's signal ---------- */
   .cartao {
     display: grid;
-    gap: var(--lk-space-5);
-    justify-items: start;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: center;
     padding: clamp(1.25rem, 4vw, 3rem);
     background: var(--lk-surface);
     border: 1px solid var(--lk-line);
-    border-radius: 8px;
+    border-radius: 6px;
+  }
+
+  .cartao__copy {
+    display: grid;
+    gap: var(--lk-space-5);
+    justify-items: start;
   }
 
   .email {
@@ -1520,15 +1686,78 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     font-size: 0.875rem;
   }
 
+  .sinal {
+    padding: 5px;
+    background: var(--home-screen);
+    border: 1px solid var(--lk-line-strong);
+    border-radius: 6px;
+  }
+
+  .sinal__tela {
+    position: relative;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: var(--lk-space-4);
+    min-height: 13rem;
+    padding: var(--lk-space-7) var(--lk-space-4) var(--lk-space-5);
+    overflow: hidden;
+    background:
+      repeating-linear-gradient(0deg, #0000 0 2px, #ffffff08 2px 3px), radial-gradient(ellipse at 50% 45%, #1b1b26 0%, #050508 75%);
+    border-radius: 2px;
+    text-align: center;
+  }
+
+  .sinal__osd {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.75rem;
+    color: var(--lk-text);
+  }
+
+  .sinal__rec {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--lk-alert);
+  }
+
+  .sinal__sub {
+    font-size: 0.75rem;
+    color: var(--lk-text-2);
+  }
+
+  @media (min-width: 37.5rem) {
+    .sinal__tela {
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  @media (min-width: 56.25rem) {
+    .cartao {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    }
+  }
+
   @media (max-width: 56.24rem) {
     .cartao .acoes,
-    .faixa .acoes {
+    .faixa .acoes,
+    .koda .acoes {
       width: 100%;
     }
 
     .cartao .acoes .btn,
-    .faixa .acoes .btn {
+    .faixa .acoes .btn,
+    .koda .acoes .btn {
       flex: 1 1 100%;
+    }
+
+    .sinal__tela .acoes {
+      width: auto;
     }
   }
 
@@ -1542,15 +1771,20 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
       padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
     }
 
+    /* Keyboard focus never lands under the bar (WCAG 2.4.11). */
+    :global(html:has(.barra)) {
+      scroll-padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+    }
+
     .barra {
       position: fixed;
       inset: auto 0 0;
       z-index: 40;
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: minmax(0, 1fr) auto;
       gap: var(--lk-space-2);
       padding: 0.625rem var(--lk-gutter) calc(0.625rem + env(safe-area-inset-bottom, 0px));
-      background: color-mix(in srgb, var(--lk-bg) 94%, transparent);
+      background: var(--lk-bg);
       border-top: 1px solid var(--lk-line);
       transition:
         transform 0.2s steps(3, end),
@@ -1558,12 +1792,19 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     }
 
     .barra .btn {
-      min-height: 3rem;
+      padding-inline: var(--lk-space-4);
     }
 
-    .barra__esp {
-      width: 3rem;
-      padding: 0;
+    /* Below 24rem the experience label needs the room: the specialist keeps its icon (named). */
+    @media (max-width: 23.99rem) {
+      .barra__esp {
+        width: 3rem;
+        padding: 0;
+      }
+
+      .barra__esp span[aria-hidden='true'] {
+        display: none;
+      }
     }
 
     .barra.some {
@@ -1603,9 +1844,12 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     object-fit: cover;
   }
 
+  /* Portrait phones: the whole 16:9 frame (contain), enlarged so TV, Koda and logo fill the
+     width instead of a thin strip in the dark; the logo stays inside the visible area. */
   @media (orientation: portrait) {
     .abertura video {
       object-fit: contain;
+      scale: 1.6;
     }
   }
 
@@ -1625,8 +1869,8 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     min-height: 2.75rem;
     padding: 0 1.1rem;
     background: #000a;
-    border: 1px solid var(--lk-line-strong);
-    border-radius: 4px;
+    border: 1px solid var(--lk-field-border);
+    border-radius: var(--lk-radius);
     color: var(--lk-text);
     font: 500 0.9rem var(--lk-font-body);
     cursor: pointer;
@@ -1682,14 +1926,15 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     }
   }
 
+  /* No scale: the page lands in place (nothing below the fold is pulled into view early). */
   @keyframes entra {
     0% {
-      transform: scale(1.14);
+      opacity: 0.4;
       filter: blur(8px) brightness(1.8);
     }
 
     100% {
-      transform: none;
+      opacity: 1;
       filter: none;
     }
   }

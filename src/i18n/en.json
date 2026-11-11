@@ -182,7 +182,7 @@
       "time": "14:32:08",
       "items": [
         {
-          "tab": "CH1 Fire",
+          "tab": "CH1",
           "name": "Fire",
           "state": "ALERT · fire detected",
           "cam": "CAM 03 · Outdoor yard",
@@ -196,7 +196,7 @@
           "wa": "Hi! I’d like to talk to a specialist about fire."
         },
         {
-          "tab": "CH2 PPE",
+          "tab": "CH2",
           "name": "PPE",
           "state": "ALERT · no helmet",
           "cam": "CAM 02 · Storage",
@@ -210,7 +210,7 @@
           "wa": "Hi! I’d like to talk to a specialist about PPE."
         },
         {
-          "tab": "CH3 Quality",
+          "tab": "CH3",
           "name": "Quality",
           "state": "INSPECTION · line 1",
           "cam": "CAM 04 · Filling",
@@ -224,7 +224,7 @@
           "wa": "Hi! I’d like to talk to a specialist about quality inspection."
         },
         {
-          "tab": "CH4 Counting",
+          "tab": "CH4",
           "name": "Counting",
           "state": "COUNT · batch 07",
           "cam": "CAM 05 · Shipping",
@@ -238,7 +238,7 @@
           "wa": "Hi! I’d like to talk to a specialist about counting."
         },
         {
-          "tab": "CH5 Ergonomics",
+          "tab": "CH5",
           "name": "Ergonomics",
           "state": "ALERT · trunk bent past 45°",
           "cam": "CAM 06 · Storage",
@@ -246,7 +246,7 @@
           "norm": "NR-17 · ergonomics (Brazil)",
           "notified": "occupational health team, in the shift report",
           "who": "For occupational health: risky postures when lifting loads, measured from the skeleton.",
-          "cta": "Talk about ergonomics",
+          "cta": "Talk to an ergonomics specialist",
           "specialist": "Talk to an ergonomics specialist",
           "source": "model: pose estimation, with the trunk angle computed on every frame · stock footage",
           "wa": "Hi! I’d like to talk to a specialist about ergonomics."
@@ -346,10 +346,12 @@
     "contact": {
       "title": "Talk to a specialist.",
       "text": "The specialist looks at your cameras with you, tells you what can be recognized and, if it makes sense, sets up a guided pilot. If you would rather see it first, the experience shows the scenarios at work.",
-      "solo": "I’d rather try it myself"
+      "screen": "CAM 07 · waiting for signal",
+      "screenSub": "your camera goes here"
     },
     "bar": {
-      "label": "Shortcuts"
+      "label": "Shortcuts",
+      "specialist": "Specialist"
     },
     "wa": "Hi! I’d like to talk to a specialist about computer vision in my plant.",
     "pipeline": {

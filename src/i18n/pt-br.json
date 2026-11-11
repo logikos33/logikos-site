@@ -182,7 +182,7 @@
       "time": "14:32:08",
       "items": [
         {
-          "tab": "CH1 Fogo",
+          "tab": "CH1",
           "name": "Fogo",
           "state": "ALERTA · fogo detectado",
           "cam": "CAM 03 · Pátio externo",
@@ -191,12 +191,12 @@
           "notified": "brigada e segurança patrimonial, no WhatsApp",
           "who": "Para brigada e patrimonial: o princípio de incêndio é detectado ainda pequeno, com o clipe do momento.",
           "cta": "Testar o cenário Fogo",
-          "specialist": "Falar com um especialista em fogo",
+          "specialist": "Falar com especialista em fogo",
           "source": "modelo: FireSet v1 (YOLOX-S), treinado pela Logikos · vídeo de banco",
           "wa": "Olá! Quero falar com um especialista sobre fogo."
         },
         {
-          "tab": "CH2 EPI",
+          "tab": "CH2",
           "name": "EPI",
           "state": "ALERTA · sem capacete",
           "cam": "CAM 02 · Armazém",
@@ -205,12 +205,12 @@
           "notified": "técnico de segurança, no WhatsApp",
           "who": "Para EHS: capacete, colete e área restrita, por pessoa.",
           "cta": "Testar o cenário EPI",
-          "specialist": "Falar com um especialista em EPI",
+          "specialist": "Falar com especialista em EPI",
           "source": "modelo: detector de capacete treinado para a demonstração · vídeo de banco",
           "wa": "Olá! Quero falar com um especialista sobre EPI."
         },
         {
-          "tab": "CH3 Qualidade",
+          "tab": "CH3",
           "name": "Qualidade",
           "state": "INSPEÇÃO · linha 1",
           "cam": "CAM 04 · Envase",
@@ -219,12 +219,12 @@
           "notified": "inspetor de qualidade",
           "who": "Para qualidade: cada peça conferida na linha, e a fora do padrão separada.",
           "cta": "Testar o cenário Qualidade",
-          "specialist": "Falar com um especialista em qualidade",
+          "specialist": "Falar com especialista em qualidade",
           "source": "modelo: detector de objetos de uso geral, para a demonstração · vídeo de banco",
           "wa": "Olá! Quero falar com um especialista sobre inspeção de qualidade."
         },
         {
-          "tab": "CH4 Contagem",
+          "tab": "CH4",
           "name": "Contagem",
           "state": "CONTAGEM · lote 07",
           "cam": "CAM 05 · Expedição",
@@ -233,12 +233,12 @@
           "notified": "painel da expedição",
           "who": "Para operação e logística: contagem na esteira e conferência de carga.",
           "cta": "Testar o cenário Contagem",
-          "specialist": "Falar com um especialista em contagem",
+          "specialist": "Falar com especialista em contagem",
           "source": "modelo: detector de vocabulário aberto + rastreamento ByteTrack · vídeo de banco",
           "wa": "Olá! Quero falar com um especialista sobre contagem."
         },
         {
-          "tab": "CH5 Ergonomia",
+          "tab": "CH5",
           "name": "Ergonomia",
           "state": "ALERTA · tronco acima de 45°",
           "cam": "CAM 06 · Armazém",
@@ -246,8 +246,8 @@
           "norm": "NR-17 · ergonomia",
           "notified": "SESMT, no relatório do turno",
           "who": "Para SESMT: posturas de risco no levantamento de carga, medidas pelo esqueleto.",
-          "cta": "Falar sobre ergonomia",
-          "specialist": "Falar com um especialista em ergonomia",
+          "cta": "Falar com especialista em ergonomia",
+          "specialist": "Falar com especialista em ergonomia",
           "source": "modelo: estimativa de pose, com o ângulo do tronco calculado a cada quadro · vídeo de banco",
           "wa": "Olá! Quero falar com um especialista sobre ergonomia."
         }
@@ -346,10 +346,12 @@
     "contact": {
       "title": "Fale com um especialista.",
       "text": "O especialista olha as suas câmeras com você, diz o que dá para reconhecer e, se fizer sentido, monta um piloto acompanhado. Se preferir ver antes, a experiência mostra os cenários funcionando.",
-      "solo": "Prefiro testar sozinho"
+      "screen": "CAM 07 · aguardando sinal",
+      "screenSub": "a sua câmera entra aqui"
     },
     "bar": {
-      "label": "Atalhos"
+      "label": "Atalhos",
+      "specialist": "Especialista"
     },
     "wa": "Olá! Quero falar com um especialista sobre visão computacional na minha planta.",
     "pipeline": {

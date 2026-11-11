@@ -128,6 +128,10 @@
     "home.scenarios.items[4].state": {
       "values": ["45"],
       "source": "Limiar de flexão de tronco (45°) desenhado no vídeo de ergonomia, esboço v3."
+    },
+    "home.contact.screen": {
+      "values": ["07"],
+      "source": "Câmera do visitante (\"CAM 07 · a sua\" no muro do herói), repetida no monitor do contato."
     }
   }
 }
