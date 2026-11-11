@@ -1,19 +1,15 @@
 ---
-// Home: six sections, six margin questions (PLANO-V2 §4). The hero is the only section built
-// by hand: the verdict figure first (it leads on phones), the buyer's gain beside it from
-// 64rem. The name is in the header; it is not repeated here (AUDITORIA-V2 F-02).
-import AlertCard from '../components/AlertCard.astro';
-import DemoStatus from '../components/DemoStatus.astro';
-import HudVideo from '../components/HudVideo.astro';
-import Pipeline from '../components/Pipeline.astro';
-import PointList from '../components/PointList.astro';
-import Section from '../components/Section.astro';
-import WhatsAppButton from '../components/WhatsAppButton.astro';
-import { LOGIN_URL } from '../config/links';
-import { READINGS } from '../data/media';
+// Home v3 (approved 11/11/2026, SCRATCH/esboco rodada 3): dark, opening (Koda turns on the TV →
+// dive), wall of five live readings + "CAM 06 · yours", partners, Koda, problem, five channels,
+// specialist band, camera → decision, Fireshow, data, FAQ, contact. "Talk to a specialist" always
+// goes to WhatsApp (contact page while PUBLIC_WHATSAPP_NUMBER is unset). No video downloads before
+// it is near the screen; reduced motion turns off the opening, carousel, pulse and autoplay.
+import Icon from '../components/Icon.astro';
+import { EXPERIENCE_URL, PHONE_DEMO_URL } from '../config/links';
 import { dict } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
+import { CONTACT_EMAIL, whatsappHref } from '../lib/site';
 
 interface Props {
   locale: Locale;
@@ -22,274 +18,1703 @@ interface Props {
 const { locale } = Astro.props;
 const t = dict(locale);
 const h = t.home;
-const dataRows = h.data.leavesRows.map((leaves, i) => ({ leaves, stays: h.data.staysRows[i] }));
+const M = '/media/home/';
+// Swap for a higher-resolution Koda here when it arrives.
+const KODA = { section: `${M}koda-apresentando.webp`, peek: `${M}koda-apontando.webp`, w: 448, h: 600 };
+
+/** Specialist link: WhatsApp with a context message, or the contact page while there is no number. */
+function specialist(message: string) {
+  const wa = whatsappHref(message);
+  return { wa: Boolean(wa), attrs: wa ? { href: wa, target: '_blank', rel: 'noopener' } : { href: pathFor('contact', locale) } };
+}
+const general = specialist(h.wa);
+
+const SCENES = (
+  [
+    { key: 'fogo', cenario: 'fogo', alert: true },
+    { key: 'epi', cenario: 'epi', alert: true },
+    { key: 'qualidade', cenario: 'qualidade', alert: false },
+    { key: 'contagem', cenario: 'contagem', alert: false },
+    { key: 'ergonomia', cenario: null, alert: true },
+  ] as const
+).map((s, i) => {
+  const text = h.scenarios.items[i];
+  if (!text) throw new Error(`home.scenarios.items[${i}] missing`);
+  return {
+    ...s,
+    ...text,
+    poster: `${M}v-${s.key}`,
+    video: `${M}v-${s.key}.mp4`,
+    esp: specialist(text.wa),
+  };
+});
+
+const LOGOS = [
+  { src: '/media/parceiros/l-brandschutz.svg', alt: h.partners.bs, w: 143, h: 38 },
+  { src: '/media/parceiros/l-visdec.svg', alt: h.partners.visdec, w: 153, h: 30 },
+  { src: '/media/parceiros/l-cath.webp', alt: h.partners.cath, w: 117, h: 48 },
+];
+// Four copies so the track is always wider than the strip; the moving half repeats exactly.
+const COPIES = [0, 1, 2, 3];
+const srcset = (base: string) => `${base}-320.webp 320w, ${base}.webp 640w`;
 ---
 
-<Base locale={locale} routeKey="home" title={h.meta.title} description={h.meta.description}>
-  <section class="section q-section greek-grid section--cover section--flush" aria-labelledby="hero-title">
-    <div class="container q-grid">
-      <p class="q" aria-hidden="true">
-        {h.questions.what}
-      </p>
-      <div class="q-body q-body--wide hero">
-        <div class="hero__copy">
-          <p class="visually-hidden q-sr">{h.questions.what}</p>
+<Base locale={locale} routeKey="home" title={h.meta.title} description={h.meta.description} theme="dark">
+  <Fragment slot="head">
+    <script is:inline>
+      // Opening: once per session; never with reduced motion, data saver or ?sem-abertura.
+      // Decided before first paint so the page never flashes under the overlay.
+      (() => {
+        try {
+          const q = location.search + location.hash;
+          const saveData = navigator.connection && navigator.connection.saveData;
+          if (matchMedia('(prefers-reduced-motion: reduce)').matches || saveData || /sem-abertura/.test(q)) return;
+          if (sessionStorage.getItem('lk-abertura') === '1') return;
+          document.documentElement.classList.add('lk-abre');
+        } catch {
+          // Storage blocked: no opening.
+        }
+      })();
+    </script>
+  </Fragment>
+
+  <div class="home">
+    <section class="heroi greek-grid" aria-labelledby="hero-title">
+      <div class="wrap heroi__grade">
+        <div class="heroi__copy">
           <h1 id="hero-title">{h.hero.title}</h1>
-          <p class="lede">{h.hero.sub}</p>
-          <div class="btn-row">
-            <WhatsAppButton locale={locale} />
-            <!-- The live demo, straight from the hero, with its state (AUDITORIA-V2 F-14). -->
-            <DemoStatus locale={locale} demo="epi" button label={t.cta.demo} />
+          <p class="lead">{h.hero.sub}</p>
+          <div class="acoes" data-heroi-acoes>
+            <a class="btn" href={EXPERIENCE_URL}>
+              {t.cta.experience}
+              <Icon name="arrow" size={18} />
+            </a>
+            <a class="btn btn--ghost" {...general.attrs}>
+              <Icon name="chat" size={18} />
+              {t.cta.specialist}
+              {general.wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
+            </a>
+          </div>
+          <p class="nota">{h.hero.note}</p>
+        </div>
+
+        <div class="muro-wrap">
+          <div class="muro liga" role="group" aria-label={h.hero.wallLabel}>
+            {SCENES.map((s) => (
+              <div class="cam">
+                <img
+                  src={`${s.poster}.webp`}
+                  srcset={srcset(s.poster)}
+                  sizes="(max-width: 56rem) 50vw, 20vw"
+                  alt=""
+                  width="640"
+                  height="360"
+                />
+                <video data-src={s.video} data-lazy muted loop playsinline preload="none" aria-hidden="true" />
+                <span class="cam__nome">{s.name}</span>
+              </div>
+            ))}
+            <a class="cam cam--voce" href={PHONE_DEMO_URL}>
+              <span>
+                <b>{h.hero.yours.title}</b>
+                {h.hero.yours.text}
+              </span>
+            </a>
+            <div class="muro__legenda">
+              <span>{h.hero.legend}</span>
+              <button type="button" class="parar" data-parar data-label-pause={h.hero.pause} data-label-resume={h.hero.resume}>
+                <Icon name="stop" size={16} class="parar__stop" />
+                <Icon name="play" size={16} class="parar__play" />
+                <span data-parar-texto>{h.hero.pause}</span>
+              </button>
+            </div>
+          </div>
+          <a class="espia" href={EXPERIENCE_URL}>
+            <span class="espia__balao">{h.hero.koda}</span>
+            <img src={KODA.peek} alt="" width={KODA.w} height={KODA.h} loading="lazy" />
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="parceiros">
+      <div class="wrap parceiros__linha">
+        <p id="parceiros-titulo">{h.partners.label}</p>
+        <div class="marquee">
+          <ul aria-labelledby="parceiros-titulo">
+            {COPIES.map((c) =>
+              LOGOS.map((l) => (
+                <li {...(c ? { 'aria-hidden': 'true', 'data-copia': '' } : {})}>
+                  <img src={l.src} alt={c ? '' : l.alt} width={l.w} height={l.h} loading="lazy" />
+                </li>
+              )),
+            )}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <section class="koda" aria-labelledby="koda-title">
+      <div class="wrap koda__grade">
+        <img class="koda__img" src={KODA.section} alt={h.koda.alt} width={KODA.w} height={KODA.h} loading="lazy" />
+        <div class="koda__copy">
+          <h2 id="koda-title">{h.koda.title}</h2>
+          <p class="lead">{h.koda.text}</p>
+          <div class="acoes">
+            <a class="btn" href={EXPERIENCE_URL}>
+              {h.koda.cta}
+              <Icon name="arrow" size={18} />
+            </a>
+          </div>
+          <p class="nota">{h.koda.note}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="problema" aria-labelledby="problema-title">
+      <div class="wrap problema__grade">
+        <h2 id="problema-title">
+          {h.problem.title} <span>{h.problem.muted}</span>
+        </h2>
+        <p class="lead">{h.problem.text}</p>
+      </div>
+    </section>
+
+    <section class="cenarios" id="cenarios" aria-labelledby="cenarios-title">
+      <div class="wrap">
+        <div class="cab">
+          <h2 id="cenarios-title">{h.scenarios.title}</h2>
+          <p class="lead">{h.scenarios.text}</p>
+        </div>
+        <div class="abas" role="tablist" aria-label={h.scenarios.tabsLabel} data-abas>
+          {SCENES.map((s, i) => (
+            <button
+              type="button"
+              role="tab"
+              id={`aba-${s.key}`}
+              aria-controls={`painel-${s.key}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              tabindex={i === 0 ? 0 : -1}
+            >
+              {s.tab}
+            </button>
+          ))}
+        </div>
+        {SCENES.map((s, i) => (
+          <div class="painel" role="tabpanel" id={`painel-${s.key}`} aria-labelledby={`aba-${s.key}`} hidden={i !== 0} data-painel>
+            <div>
+              <div class="monitor liga">
+                <div class="cam">
+                  <img src={`${s.poster}.webp`} alt="" width="640" height="360" loading="lazy" />
+                  <video data-src={s.video} data-lazy muted loop playsinline preload="none" aria-hidden="true" />
+                </div>
+              </div>
+              <p class="fonte">{s.source}</p>
+            </div>
+            <div class="ticket">
+              <p class:list={['estado', { 'estado--ok': !s.alert }]}>
+                <Icon name={s.alert ? 'alert' : 'ok'} size={16} />
+                {s.state}
+              </p>
+              <dl>
+                <dt>{h.scenarios.camera}</dt>
+                <dd>{s.cam}</dd>
+                <dt>{h.scenarios.when}</dt>
+                <dd class="mono">{h.scenarios.time}</dd>
+                <dt>{h.scenarios.evidence}</dt>
+                <dd>{s.evidence}</dd>
+                <dt>{h.scenarios.norm}</dt>
+                <dd>{s.norm}</dd>
+                <dt>{h.scenarios.notified}</dt>
+                <dd>{s.notified}</dd>
+              </dl>
+              <p class="quem">{s.who}</p>
+              {s.cenario ? (
+                <>
+                  <a class="btn" href={`${EXPERIENCE_URL}?cenario=${s.cenario}`}>
+                    {s.cta}
+                  </a>
+                  <a class="link-esp" {...s.esp.attrs}>
+                    {s.specialist}
+                    {s.esp.wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
+                  </a>
+                </>
+              ) : (
+                <a class="btn" {...s.esp.attrs}>
+                  {s.cta}
+                  {s.esp.wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
+                </a>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="faixa" aria-labelledby="faixa-title">
+      <div class="wrap faixa__grade">
+        <div>
+          <h2 id="faixa-title">{h.band.title}</h2>
+          <p class="lead">{h.band.text}</p>
+        </div>
+        <div class="acoes">
+          <a class="btn" {...general.attrs}>
+            <Icon name="chat" size={18} />
+            {t.cta.specialist}
+            {general.wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="como" id="como" aria-labelledby="como-title">
+      <div class="wrap">
+        <div class="cab">
+          <h2 id="como-title">{h.how.title}</h2>
+        </div>
+        <div class="como__grade">
+          <svg class="diagrama liga" viewBox="0 0 620 300" role="img" aria-label={h.how.diagram}>
+            <path class="fio" d="M128 150 H232"></path>
+            <path class="pulso" d="M128 150 H232"></path>
+            <path class="fio" d="M368 150 H462"></path>
+            <path class="pulso pulso--2" d="M368 150 H462"></path>
+            <g transform="translate(40 110)">
+              <rect class="caixa" width="88" height="80" rx="6"></rect>
+              <rect class="icone" x="16" y="28" width="40" height="26" rx="3"></rect>
+              <path class="icone" d="M56 36l14-7v24l-14-7"></path>
+              <circle class="icone" cx="30" cy="41" r="6"></circle>
+            </g>
+            <text class="t" x="40" y="236">
+              {h.how.camera}
+            </text>
+            <text x="40" y="258">
+              {h.how.cameraSub}
+            </text>
+            <g transform="translate(232 96)">
+              <rect class="caixa" width="136" height="108" rx="6"></rect>
+              <g class="opA">
+                <path class="icone" d="M44 66h48a16 16 0 0 0 0-32a22 22 0 0 0-42-4a18 18 0 0 0-6 36z"></path>
+              </g>
+              <g class="opB">
+                <rect class="icone" x="40" y="34" width="56" height="40" rx="3"></rect>
+                <path class="icone" d="M50 46h36M50 56h36M50 66h22"></path>
+              </g>
+            </g>
+            <text class="t opA" x="232" y="236">
+              {h.how.cloud}
+            </text>
+            <text class="opA" x="232" y="258">
+              {h.how.cloudSub}
+            </text>
+            <text class="t opB" x="232" y="236">
+              {h.how.plant}
+            </text>
+            <text class="opB" x="232" y="258">
+              {h.how.plantSub}
+            </text>
+            <g transform="translate(462 90)">
+              <g class="opA">
+                <rect class="caixa" x="18" width="70" height="120" rx="10"></rect>
+                <path class="icone" d="M40 58l10 10 18-20"></path>
+              </g>
+              <g class="opB">
+                <rect class="caixa" y="16" width="112" height="84" rx="6"></rect>
+                <path class="icone" d="M18 74l18-18 14 12 22-26 20 16"></path>
+              </g>
+            </g>
+            <text class="t opA" x="462" y="236">
+              {h.how.phone}
+            </text>
+            <text class="opA" x="462" y="258">
+              {h.how.phoneSub}
+            </text>
+            <text class="t opB" x="462" y="236">
+              {h.how.dashboard}
+            </text>
+            <text class="opB" x="462" y="258">
+              {h.how.dashboardSub}
+            </text>
+            <text x="40" y="52">
+              {h.how.choose}
+            </text>
+          </svg>
+          <ol class="passos">
+            {h.how.steps.map((p) => (
+              <li>
+                <h3>{p.title}</h3>
+                <p>{p.text}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="prova" id="prova" aria-labelledby="prova-title">
+      <div class="wrap">
+        <div class="cab">
+          <h2 id="prova-title">{h.proof.title}</h2>
+        </div>
+        <div class="prova__grade">
+          <figure class="vert liga">
+            <div class="clip">
+              <img src={`${M}fs-publico.webp`} alt="" width="464" height="832" loading="lazy" />
+              <video
+                data-src={`${M}fs-publico.mp4`}
+                data-lazy
+                muted
+                loop
+                playsinline
+                preload="none"
+                aria-label={h.proof.publicLabel}
+              ></video>
+            </div>
+            <figcaption>{h.proof.publicCaption}</figcaption>
+          </figure>
+          <div class="lado">
+            <figure class="hor liga">
+              <div class="clip">
+                <img src={`${M}fs-camera.webp`} alt="" width="960" height="508" loading="lazy" />
+                <video
+                  data-src={`${M}fs-camera.mp4`}
+                  data-lazy
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                  aria-label={h.proof.cameraLabel}
+                ></video>
+              </div>
+              <figcaption>{h.proof.cameraCaption}</figcaption>
+            </figure>
+            <div class="itens">
+              <div class="item">
+                <span class="item__data">{h.proof.event.date}</span>
+                <h3>{h.proof.event.title}</h3>
+                <p>{h.proof.event.text}</p>
+              </div>
+              <div class="item">
+                <span class="item__data">{h.proof.demo.date}</span>
+                <h3>{h.proof.demo.title}</h3>
+                <p>{h.proof.demo.text}</p>
+                <a href={PHONE_DEMO_URL}>{h.proof.demo.cta}</a>
+              </div>
+            </div>
           </div>
         </div>
-        <HudVideo locale={locale} clip="hero" priority class="hero__video" />
       </div>
-    </div>
-  </section>
+    </section>
 
-  <Section question={h.questions.gain} title={h.doors.title} id="gain-title" flush wide>
-    <div class="doors">
-      <div class="door">
-        <p class="eyebrow">{h.doors.plant.eyebrow}</p>
-        <h3>{h.doors.plant.title}</h3>
-        <PointList rows={h.doors.plant.rows} />
-        <div class="btn-row">
-          <WhatsAppButton locale={locale} label={h.doors.plant.cta} />
+    <section class="dados" id="dados" aria-labelledby="dados-title">
+      <div class="wrap dados__grade">
+        <div class="cab">
+          <h2 id="dados-title">{h.data.title}</h2>
+          <p class="lead">{h.data.text}</p>
+        </div>
+        <table>
+          <caption class="visually-hidden">{h.data.title}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{h.data.leaves}</th>
+              <th scope="col">{h.data.stays}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {h.data.rows.map(([a, b]) => (
+              <tr>
+                <td>{a}</td>
+                <td>{b}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="faq" id="faq" aria-labelledby="faq-title">
+      <div class="wrap faq__grade">
+        <div class="cab">
+          <h2 id="faq-title">{h.faq.title}</h2>
+        </div>
+        <div>
+          {h.faq.items.map((f, i) => (
+            <details open={i === 0}>
+              <summary>{f.q}</summary>
+              <p>
+                {f.a}
+                {i === h.faq.items.length - 1 && (
+                  <>
+                    {' '}
+                    <a href={pathFor('privacy', locale)}>{h.faq.privacy}</a>
+                  </>
+                )}
+              </p>
+            </details>
+          ))}
         </div>
       </div>
-      <div class="door">
-        <p class="eyebrow">{h.doors.partner.eyebrow}</p>
-        <h3>{h.doors.partner.title}</h3>
-        <PointList rows={h.doors.partner.rows} />
-        <div class="btn-row">
-          <a class="btn" href={pathFor('partners', locale)}>
-            <span class="btn__mark" aria-hidden="true"></span>
-            {h.doors.partner.cta}
-          </a>
+    </section>
+
+    <section class="contato" id="contato" aria-labelledby="contato-title">
+      <div class="wrap">
+        <div class="cartao">
+          <h2 id="contato-title">{h.contact.title}</h2>
+          <p class="lead">{h.contact.text}</p>
+          <div class="acoes">
+            <a class="btn" {...general.attrs}>
+              <Icon name="chat" size={18} />
+              {t.cta.specialist}
+              {general.wa && <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>}
+            </a>
+            <a class="btn btn--ghost" href={EXPERIENCE_URL}>
+              {h.contact.solo}
+            </a>
+          </div>
+          {CONTACT_EMAIL && (
+            <a class="email mono" href={`mailto:${CONTACT_EMAIL}`}>
+              {CONTACT_EMAIL}
+            </a>
+          )}
         </div>
       </div>
+    </section>
+  </div>
+
+  <Fragment slot="after">
+    <div class="barra some" role="region" aria-label={h.bar.label} data-barra>
+      <a class="btn" href={EXPERIENCE_URL}>
+        {t.cta.experience}
+      </a>
+      <a class="btn btn--ghost barra__esp" {...general.attrs}>
+        <Icon name="chat" size={20} />
+        <span class="visually-hidden">
+          {t.cta.specialist}
+          {general.wa && <> ({t.a11y.externalWhatsapp})</>}
+        </span>
+      </a>
     </div>
-  </Section>
 
-  <Section question={h.questions.how} title={h.pipeline.title} id="how-title" wide>
-    <Pipeline locale={locale} />
-    <p class="after">
-      <a href={pathFor('howItWorks', locale)}>{h.pipeline.cta}</a>
-    </p>
-  </Section>
-
-  <Section question={h.questions.see} title={h.stage.title} text={h.stage.text} id="see-title" wide>
-    <HudVideo locale={locale} clip="fire" readings id="stage" />
-    <div class="stage-alerts" data-stage-alerts>
-      {READINGS.map((s) => (
-        <AlertCard locale={locale} clip={s} {...(s === 'fire' ? {} : { class: 'is-hidden' })} />
-      ))}
+    <div class="abertura" role="dialog" aria-modal="true" aria-label={h.opening.label} data-abertura>
+      <div class="abertura__palco">
+        <video data-src={`${M}abertura.mp4`} poster={`${M}abertura-poster.webp`} muted playsinline preload="none"></video>
+      </div>
+      <div class="abertura__flash"></div>
+      <button type="button" class="abertura__pular" data-pular>
+        {h.opening.skip}
+      </button>
     </div>
-    <p class="after demos-line">
-      <span>{h.stage.demosLine}</span>
-      <DemoStatus locale={locale} demo="epi" label={h.stage.demoEpi} />
-      <DemoStatus locale={locale} demo="fire" label={h.stage.demoFire} />
-      <a href={pathFor('demos', locale)}>{t.cta.seeDemos}</a>
-    </p>
-  </Section>
-
-  <Section question={h.questions.data} title={h.data.title} id="data-title">
-    <table class="data">
-      <caption class="visually-hidden">{h.data.title}</caption>
-      <thead>
-        <tr>
-          <th scope="col">{h.data.leaves}</th>
-          <th scope="col">{h.data.stays}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {dataRows.map((r) => (
-          <tr>
-            <td>{r.leaves}</td>
-            <td>{r.stays}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-    <p>{h.data.retention}</p>
-    <p>
-      <a href={pathFor('compliance', locale)}>{h.data.cta}</a>
-    </p>
-  </Section>
-
-  <Section question={h.questions.next} title={h.next.title} id="next-title">
-    <dl class="defs next">
-      <div class="defs__row next__row">
-        <dt>{h.next.plant.term}</dt>
-        <dd>{h.next.plant.text}</dd>
-        <dd class="next__action">
-          <WhatsAppButton locale={locale} />
-        </dd>
-      </div>
-      <div class="defs__row next__row">
-        <dt>{h.next.partner.term}</dt>
-        <dd>{h.next.partner.text}</dd>
-        <dd class="next__action">
-          <a class="btn" href={`${pathFor('partners', locale)}#parceria`}>
-            <span class="btn__mark" aria-hidden="true"></span>
-            {h.next.partner.cta}
-          </a>
-        </dd>
-      </div>
-      <div class="defs__row next__row">
-        <dt>{h.next.client.term}</dt>
-        <dd>{h.next.client.text}</dd>
-        <dd class="next__action">
-          <a href={LOGIN_URL} rel="noopener" target="_blank">
-            {t.nav.login}
-            <span class="visually-hidden"> ({t.a11y.external})</span>
-          </a>
-        </dd>
-      </div>
-    </dl>
-    <p class="after">
-      {h.next.also} <a href={pathFor('twins', locale)}>{t.nav.twins}</a>
-      {' · '}
-      <a href={pathFor('robotics', locale)}>{t.nav.robotics}</a>
-    </p>
-  </Section>
+  </Fragment>
 </Base>
 
 <script>
-  // Stage: only the alert card of the active reading is shown.
-  const list = document.querySelector<HTMLFieldSetElement>('[data-hud-readings="stage"]');
-  const cards = document.querySelectorAll<HTMLElement>('[data-stage-alerts] [data-alert-card][data-slot]');
-  list?.addEventListener('change', (e) => {
-    const slot = (e.target as HTMLInputElement).value;
-    cards.forEach((c) => c.classList.toggle('is-hidden', c.dataset.slot !== slot));
+  const root = document.documentElement;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- Opening: Koda turns on the TV, the camera dives in, the site opens. Fail-safe: if the
+  // video is not playing within 1.2 s the site opens at once; the rest of the page is inert meanwhile.
+  const opened = new Promise<void>((resolve) => {
+    const ab = document.querySelector<HTMLElement>('[data-abertura]');
+    const video = ab?.querySelector('video');
+    const skip = ab?.querySelector<HTMLButtonElement>('[data-pular]');
+    if (!root.classList.contains('lk-abre') || !ab || !video || !skip) {
+      ab?.remove();
+      resolve();
+      return;
+    }
+    const rest = [...document.body.children].filter((e): e is HTMLElement => e !== ab && e instanceof HTMLElement);
+    rest.forEach((e) => (e.inert = true));
+    video.src = video.dataset.src ?? '';
+    skip.focus();
+    let done = false;
+    let playing = false;
+    const close = () => {
+      root.classList.remove('lk-abre', 'lk-entrando');
+      ab.remove();
+      resolve();
+    };
+    const finish = (skipped: boolean) => {
+      if (done) return;
+      done = true;
+      try {
+        sessionStorage.setItem('lk-abertura', '1');
+      } catch {
+        // Storage blocked: it may play again next load.
+      }
+      rest.forEach((e) => (e.inert = false));
+      if (skipped) {
+        close();
+        document.querySelector<HTMLElement>('.site-header__logo')?.focus({ preventScroll: true });
+        return;
+      }
+      (document.activeElement as HTMLElement | null)?.blur();
+      ab.classList.add('mergulha');
+      window.setTimeout(() => root.classList.add('lk-entrando'), 500);
+      window.setTimeout(close, 1200);
+    };
+    video.addEventListener('playing', () => (playing = true));
+    video.addEventListener('ended', () => finish(false));
+    video.play().catch(() => finish(true));
+    window.setTimeout(() => !playing && finish(true), 1200);
+    window.setTimeout(() => finish(false), 8000);
+    skip.addEventListener('click', () => finish(true));
+    ab.addEventListener('keydown', (e) => e.key === 'Escape' && finish(true));
   });
+
+  // ---- Videos: nothing downloads before it is near the screen; off-screen ones pause; reduced
+  // motion keeps the posters. One visible control stops every moving thing (WCAG 2.2.2).
+  const videos = [...document.querySelectorAll<HTMLVideoElement>('video[data-lazy]')];
+  const near = new Set<HTMLVideoElement>();
+  let stopped = reduce;
+  const play = (v: HTMLVideoElement) => {
+    if (stopped) return;
+    if (!v.getAttribute('src')) v.src = v.dataset.src ?? '';
+    v.play().catch(() => {});
+  };
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        const v = e.target as HTMLVideoElement;
+        if (e.isIntersecting) {
+          near.add(v);
+          play(v);
+        } else {
+          near.delete(v);
+          if (v.getAttribute('src')) v.pause();
+        }
+      }
+    },
+    { rootMargin: '200px' },
+  );
+  void opened.then(() => videos.forEach((v) => io.observe(v)));
+
+  const stopButton = document.querySelector<HTMLButtonElement>('[data-parar]');
+  const syncStop = () => {
+    root.classList.toggle('lk-parado', stopped);
+    if (!stopButton) return;
+    stopButton.setAttribute('aria-pressed', String(stopped));
+    const label = stopButton.querySelector('[data-parar-texto]');
+    if (label) label.textContent = (stopped ? stopButton.dataset.labelResume : stopButton.dataset.labelPause) ?? '';
+  };
+  syncStop();
+  stopButton?.addEventListener('click', () => {
+    stopped = !stopped;
+    if (stopped) videos.forEach((v) => v.pause());
+    else near.forEach(play);
+    syncStop();
+  });
+
+  // ---- Channels (tabs): arrows/Home/End move, the panel swaps in place.
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>('[data-abas] [role="tab"]')];
+  const select = (tab: HTMLButtonElement) => {
+    for (const x of tabs) {
+      const on = x === tab;
+      x.setAttribute('aria-selected', String(on));
+      x.tabIndex = on ? 0 : -1;
+      const panel = document.getElementById(x.getAttribute('aria-controls') ?? '');
+      if (panel) panel.hidden = !on;
+      if (!on) panel?.querySelector('video')?.pause();
+    }
+  };
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => select(tab));
+    tab.addEventListener('keydown', (e) => {
+      const n = tabs.length;
+      const to = { ArrowRight: (i + 1) % n, ArrowLeft: (i - 1 + n) % n, Home: 0, End: n - 1 }[e.key];
+      if (to === undefined) return;
+      e.preventDefault();
+      const next = tabs[to];
+      if (!next) return;
+      select(next);
+      next.focus();
+    });
+  });
+
+  // ---- Phone shortcut bar: shows once the hero buttons scrolled away.
+  const bar = document.querySelector<HTMLElement>('[data-barra]');
+  const heroActions = document.querySelector('[data-heroi-acoes]');
+  if (bar && heroActions) {
+    new IntersectionObserver(([e]) => {
+      if (e) bar.classList.toggle('some', e.isIntersecting || e.boundingClientRect.top > 0);
+    }).observe(heroActions);
+  }
 </script>
 
 <style>
-  /* Hero: copy first in the DOM (Tab reaches the primary CTA before the HUD's button at every
-     width); on phones the figure is placed first visually, two columns (copy ≈40 | figure 60)
-     from 64rem so frame + caption fit the fold. */
-  .hero {
-    display: grid;
-    gap: var(--lk-space-6);
-    align-items: start;
+  /* ---------- Header on the home: as wide as the page ---------- */
+  :global(.site-header__bar) {
+    max-width: 82.5rem;
   }
 
-  .hero :global(.hero__video) {
-    order: -1;
+  /* ---------- Shared bits of the home ---------- */
+  .home {
+    --home-text-2: #c9cdd3;
+    --home-screen: #050508;
+    overflow-x: clip;
   }
 
-  .hero__copy h1 {
-    max-width: 18ch;
-    margin-top: 0;
-    /* Two lines beside the figure at 1280; the global display size is for full-width covers. */
-    font-size: clamp(2.4rem, 4.4vw, 3.6rem);
+  .wrap {
+    max-width: 82.5rem;
+    margin-inline: auto;
+    padding-inline: var(--lk-gutter);
   }
 
-  .hero__copy .lede {
-    max-width: var(--lk-measure-lede);
+  .home h2 {
+    font-size: clamp(1.7rem, 3.4vw, 2.7rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0;
   }
 
-  .hero__copy .btn-row {
-    margin-top: var(--lk-space-5);
+  .home h3 {
+    font-size: 1.1rem;
+    line-height: 1.3;
+    margin: 0;
   }
 
-  @media (min-width: 64rem) {
-    .hero {
-      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-      gap: var(--lk-space-7);
-    }
-
-    .hero :global(.hero__video) {
-      order: 0;
-    }
+  .home p {
+    margin: 0;
   }
 
-  /* Two doors, a vertical rule between them, no frame. */
-  .doors {
-    display: grid;
-    gap: var(--lk-space-7);
+  .lead {
+    color: var(--home-text-2);
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    max-width: 58ch;
   }
 
-  .door h3 {
-    max-width: var(--lk-measure-lede);
-    margin: 0 0 var(--lk-space-5);
-  }
-
-  .door .btn-row {
-    margin-top: var(--lk-space-5);
-  }
-
-  @media (min-width: 48rem) {
-    .doors {
-      grid-template-columns: 1fr 1fr;
-    }
-
-    .door + .door {
-      border-left: 1px solid var(--lk-line);
-      padding-left: var(--lk-space-7);
-    }
-  }
-
-  /* Stage: one visible alert card at a time. */
-  .stage-alerts {
-    margin-top: var(--lk-space-5);
-  }
-
-  .stage-alerts :global(.is-hidden) {
-    display: none;
-  }
-
-  .after {
-    margin-top: var(--lk-space-6);
-  }
-
-  /* Data table: hairline rows, two columns. */
-  .data {
-    width: 100%;
-    max-width: var(--lk-measure);
-    border-collapse: collapse;
-    margin-top: var(--lk-space-5);
-  }
-
-  .data th,
-  .data td {
-    text-align: left;
-    vertical-align: top;
-    padding: var(--lk-space-3) var(--lk-space-4) var(--lk-space-3) 0;
-    border-bottom: 1px solid var(--lk-line);
-  }
-
-  .data th {
-    font-family: var(--lk-font-display);
-    font-weight: 500;
-    border-bottom: var(--lk-rule);
-  }
-
-  .data td {
+  .nota,
+  .fonte,
+  figcaption {
+    font: 400 0.8125rem/1.5 var(--lk-font-mono);
     color: var(--lk-text-2);
   }
 
-  /* Next: a third cell for the action. */
-  .next {
-    margin-top: var(--lk-space-5);
+  .acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--lk-space-3);
   }
 
-  .next__action {
-    max-width: none;
+  .acoes .btn {
+    min-height: 3rem;
   }
 
-  @media (min-width: 48rem) {
-    .next__row {
-      grid-template-columns: minmax(10rem, 0.8fr) minmax(0, 1.6fr) auto;
-      align-items: start;
+  .home section:not(.heroi) {
+    padding-block: clamp(3.5rem, 9vw, 7.5rem);
+    border-top: 1px solid var(--lk-line);
+  }
+
+  .cab {
+    display: grid;
+    gap: var(--lk-space-3);
+    margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
+    max-width: 47.5rem;
+  }
+
+  /* CRT turn-on as a section enters the view (scroll-driven, stepped, ends at rest). */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .liga {
+        animation: liga steps(6, end) both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 45%;
+      }
     }
   }
 
-  .demos-line {
+  @keyframes liga {
+    0% {
+      clip-path: inset(49.5% 0 49.5% 0);
+      filter: brightness(2.4);
+    }
+
+    40% {
+      clip-path: inset(0);
+      filter: brightness(1.6);
+    }
+
+    100% {
+      clip-path: inset(0);
+      filter: none;
+    }
+  }
+
+  /* ---------- Camera tile (poster image under a lazy video) ---------- */
+  .cam,
+  .clip {
+    position: relative;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .cam {
+    aspect-ratio: 16 / 9;
+    border-radius: 2px;
+  }
+
+  .cam img,
+  .cam video,
+  .clip img,
+  .clip video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .cam::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, #0000 0 2px, #0000002e 2px 3px);
+    pointer-events: none;
+  }
+
+  .cam__nome {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 2;
+    padding: 0.9rem 0.5rem 0.3rem;
+    background: linear-gradient(#0000, #000c);
+    font: 500 clamp(0.66rem, 0.95vw, 0.75rem) var(--lk-font-mono);
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  /* ---------- Hero ---------- */
+  .heroi {
+    padding-block: clamp(1.75rem, 5vw, 4.5rem) clamp(3rem, 6vw, 5rem);
+  }
+
+  .heroi__grade {
+    display: grid;
+    gap: var(--lk-space-5);
+  }
+
+  .heroi__copy {
+    display: grid;
+    gap: var(--lk-space-5);
+    align-content: center;
+  }
+
+  .heroi h1 {
+    font-size: clamp(2.1rem, 3.6vw, 3.25rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  .muro-wrap {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .muro {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+    padding: 5px;
+    background: var(--home-screen);
+    border: 1px solid var(--lk-line-strong);
+    border-radius: 6px;
+  }
+
+  .cam--voce {
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: var(--lk-space-2);
+    background: var(--lk-surface);
+    text-decoration: none;
+    font: 500 clamp(0.74rem, 1vw, 0.82rem) / 1.35 var(--lk-font-mono);
+    color: var(--lk-text-2);
+  }
+
+  .cam--voce::after {
+    display: none;
+  }
+
+  .cam--voce b {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--lk-accent);
+    font-weight: 500;
+  }
+
+  .cam--voce:hover b {
+    text-decoration: underline;
+  }
+
+  .muro__legenda {
+    grid-column: 1 / -1;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--lk-space-2) var(--lk-space-4);
+    justify-content: space-between;
+    gap: var(--lk-space-1) var(--lk-space-3);
+    padding: 0.15rem 0.15rem 0;
+    font: 400 0.75rem/1.4 var(--lk-font-mono);
+    color: var(--lk-text-2);
+  }
+
+  .parar {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    padding: 0 0.5rem;
+    background: none;
+    border: 0;
+    color: var(--lk-text);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .parar:hover {
+    color: var(--lk-accent);
+  }
+
+  .parar[aria-pressed='true'] :global(.parar__stop),
+  .parar:not([aria-pressed='true']) :global(.parar__play) {
+    display: none;
+  }
+
+  /* Koda peeks over the bottom edge of the wall (behind it) and points at the experience. */
+  .espia {
+    display: none;
+  }
+
+  @media (min-width: 37.5rem) {
+    .espia {
+      position: relative;
+      z-index: -1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+      gap: var(--lk-space-2);
+      margin-top: -2.5rem;
+      margin-right: 1.5rem;
+      text-decoration: none;
+      color: var(--lk-text);
+    }
+
+    .espia img {
+      width: 5.5rem;
+      height: auto;
+    }
+
+    .espia__balao {
+      position: relative;
+      margin-top: 3.4rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--lk-surface);
+      border: 1px solid var(--lk-line-strong);
+      border-radius: 6px;
+      font: 500 0.8125rem/1.3 var(--lk-font-body);
+    }
+
+    .espia:hover .espia__balao {
+      border-color: var(--lk-accent);
+      color: var(--lk-accent);
+    }
+  }
+
+  @media (min-width: 56.25rem) {
+    .heroi__grade {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+      gap: clamp(1.5rem, 4vw, 3.5rem);
+      align-items: center;
+    }
+
+    .muro {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 56.24rem) {
+    .heroi__copy {
+      display: contents;
+    }
+
+    .heroi h1 {
+      order: 1;
+    }
+
+    .heroi .lead {
+      order: 2;
+    }
+
+    .muro-wrap {
+      order: 3;
+    }
+
+    .heroi .acoes {
+      order: 4;
+    }
+
+    .heroi .nota {
+      order: 5;
+    }
+
+    .heroi .acoes .btn {
+      flex: 1 1 100%;
+    }
+  }
+
+  /* ---------- Partners ---------- */
+  .parceiros {
+    border-block: 1px solid var(--lk-line);
+    padding-block: var(--lk-space-6);
+  }
+
+  .parceiros__linha {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--lk-space-5) clamp(1.25rem, 5vw, 4rem);
+  }
+
+  .parceiros p {
+    flex: 1 1 11rem;
+    max-width: 14rem;
+    font: 500 0.8125rem/1.4 var(--lk-font-mono);
+    color: var(--lk-text-2);
+  }
+
+  .marquee {
+    flex: 1 1 26rem;
+    min-width: 0;
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, #0000, #000 12%, #000 88%, #0000);
+  }
+
+  .marquee ul {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    gap: clamp(3rem, 7vw, 5.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    animation: corre 26s steps(520, end) infinite;
+  }
+
+  .marquee:hover ul,
+  .marquee:focus-within ul,
+  :global(.lk-parado) .marquee ul {
+    animation-play-state: paused;
+  }
+
+  .marquee img {
+    height: clamp(1.6rem, 3.4vw, 2.4rem);
+    width: auto;
+    filter: brightness(0) invert(1);
+    opacity: 0.8;
+  }
+
+  .marquee li:nth-child(3n) img {
+    height: clamp(2.1rem, 4.4vw, 3rem);
+  }
+
+  @keyframes corre {
+    to {
+      transform: translateX(calc(-50% - clamp(1.5rem, 3.5vw, 2.75rem)));
+    }
+  }
+
+  /* ---------- Koda ---------- */
+  .home .koda {
+    border-top: 0;
+  }
+
+  .koda__grade {
+    display: grid;
+    gap: var(--lk-space-5);
+    align-items: center;
+  }
+
+  .koda__img {
+    width: clamp(10rem, 28vw, 18rem);
+    height: auto;
+    justify-self: center;
+  }
+
+  .koda__copy {
+    display: grid;
+    gap: var(--lk-space-5);
+    max-width: 40rem;
+  }
+
+  @media (min-width: 48rem) {
+    .koda__grade {
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: clamp(2rem, 6vw, 5rem);
+    }
+  }
+
+  /* ---------- Problem ---------- */
+  .problema__grade {
+    display: grid;
+    gap: var(--lk-space-5) clamp(1.5rem, 5vw, 4.5rem);
+    align-items: end;
+  }
+
+  .problema h2 {
+    font-size: clamp(1.9rem, 4.2vw, 3.4rem);
+  }
+
+  .problema h2 span {
+    color: var(--lk-text-2);
+  }
+
+  @media (min-width: 56.25rem) {
+    .problema__grade {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+  }
+
+  /* ---------- Channels ---------- */
+  .abas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: var(--lk-space-4);
+  }
+
+  .abas button {
+    min-height: 2.75rem;
+    padding: 0 0.9rem;
+    background: var(--lk-surface);
+    border: 1px solid var(--lk-line-strong);
+    border-radius: 4px;
+    color: var(--home-text-2);
+    font: 500 0.875rem var(--lk-font-mono);
+    cursor: pointer;
+  }
+
+  .abas button:hover {
+    border-color: var(--lk-accent);
+  }
+
+  .abas button[aria-selected='true'] {
+    color: var(--lk-bg);
+    background: var(--lk-text);
+    border-color: var(--lk-text);
+  }
+
+  .painel {
+    display: grid;
+    gap: var(--lk-space-5);
+    align-items: start;
+  }
+
+  .painel[hidden] {
+    display: none;
+  }
+
+  .monitor {
+    padding: 5px;
+    background: var(--home-screen);
+    border: 1px solid var(--lk-line-strong);
+    border-radius: 6px;
+  }
+
+  .monitor + .fonte {
+    margin-top: var(--lk-space-2);
+  }
+
+  .ticket {
+    display: grid;
+    gap: var(--lk-space-4);
+    padding: var(--lk-space-5);
+    background: var(--lk-surface);
+    border: 1px solid var(--lk-line);
+    border-radius: 6px;
+  }
+
+  .estado {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font: 600 0.8125rem/1.3 var(--lk-font-mono);
+    color: var(--lk-alert);
+  }
+
+  .estado--ok {
+    color: var(--lk-ok);
+  }
+
+  .ticket dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem 1rem;
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+
+  .ticket dt {
+    padding-top: 0.15rem;
+    font: 400 0.8125rem var(--lk-font-mono);
+    color: var(--lk-text-2);
+  }
+
+  .ticket dd {
+    margin: 0;
+  }
+
+  .quem {
+    padding-top: var(--lk-space-3);
+    border-top: 1px solid var(--lk-line);
+    color: var(--home-text-2);
+    font-size: 0.9375rem;
+  }
+
+  .link-esp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    font-size: 0.9375rem;
+    text-align: center;
+  }
+
+  @media (min-width: 56.25rem) {
+    .painel {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+    }
+  }
+
+  /* ---------- Specialist band ---------- */
+  .home .faixa {
+    padding-block: clamp(2.25rem, 6vw, 4rem);
+    background: var(--lk-surface);
+  }
+
+  .faixa__grade {
+    display: grid;
+    gap: var(--lk-space-5);
+    align-items: center;
+  }
+
+  .faixa h2 {
+    font-size: clamp(1.5rem, 2.8vw, 2.2rem);
+  }
+
+  .faixa .lead {
+    margin-top: var(--lk-space-3);
+  }
+
+  @media (min-width: 56.25rem) {
+    .faixa__grade {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+  }
+
+  /* ---------- Camera → decision ---------- */
+  .como__grade {
+    display: grid;
+    gap: clamp(1.5rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .diagrama {
+    width: 100%;
+    height: auto;
+    background: var(--home-screen);
+    border: 1px solid var(--lk-line);
+    border-radius: 6px;
+  }
+
+  .fio {
+    fill: none;
+    stroke: var(--lk-line-strong);
+    stroke-width: 2;
+  }
+
+  .pulso {
+    fill: none;
+    stroke: var(--lk-accent);
+    stroke-width: 2;
+    stroke-dasharray: 14 220;
+    animation: pulso 2.4s steps(24, end) infinite;
+  }
+
+  .pulso--2 {
+    animation-delay: 1.2s;
+  }
+
+  .diagrama text {
+    font: 500 17px var(--lk-font-mono);
+    fill: var(--home-text-2);
+  }
+
+  .diagrama .t {
+    font: 600 20px var(--lk-font-body);
+    fill: var(--lk-text);
+  }
+
+  .caixa {
+    fill: var(--lk-surface);
+    stroke: var(--lk-line-strong);
+    stroke-width: 1.5;
+  }
+
+  .icone {
+    fill: none;
+    stroke: var(--lk-text);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Idle: cloud/device and phone/dashboard alternate. */
+  .opA {
+    animation: opA 6s steps(1, end) infinite;
+  }
+
+  .opB {
+    animation: opB 6s steps(1, end) infinite;
+  }
+
+  :global(.lk-parado) .pulso,
+  :global(.lk-parado) .opA,
+  :global(.lk-parado) .opB {
+    animation-play-state: paused;
+  }
+
+  @keyframes pulso {
+    to {
+      stroke-dashoffset: -234;
+    }
+  }
+
+  @keyframes opA {
+    0%,
+    49% {
+      opacity: 1;
+    }
+
+    50%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes opB {
+    0%,
+    49% {
+      opacity: 0;
+    }
+
+    50%,
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .passos {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: p;
+  }
+
+  .passos li {
+    display: grid;
+    grid-template-columns: 2.75rem 1fr;
+    gap: 0.25rem 0.75rem;
+    padding: var(--lk-space-4) 0;
+    border-top: 1px solid var(--lk-line);
+  }
+
+  .passos li::before {
+    grid-row: span 2;
+    padding-top: 0.1rem;
+    counter-increment: p;
+    content: counter(p);
+    font: 500 0.875rem var(--lk-font-mono);
+    color: var(--lk-accent);
+  }
+
+  .passos p {
+    color: var(--home-text-2);
+    font-size: 0.9375rem;
+  }
+
+  @media (min-width: 56.25rem) {
+    .como__grade {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    }
+  }
+
+  /* ---------- Fireshow ---------- */
+  .prova__grade {
+    display: grid;
+    gap: var(--lk-space-4);
+    align-items: start;
+  }
+
+  .prova figure {
+    display: grid;
+    gap: var(--lk-space-2);
+    margin: 0;
+  }
+
+  .clip {
+    border: 1px solid var(--lk-line);
+    border-radius: 6px;
+  }
+
+  .vert .clip {
+    aspect-ratio: 4 / 5;
+  }
+
+  .hor .clip {
+    aspect-ratio: 7 / 4;
+  }
+
+  .lado,
+  .itens {
+    display: grid;
+    gap: var(--lk-space-4);
+    align-content: start;
+  }
+
+  .item {
+    display: grid;
+    gap: 0.4rem;
+    align-content: start;
+    padding: var(--lk-space-4);
+    border: 1px solid var(--lk-line);
+    border-radius: 6px;
+  }
+
+  .item__data {
+    font: 500 0.75rem var(--lk-font-mono);
+    color: var(--lk-text-2);
+  }
+
+  .item p {
+    color: var(--home-text-2);
+    font-size: 0.9375rem;
+  }
+
+  .item a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+
+  @media (min-width: 56.25rem) {
+    .prova__grade {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    }
+
+    .vert .clip {
+      aspect-ratio: 9 / 14;
+    }
+
+    .itens {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  /* ---------- Data ---------- */
+  .dados__grade {
+    display: grid;
+    gap: clamp(1.5rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  .dados table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+  }
+
+  .dados th,
+  .dados td {
+    padding: var(--lk-space-3) var(--lk-space-2);
+    text-align: left;
+    border-bottom: 1px solid var(--lk-line);
+  }
+
+  .dados th {
+    font: 500 0.8125rem var(--lk-font-mono);
+    color: var(--lk-text-2);
+  }
+
+  @media (min-width: 56.25rem) {
+    .dados__grade {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    }
+  }
+
+  /* ---------- FAQ ---------- */
+  .faq__grade {
+    display: grid;
+    gap: clamp(1.5rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  .faq details {
+    padding-block: 0.25rem;
+    border-top: 1px solid var(--lk-line);
+  }
+
+  .faq details:last-child {
+    border-bottom: 1px solid var(--lk-line);
+  }
+
+  .faq summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--lk-space-4);
+    min-height: 3.5rem;
+    font: 600 1.02rem/1.35 var(--lk-font-body);
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq summary::after {
+    content: '+';
+    font: 500 1.2rem var(--lk-font-mono);
+    color: var(--lk-accent);
+  }
+
+  .faq details[open] summary::after {
+    content: '−';
+  }
+
+  .faq details p {
+    max-width: 62ch;
+    padding-bottom: var(--lk-space-4);
+    color: var(--home-text-2);
+  }
+
+  @media (min-width: 56.25rem) {
+    .faq__grade {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    }
+  }
+
+  /* ---------- Contact ---------- */
+  .cartao {
+    display: grid;
+    gap: var(--lk-space-5);
+    justify-items: start;
+    padding: clamp(1.25rem, 4vw, 3rem);
+    background: var(--lk-surface);
+    border: 1px solid var(--lk-line);
+    border-radius: 8px;
+  }
+
+  .email {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 56.24rem) {
+    .cartao .acoes,
+    .faixa .acoes {
+      width: 100%;
+    }
+
+    .cartao .acoes .btn,
+    .faixa .acoes .btn {
+      flex: 1 1 100%;
+    }
+  }
+
+  /* ---------- Phone shortcut bar ---------- */
+  .barra {
+    display: none;
+  }
+
+  @media (max-width: 56.24rem) {
+    :global(body:has(.barra)) {
+      padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+    }
+
+    .barra {
+      position: fixed;
+      inset: auto 0 0;
+      z-index: 40;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: var(--lk-space-2);
+      padding: 0.625rem var(--lk-gutter) calc(0.625rem + env(safe-area-inset-bottom, 0px));
+      background: color-mix(in srgb, var(--lk-bg) 94%, transparent);
+      border-top: 1px solid var(--lk-line);
+      transition:
+        transform 0.2s steps(3, end),
+        visibility 0.2s steps(1, end);
+    }
+
+    .barra .btn {
+      min-height: 3rem;
+    }
+
+    .barra__esp {
+      width: 3rem;
+      padding: 0;
+    }
+
+    .barra.some {
+      transform: translateY(110%);
+      visibility: hidden;
+    }
+  }
+
+  /* ---------- Opening ---------- */
+  .abertura {
+    display: none;
+  }
+
+  :global(.lk-abre) {
+    overflow: hidden;
+  }
+
+  :global(.lk-abre) .abertura {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: block;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .abertura__palco {
+    position: absolute;
+    inset: 0;
+    transform-origin: 50% 46%;
+  }
+
+  .abertura video {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+  }
+
+  @media (orientation: portrait) {
+    .abertura video {
+      object-fit: contain;
+    }
+  }
+
+  .abertura__flash {
+    position: absolute;
+    inset: 0;
+    background: var(--lk-text);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .abertura__pular {
+    position: absolute;
+    right: var(--lk-gutter);
+    bottom: calc(var(--lk-gutter) + env(safe-area-inset-bottom, 0px));
+    z-index: 2;
+    min-height: 2.75rem;
+    padding: 0 1.1rem;
+    background: #000a;
+    border: 1px solid var(--lk-line-strong);
+    border-radius: 4px;
+    color: var(--lk-text);
+    font: 500 0.9rem var(--lk-font-body);
+    cursor: pointer;
+  }
+
+  .abertura.mergulha .abertura__palco {
+    animation: mergulho 0.9s steps(9, end) forwards;
+  }
+
+  .abertura.mergulha .abertura__flash {
+    animation: flash 0.9s steps(9, end) forwards;
+  }
+
+  .abertura.mergulha .abertura__pular {
+    display: none;
+  }
+
+  :global(.lk-entrando) :global(.site-header),
+  :global(.lk-entrando) :global(main) {
+    animation: entra 0.7s steps(7, end) both;
+  }
+
+  @keyframes mergulho {
+    0% {
+      transform: scale(1);
+      filter: none;
+    }
+
+    55% {
+      transform: scale(3.2);
+      filter: brightness(1.6) blur(1px);
+    }
+
+    100% {
+      transform: scale(9);
+      filter: brightness(3) blur(6px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes flash {
+    0%,
+    50% {
+      opacity: 0;
+    }
+
+    70% {
+      opacity: 0.85;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes entra {
+    0% {
+      transform: scale(1.14);
+      filter: blur(8px) brightness(1.8);
+    }
+
+    100% {
+      transform: none;
+      filter: none;
+    }
+  }
+
+  /* ---------- Reduced motion: posters, a still strip, a static diagram ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee ul,
+    .pulso,
+    .opA,
+    .opB {
+      animation: none;
+    }
+
+    .marquee {
+      mask-image: none;
+    }
+
+    .marquee [data-copia] {
+      display: none;
+    }
+
+    .opB {
+      opacity: 0;
+    }
   }
 </style>
