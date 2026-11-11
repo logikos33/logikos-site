@@ -7,7 +7,7 @@
 import { CRM_LEAD_URL } from '../config/links';
 import { dict } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
-import { CHAT_INTERESTS, CONTACT_EMAIL } from '../lib/site';
+import { CHAT_INTERESTS } from '../lib/site';
 
 interface Props {
   locale: Locale;
@@ -23,7 +23,7 @@ const submit = kind === 'conta' ? f.submitAccount : f.submitPartner;
 const texts = {
   sending: f.sending,
   success: kind === 'conta' ? f.successAccount : f.success,
-  error: f.error.replace('{email}', CONTACT_EMAIL),
+  error: f.error,
   errors: f.errors,
   consent: `${f.consentBefore} ${f.consentLink} ${f.consentAfter}`,
 };

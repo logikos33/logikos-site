@@ -1,13 +1,13 @@
 ---
 // /contato is the conversation with Koda (feedback 11/11, item 11): every "Talk to a specialist" on
-// the site lands here (#conversa), and the lead goes to the CRM. Email (and WhatsApp, once the
-// number is configured) stay beside it for whoever prefers to write.
+// the site lands here (#conversa), and the lead goes to the CRM. The email lives in the footer
+// only (round 5); WhatsApp shows beside the chat once the number is configured.
 import KodaChat from '../components/KodaChat.astro';
 import PageHero from '../components/PageHero.astro';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
-import { CONTACT_EMAIL, whatsappHref } from '../lib/site';
+import { whatsappHref } from '../lib/site';
 
 interface Props {
   locale: Locale;
@@ -22,16 +22,14 @@ const wa = whatsappHref(t.cta.whatsappMessage);
 
 <Base locale={locale} routeKey="contact" title={p.meta.title} description={p.meta.description}>
   <PageHero locale={locale} id="hero-title" title={c.title} text={c.text} quiet>
-    <p slot="note" class="alt">
-      {c.alt}
-      {CONTACT_EMAIL && <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>}
-      {wa && (
+    {wa && (
+      <p slot="note" class="alt">
         <a href={wa} rel="noopener" target="_blank">
           {p.whatsapp.title}
           <span class="visually-hidden">({t.a11y.externalWhatsapp})</span>
         </a>
-      )}
-    </p>
+      </p>
+    )}
     <KodaChat locale={locale} />
   </PageHero>
 </Base>

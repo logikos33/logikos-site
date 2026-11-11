@@ -147,7 +147,6 @@
         "title": "CAM 07 · yours",
         "text": "Open the demo on your phone and point it at anything."
       },
-      "legend": "real detection, run over stock footage · demonstration",
       "pause": "Pause motion",
       "resume": "Resume motion",
       "koda": "I’ll show you the readings."
@@ -172,7 +171,7 @@
     },
     "scenarios": {
       "title": "Five readings. The same cameras.",
-      "text": "The channels cycle on their own; swipe or pick a channel for a closer look. The video shows real detection, frame by frame.",
+      "text": "The channels cycle on their own; swipe or pick a channel for a closer look.",
       "tabsLabel": "Scenarios",
       "roledescription": "carousel",
       "slideRole": "channel",
@@ -197,7 +196,6 @@
           "who": "For fire brigades and site security: an early-stage fire is caught while it is still small, with the clip of the moment.",
           "cta": "Try the Fire scenario",
           "specialist": "Talk to a fire specialist",
-          "source": "Logikos proprietary model · stock footage",
           "wa": "Hi! I’d like to talk to a specialist about fire."
         },
         {
@@ -211,7 +209,6 @@
           "who": "For EHS: helmet, vest and restricted areas, person by person.",
           "cta": "Try the PPE scenario",
           "specialist": "Talk to a PPE specialist",
-          "source": "Logikos proprietary model · stock footage",
           "wa": "Hi! I’d like to talk to a specialist about PPE."
         },
         {
@@ -225,7 +222,6 @@
           "who": "For quality: every part checked on the line, and the off-spec ones set aside.",
           "cta": "Try the Quality scenario",
           "specialist": "Talk to a quality specialist",
-          "source": "Logikos proprietary model · stock footage",
           "wa": "Hi! I’d like to talk to a specialist about quality inspection."
         },
         {
@@ -239,7 +235,6 @@
           "who": "For operations and logistics: counting on the conveyor and load checks.",
           "cta": "Try the Counting scenario",
           "specialist": "Talk to a counting specialist",
-          "source": "Logikos proprietary model · stock footage",
           "wa": "Hi! I’d like to talk to a specialist about counting."
         },
         {
@@ -253,7 +248,6 @@
           "who": "For occupational health: risky postures when lifting loads, measured from the skeleton.",
           "cta": "Talk to an ergonomics specialist",
           "specialist": "Talk to an ergonomics specialist",
-          "source": "Logikos proprietary model · stock footage",
           "wa": "Hi! I’d like to talk to a specialist about ergonomics."
         }
       ],
@@ -265,7 +259,6 @@
         "state": "DIGITAL TWIN · plant and part by part",
         "solves": "A walkable plant from a phone video, to measure and annotate without going there; and a twin of every part, with 100 % inspection and the deviation from the design visible before it becomes a batch.",
         "gets": "The site in 3D to measure and annotate, traceability of every part and its history, part by part.",
-        "source": "Logikos Twins · illustrative scene",
         "cta": "Request your custom model"
       }
     },
@@ -748,12 +741,12 @@
   "about": {
     "meta": {
       "title": "About Logikos",
-      "description": "Logikos, from Indaial, Brazil: computer vision for the people who decide in industry. The camera you already have starts to understand what it sees, with robotics, drones and digital twins in the same vision."
+      "description": "Logikos: computer vision for the people who decide in industry. The camera you already have starts to understand what it sees, with robotics, drones and digital twins in the same vision."
     },
     "hero": {
       "question": "who are we?",
       "title": "Reason and sight.",
-      "text": "ΛΟΓΙΚΟΣ is Greek for rational. We are a team from Indaial, in Brazil's Itajaí Valley, born innovators who love technology, making the cameras industry already has understand what they see."
+      "text": "ΛΟΓΙΚΟΣ is Greek for rational. We are a team of born innovators who love technology, making the cameras industry already has understand what they see."
     },
     "cta": "Request your custom model",
     "manifesto": {
@@ -800,8 +793,8 @@
     },
     "facts": {
       "place": {
-        "title": "Where we are",
-        "text": "In Indaial, Santa Catarina, in Brazil's Itajaí Valley. Engineering and support from here to your plant."
+        "title": "From the first test to operation",
+        "text": "Model, engineering and support from Logikos itself, from the first test on your cameras to day-to-day operation."
       },
       "model": {
         "title": "Logikos proprietary model",
@@ -813,7 +806,7 @@
       }
     },
     "questions": {
-      "who": "where are we?",
+      "who": "from test to operation?",
       "why": "why do we exist?",
       "vision": "what is computer vision?",
       "fronts": "what do we do?",
@@ -824,7 +817,6 @@
     "chat": {
       "title": "Talk to Koda.",
       "text": "He asks a few questions, one at a time, and hands everything to a Logikos specialist. It takes a minute.",
-      "alt": "Rather write?",
       "label": "Conversation with Koda",
       "koda": "Koda",
       "you": "You",
@@ -847,9 +839,9 @@
       "submit": "Send to the team",
       "sending": "Sending…",
       "thanks": "Thank you, {nome}! I've got everything. Our team will be in touch as soon as possible.",
-      "error": "I couldn't send it right now. Try again in a moment or write to {email}.",
+      "error": "I couldn't send it right now. Try again in a moment.",
       "retry": "Try again",
-      "noscript": "The conversation with Koda needs JavaScript. Write to {email}.",
+      "noscript": "The conversation with Koda needs JavaScript. Our email is in the footer.",
       "errors": {
         "required": "I need this answer to go on.",
         "email": "That email doesn't look complete. Can you check?",
@@ -894,7 +886,7 @@
     "sections": {
       "controller": {
         "title": "Who handles your data",
-        "text": "Logikos Soluções, CNPJ {cnpj}, based in Indaial, Santa Catarina, Brazil, is the controller of the data sent through this website."
+        "text": "Logikos Soluções, CNPJ {cnpj}, is the controller of the data sent through this website."
       },
       "data": {
         "title": "What we collect",
@@ -954,7 +946,7 @@
     "sending": "Sending…",
     "success": "Received. We'll be in touch soon.",
     "successAccount": "Received. You get your access by email.",
-    "error": "We couldn't send it right now. Try again or write to {email}.",
+    "error": "Could not send right now. Try again in a moment.",
     "errorVerification": "We couldn't confirm you're not a bot. Reload the page and try again.",
     "invalid": "Please check the highlighted fields.",
     "options": {
@@ -991,7 +983,6 @@
   "footer": {
     "company": "Logikos Soluções",
     "cnpjLabel": "CNPJ",
-    "city": "Indaial, SC, Brazil",
     "rights": "All rights reserved."
   },
   "notFound": {
@@ -1169,14 +1160,12 @@
       "ergonomia": "Ergonomics"
     },
     "wall": {
-      "label": "Readings of the Logikos proprietary model on sample cameras",
-      "legend": "stock footage · Logikos proprietary model reading"
+      "label": "Readings of the Logikos proprietary model on sample cameras"
     },
     "yours": {
       "title": "CAM 07 · yours",
       "text": "try it on your phone camera"
     },
-    "clipNote": "stock footage · Logikos proprietary model reading",
     "fireshow": {
       "label": "Visitors trying the recognition at the Fireshow 2026 booth, faces blurred",
       "caption": "the crowd · Fireshow 2026 · faces blurred"

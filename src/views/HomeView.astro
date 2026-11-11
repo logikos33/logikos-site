@@ -10,7 +10,7 @@ import { EXPERIENCE_URL, PHONE_DEMO_URL } from '../config/links';
 import { dict, fill } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
-import { CONTACT_EMAIL, specialistHref, type ChatInterest } from '../lib/site';
+import { specialistHref, type ChatInterest } from '../lib/site';
 
 interface Props {
   locale: Locale;
@@ -138,7 +138,6 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
               </span>
             </a>
             <div class="muro__legenda">
-              <span>{h.hero.legend}</span>
               <button type="button" class="parar" data-parar data-label-pause={h.hero.pause} data-label-resume={h.hero.resume}>
                 <Icon name="stop" size={16} class="parar__stop" />
                 <Icon name="play" size={16} class="parar__play" />
@@ -227,7 +226,6 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
                       <video data-src={s.video} data-lazy muted loop playsinline preload="none" aria-hidden="true" />
                     </div>
                   </div>
-                  <p class="fonte">{s.source}</p>
                 </div>
                 <div class="ticket">
                   <p class:list={['estado', { 'estado--ok': !s.alert }]}>
@@ -283,7 +281,6 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
                     <video data-src={TWIN.video} data-webm={TWIN.webm} data-lazy muted loop playsinline preload="none" aria-hidden="true" />
                   </div>
                 </div>
-                <p class="fonte">{TWIN.source}</p>
               </div>
               <div class="ticket">
                 <p class="estado estado--ok">
@@ -540,11 +537,6 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
                 <Icon name="arrow" size={18} />
               </a>
             </div>
-            {CONTACT_EMAIL && (
-              <a class="email mono" href={`mailto:${CONTACT_EMAIL}`}>
-                {CONTACT_EMAIL}
-              </a>
-            )}
           </div>
           <!-- The page ends where it began: one more camera on the wall, waiting for the visitor's signal. -->
           <div class="sinal">
@@ -1800,16 +1792,22 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
       padding-bottom: calc(1.5em + var(--lk-space-2));
     }
 
-    /* Date on top, the story at the bottom: the card reads as a caption of the clip, not a box
-       with leftover space. */
+    /* Round 5 (r5-print-36): each card's content centred vertically, and the whole set (clip +
+       cards, with its heading) centred on the page. */
+    .prova .cab,
+    .prova__grade {
+      max-width: 60rem;
+      margin-inline: auto;
+    }
+
     .item {
       display: flex;
       flex-direction: column;
-      padding: var(--lk-space-5);
+      justify-content: center;
+      padding: var(--lk-space-5) var(--lk-space-6);
     }
 
     .item h3 {
-      margin-top: auto;
       font-size: clamp(1.4rem, 2vw, 1.75rem);
     }
   }

@@ -161,3 +161,14 @@ test('round 5: CH6 digital twin in the carousel and on the Twins hero, with WebM
   await expect(page.locator('.ph__media video')).toHaveAttribute('data-webm', /v-gemeo\.webm$/);
   await expect(page.locator('main')).toContainText('Gêmeo de cada peça');
 });
+
+// Round 5 (c, d): the email lives only in the footer (and in the privacy policy, the data subject's
+// channel); the city appears nowhere on the page.
+test('round 5: no email in the page body and no city anywhere visible', async ({ page }) => {
+  for (const path of ['/', '/contato', '/sobre', '/plataforma', '/integradores', '/en/', '/en/about']) {
+    await page.goto(path);
+    await expect(page.locator('main'), path).not.toContainText('@logikosvision.com.br');
+    await expect(page.locator('body'), path).not.toContainText(/Indaial|Itajaí|Santa Catarina/);
+  }
+  await expect(page.locator('.site-footer a[href^="mailto:"]')).toHaveCount(1);
+});

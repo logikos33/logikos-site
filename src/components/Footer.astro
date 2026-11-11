@@ -47,7 +47,6 @@ const LINKS: RouteKey[] = [
       <span class="mono">
         {t.footer.cnpjLabel} {COMPANY.cnpj}
       </span>
-      <span>{t.footer.city}</span>
       {CONTACT_EMAIL && <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>}
       <a href={pathFor('privacy', locale)}>{t.nav.privacy}</a>
       <span class="mono">

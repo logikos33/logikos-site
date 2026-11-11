@@ -147,7 +147,6 @@
         "title": "CAM 07 · a sua",
         "text": "Abra a demo no celular e aponte para o que quiser."
       },
-      "legend": "detecção real, rodada por cima de vídeos de banco · demonstração",
       "pause": "Pausar o movimento",
       "resume": "Retomar o movimento",
       "koda": "Eu te mostro as leituras."
@@ -172,7 +171,7 @@
     },
     "scenarios": {
       "title": "Cinco leituras. As mesmas câmeras.",
-      "text": "Os canais passam sozinhos; arraste ou escolha um canal para ver de perto. O vídeo mostra a detecção de verdade, quadro a quadro.",
+      "text": "Os canais passam sozinhos; arraste ou escolha um canal para ver de perto.",
       "tabsLabel": "Cenários",
       "roledescription": "carrossel",
       "slideRole": "canal",
@@ -197,7 +196,6 @@
           "who": "Para brigada e patrimonial: o princípio de incêndio é detectado ainda pequeno, com o clipe do momento.",
           "cta": "Testar o cenário Fogo",
           "specialist": "Falar com especialista em fogo",
-          "source": "modelo proprietário Logikos · vídeo de banco",
           "wa": "Olá! Quero falar com um especialista sobre fogo."
         },
         {
@@ -211,7 +209,6 @@
           "who": "Para EHS: capacete, colete e área restrita, por pessoa.",
           "cta": "Testar o cenário EPI",
           "specialist": "Falar com especialista em EPI",
-          "source": "modelo proprietário Logikos · vídeo de banco",
           "wa": "Olá! Quero falar com um especialista sobre EPI."
         },
         {
@@ -225,7 +222,6 @@
           "who": "Para qualidade: cada peça conferida na linha, e a fora do padrão separada.",
           "cta": "Testar o cenário Qualidade",
           "specialist": "Falar com especialista em qualidade",
-          "source": "modelo proprietário Logikos · vídeo de banco",
           "wa": "Olá! Quero falar com um especialista sobre inspeção de qualidade."
         },
         {
@@ -239,7 +235,6 @@
           "who": "Para operação e logística: contagem na esteira e conferência de carga.",
           "cta": "Testar o cenário Contagem",
           "specialist": "Falar com especialista em contagem",
-          "source": "modelo proprietário Logikos · vídeo de banco",
           "wa": "Olá! Quero falar com um especialista sobre contagem."
         },
         {
@@ -253,7 +248,6 @@
           "who": "Para SESMT: posturas de risco no levantamento de carga, medidas pelo esqueleto.",
           "cta": "Falar com especialista em ergonomia",
           "specialist": "Falar com especialista em ergonomia",
-          "source": "modelo proprietário Logikos · vídeo de banco",
           "wa": "Olá! Quero falar com um especialista sobre ergonomia."
         }
       ],
@@ -265,7 +259,6 @@
         "state": "GÊMEO DIGITAL · planta e peça a peça",
         "solves": "A planta navegável a partir de um vídeo do celular, para medir e anotar sem ir até lá; e o gêmeo de cada peça, com inspeção de 100 % e o desvio em relação ao projeto visível antes de virar lote.",
         "gets": "O ambiente em 3D para medir e anotar, a rastreabilidade de cada peça e o histórico peça a peça.",
-        "source": "Logikos Twins · cena ilustrativa",
         "cta": "Solicite seu modelo customizado"
       }
     },
@@ -748,12 +741,12 @@
   "about": {
     "meta": {
       "title": "Sobre a Logikos",
-      "description": "Logikos, de Indaial/SC: visão computacional para quem decide na indústria. A câmera que já existe passa a entender o que vê, com robótica, drones e gêmeos digitais na mesma visão."
+      "description": "Logikos: visão computacional para quem decide na indústria. A câmera que já existe passa a entender o que vê, com robótica, drones e gêmeos digitais na mesma visão."
     },
     "hero": {
       "question": "quem somos?",
       "title": "Razão e visão.",
-      "text": "ΛΟΓΙΚΟΣ: racional, em grego. Somos uma equipe de Indaial/SC, no Vale do Itajaí, de inovadores natos e apaixonados por tecnologia, fazendo a câmera que a indústria já tem entender o que vê."
+      "text": "ΛΟΓΙΚΟΣ: racional, em grego. Somos uma equipe de inovadores natos e apaixonados por tecnologia, fazendo a câmera que a indústria já tem entender o que vê."
     },
     "cta": "Solicite seu modelo customizado",
     "manifesto": {
@@ -800,8 +793,8 @@
     },
     "facts": {
       "place": {
-        "title": "Onde estamos",
-        "text": "Em Indaial/SC, no Vale do Itajaí. Engenharia e suporte daqui para a sua planta."
+        "title": "Do teste à operação",
+        "text": "Modelo, engenharia e suporte da própria Logikos, do primeiro teste nas suas câmeras à operação na planta."
       },
       "model": {
         "title": "Modelo proprietário Logikos",
@@ -813,7 +806,7 @@
       }
     },
     "questions": {
-      "who": "onde estamos?",
+      "who": "do teste à operação?",
       "why": "por que existimos?",
       "vision": "o que é visão computacional?",
       "fronts": "o que fazemos?",
@@ -824,7 +817,6 @@
     "chat": {
       "title": "Fale com o Koda.",
       "text": "Ele faz algumas perguntas, uma de cada vez, e passa tudo para um especialista da Logikos. Leva um minuto.",
-      "alt": "Prefere escrever?",
       "label": "Conversa com o Koda",
       "koda": "Koda",
       "you": "Você",
@@ -847,9 +839,9 @@
       "submit": "Enviar para a equipe",
       "sending": "Enviando…",
       "thanks": "Obrigado, {nome}! Recebi tudo. Nossa equipe entra em contato assim que possível.",
-      "error": "Não consegui enviar agora. Tente de novo em instantes ou escreva para {email}.",
+      "error": "Não consegui enviar agora. Tente de novo em instantes.",
       "retry": "Tentar de novo",
-      "noscript": "A conversa com o Koda precisa de JavaScript. Escreva para {email}.",
+      "noscript": "A conversa com o Koda precisa de JavaScript. O nosso e-mail está no rodapé.",
       "errors": {
         "required": "Preciso dessa resposta para seguir.",
         "email": "Esse e-mail não parece completo. Confere?",
@@ -894,7 +886,7 @@
     "sections": {
       "controller": {
         "title": "Quem trata os dados",
-        "text": "Logikos Soluções, CNPJ {cnpj}, com sede em Indaial/SC, é a controladora dos dados enviados por este site."
+        "text": "Logikos Soluções, CNPJ {cnpj}, é a controladora dos dados enviados por este site."
       },
       "data": {
         "title": "Quais dados coletamos",
@@ -954,7 +946,7 @@
     "sending": "Enviando…",
     "success": "Recebido. Retornamos em breve.",
     "successAccount": "Recebido. Você recebe o acesso por e-mail.",
-    "error": "Não foi possível enviar agora. Tente de novo ou escreva para {email}.",
+    "error": "Não foi possível enviar agora. Tente de novo em instantes.",
     "errorVerification": "Não foi possível confirmar que você não é um robô. Recarregue a página e tente de novo.",
     "invalid": "Revise os campos marcados.",
     "options": {
@@ -991,7 +983,6 @@
   "footer": {
     "company": "Logikos Soluções",
     "cnpjLabel": "CNPJ",
-    "city": "Indaial/SC",
     "rights": "Todos os direitos reservados."
   },
   "notFound": {
@@ -1169,14 +1160,12 @@
       "ergonomia": "Ergonomia"
     },
     "wall": {
-      "label": "Leituras do modelo proprietário Logikos em câmeras de exemplo",
-      "legend": "vídeos de banco · leitura do modelo proprietário Logikos"
+      "label": "Leituras do modelo proprietário Logikos em câmeras de exemplo"
     },
     "yours": {
       "title": "CAM 07 · a sua",
       "text": "teste na câmera do seu celular"
     },
-    "clipNote": "vídeo de banco · leitura do modelo proprietário Logikos",
     "fireshow": {
       "label": "Visitantes testando o reconhecimento no estande da Fireshow 2026, rostos borrados",
       "caption": "o público · Fireshow 2026 · rostos borrados"
