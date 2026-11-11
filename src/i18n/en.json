@@ -172,7 +172,7 @@
     },
     "scenarios": {
       "title": "Five readings. The same cameras.",
-      "text": "Pick a channel. The video shows the real detection, frame by frame.",
+      "text": "The channels cycle on their own; tap one for a closer look. The video shows real detection, frame by frame.",
       "tabsLabel": "Scenarios",
       "camera": "camera",
       "when": "when",
@@ -206,7 +206,7 @@
           "who": "For EHS: helmet, vest and restricted areas, person by person.",
           "cta": "Try the PPE scenario",
           "specialist": "Talk to a PPE specialist",
-          "source": "model: helmet detector trained for the demonstration · stock footage",
+          "source": "Logikos proprietary model · stock footage",
           "wa": "Hi! I’d like to talk to a specialist about PPE."
         },
         {
@@ -220,7 +220,7 @@
           "who": "For quality: every part checked on the line, and the off-spec ones set aside.",
           "cta": "Try the Quality scenario",
           "specialist": "Talk to a quality specialist",
-          "source": "model: general-purpose object detector, for the demonstration · stock footage",
+          "source": "Logikos proprietary model · stock footage",
           "wa": "Hi! I’d like to talk to a specialist about quality inspection."
         },
         {
@@ -234,7 +234,7 @@
           "who": "For operations and logistics: counting on the conveyor and load checks.",
           "cta": "Try the Counting scenario",
           "specialist": "Talk to a counting specialist",
-          "source": "model: open-vocabulary detector + ByteTrack tracking · stock footage",
+          "source": "Logikos proprietary model · stock footage",
           "wa": "Hi! I’d like to talk to a specialist about counting."
         },
         {
@@ -248,14 +248,15 @@
           "who": "For occupational health: risky postures when lifting loads, measured from the skeleton.",
           "cta": "Talk to an ergonomics specialist",
           "specialist": "Talk to an ergonomics specialist",
-          "source": "model: pose estimation, with the trunk angle computed on every frame · stock footage",
+          "source": "Logikos proprietary model · stock footage",
           "wa": "Hi! I’d like to talk to a specialist about ergonomics."
         }
       ]
     },
     "band": {
       "title": "Want to see this on your cameras?",
-      "text": "A specialist looks at your scenario with you, tells you what can be recognized with the cameras you already have and designs a guided pilot."
+      "text": "Open the demo on your phone, point the camera at anything and see the detection right away, no sign-up. For the cameras in your plant, a specialist designs the pilot with you.",
+      "cta": "Try it on your phone camera"
     },
     "how": {
       "title": "From camera to decision.",

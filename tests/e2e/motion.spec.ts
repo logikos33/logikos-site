@@ -90,10 +90,14 @@ test('home idle: wall videos load only after the opening and near the screen; th
   const h264 = await page.evaluate(() => document.createElement('video').canPlayType('video/mp4; codecs="avc1.4D401E"') !== '');
   const playing = () => wall.first().evaluate((v: HTMLVideoElement) => !v.paused);
   if (h264) await expect.poll(playing).toBe(true);
-  // WCAG 2.2.2: one visible control stops videos, the partner strip and the diagram pulse.
+  // WCAG 2.2.2: one control stops videos, the partner strip, the diagram pulse and the channels.
+  // It stays off the picture until the keyboard reaches it.
   const stop = page.locator('[data-parar]');
+  expect((await stop.boundingBox())?.width ?? 0).toBeLessThanOrEqual(1);
+  await stop.focus();
   await expect(stop).toBeVisible();
-  await stop.click();
+  expect((await stop.boundingBox())?.width ?? 0).toBeGreaterThan(40);
+  await stop.press('Enter');
   await expect(stop).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('html')).toHaveClass(/lk-parado/);
   expect(await wall.evaluateAll((vs) => vs.every((v) => (v as HTMLVideoElement).paused))).toBe(true);
@@ -102,7 +106,7 @@ test('home idle: wall videos load only after the opening and near the screen; th
       document.getAnimations().filter((a) => a.playState === 'running' && !(a as CSSAnimation).animationName?.startsWith('liga')).length,
   );
   expect(running).toBe(0);
-  await stop.click();
+  await stop.press('Enter');
   await expect(stop).toHaveAttribute('aria-pressed', 'false');
   if (h264) {
     await expect.poll(playing).toBe(true);

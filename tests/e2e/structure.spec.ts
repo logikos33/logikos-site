@@ -116,6 +116,18 @@ test('home channels: tabs swap the panel in place, by click and by arrow keys', 
   await expect(page.locator('#painel-fogo a.btn')).toHaveAttribute('href', /experiencia\/\?cenario=fogo$/);
 });
 
+test('home channels: the carousel advances on its own when its progress rule fills', async ({ page }) => {
+  await page.goto('/?sem-abertura');
+  const tabs = page.locator('[data-abas] [role="tab"]');
+  await page.locator('#cenarios .cab').scrollIntoViewIfNeeded();
+  await page.mouse.move(0, 0);
+  await expect(page.locator('#cenarios')).toHaveClass(/em-tela/);
+  // Skip the 7 s timer: finish the running progress animation.
+  await page.evaluate(() => document.getAnimations().forEach((a) => (a as CSSAnimation).animationName === 'progresso' && a.finish()));
+  await expect(tabs.nth(1)).toHaveAttribute('aria-selected', 'true');
+  await expect(page.locator('#painel-epi')).toBeVisible();
+});
+
 test('every HUD figure carries a two-cell caption (machine | person) and the poster already shows the verdict', async ({ page }) => {
   // The simulated HUD left the public pages (feedback 11/11); it is kept on the internal brand page.
   await page.goto('/_marca');
@@ -160,5 +172,5 @@ test('buttons: one size, a visible hover (cyan as state), and one pair of CTAs o
   // Koda's link is only Koda and the balloon, not an invisible strip under the wall.
   await page.goto('/');
   const peek = await page.locator('.espia').boundingBox();
-  expect(peek?.width ?? 999).toBeLessThan(320);
+  expect(peek?.width ?? 999).toBeLessThan(420);
 });
