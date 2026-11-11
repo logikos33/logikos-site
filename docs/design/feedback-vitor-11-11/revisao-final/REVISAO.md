@@ -76,3 +76,8 @@ Cada recorte mostra o ponto marcado (círculo ciano) no print da prévia pr-48 d
   **notificação do app** como imagem/componente de notificação de celular (cartão branco com ícone Logikos, título,
   texto e hora — o mesmo visual do push da experiência: `~/logikos/cvw-wt/unificada/src/features/experiencia/ui/push-card.tsx`
   como referência visual). Replicar em todos os 6 cartões.
+
+## 14. header — "um espaçamento aqui será necessário"
+
+![](p14-header.png)
+A logo Logikos Vision (maior agora) encosta no menu: dar respiro entre a logo e o primeiro item do menu (≥ 40 px no desktop), alinhar o menu verticalmente ao centro da logo (não à linha do LOGIKOS), e equilibrar o header (logo à esquerda, menu, idioma e CTAs à direita) sem quebrar em 1280 px.

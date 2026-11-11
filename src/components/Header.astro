@@ -388,8 +388,12 @@ const ctaHref = specialistHref(locale);
       padding-inline: var(--lk-space-3);
     }
 
+    /* Final review, item 14: air between the Logikos Vision lockup and the menu (≥ 40 px: the
+       logo's 16 px protection + 24 px here), the menu centred on the lockup's height. */
     .site-nav {
       display: block;
+      align-self: center;
+      margin-left: var(--lk-space-5);
     }
 
     .mobile-nav {
@@ -397,18 +401,22 @@ const ctaHref = specialistHref(locale);
     }
   }
 
-  /* From 90rem the 82.5rem bar has room for the full specialist label (measured: no overflow). */
-  @media (min-width: 90rem) {
-    .site-header__cta--specialist {
-      width: auto;
-      padding-inline: var(--lk-space-4);
+  /* Final review, item 14: with the larger lockup and 40 px of air before the menu, the specialist
+     stays a chat icon on desktop (its label is for screen readers), and between 72 and 80 rem the
+     lockup steps down to 46 px so the bar never overflows. */
+  @media (min-width: 72rem) and (max-width: 79.99rem) {
+    .site-header__logo :global(.lk-mark) {
+      width: 211px;
+      height: 46px;
     }
 
-    .site-header__cta-label {
-      position: static;
-      width: auto;
-      height: auto;
-      clip: auto;
+    /* Exactly 40 px of air here (16 px protection + 8 px gap + 16 px), menu items a touch tighter. */
+    .site-nav {
+      margin-left: var(--lk-space-4);
+    }
+
+    .site-nav a {
+      padding-inline: 0.28rem;
     }
   }
 

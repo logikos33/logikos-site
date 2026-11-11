@@ -194,3 +194,30 @@ test('final review: app notifications, page CTAs, custom-model partners, demos a
   await page.goto('/?sem-abertura');
   await expect(page.locator('.problema .folha')).toBeVisible();
 });
+
+// Final review, item 14: air between the lockup and the menu, menu centred on the logo, nothing
+// past the bar's edge from 1152 to 1440.
+test('final review 14: header — ≥ 40 px before the menu, centred, balanced at desktop widths', async ({ browser }) => {
+  for (const width of [1152, 1280, 1440]) {
+    const ctx = await browser.newContext({ viewport: { width, height: 400 } });
+    const page = await ctx.newPage();
+    await page.goto('/sobre');
+    await page.evaluate(() => document.documentElement.classList.remove('lk-heroi-acoes'));
+    const r = await page.evaluate(() => {
+      const logo = (document.querySelector('.site-header__logo svg') as Element).getBoundingClientRect();
+      const nav = (document.querySelector('.site-nav a') as Element).getBoundingClientRect();
+      const tools = (document.querySelector('.site-header__tools') as Element).getBoundingClientRect();
+      const bar = document.querySelector('.site-header__bar') as Element;
+      const edge = bar.getBoundingClientRect().right - parseFloat(getComputedStyle(bar).paddingRight);
+      return {
+        gap: nav.left - logo.right,
+        centre: Math.abs(nav.top + nav.height / 2 - (logo.top + logo.height / 2)),
+        over: tools.right - edge,
+      };
+    });
+    expect(r.gap, `${width}: gap`).toBeGreaterThanOrEqual(40);
+    expect(r.centre, `${width}: centre`).toBeLessThanOrEqual(2);
+    expect(r.over, `${width}: overflow`).toBeLessThanOrEqual(1);
+    await ctx.close();
+  }
+});
