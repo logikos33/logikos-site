@@ -4,8 +4,6 @@ import LeadForm from '../components/LeadForm.astro';
 import PageClose from '../components/PageClose.astro';
 import PageHero from '../components/PageHero.astro';
 import Section from '../components/Section.astro';
-import SpecialistButton from '../components/SpecialistButton.astro';
-import { LOGIN_URL } from '../config/links';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
 import Base from '../layouts/Base.astro';
@@ -21,13 +19,7 @@ const p = t.platform;
 
 <Base locale={locale} routeKey="platform" title={p.meta.title} description={p.meta.description}>
   <PageHero locale={locale} id="platform-title" title={p.hero.title} text={p.hero.text}>
-    <Fragment slot="actions">
-      <SpecialistButton locale={locale} label={t.cta.pilot} />
-      <a class="btn btn--ghost" href={LOGIN_URL} rel="noopener" target="_blank">
-        {p.login.cta}
-        <span class="visually-hidden"> ({t.a11y.external})</span>
-      </a>
-    </Fragment>
+    <!-- No "Sign in" until the new platform exists (feedback 11/11): the hero keeps the site's pair. -->
     <figure class="fig">
       <Cam clip="v-contagem" name={t.pages.cams.contagem} />
       <figcaption class="mono">{t.pages.clipNote}</figcaption>
@@ -63,16 +55,6 @@ const p = t.platform;
     <p>{p.account.confirm}</p>
     <div class="account-form">
       <LeadForm locale={locale} kind="account" id="conta" />
-    </div>
-    <div class="login">
-      <h3>{p.login.title}</h3>
-      <p>{p.login.text}</p>
-      <div class="btn-row">
-        <a class="btn btn--ghost" href={LOGIN_URL} rel="noopener" target="_blank">
-          {p.login.cta}
-          <span class="visually-hidden"> ({t.a11y.external})</span>
-        </a>
-      </div>
     </div>
   </Section>
 
@@ -160,22 +142,6 @@ const p = t.platform;
     .compare td:nth-child(3)::before {
       content: attr(data-cloud);
     }
-  }
-
-  .login {
-    margin-top: var(--lk-space-7);
-    padding-top: var(--lk-space-5);
-    border-top: 1px solid var(--lk-line);
-    max-width: var(--lk-measure);
-  }
-
-  .login h3 {
-    margin: 0 0 var(--lk-space-2);
-  }
-
-  .login p {
-    margin: 0 0 var(--lk-space-4);
-    color: var(--lk-text-2);
   }
 
   .account-form {

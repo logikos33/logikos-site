@@ -18,13 +18,6 @@ export const DEMO_PROBES: Record<keyof typeof DEMOS, string> = {
   fire: DEMOS.fire,
 };
 
-/**
- * Recognition SaaS sign-in, production environment (Railway `epi-monitor-v2/Frontend`).
- * The custom domain app.logikosvision.com.br does not answer (certificate pending), so the
- * Railway service domain is the only working production URL. Never DEV/staging environments.
- */
-export const LOGIN_URL = 'https://frontend-production-bf96.up.railway.app/login';
-
 /** The guided Logikos experience (Koda's tour of the scenarios). `?cenario=` takes fogo, epi, contagem, qualidade. */
 export const EXPERIENCE_URL = 'https://logikosvision.com.br/experiencia/';
 

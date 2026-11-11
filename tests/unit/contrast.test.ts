@@ -55,3 +55,28 @@ describe('verdict chip ink', () => {
     }
   });
 });
+
+// Feedback 11/11, item 12: the old-TV backdrop must stay light enough for AA. Scanline alpha comes
+// from global.css; the grain tile (public/media/ruido-v2.webp) has mean alpha 11.9/255 and max 40/255,
+// measured when it was generated.
+describe('old-TV backdrop', () => {
+  const dark = block("[data-theme='dark']");
+  const global = readFileSync('src/styles/global.css', 'utf8');
+  const scan = parseInt(/repeating-linear-gradient\(0deg, #ffffff([0-9a-f]{2}) 0 1px/i.exec(global)?.[1] ?? 'ff', 16) / 255;
+  const lift = (bg: string, white: number) => {
+    const ch = (i: number) => Math.round(parseInt(bg.slice(i, i + 2), 16) + (255 - parseInt(bg.slice(i, i + 2), 16)) * white);
+    return `#${[1, 3, 5].map((i) => ch(i).toString(16).padStart(2, '0')).join('')}`;
+  };
+  const bg = dark['lk-bg'] ?? '#000000';
+  // Average over the screen (one scanline every 3 px, mean grain) and the busiest pixel.
+  const average = lift(bg, 1 - (1 - scan / 3) * (1 - 11.9 / 255));
+  const busiest = lift(bg, 1 - (1 - scan) * (1 - 40 / 255));
+  it(`secondary text ≥ 4.5:1 on the average backdrop (${average})`, () => {
+    const ratio = contrast(dark['lk-text-2'] ?? '', average);
+    assert.ok(ratio >= 4.5, ratio.toFixed(2));
+  });
+  it(`body text ≥ 4.5:1 even on the busiest backdrop pixel (${busiest})`, () => {
+    const ratio = contrast(dark['lk-text'] ?? '', busiest);
+    assert.ok(ratio >= 4.5, ratio.toFixed(2));
+  });
+});

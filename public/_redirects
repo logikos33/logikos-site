@@ -1,0 +1,6 @@
+# "Entrar" left the site until the new platform exists (feedback 11/11): old bookmarks and links to
+# a sign-in page land on the home instead of the old Recognition system.
+/entrar / 302
+/login / 302
+/en/sign-in /en/ 302
+/en/login /en/ 302

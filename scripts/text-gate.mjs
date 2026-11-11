@@ -51,7 +51,7 @@ const RULES = [
 const APPROVED = {
   'index.html': [
     '/media/parceiros/l-brandschutz.webp',
-    '/media/parceiros/l-cath.webp',
+    '/media/parceiros/l-cath-v2.webp',
     'alt="brandschutz"',
     'alt="cath projetos e seguranca"',
     'estande da parceira brandschutz',

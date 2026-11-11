@@ -75,13 +75,22 @@ test('footer pages: real media, the hero CTA pair and the phone-camera close', a
   }
 });
 
-test('nav has six items plus sign-in (production login, new tab) and the CTA', async ({ page }) => {
+test('nav has six items and no "Entrar" anywhere; /entrar goes home (feedback 11/11)', async ({ page, request }) => {
   await page.goto('/');
   await expect(page.locator('.site-nav a')).toHaveCount(6);
-  const login = page.locator('header [data-login]');
-  await expect(login).toHaveAttribute('href', /frontend-production-bf96\.up\.railway\.app\/login$/);
-  await expect(login).toHaveAttribute('target', '_blank');
-  await expect(login).toHaveAttribute('rel', /noopener/);
+  for (const path of ['/', '/plataforma', '/en/platform', '/contato']) {
+    await page.goto(path);
+    await expect(page.locator('a[href*="railway.app"], a[href*="/login"], [data-login]'), path).toHaveCount(0);
+    await expect(page.getByRole('link', { name: /^(Entrar|Sign in)\b/ }), path).toHaveCount(0);
+  }
+  for (const [from, to] of [
+    ['/entrar', '/'],
+    ['/en/sign-in', '/en/'],
+  ] as const) {
+    const res = await request.get(from, { maxRedirects: 0 });
+    expect(res.status(), from).toBe(302);
+    expect(new URL(res.headers()['location'] ?? '', 'http://x').pathname, from).toBe(to);
+  }
 });
 
 test('no generic tells in the built pages: arrows in links, decorative eyebrows, card grids', async ({ page }) => {
