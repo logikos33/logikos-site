@@ -134,3 +134,31 @@ test('every HUD figure carries a two-cell caption (machine | person) and the pos
   expect(verdict).toContain('hud-pbox');
   expect(plain).not.toContain('hud-pbox');
 });
+
+test('buttons: one size, a visible hover (cyan as state), and one pair of CTAs on screen at a time', async ({ page }) => {
+  for (const path of ['/', '/en/']) {
+    await page.goto(path);
+    // Every call to action on the home is 48 px; the header uses the compact 44 px size.
+    const heights = await page
+      .locator('main .btn, .barra .btn')
+      .evaluateAll((els) => [
+        ...new Set(els.filter((e) => e.getClientRects().length).map((e) => Math.round(e.getBoundingClientRect().height))),
+      ]);
+    expect(heights, path).toEqual([48]);
+    // Header CTAs wait while the hero's are on screen, then appear.
+    const headerCta = page.locator('.site-header__cta[data-cta="experience"]');
+    await expect(headerCta).toBeHidden();
+    await page.locator('#cenarios').scrollIntoViewIfNeeded();
+    await expect(headerCta).toBeVisible();
+    // Hover changes the primary button (never a dead button), from white to the accent.
+    const btn = page.locator('#painel-fogo a.btn');
+    const rest = await btn.evaluate((e) => getComputedStyle(e).backgroundColor);
+    await btn.hover();
+    await expect.poll(() => btn.evaluate((e) => getComputedStyle(e).backgroundColor)).toBe('rgb(0, 229, 255)');
+    expect(rest).not.toBe('rgb(0, 229, 255)');
+  }
+  // Koda's link is only Koda and the balloon, not an invisible strip under the wall.
+  await page.goto('/');
+  const peek = await page.locator('.espia').boundingBox();
+  expect(peek?.width ?? 999).toBeLessThan(320);
+});
