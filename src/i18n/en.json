@@ -192,7 +192,7 @@
           "who": "For fire brigades and site security: an early-stage fire is caught while it is still small, with the clip of the moment.",
           "cta": "Try the Fire scenario",
           "specialist": "Talk to a fire specialist",
-          "source": "model: FireSet v1 (YOLOX-S), trained by Logikos · stock footage",
+          "source": "Logikos proprietary model · stock footage",
           "wa": "Hi! I’d like to talk to a specialist about fire."
         },
         {
@@ -384,8 +384,8 @@
       "text": "Works with the IP cameras already on site."
     },
     "device": {
-      "title": "Edge device in the plant",
-      "text": "An NVIDIA Jetson runs the analysis on site. It keeps working offline; continuous video stays out of the cloud by default."
+      "title": "Processing in the plant or in the cloud",
+      "text": "The Logikos proprietary model runs in the plant or in the cloud, your choice. In the plant it works offline and continuous video never leaves."
     },
     "verdict": {
       "title": "Verdict, evidence, alert",
@@ -416,7 +416,7 @@
   },
   "recognition": {
     "meta": {
-      "title": "Recognition — edge computer vision for industry",
+      "title": "Recognition — computer vision for industry",
       "description": "Fire and smoke, PPE by body region, ergonomics, hazard zones and counting on the same camera. Processed inside the plant."
     },
     "hero": {
@@ -490,7 +490,7 @@
     },
     "where": {
       "title": "Inside the plant.",
-      "text": "The existing IP cameras, an NVIDIA Jetson in the rack and a panel. Works without internet; only the alert and the clip cross the wall.",
+      "text": "The existing IP cameras, the Logikos proprietary model and a panel. Processing in the cloud or in the plant; in the plant, only the alert and the clip cross the wall.",
       "cta": "See how it works"
     },
     "partners": {
@@ -504,8 +504,8 @@
   },
   "howItWorks": {
     "meta": {
-      "title": "How it works — camera, edge device, alert",
-      "description": "Existing cameras, offline-first processing on NVIDIA Jetson inside the plant, verdicts with evidence, and integration via dry contact, MQTT or webhooks."
+      "title": "How it works — camera, processing, alert",
+      "description": "Existing cameras, the Logikos proprietary model processing in the cloud or in the plant, verdicts with evidence, and integration via dry contact, MQTT or webhooks."
     },
     "hero": {
       "question": "how does it work?",
@@ -667,7 +667,7 @@
   "about": {
     "meta": {
       "title": "About Logikos Soluções",
-      "description": "Logikos Soluções, from Indaial, Brazil. Edge computer vision on NVIDIA Jetson, built on permissively licensed models."
+      "description": "Logikos Soluções, from Indaial, Brazil. Computer vision for industry with the Logikos proprietary model, processing in the cloud or in the plant."
     },
     "hero": {
       "question": "who makes it?",
@@ -679,13 +679,13 @@
         "title": "Indaial, Brazil",
         "text": "Engineering and support from Santa Catarina."
       },
-      "nvidia": {
-        "title": "NVIDIA Jetson",
-        "text": "Edge processing on the Jetson platform."
+      "model": {
+        "title": "Logikos proprietary model",
+        "text": "Trained and validated by Logikos for each reading: fire, PPE, ergonomics, counting and quality."
       },
-      "licenses": {
-        "title": "Permissive licenses",
-        "text": "Third-party models under permissive licenses such as Apache 2.0, MIT and BSD."
+      "processing": {
+        "title": "In the cloud or in the plant",
+        "text": "The same verdict either way. In the plant it works offline and continuous video never leaves."
       }
     },
     "questions": {
@@ -775,7 +775,7 @@
     "cameras": "How many cameras",
     "camerasHint": "An estimate is fine.",
     "mode": "Mode",
-    "modeEdge": "Edge (device in the plant)",
+    "modeEdge": "In the plant (device in the rack)",
     "modeCloud": "Cloud (platform on a monthly plan)",
     "interests": "Interests",
     "interestsHint": "Pick one or more.",
@@ -931,7 +931,7 @@
       "title": "Fire and smoke demo",
       "see": "Flame and smoke marked on your device camera.",
       "verdict": "An alert when the model sees flame or smoke. The demo page publishes its measured false-alarm rate.",
-      "note": "A model trained only on public, permissively licensed data."
+      "note": "Logikos proprietary model."
     },
     "status": {
       "checking": "checking",
@@ -947,13 +947,13 @@
   },
   "platform": {
     "meta": {
-      "title": "Platform — Edge and Cloud",
+      "title": "Platform — in the plant or in the cloud",
       "description": "Two ways to run Recognition: a device in the plant, no internet needed, term license; or the cloud platform on a monthly plan, with dashboard and evidence. No public pricing."
     },
     "hero": {
-      "question": "edge or cloud?",
+      "question": "plant or cloud?",
       "title": "In the plant or in the cloud. The same verdict, with evidence.",
-      "text": "Edge: a device in the rack, works without internet, term licence. Cloud: a panel in the browser, monthly fee."
+      "text": "In the plant: a device in the rack, works without internet, term licence. In the cloud: a panel in the browser, monthly fee."
     },
     "questions": {
       "account": "how do I get in?",
@@ -973,7 +973,7 @@
     "compare": {
       "title": "Side by side",
       "aspect": "Aspect",
-      "edge": "Edge",
+      "edge": "In the plant",
       "cloud": "Cloud",
       "rows": [
         {

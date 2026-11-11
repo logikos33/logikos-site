@@ -14,7 +14,7 @@ const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.about;
 const f = p.facts;
-const facts = [f.nvidia, f.licenses].map((x) => ({ term: x.title, text: x.text }));
+const facts = [f.model, f.processing].map((x) => ({ term: x.title, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="about" title={p.meta.title} description={p.meta.description}>

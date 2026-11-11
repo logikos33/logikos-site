@@ -192,7 +192,7 @@
           "who": "Para brigada e patrimonial: o princípio de incêndio é detectado ainda pequeno, com o clipe do momento.",
           "cta": "Testar o cenário Fogo",
           "specialist": "Falar com especialista em fogo",
-          "source": "modelo: FireSet v1 (YOLOX-S), treinado pela Logikos · vídeo de banco",
+          "source": "modelo proprietário Logikos · vídeo de banco",
           "wa": "Olá! Quero falar com um especialista sobre fogo."
         },
         {
@@ -384,8 +384,8 @@
       "text": "Usa as câmeras IP que a planta já tem."
     },
     "device": {
-      "title": "Dispositivo na planta",
-      "text": "Um NVIDIA Jetson processa o vídeo no local. Funciona sem internet; o vídeo contínuo não vai para a nuvem por padrão."
+      "title": "Na planta ou na nuvem",
+      "text": "O modelo proprietário Logikos processa o vídeo na planta ou na nuvem, como você preferir. Na planta, funciona sem internet e o vídeo contínuo não sai."
     },
     "verdict": {
       "title": "Veredito, evidência e alerta",
@@ -416,7 +416,7 @@
   },
   "recognition": {
     "meta": {
-      "title": "Recognition — visão computacional na borda para indústria",
+      "title": "Recognition — visão computacional para a indústria",
       "description": "Fogo e fumaça, EPI por região do corpo, ergonomia, zonas de risco e contagem na mesma câmera. Processamento dentro da planta."
     },
     "hero": {
@@ -490,7 +490,7 @@
     },
     "where": {
       "title": "Dentro da planta.",
-      "text": "As câmeras IP existentes, um NVIDIA Jetson no rack e um painel. Funciona sem internet; só o alerta e o clipe atravessam o muro.",
+      "text": "As câmeras IP existentes, o modelo proprietário Logikos e um painel. Processamento na nuvem ou na planta; na planta, só o alerta e o clipe atravessam o muro.",
       "cta": "Ver como funciona"
     },
     "partners": {
@@ -505,7 +505,7 @@
   "howItWorks": {
     "meta": {
       "title": "Como funciona — câmera, dispositivo na planta, alerta",
-      "description": "Câmera existente, processamento offline-first em NVIDIA Jetson dentro da planta, veredito com evidência e integração por contato seco, MQTT ou webhook."
+      "description": "Câmera existente, modelo proprietário Logikos com processamento na nuvem ou na planta, veredito com evidência e integração por contato seco, MQTT ou webhook."
     },
     "hero": {
       "question": "como funciona?",
@@ -667,7 +667,7 @@
   "about": {
     "meta": {
       "title": "Sobre a Logikos Soluções",
-      "description": "Logikos Soluções, de Indaial/SC. Visão computacional na borda com NVIDIA Jetson e modelos de licença permissiva."
+      "description": "Logikos Soluções, de Indaial/SC. Visão computacional para a indústria com modelo proprietário Logikos e processamento na nuvem ou na planta."
     },
     "hero": {
       "question": "quem faz?",
@@ -679,13 +679,13 @@
         "title": "Indaial/SC",
         "text": "Engenharia e suporte no Vale do Itajaí."
       },
-      "nvidia": {
-        "title": "NVIDIA Jetson",
-        "text": "Processamento na borda sobre a plataforma Jetson."
+      "model": {
+        "title": "Modelo proprietário Logikos",
+        "text": "Treinado e validado pela Logikos para cada leitura: fogo, EPI, ergonomia, contagem e qualidade."
       },
-      "licenses": {
-        "title": "Licenças permissivas",
-        "text": "Modelos de terceiros sob licenças permissivas, como Apache 2.0, MIT e BSD."
+      "processing": {
+        "title": "Na nuvem ou na planta",
+        "text": "O mesmo veredito nos dois modos. Na planta, funciona sem internet e o vídeo contínuo não sai."
       }
     },
     "questions": {
@@ -775,7 +775,7 @@
     "cameras": "Quantas câmeras",
     "camerasHint": "Uma estimativa basta.",
     "mode": "Modo",
-    "modeEdge": "Edge (dispositivo na planta)",
+    "modeEdge": "Na planta (dispositivo no rack)",
     "modeCloud": "Nuvem (plataforma por mensalidade)",
     "interests": "Interesses",
     "interestsHint": "Marque um ou mais.",
@@ -931,7 +931,7 @@
       "title": "Demo de fogo e fumaça",
       "see": "Chama e fumaça marcadas na câmera do seu aparelho.",
       "verdict": "Alerta quando o modelo vê chama ou fumaça. A página da demo publica a taxa de alarme falso medida.",
-      "note": "Modelo treinado só com dados públicos de licença permissiva."
+      "note": "Modelo proprietário Logikos."
     },
     "status": {
       "checking": "verificando",
@@ -947,13 +947,13 @@
   },
   "platform": {
     "meta": {
-      "title": "Plataforma — Edge e Nuvem",
+      "title": "Plataforma — na planta ou na nuvem",
       "description": "Dois modos do Recognition: dispositivo na planta, sem internet, licença por prazo; ou plataforma na nuvem por mensalidade, com painel e evidências. Sem preço público."
     },
     "hero": {
-      "question": "edge ou nuvem?",
+      "question": "na planta ou na nuvem?",
       "title": "Na planta ou na nuvem. O mesmo veredito, com evidência.",
-      "text": "Edge: um dispositivo no rack, funciona sem internet, licença por prazo. Nuvem: painel pelo navegador, mensalidade."
+      "text": "Na planta: um dispositivo no rack, funciona sem internet, licença por prazo. Na nuvem: painel pelo navegador, mensalidade."
     },
     "questions": {
       "account": "como entro?",
@@ -973,7 +973,7 @@
     "compare": {
       "title": "Lado a lado",
       "aspect": "Aspecto",
-      "edge": "Edge",
+      "edge": "Na planta",
       "cloud": "Nuvem",
       "rows": [
         {

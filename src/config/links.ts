@@ -3,9 +3,9 @@
 
 /** Live demos: both run the model inside the visitor's browser (nothing is uploaded). */
 export const DEMOS = {
-  /** Logikos-branded event demo (Railway `recognition-demo-evento`): YOLOX-nano ONNX, Apache-2.0. */
+  /** Logikos-branded event demo (Railway `recognition-demo-evento`), Logikos proprietary model in the browser. */
   epi: 'https://recognition-demo-evento-production.up.railway.app/',
-  /** FireSet v1 (Railway `fire-demo`): YOLOX-s ONNX, Apache-2.0. Live screen at /incendio.html. */
+  /** Fire demo (Railway `fire-demo`), Logikos proprietary model in the browser. Live screen at /incendio.html. */
   fire: 'https://fire-demo-production.up.railway.app/',
 } as const;
 

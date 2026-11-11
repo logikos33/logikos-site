@@ -9,10 +9,6 @@
       "values": ["24"],
       "source": "Prazo da licença (24 meses) — brief do site, 01/10/2026."
     },
-    "about.facts.licenses.text": {
-      "values": ["2.0"],
-      "source": "Nome da licença Apache 2.0 — política de licenças da Logikos."
-    },
     "privacy.sections.legalBasis.text": {
       "values": ["7"],
       "source": "LGPD (Lei 13.709/2018), art. 7º — bases legais."
@@ -112,10 +108,6 @@
     "home.scenarios.items[4].norm": {
       "values": ["17"],
       "source": "NR-17 (Ergonomia), Norma Regulamentadora do MTE."
-    },
-    "home.scenarios.items[0].source": {
-      "values": ["1"],
-      "source": "Nome do modelo próprio FireSet v1 (src/config/links.ts)."
     },
     "home.scenarios.items[2].state": {
       "values": ["1"],

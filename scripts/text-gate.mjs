@@ -33,6 +33,16 @@ const RULES = [
   ['Roccatextil', /\broccatextil\b/],
   ['EPI Monitor', /\bepi\s*monitor\b|\bepimonitor\b/],
   ['YOLOv8', /\byolo\s*v?8\b/],
+  // Feedback 11/11 (item 6): no model name, architecture or hardware on any page — the site says
+  // "modelo proprietário Logikos" and "processamento na nuvem ou na planta".
+  ['YOLO / YOLOX', /\byolo\w*/],
+  ['RT-DETR', /\brt-?detr\b/],
+  ['FireSet', /\bfireset\b/],
+  ['NVIDIA', /\bnvidia\b/],
+  ['Jetson', /\bjetson\b/],
+  ['TensorRT / DeepStream / ONNX', /\b(?:tensorrt|deepstream|onnx)\b/],
+  ['nome de placa', /\b(?:orin|xavier|raspberry\s*pi|hailo|coral\s+tpu)\b/],
+  ['edge (como nome técnico)', /\bedge\s+(?:computing|device|ai)\b|\bna\s+borda\b/],
 ];
 
 // Partner mentions approved by Vitor for the home only (decision 0027): the partner strip and the
