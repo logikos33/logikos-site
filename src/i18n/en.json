@@ -793,8 +793,7 @@
     "buy": {
       "title": "By project.",
       "text": "Each application is scoped case by case, from your scenario."
-    },
-    "loopLabel": "Aerial drone and quadruped robot on inspection"
+    }
   },
   "compliance": {
     "meta": {

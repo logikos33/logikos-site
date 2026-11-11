@@ -14,25 +14,14 @@ interface Props {
   vertical?: boolean;
   /** A .webm sibling exists (VP9, lighter); browsers that play it get it. */
   webm?: boolean;
-  /** Folder under /media (home by default); outside home there is one poster, no 320/480 set. */
-  dir?: string;
   sizes?: string;
   class?: string;
 }
 
-const {
-  clip,
-  name,
-  label,
-  vertical = false,
-  webm = false,
-  dir = 'home',
-  sizes = '(max-width: 56rem) 100vw, 40vw',
-  class: className,
-} = Astro.props;
-const base = `/media/${dir}/${clip}`;
+const { clip, name, label, vertical = false, webm = false, sizes = '(max-width: 56rem) 100vw, 40vw', class: className } = Astro.props;
+const base = `/media/home/${clip}`;
 // The five scenario clips ship 320/480/640 posters; the Fireshow clip has one.
-const srcset = vertical || dir !== 'home' ? undefined : `${base}-320.webp 320w, ${base}-480.webp 480w, ${base}.webp 640w`;
+const srcset = vertical ? undefined : `${base}-320.webp 320w, ${base}-480.webp 480w, ${base}.webp 640w`;
 const [w, h] = vertical ? [464, 832] : [640, 360];
 ---
 

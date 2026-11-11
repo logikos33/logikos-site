@@ -793,8 +793,7 @@
     "buy": {
       "title": "Por projeto.",
       "text": "Cada aplicação é dimensionada caso a caso, a partir do seu cenário."
-    },
-    "loopLabel": "Drone aéreo e robô quadrúpede em inspeção"
+    }
   },
   "compliance": {
     "meta": {

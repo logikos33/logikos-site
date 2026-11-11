@@ -1,7 +1,4 @@
 ---
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
-import Cam from '../components/Cam.astro';
 import DefList from '../components/DefList.astro';
 import Koda from '../components/Koda.astro';
 import SpecialistButton from '../components/SpecialistButton.astro';
@@ -21,9 +18,6 @@ const t = dict(locale);
 const p = t.robotics;
 const pts = p.points;
 const uses = [pts.drones, pts.quadrupeds, pts.project].map((x) => ({ term: x.title, text: x.text }));
-// Revisão final 2, q4: the drone + quadruped loop takes the right column as soon as its files are in
-// public/media/robotica/ (drones-loop.mp4/.webm + drones-loop.webp poster); until then, the uses.
-const LOOP = existsSync(join(process.cwd(), 'public/media/robotica/drones-loop.mp4'));
 ---
 
 <Base locale={locale} routeKey="robotics" title={p.meta.title} description={p.meta.description}>
@@ -40,7 +34,6 @@ const LOOP = existsSync(join(process.cwd(), 'public/media/robotica/drones-loop.m
   </PageHero>
 
   <Section id="how-title" question={p.questions.how} title={pts.both.title} text={pts.both.text}>
-    {LOOP && <Cam clip="drones-loop" dir="robotica" webm label={p.loopLabel} class="loop" />}
     <DefList rows={uses} />
   </Section>
 
@@ -48,9 +41,3 @@ const LOOP = existsSync(join(process.cwd(), 'public/media/robotica/drones-loop.m
 
   <PageClose locale={locale} interest="robotics" />
 </Base>
-
-<style>
-  :global(.q-content .loop) {
-    margin-bottom: var(--lk-space-4);
-  }
-</style>
