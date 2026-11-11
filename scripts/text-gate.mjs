@@ -40,7 +40,7 @@ const RULES = [
 // other wording, the names still fail.
 const APPROVED = {
   'index.html': [
-    '/media/parceiros/l-brandschutz.svg',
+    '/media/parceiros/l-brandschutz.webp',
     '/media/parceiros/l-cath.webp',
     'alt="brandschutz"',
     'alt="cath projetos e seguranca"',
