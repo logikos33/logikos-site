@@ -164,3 +164,44 @@ CI da PR: lint, `astro check`, gates (texto, i18n, licença), unit, e2e (inclui 
 
 1. Ver o primeiro lead da conversa e dos formulários chegando no CRM como "Site Logikos".
 2. Vídeo real de robótica e de uma captura do Twins (o Koda ainda segura esses heróis).
+
+---
+
+# Rodada 5
+
+Mesma PR #48, prévia https://pr-48.logikos-site.pages.dev/ . Prints em [`rodada-5/`](rodada-5/) e [`rodada-4/`](rodada-4/) (lockup).
+
+| Pedido                                        | 1440                                                                                            | 390                                                                                           | Resultado                                                                                                                                                                                                                 |
+| --------------------------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Logo: direção A (decisão do Vitor)            | [header](rodada-4/14-lockup-A-header-1440.jpg) · [rodapé](rodada-4/14-lockup-A-rodape-1440.jpg) | [header](rodada-4/14-lockup-A-header-390.jpg) · [rodapé](rodada-4/14-lockup-A-rodape-390.jpg) | ok — lockup A em vetor com brilho suave em CSS; header de 73 px; VISION com 11,4 px de letra no desktop e 10,1 px a 390 (8,8 px a 360, 7 px a 320); também no rodapé, na 404 e no card de OG; favicon segue com o símbolo |
+| (1) "Dentro da planta."                       | [print](rodada-5/1-dentro-da-planta-1440.jpg)                                                   | [print](rodada-5/1-dentro-da-planta-390.jpg)                                                  | ok — a caixa Logikos ao lado; "Ver como funciona" virou botão secundário junto do texto (slot de ações do componente de seção, vale para o site todo)                                                                     |
+| (2) Gêmeo digital                             | [CH6](rodada-5/2-ch6-gemeo-1440.jpg) · [Twins](rodada-5/2-twins-1440.jpg)                       | [CH6](rodada-5/2-ch6-gemeo-390.jpg) · [Twins](rodada-5/2-twins-390.jpg)                       | ok — loop composto em mp4 h264 + webm (≈ 250 KB cada, sem áudio, toca só na tela/primeiro gesto); CH6 no carrossel (o que resolve, o que você recebe, "Solicite seu modelo customizado"); herói do Twins no lugar do Koda |
+| Twins peça a peça                             | [Twins](rodada-5/2-twins-1440.jpg)                                                              | [Twins](rodada-5/2-twins-390.jpg)                                                             | ok — "Gêmeo de cada peça" (inspeção de 100 %, rastreabilidade, desvio do projeto antes do lote, histórico) no texto da página e no painel do CH6, PT e EN                                                                 |
+| Frase sob os botões do herói                  | [herói](rodada-5/a-heroi-sem-legenda-1440.jpg)                                                  | [herói](rodada-5/a-heroi-sem-legenda-390.jpg)                                                 | ok — removida (PT e EN)                                                                                                                                                                                                   |
+| (a) legendas "vídeo de banco / detecção real" | [herói](rodada-5/a-heroi-sem-legenda-1440.jpg)                                                  | —                                                                                             | ok — removidas em todo o site; o text-gate reprova a volta                                                                                                                                                                |
+| (b) "Funcionando na frente de todo mundo"     | [print](rodada-5/b-fireshow-1440.jpg)                                                           | [print](rodada-5/b-fireshow-390.jpg)                                                          | ok — conteúdo dos cartões centralizado na vertical e conjunto centralizado                                                                                                                                                |
+| (c) e-mail só no rodapé                       | [rodapé](rodada-5/d-rodape-1440.jpg)                                                            | [rodapé](rodada-5/d-rodape-390.jpg)                                                           | ok — fora do contato da home, da página de contato e das mensagens de erro; fica no rodapé e na política de privacidade (canal do titular exigido pela LGPD)                                                              |
+| (d) sem cidade                                | [Sobre](rodada-5/d-sobre-1440.jpg)                                                              | [Sobre](rodada-5/d-sobre-390.jpg)                                                             | ok — fora do rodapé, do Sobre ("Do teste à operação" no lugar de "Onde estamos"), da privacidade e dos metadados; segue só no JSON-LD (dado estruturado, invisível)                                                       |
+
+Orçamento da home no Lighthouse: 540 → 550 KB (o CH6 e o lockup vetorial no header e no rodapé cresceram o HTML; medido 540,0 KB). CI todo verde.
+
+## Lançamento no www: suspenso
+
+A pedido do Vitor, nada foi feito na Cloudflare. Só a PR #49 foi mergeada em `main`; ela já estava aplicada desde antes (ponte da raiz deixa `/teste-no-seu-celular` na origem). Estado de produção registrado em 11/11 16:08: `logikosvision.com.br/` 302 → `logikos-site.pages.dev`; `/demo/`, `/experiencia/` e `/teste-no-seu-celular/` 200; `/bs` 302 → BrandSchutz; `www` sem registro DNS; `brandschutz.` 200; MX `mx1/mx2.titan.email` e SPF da Titan.
+
+Já está pronto na PR #48 para quando o Vitor liberar:
+
+1. Mergear a #48 em `main` (o CI publica a produção do Pages).
+2. Workflow **cf-apex**, modo `www`: domínio `www.logikosvision.com.br` no Pages `logikos-site` + CNAME `www` → `logikos-site.pages.dev` (proxied, com comentário de autoria). Se o `www` já apontar para outro lugar, aborta sem mexer.
+3. Workflow **cf-apex**, modo `ponte` (destino padrão `https://www.logikosvision.com.br`): a regra 302 da raiz passa a mandar para o www, mantendo fora `/demo`, `/experiencia`, `/teste-no-seu-celular` e `/bs`.
+4. Workflow **cf-apex**, modo `verify`: www, raiz, caminhos preservados, `brandschutz.` e MX.
+
+Rollback, em ordem:
+
+- **Raiz de volta ao Pages:** modo `ponte` com `destino = https://logikos-site.pages.dev` (estado de hoje).
+- **Tirar o www:** modo `www-rollback` (remove só o domínio do Pages e o CNAME criados pelo cf-apex).
+- **Tirar a ponte:** modo `ponte-rollback` (a raiz volta direto para a origem/túnel).
+
+Nenhum modo toca MX/TXT (Titan), o túnel ou outros registros.
+
+A canonical, o OG e o sitemap já apontam para `https://www.logikosvision.com.br` (o `pages.dev` segue `noindex`).
