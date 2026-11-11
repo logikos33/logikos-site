@@ -8,6 +8,7 @@ export const ICON_PATHS = {
   moon: '<path d="M15.5 3.5A8.5 8.5 0 1 0 20.5 15 6.5 6.5 0 0 1 15.5 3.5z"/>',
   menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
   close: '<path d="M6 6l12 12M18 6L6 18"/>',
+  plus: '<path d="M12 5v14"/><path d="M5 12h14"/>',
   arrow: '<path d="M5 12h13M13 7l5 5-5 5"/>',
   chat: '<path d="M4 4h16v12H10l-4 4v-4H4z"/><path d="M8 9h8M8 12h5"/>',
   mail: '<path d="M3.5 5.5h17v13h-17z"/><path d="M3.5 6l8.5 7 8.5-7"/>',
