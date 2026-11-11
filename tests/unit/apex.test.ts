@@ -26,13 +26,31 @@ describe('roteador da raiz', () => {
     assert.equal(res.headers.get('X-Robots-Tag'), null);
   });
 
-  it('mantém /demo, /experiencia e /bs na origem atual', async () => {
+  it('mantém /demo e /bs na origem atual', async () => {
     falso(() => new Response('origem'));
-    for (const p of ['/demo/', '/demo', '/experiencia/?cenario=fogo', '/bs']) {
+    for (const p of ['/demo/', '/demo', '/bs']) {
       await apex.fetch(new Request(`https://logikosvision.com.br${p}`));
     }
     assert.ok(pedidos.every((u) => u.startsWith('https://logikosvision.com.br/')));
-    assert.equal(pedidos.length, 4);
+    assert.equal(pedidos.length, 3);
+  });
+
+  it('/experiencia usa a origem quando ela responde', async () => {
+    falso(() => new Response('experiência na origem'));
+    const res = await apex.fetch(new Request('https://logikosvision.com.br/experiencia/?cenario=fogo'));
+    assert.deepEqual(pedidos, ['https://logikosvision.com.br/experiencia/?cenario=fogo']);
+    assert.equal(await res.text(), 'experiência na origem');
+  });
+
+  it('/experiencia cai na publicação da experiência quando a origem dá 404', async () => {
+    let n = 0;
+    falso(() => (n++ === 0 ? new Response('', { status: 404 }) : new Response('prévia')));
+    const res = await apex.fetch(new Request('https://logikosvision.com.br/experiencia/?cenario=epi'));
+    assert.deepEqual(pedidos, [
+      'https://logikosvision.com.br/experiencia/?cenario=epi',
+      'https://previa.logikos-experiencia.pages.dev/experiencia/?cenario=epi',
+    ]);
+    assert.equal(await res.text(), 'prévia');
   });
 
   it('não confunde /demonstracao com /demo', async () => {
