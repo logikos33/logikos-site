@@ -2,6 +2,9 @@ import { execFileSync } from 'node:child_process';
 import { expect, test } from '@playwright/test';
 import { stubTurnstile, wranglerLog } from './helpers.ts';
 
+// The KV lead form lives on the partner and account pages; /contato is the conversation with Koda
+// (CRM), covered by chat.spec.ts.
+
 function kvKeys(): string[] {
   const out = execFileSync(
     'pnpm',
@@ -37,8 +40,8 @@ test('server rejects cross-origin posts, wrong content types and other methods',
 
 test('client validation blocks an empty submit and marks fields', async ({ page }) => {
   await stubTurnstile(page);
-  await page.goto('/contato');
-  const form = page.locator('#formulario');
+  await page.goto('/integradores');
+  const form = page.locator('#parceria');
   await form.locator('button[type="submit"]').click();
   const status = form.locator('[data-status]');
   await expect(status).toHaveAttribute('data-kind', 'invalid');
@@ -54,15 +57,15 @@ test('client validation blocks an empty submit and marks fields', async ({ page 
   const toRgb = (hex: string) => `rgb(${[1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(', ')})`;
   expect(border).toBe(toRgb(alert));
   for (const field of ['name', 'company', 'email', 'consent']) {
-    const err = form.locator(`#formulario-${field}-error`);
+    const err = form.locator(`#parceria-${field}-error`);
     await expect(err).toBeVisible();
     await expect(err.locator('svg')).toHaveCount(1);
     await expect(err.locator('[data-error-text]')).not.toHaveText('');
-    await expect(form.locator(`#formulario-${field}`)).toHaveAttribute('aria-describedby', new RegExp(`formulario-${field}-error`));
+    await expect(form.locator(`#parceria-${field}`)).toHaveAttribute('aria-describedby', new RegExp(`parceria-${field}-error`));
   }
   // Fixing a field clears its error.
   await name.fill('Ana');
-  await expect(form.locator('#formulario-name-error')).toBeHidden();
+  await expect(form.locator('#parceria-name-error')).toBeHidden();
   await expect(name).not.toHaveAttribute('aria-invalid', 'true');
 });
 
@@ -75,8 +78,8 @@ test('fields rejected by the server (422) are marked with icon + word and focuse
       body: JSON.stringify({ ok: false, error: 'invalid', fields: ['whatsapp'] }),
     }),
   );
-  await page.goto('/contato');
-  const form = page.locator('#formulario');
+  await page.goto('/integradores');
+  const form = page.locator('#parceria');
   await form.locator('input[name="name"]').fill('Ana');
   await form.locator('input[name="company"]').fill('ACME');
   await form.locator('input[name="email"]').fill('ana@acme.example');
@@ -86,10 +89,10 @@ test('fields rejected by the server (422) are marked with icon + word and focuse
   const wa = form.locator('input[name="whatsapp"]');
   await expect(wa).toHaveAttribute('aria-invalid', 'true');
   await expect(wa).toBeFocused();
-  await expect(form.locator('#formulario-whatsapp-error')).toBeVisible();
-  await expect(form.locator('#formulario-whatsapp-error svg')).toHaveCount(1);
+  await expect(form.locator('#parceria-whatsapp-error')).toBeVisible();
+  await expect(form.locator('#parceria-whatsapp-error svg')).toHaveCount(1);
   await wa.fill('47 99999 0001');
-  await expect(form.locator('#formulario-whatsapp-error')).toBeHidden();
+  await expect(form.locator('#parceria-whatsapp-error')).toBeHidden();
 });
 
 test('client patterns match the server: malformed e-mail and phone are caught before sending', async ({ page }) => {
@@ -99,8 +102,8 @@ test('client patterns match the server: malformed e-mail and phone are caught be
     posted = true;
     return route.abort();
   });
-  await page.goto('/contato');
-  const form = page.locator('#formulario');
+  await page.goto('/integradores');
+  const form = page.locator('#parceria');
   await form.locator('input[name="name"]').fill('Ana');
   await form.locator('input[name="company"]').fill('ACME');
   await form.locator('input[name="email"]').fill('joao@empresa');
@@ -113,7 +116,7 @@ test('client patterns match the server: malformed e-mail and phone are caught be
 });
 
 for (const [path, id, lang] of [
-  ['/contato', 'formulario', 'pt-br'],
+  ['/integradores', 'parceria', 'pt-br'],
   ['/en/partners', 'parceria', 'en'],
   ['/plataforma', 'conta', 'pt-br'],
 ] as const) {

@@ -38,7 +38,13 @@ test('M7: the demo chips flip once, in place, to the server state; the link neve
   await expect(page.locator('[data-hud]')).toHaveCount(0);
   // Nothing keeps moving once the state landed.
   await page.waitForTimeout(600);
-  expect(await page.evaluate(() => document.getAnimations().filter((a) => a.playState === 'running').length)).toBe(0);
+  // The old-TV backdrop (crt-*, feedback item 12) is the page's surface, not content: it is left out.
+  expect(
+    await page.evaluate(
+      () =>
+        document.getAnimations().filter((a) => a.playState === 'running' && !(a as CSSAnimation).animationName?.startsWith('crt-')).length,
+    ),
+  ).toBe(0);
 });
 
 test('M7: when the status request fails the chip stays "checking" (never a fake "live")', async ({ page }) => {

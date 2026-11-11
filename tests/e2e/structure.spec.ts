@@ -36,19 +36,16 @@ test('home v3: sections in the approved order, Koda right after the partners, le
   }
 });
 
-test('home: every "talk to a specialist" goes to WhatsApp, or to the contact page while there is no number', async ({ page }) => {
-  await page.goto('/');
-  const hrefs = await page
-    .locator('a[data-cta="whatsapp"], main a, .barra a')
-    .evaluateAll((els) =>
-      els
-        .filter((e) => /especialista|ergonomia/i.test(e.textContent ?? '') && !/experiencia\//.test(e.getAttribute('href') ?? ''))
-        .map((e) => ({ href: e.getAttribute('href') ?? '', target: e.getAttribute('target') ?? '' })),
-    );
-  expect(hrefs.length).toBeGreaterThanOrEqual(8);
-  for (const { href, target } of hrefs) {
-    if (href.startsWith('https://wa.me/')) expect(target).toBe('_blank');
-    else expect(href).toBe('/contato');
+test('every "talk to a specialist" opens the conversation with Koda (feedback 11/11, item 11)', async ({ page }) => {
+  for (const path of ['/', '/recognition', '/integradores', '/robotica', '/en/']) {
+    await page.goto(path);
+    const hrefs = await page
+      .locator('a')
+      .evaluateAll((els) =>
+        els.filter((e) => /especialista|specialist/i.test(e.textContent ?? '')).map((e) => e.getAttribute('href') ?? ''),
+      );
+    expect(hrefs.length, path).toBeGreaterThanOrEqual(2);
+    for (const href of hrefs) expect(href, path).toMatch(/^\/(en\/contact|contato)(\?interesse=[a-z]+)?#conversa$/);
   }
 });
 
@@ -100,32 +97,38 @@ test('no generic tells in the built pages: arrows in links, decorative eyebrows,
   }
 });
 
-test('home channels: tabs swap the panel in place, by click and by arrow keys', async ({ page }) => {
-  await page.goto('/');
-  const tabs = page.locator('[data-abas] [role="tab"]');
-  await expect(tabs).toHaveCount(5);
-  await expect(page.locator('#painel-fogo')).toBeVisible();
-  await tabs.nth(3).click();
-  await expect(tabs.nth(3)).toHaveAttribute('aria-selected', 'true');
-  await expect(page.locator('#painel-contagem')).toBeVisible();
-  await expect(page.locator('#painel-fogo')).toBeHidden();
-  await page.keyboard.press('ArrowRight');
-  await expect(tabs.nth(4)).toBeFocused();
-  await expect(page.locator('#painel-ergonomia')).toBeVisible();
-  // Every panel names its NR or check, and the fire one links to its scenario in the experience.
+test('home channels: a real carousel — arrows, ruler and swipe move the slides; only the shown one is reachable', async ({ page }) => {
+  await page.goto('/?sem-abertura');
+  const slides = page.locator('[data-slide]');
+  const marks = page.locator('[data-ir]');
+  await expect(slides).toHaveCount(5);
+  await expect(marks.nth(0)).toHaveAttribute('aria-current', 'true');
+  await expect(page.locator('#painel-epi')).toHaveAttribute('inert', '');
+  await page.locator('[data-proximo]').click();
+  await expect(marks.nth(1)).toHaveAttribute('aria-current', 'true');
+  await expect(page.locator('#painel-epi')).not.toHaveAttribute('inert', '');
+  await expect(page.locator('#painel-fogo')).toHaveAttribute('inert', '');
+  await marks.nth(3).click();
+  await expect(marks.nth(3)).toHaveAttribute('aria-current', 'true');
+  await expect(page.locator('#painel-contagem')).toBeInViewport({ ratio: 0.6 });
+  await page.locator('[data-anterior]').click();
+  await expect(marks.nth(2)).toHaveAttribute('aria-current', 'true');
+  // A swipe is a native scroll of the track: the slide that settles becomes the current one.
+  await page.locator('[data-trilho]').evaluate((t) => t.scrollTo({ left: (t.firstElementChild as HTMLElement).offsetWidth * 4 + 200 }));
+  await expect(marks.nth(4)).toHaveAttribute('aria-current', 'true');
+  // The fire slide links to its scenario in the experience.
   await expect(page.locator('#painel-fogo a.btn')).toHaveAttribute('href', /experiencia\/\?cenario=fogo$/);
 });
 
 test('home channels: the carousel advances on its own when its progress rule fills', async ({ page }) => {
   await page.goto('/?sem-abertura');
-  const tabs = page.locator('[data-abas] [role="tab"]');
   await page.locator('#cenarios .cab').scrollIntoViewIfNeeded();
   await page.mouse.move(0, 0);
-  await expect(page.locator('#cenarios')).toHaveClass(/em-tela/);
+  await expect(page.locator('[data-carrossel]')).toHaveClass(/em-tela/);
   // Skip the 7 s timer: finish the running progress animation.
   await page.evaluate(() => document.getAnimations().forEach((a) => (a as CSSAnimation).animationName === 'progresso' && a.finish()));
-  await expect(tabs.nth(1)).toHaveAttribute('aria-selected', 'true');
-  await expect(page.locator('#painel-epi')).toBeVisible();
+  await expect(page.locator('[data-ir]').nth(1)).toHaveAttribute('aria-current', 'true');
+  await expect(page.locator('#painel-epi')).toBeInViewport({ ratio: 0.6 });
 });
 
 test('every HUD figure carries a two-cell caption (machine | person) and the poster already shows the verdict', async ({ page }) => {
@@ -164,6 +167,7 @@ test('buttons: one size, a visible hover (cyan as state), and one pair of CTAs o
     await expect(headerCta).toBeVisible();
     // Hover changes the primary button (never a dead button), from white to the accent.
     const btn = page.locator('#painel-fogo a.btn');
+    await btn.scrollIntoViewIfNeeded();
     const rest = await btn.evaluate((e) => getComputedStyle(e).backgroundColor);
     await btn.hover();
     await expect.poll(() => btn.evaluate((e) => getComputedStyle(e).backgroundColor)).toBe('rgb(0, 229, 255)');

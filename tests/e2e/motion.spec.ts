@@ -103,6 +103,7 @@ test('home idle: wall videos load only after the opening and near the screen; th
   expect(await wall.evaluateAll((vs) => vs.every((v) => (v as HTMLVideoElement).paused))).toBe(true);
   const running = await page.evaluate(
     () =>
+      // The stop control freezes the old-TV backdrop too: only the scroll-driven turn-on (liga) may run.
       document.getAnimations().filter((a) => a.playState === 'running' && !(a as CSSAnimation).animationName?.startsWith('liga')).length,
   );
   expect(running).toBe(0);
@@ -241,7 +242,11 @@ test('M4: the pipeline is revealed in order, once, and ends at rest; static when
   await expect(nodes).toHaveCount(4);
   for (let i = 0; i < 4; i++) await expect(nodes.nth(i)).toBeVisible({ timeout: 3000 });
   await page.waitForTimeout(1500);
-  const running = await page.evaluate(() => document.getAnimations().filter((a) => a.playState === 'running').length);
+  // The old-TV backdrop (crt-*) is the page's surface, not the pipeline: it is left out.
+  const running = await page.evaluate(
+    () =>
+      document.getAnimations().filter((a) => a.playState === 'running' && !(a as CSSAnimation).animationName?.startsWith('crt-')).length,
+  );
   expect(running).toBe(0);
   await ctx.close();
 

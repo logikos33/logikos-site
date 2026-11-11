@@ -30,8 +30,8 @@ test('mobile: hero text first, the shortcut bar in reach from the start (one pai
   await page.locator('#como').scrollIntoViewIfNeeded();
   await page.locator('.passos li').last().scrollIntoViewIfNeeded();
   await expect(bar).toBeVisible();
-  for (const tab of await page.locator('[data-abas] [role="tab"]').all())
-    expect((await tab.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(44);
+  for (const control of await page.locator('[data-ir], [data-anterior], [data-proximo]').all())
+    expect((await control.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(44);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(0);
 });
