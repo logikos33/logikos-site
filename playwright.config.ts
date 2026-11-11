@@ -24,7 +24,7 @@ export default defineConfig({
     { name: 'mobile', use: { ...devices['Pixel 7'] }, testMatch: /mobile\.spec\.ts/ },
   ],
   webServer: {
-    // Serves dist/ + functions/ exactly like Cloudflare Pages, with a local KV for LEADS_KV.
+    // Serves dist/ exactly like Cloudflare Pages (the _redirects included).
     // Output is teed to a log so the form test can prove no lead value is ever logged.
     command: `mkdir -p test-results && WRANGLER_SEND_METRICS=false pnpm exec wrangler pages dev dist --port ${PORT} --ip 127.0.0.1 --persist-to .wrangler/e2e 2>&1 | tee test-results/wrangler.log`,
     url: `http://127.0.0.1:${PORT}/`,
