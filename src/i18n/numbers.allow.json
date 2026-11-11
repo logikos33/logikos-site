@@ -113,10 +113,6 @@
       "values": ["17"],
       "source": "NR-17 (Ergonomia), Norma Regulamentadora do MTE."
     },
-    "home.scenarios.items[0].source": {
-      "values": ["1"],
-      "source": "Nome do modelo próprio FireSet v1 (src/config/links.ts)."
-    },
     "home.scenarios.items[2].state": {
       "values": ["1"],
       "source": "Linha 1 mostrada no OSD/HUD do vídeo de qualidade, esboço v3."

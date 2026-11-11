@@ -172,7 +172,7 @@
     },
     "scenarios": {
       "title": "Cinco leituras. As mesmas câmeras.",
-      "text": "Escolha um canal. O vídeo mostra a detecção de verdade, quadro a quadro.",
+      "text": "Os canais passam sozinhos; toque em um para ver de perto. O vídeo mostra a detecção de verdade, quadro a quadro.",
       "tabsLabel": "Cenários",
       "camera": "câmera",
       "when": "quando",
@@ -192,7 +192,7 @@
           "who": "Para brigada e patrimonial: o princípio de incêndio é detectado ainda pequeno, com o clipe do momento.",
           "cta": "Testar o cenário Fogo",
           "specialist": "Falar com especialista em fogo",
-          "source": "modelo: FireSet v1 (YOLOX-S), treinado pela Logikos · vídeo de banco",
+          "source": "modelo proprietário Logikos · vídeo de banco",
           "wa": "Olá! Quero falar com um especialista sobre fogo."
         },
         {
@@ -234,7 +234,7 @@
           "who": "Para operação e logística: contagem na esteira e conferência de carga.",
           "cta": "Testar o cenário Contagem",
           "specialist": "Falar com especialista em contagem",
-          "source": "modelo: detector de vocabulário aberto + rastreamento ByteTrack · vídeo de banco",
+          "source": "modelo: detector de vocabulário aberto com rastreamento · vídeo de banco",
           "wa": "Olá! Quero falar com um especialista sobre contagem."
         },
         {
@@ -255,7 +255,8 @@
     },
     "band": {
       "title": "Quer ver isso nas suas câmeras?",
-      "text": "Um especialista olha o seu cenário com você, diz o que dá para reconhecer com as câmeras que já existem e desenha um piloto acompanhado."
+      "text": "Abra a demo no celular, aponte a câmera para o que quiser e veja a detecção na hora, sem cadastro. Para as câmeras da planta, um especialista desenha o piloto com você.",
+      "cta": "Teste na câmera do seu celular"
     },
     "how": {
       "title": "Da câmera à decisão.",
