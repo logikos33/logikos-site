@@ -1,0 +1,222 @@
+---
+// "From the camera to the decision" as an animated flow (rodada soluções 5, pin 2xni): four steps,
+// each with a simple icon, lighting up in sequence while a cyan progress line runs from one to the
+// next; it holds, then starts over. Starts when it comes into view. Reduced motion: all lit, still.
+import { dict } from '../i18n';
+import type { Locale } from '../i18n/routes';
+import type { IconName } from '../lib/icons';
+import Icon from './Icon.astro';
+
+interface Props {
+  locale: Locale;
+  class?: string;
+}
+
+const { locale, class: className } = Astro.props;
+const st = dict(locale).steps;
+const STEPS: { icon: IconName; title: string; text: string }[] = [
+  { icon: 'camera', ...st.camera },
+  { icon: 'chip', ...st.device },
+  { icon: 'clip', ...st.verdict },
+  { icon: 'user', ...st.person },
+];
+---
+
+<ol class:list={['fluxo', className]} data-fluxo>
+  {STEPS.map((s, i) => (
+    <li class="etapa" data-etapa={i}>
+      <span class="etapa__icone">
+        <Icon name={s.icon} size={30} />
+      </span>
+      <span class="etapa__n mono" aria-hidden="true">
+        {String(i + 1).padStart(2, '0')}
+      </span>
+      <h3>{s.title}</h3>
+      <p>{s.text}</p>
+    </li>
+  ))}
+</ol>
+
+<script>
+  const PASSO = 1700;
+  const PAUSA = 3200;
+  for (const fluxo of document.querySelectorAll<HTMLElement>('[data-fluxo]')) {
+    const etapas = [...fluxo.querySelectorAll<HTMLElement>('[data-etapa]')];
+    const mostra = (k: number) =>
+      etapas.forEach((e, i) => {
+        e.classList.toggle('acesa', i <= k);
+        e.classList.toggle('feita', i < k);
+      });
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      mostra(etapas.length);
+      continue;
+    }
+    let k = 0;
+    let timer = 0;
+    const tick = () => {
+      mostra(k);
+      const fim = k >= etapas.length - 1;
+      timer = window.setTimeout(
+        () => {
+          k = fim ? 0 : k + 1;
+          tick();
+        },
+        fim ? PAUSA : PASSO,
+      );
+    };
+    new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          window.clearTimeout(timer);
+          if (e.isIntersecting && !document.documentElement.classList.contains('lk-parado')) tick();
+        }
+      },
+      { threshold: 0.4 },
+    ).observe(fluxo);
+    mostra(0);
+  }
+</script>
+
+<style>
+  .fluxo {
+    --icone: 4rem;
+    display: grid;
+    gap: var(--lk-space-5);
+    margin: var(--lk-space-6) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .etapa {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--icone) 1fr;
+    column-gap: var(--lk-space-4);
+    align-items: start;
+    align-content: start;
+  }
+
+  .etapa__icone {
+    grid-row: 1 / span 3;
+    display: grid;
+    place-items: center;
+    width: var(--icone);
+    height: var(--icone);
+    background: #0d1117;
+    border: 2px solid var(--lk-line-strong);
+    border-radius: 50%;
+    color: var(--lk-text-2);
+    transition:
+      border-color 0.4s ease,
+      color 0.4s ease,
+      box-shadow 0.4s ease;
+  }
+
+  .etapa__n {
+    font-size: 0.75rem;
+    color: var(--lk-text-2);
+    transition: color 0.4s ease;
+  }
+
+  /* Not lit yet: secondary text colour (still AA), never a faded opacity. */
+  .etapa h3 {
+    margin: 0.15rem 0 0.35rem;
+    font-size: 1.15rem;
+    color: var(--lk-text-2);
+    transition: color 0.4s ease;
+  }
+
+  .etapa p {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: var(--lk-text-2);
+  }
+
+  .etapa.acesa .etapa__icone {
+    border-color: #00d4ff;
+    color: #00d4ff;
+    box-shadow:
+      0 0 0 6px #00d4ff1f,
+      0 0 24px #00d4ff55;
+  }
+
+  .etapa.acesa .etapa__n {
+    color: #00d4ff;
+  }
+
+  .etapa.acesa h3 {
+    color: var(--lk-text);
+  }
+
+  /* The connector to the next step: a track and a cyan fill that runs when the step is done.
+     Phone: vertical, under the icon. */
+  .etapa:not(:last-child)::before,
+  .etapa:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: calc(var(--icone) / 2 - 1.5px);
+    top: calc(var(--icone) + 0.4rem);
+    bottom: calc(-1 * var(--lk-space-5) + 0.4rem);
+    width: 3px;
+    border-radius: 2px;
+  }
+
+  .etapa:not(:last-child)::before {
+    background: var(--lk-line-strong);
+  }
+
+  .etapa:not(:last-child)::after {
+    background: #00d4ff;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 1.1s ease-in-out;
+  }
+
+  .etapa.feita::after {
+    transform: scaleY(1) !important;
+  }
+
+  /* Desktop: one row, icons on top, the line running across between them. */
+  @media (min-width: 56rem) {
+    .fluxo {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--lk-space-5);
+    }
+
+    .etapa {
+      grid-template-columns: 1fr;
+      row-gap: var(--lk-space-2);
+    }
+
+    .etapa__icone {
+      grid-row: auto;
+      margin-bottom: var(--lk-space-2);
+    }
+
+    .etapa:not(:last-child)::before,
+    .etapa:not(:last-child)::after {
+      left: calc(var(--icone) + 0.6rem);
+      right: calc(-1 * var(--lk-space-5) + 0.6rem);
+      top: calc(var(--icone) / 2 - 1.5px);
+      bottom: auto;
+      width: auto;
+      height: 3px;
+    }
+
+    .etapa:not(:last-child)::after {
+      transform: scaleX(0);
+      transform-origin: left;
+    }
+
+    .etapa.feita::after {
+      transform: scaleX(1) !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .etapa *,
+    .etapa::after {
+      transition: none !important;
+    }
+  }
+</style>

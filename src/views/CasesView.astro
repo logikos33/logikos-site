@@ -4,6 +4,7 @@
 // page (twins, robotics, the short case pages) or its card on /recognition.
 import CaseTile from '../components/CaseTile.astro';
 import Cam from '../components/Cam.astro';
+import RaScene from '../components/RaScene.astro';
 import RoboScene from '../components/RoboScene.astro';
 import Icon from '../components/Icon.astro';
 import PageClose from '../components/PageClose.astro';
@@ -31,7 +32,7 @@ interface Card {
   icon: IconName;
   poster?: string;
   src?: string;
-  /** Ergonomics is Vitor's priority now (12/11/2026): first and wider, with a seal. */
+  /** Ergonomics is Vitor's priority now (12/11/2026): first, with a cyan frame, same size as the rest. */
   featured?: boolean;
 }
 const page = (k: RouteKey) => pathFor(k, locale);
@@ -39,7 +40,7 @@ const PROJECTS: Card[] = [
   { key: 'twins', href: page('twins'), icon: 'chip', poster: `${M}v-gemeo` },
   { key: 'yard', href: page('caseYard'), icon: 'counter', src: '/media/cases/conteineres-aereo-480.webp' },
   { key: 'robotics', href: page('robotics'), icon: 'camera' },
-  { key: 'ar', href: page('caseAr'), icon: 'camera', src: '/media/cases/ra-logistica-480.webp' },
+  { key: 'ar', href: page('caseAr'), icon: 'camera' },
   { key: 'ops', href: page('caseOps'), icon: 'doc', src: '/media/cases/controle-operacao-480.webp' },
 ];
 const MODELS: Card[] = [
@@ -66,7 +67,9 @@ const GROUPS = [
         {g.cards.map((c) => (
           <li class:list={{ destaque: c.featured }}>
             <a class="case" href={c.href}>
-              {c.key === 'robotics' ? (
+              {c.key === 'ar' ? (
+                <RaScene locale={locale} square />
+              ) : c.key === 'robotics' ? (
                 <RoboScene />
               ) : c.key === 'presence' ? (
                 <Cam dir="/media/cases" clip="presenca-posto" webm square />
@@ -74,7 +77,6 @@ const GROUPS = [
                 <CaseTile icon={c.icon} {...(c.poster ? { poster: c.poster } : {})} {...(c.src ? { src: c.src } : {})} />
               )}
               <div class="case__txt">
-                {c.featured && <span class="case__selo mono">{p.featured}</span>}
                 <h3>{p.items[c.key].name}</h3>
                 <p>{p.items[c.key].text}</p>
                 <span class="case__ver">
@@ -102,7 +104,7 @@ const GROUPS = [
     list-style: none;
   }
 
-  /* Five projects in one row on desktop; the models (featured = two slots) in rows of four. */
+  /* Five projects in one row on desktop; the seven models in rows of four. */
   @media (min-width: 64rem) {
     .cases--5 {
       grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -122,51 +124,15 @@ const GROUPS = [
     text-decoration: none;
   }
 
-  /* The featured case: two columns wide on desktop, picture beside the text. */
-  .destaque .case {
-    position: relative;
-  }
-
-  .case__selo {
-    justify-self: start;
-    padding: 0.2rem 0.55rem;
-    background: #0a0a0f;
-    border: 1px solid #00d4ff;
-    border-radius: 999px;
-    color: #00d4ff;
-    font-size: 0.75rem;
-  }
-
-  .destaque {
-    grid-column: 1 / -1;
-  }
-
-  @media (min-width: 48rem) {
-    .destaque {
-      grid-column: span 2;
-    }
-
-    .destaque .case {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      grid-template-rows: auto;
-      column-gap: var(--lk-space-5);
-      align-items: start;
-    }
-
-    .destaque .case h3 {
-      font-size: 1.5rem;
-    }
+  /* The featured case (ergonomics): same cell as the others, its picture framed in cyan. */
+  .destaque :global(.tile) {
+    border: 2px solid #00d4ff;
   }
 
   .case__txt {
     display: grid;
-    grid-template-rows: auto auto 1fr auto;
+    grid-template-rows: auto 1fr auto;
     gap: var(--lk-space-2);
-  }
-
-  .destaque .case__txt {
-    grid-template-rows: none;
-    align-content: start;
   }
 
   .case h3 {

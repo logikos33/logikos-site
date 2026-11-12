@@ -228,7 +228,8 @@ test('final review 14: header — ≥ 40 px before the menu, centred, balanced a
 test('final review 2: steps, guarantees, part-twin first, drones and humanoids, Twins connections', async ({ page }) => {
   await page.goto('/sobre');
   await expect(page.locator('section[aria-labelledby="how-title"] .passo')).toHaveCount(3);
-  await expect(page.locator('.frentes .specs li')).toHaveCount(6);
+  // Rodada soluções 5: every front card has its list (readings 7, where it works 5, connects 6).
+  await expect(page.locator('.frentes .specs li')).toHaveCount(18);
   await page.goto('/conformidade');
   await expect(page.locator('.garantia')).toHaveCount(4);
   await expect(page.locator('.garantia svg')).toHaveCount(4);

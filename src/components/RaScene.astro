@@ -1,0 +1,148 @@
+---
+// Augmented reality for logistics, drawn in code over the approved tablet scene (rodada soluções 5,
+// pin 9nl4): clipped to the tablet's screen, the right box outlined with its SKU tag, the order in
+// progress, the aisle and level, and a dashed route on the floor marching to the spot. Marked as an
+// example. `square` crops it for the case card. Reduced motion: still route.
+import type { Locale } from '../i18n/routes';
+import { dict } from '../i18n';
+
+interface Props {
+  locale: Locale;
+  square?: boolean;
+  class?: string;
+}
+
+const { locale, square = false, class: className } = Astro.props;
+const s = dict(locale).caseAr.scene;
+// Source pixels (1280×720). The tablet's screen spans about x 330–862, y 137–505.
+const TELA = { x: 330, y: 137, w: 532, h: 368 };
+const CAIXA = { x: 690, y: 316, w: 102, h: 78 };
+const view = square ? '240 0 720 720' : '0 0 1280 720';
+const fs = 20;
+const tagW = s.sku.length * fs * 0.6 + 16;
+const src = square ? '/media/cases/ra-tablet-640.webp' : '/media/cases/ra-tablet.webp';
+---
+
+<svg class:list={['ra', className]} viewBox={view} role="img" aria-label={s.alt}>
+  <defs>
+    <clipPath id={square ? 'ra-tela-q' : 'ra-tela'}>
+      <rect x={TELA.x} y={TELA.y} width={TELA.w} height={TELA.h} rx="6"></rect>
+    </clipPath>
+    <marker
+      id={square ? 'ra-seta-q' : 'ra-seta'}
+      viewBox="0 0 10 10"
+      refX="5"
+      refY="5"
+      markerWidth="5"
+      markerHeight="5"
+      orient="auto-start-reverse"
+    >
+      <path d="M0 0 L10 5 L0 10 Z" fill="#00d4ff"></path>
+    </marker>
+  </defs>
+  <image href={src} x="0" y="0" width="1280" height="720" preserveAspectRatio="none" />
+  <g clip-path={`url(#${square ? 'ra-tela-q' : 'ra-tela'})`}>
+    <!-- route on the floor -->
+    <path class="rota" d="M372 500 C 450 470, 560 468, 668 452" marker-end={`url(#${square ? 'ra-seta-q' : 'ra-seta'})`}></path>
+    <!-- the box -->
+    <rect class="caixa" x={CAIXA.x} y={CAIXA.y} width={CAIXA.w} height={CAIXA.h} rx="3"></rect>
+    <rect class="tag" x={CAIXA.x + CAIXA.w - tagW} y={CAIXA.y - 34} width={tagW} height="30" rx="3"></rect>
+    <text class="tag__texto" x={CAIXA.x + CAIXA.w - tagW + 8} y={CAIXA.y - 12} font-size={fs}>
+      {s.sku}
+    </text>
+    <!-- order panel -->
+    <rect class="painel" x={TELA.x + 12} y={TELA.y + 12} width="330" height="80" rx="8"></rect>
+    <text class="painel__t1" x={TELA.x + 28} y={TELA.y + 46}>
+      {s.order}
+    </text>
+    <text class="painel__t2" x={TELA.x + 28} y={TELA.y + 76}>
+      {s.where}
+    </text>
+    <!-- example badge -->
+    <rect class="selo" x={TELA.x + TELA.w - 120} y={TELA.y + 12} width="108" height="30" rx="15"></rect>
+    <text class="selo__texto" x={TELA.x + TELA.w - 66} y={TELA.y + 32} text-anchor="middle">
+      {s.badge}
+    </text>
+  </g>
+</svg>
+
+<style>
+  .ra {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--lk-line-strong);
+    border-radius: 6px;
+    background: #0d1117;
+  }
+
+  .rota {
+    fill: none;
+    stroke: #00d4ff;
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-dasharray: 12 10;
+    animation: marcha 1.2s linear infinite;
+    filter: drop-shadow(0 0 4px #00d4ffaa);
+  }
+
+  .caixa {
+    fill: #00d4ff22;
+    stroke: #00d4ff;
+    stroke-width: 3;
+  }
+
+  .tag {
+    fill: #00d4ff;
+  }
+
+  .tag__texto {
+    fill: #0a0a0f;
+    font-family: var(--lk-font-mono);
+    font-weight: 600;
+  }
+
+  .painel {
+    fill: #0a0a0fd9;
+    stroke: #00d4ff;
+    stroke-width: 1.5;
+  }
+
+  .painel__t1 {
+    fill: #f4f6f8;
+    font: 600 22px var(--lk-font-body);
+  }
+
+  .painel__t2 {
+    fill: #00d4ff;
+    font: 600 20px var(--lk-font-mono);
+  }
+
+  .selo {
+    fill: #0a0a0fd9;
+    stroke: #00d4ff;
+  }
+
+  .selo__texto {
+    fill: #00d4ff;
+    font: 600 15px var(--lk-font-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  @keyframes marcha {
+    to {
+      stroke-dashoffset: -22;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rota {
+      animation: none;
+    }
+  }
+
+  :global(html.lk-parado) .rota {
+    animation-play-state: paused;
+  }
+</style>

@@ -250,31 +250,25 @@ test('glitch slices never cross the two O letters (keyhole), at desktop and phon
   }
 });
 
-test('M4: the pipeline is revealed in order, once, and ends at rest; static when reduced motion', async ({ browser }) => {
+test('M4: "from the camera to the decision" lights its steps in order; all lit and still with reduced motion', async ({ browser }) => {
+  // Rodada soluções 5 (pin 2xni): the flow is an animated sequence of four steps.
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
   const page = await ctx.newPage();
   await page.goto('/como-funciona');
-  const pipe = page.locator('[data-pipeline]').first();
-  await expect(pipe).toHaveClass(/pipeline--armed/);
-  await pipe.scrollIntoViewIfNeeded();
-  await expect(pipe).toHaveClass(/is-seen/);
-  const nodes = pipe.locator('.pipeline__node');
-  await expect(nodes).toHaveCount(4);
-  for (let i = 0; i < 4; i++) await expect(nodes.nth(i)).toBeVisible({ timeout: 3000 });
-  await page.waitForTimeout(1500);
-  // The old-TV backdrop (crt-*) and the CAM 07 "waiting" loop (ag-*) are surfaces, not the pipeline.
-  const running = await page.evaluate(
-    () =>
-      document.getAnimations().filter((a) => a.playState === 'running' && !/^(crt|ag)-/.test((a as CSSAnimation).animationName ?? ''))
-        .length,
-  );
-  expect(running).toBe(0);
+  const fluxo = page.locator('[data-fluxo]');
+  await fluxo.scrollIntoViewIfNeeded();
+  const etapas = fluxo.locator('[data-etapa]');
+  await expect(etapas).toHaveCount(4);
+  await expect(etapas.nth(0)).toHaveClass(/acesa/);
+  await expect(etapas.nth(3)).not.toHaveClass(/acesa/);
+  await expect(etapas.nth(1)).toHaveClass(/acesa/, { timeout: 4000 });
+  await expect(etapas.nth(0)).toHaveClass(/feita/);
+  await expect(etapas.nth(3)).toHaveClass(/acesa/, { timeout: 8000 });
   await ctx.close();
 
   const reduced = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 1280, height: 800 } });
   const p2 = await reduced.newPage();
   await p2.goto('/como-funciona');
-  await expect(p2.locator('[data-pipeline]').first()).not.toHaveClass(/pipeline--armed/);
-  await expect(p2.locator('[data-pipeline] .pipeline__node').first()).toBeVisible();
+  await expect(p2.locator('[data-fluxo] [data-etapa].acesa')).toHaveCount(4);
   await reduced.close();
 });

@@ -8,7 +8,11 @@ import { YARD } from '../data/scenes';
 import Icon from '../components/Icon.astro';
 import PageClose from '../components/PageClose.astro';
 import PageHero from '../components/PageHero.astro';
+import Painel from '../components/Painel.astro';
+import PatioMapa from '../components/PatioMapa.astro';
 import PointList from '../components/PointList.astro';
+import RaScene from '../components/RaScene.astro';
+import { OPS_PANEL, YARD_PANEL } from '../data/exemplos';
 import Section from '../components/Section.astro';
 import { dict } from '../i18n';
 import { pathFor, type Locale } from '../i18n/routes';
@@ -31,9 +35,32 @@ const chip = 'chip' in c ? c.chip : undefined;
 // operations control applies), and the Artlist scenes approved by Vitor in the hero.
 const extra = c.extra.points.map((x) => ({ term: x.title, text: x.text }));
 const HERO: Partial<Record<typeof routeKey, string>> = {
-  caseAr: '/media/cases/ra-logistica.webp',
   caseOps: '/media/cases/controle-operacao.webp',
 };
+// Rodada soluções 5: example panels drawn in code (yard: map + panel; operations: panel). Labels
+// from i18n, figures from src/data/exemplos.ts, always marked "Example".
+const painel = (
+  dash: {
+    panel: {
+      title: string;
+      kpis: string[];
+      barsTitle: string;
+      bars: string[];
+      lists: { title: string; items: { text: string; meta?: string; tone?: string }[] }[];
+    };
+    badge: string;
+  },
+  data: { kpis: string[]; bars: number[] },
+) => ({
+  title: dash.panel.title,
+  badge: dash.badge,
+  kpis: dash.panel.kpis.map((label, i) => ({ label, value: data.kpis[i] ?? '' })),
+  barsTitle: dash.panel.barsTitle,
+  bars: dash.panel.bars.map((label, i) => ({ label, value: data.bars[i] ?? 0 })),
+  lists: dash.panel.lists,
+});
+const yardDash = routeKey === 'caseYard' ? t.caseYard.dash : undefined;
+const opsDash = routeKey === 'caseOps' ? t.caseOps.dash : undefined;
 const hero = HERO[routeKey];
 const sc = t.scenes.yard;
 const yardBoxes = YARD.boxes.map((x) => ({ label: sc.labels[x.k], b: x.b }));
@@ -48,6 +75,8 @@ const yardBoxes = YARD.boxes.map((x) => ({ label: sc.labels[x.k], b: x.b }));
     )}
     {routeKey === 'caseYard' ? (
       <DetectScene src={YARD.src} w={YARD.w} h={YARD.h} boxes={yardBoxes} label={sc.alt} />
+    ) : routeKey === 'caseAr' ? (
+      <RaScene locale={locale} />
     ) : hero ? (
       <img class="heroi-img" src={hero} alt="" width="1280" height="720" />
     ) : (
@@ -57,11 +86,26 @@ const yardBoxes = YARD.boxes.map((x) => ({ label: sc.labels[x.k], b: x.b }));
 
   <Section id="problem-title" question={l.problem} title={c.problem.title} text={c.problem.text} />
 
+  {yardDash && (
+    <Section id="dash-title" question={yardDash.question} title={yardDash.title} text={yardDash.text} wide>
+      <div class="dash">
+        <PatioMapa locale={locale} />
+        <Painel {...painel(yardDash, YARD_PANEL)} />
+      </div>
+    </Section>
+  )}
+
   <Section id="scope-title" question={l.scope} title={c.scope.title} text={c.scope.text} />
 
   <Section id="extra-title" question={c.extra.question} title={c.extra.title} text={c.extra.text}>
     <PointList rows={extra} />
   </Section>
+
+  {opsDash && (
+    <Section id="dash-title" question={opsDash.question} title={opsDash.title} text={opsDash.text}>
+      <Painel {...painel(opsDash, OPS_PANEL)} />
+    </Section>
+  )}
 
   <Section id="gets-title" question={l.gets} title={c.gets.title}>
     <a slot="actions" class="btn btn--ghost" href={pathFor('cases', locale)}>
@@ -75,6 +119,19 @@ const yardBoxes = YARD.boxes.map((x) => ({ label: sc.labels[x.k], b: x.b }));
 </Base>
 
 <style>
+  .dash {
+    display: grid;
+    gap: var(--lk-space-5);
+    margin-top: var(--lk-space-5);
+    align-items: start;
+  }
+
+  @media (min-width: 64rem) {
+    .dash {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    }
+  }
+
   .heroi-img {
     display: block;
     width: 100%;

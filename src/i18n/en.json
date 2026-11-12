@@ -334,18 +334,9 @@
       "leaves": "leaves the plant",
       "stays": "stays in the plant",
       "rows": [
-        [
-          "the alert",
-          "the day-to-day images"
-        ],
-        [
-          "the event clip",
-          "the recordings"
-        ],
-        [
-          "the marked frame",
-          "the model and the unit"
-        ]
+        ["the alert", "the day-to-day images"],
+        ["the event clip", "the recordings"],
+        ["the marked frame", "the model and the unit"]
       ]
     },
     "faq": {
@@ -385,12 +376,6 @@
       "specialist": "Your model"
     },
     "wa": "Hi! I’d like to talk to a specialist about computer vision in my plant.",
-    "pipeline": {
-      "title": "From camera to decision, without leaving the plant.",
-      "wall": "plant",
-      "note": "Only the alert and the event clip leave the plant.",
-      "cta": "See the architecture"
-    },
     "next": {
       "title": "Start with a guided pilot.",
       "plant": {
@@ -430,19 +415,23 @@
   "partnerPoints": {
     "brand": {
       "title": "You bring the case",
-      "text": "What your operation needs to see on its cameras: the area, the risk, the part, the indicator."
+      "text": "You tell us what the operation needs to see on its cameras: the area, the risk, the part, the indicator. We listen carefully."
+    },
+    "mapping": {
+      "title": "Process mapping, together",
+      "text": "With your team, we understand how the process runs day to day, align the goals and define, with whoever is hiring, what really matters to measure."
     },
     "pilot": {
-      "title": "Logikos scopes and trains",
-      "text": "We define cameras, readings and where processing happens, and train the model on your images, with a guided pilot."
+      "title": "We scope and train together",
+      "text": "We define with you cameras, readings and where processing happens, and train the model on your images, with a pilot followed by your team."
     },
     "license": {
       "title": "Delivered to the operation",
       "text": "In the cloud or with an on-site unit, as the project calls for, under the contract option that makes sense for you."
     },
     "support": {
-      "title": "Support and evolution",
-      "text": "Training for your team and model updates on Logikos."
+      "title": "Support and evolution, side by side",
+      "text": "Training for your team and model updates on Logikos, staying with the operation after delivery."
     }
   },
   "recognition": {
@@ -639,7 +628,7 @@
     },
     "integrations": {
       "title": "Integrations",
-      "text": "The alert reaches the places your operation already works in. Which integrations go in, we define together while scoping.",
+      "text": "The alert reaches the places your operation already works in, and we adapt to your setting. Which integrations go in, we define together while scoping.",
       "alarm": {
         "title": "Alarms and signalling",
         "text": "Dry-contact output to a siren, beacon or the existing alarm panel."
@@ -663,6 +652,14 @@
       "webhook": {
         "title": "Webhook",
         "text": "Each event sent over HTTP to your system."
+      },
+      "own": {
+        "title": "Your own applications",
+        "text": "Events reach the systems your team built, in the format they expect."
+      },
+      "data": {
+        "title": "APIs, databases and legacy systems",
+        "text": "Integration through an API, writing straight to a database or connecting to older systems."
       }
     },
     "license": {
@@ -684,7 +681,7 @@
     "project": {
       "question": "what does a project look like?",
       "title": "From your case to the model running",
-      "text": "Four steps, always in this order, so the model arrives right for your operation."
+      "text": "Five steps, always together with your team, because every model is a tailor-made service."
     }
   },
   "partners": {
@@ -918,31 +915,42 @@
     "hero": {
       "question": "who are we?",
       "title": "Reason and sight.",
-      "text": "ΛΟΓΙΚΟΣ is Greek for rational. We are a team of born innovators who love technology, making the cameras industry already has understand what they see."
+      "text": "ΛΟΓΙΚΟΣ (logikós) comes from the Greek lógos: reason, word, what brings order to things. It is what we look for in every delivery: understand before proposing, organise before building and take care of every detail until the solution works in your operation. We are a team passionate about technology, making the cameras industry already has understand what they see."
     },
     "cta": "Request your custom model",
     "manifesto": {
       "title": "Why we exist",
-      "text": "Every plant already has cameras, and almost nobody is looking at them when it matters. Logikos exists to turn that image into an alert for whoever decides: the early fire, the forgotten PPE, the out-of-spec part, with the proof attached."
+      "text": "Every plant already has cameras, and almost nobody looks at them when it matters. And when something happens, finding what really matters among hours of footage takes time the operation doesn’t have. Logikos exists to turn that image into a notice for whoever decides: the early fire, the forgotten PPE, the out-of-spec part, with the proof attached."
     },
     "vision": {
       "title": "Computer vision, no mystery",
-      "text": "The camera stays the same. What changes is that a model trained by Logikos starts to understand what it sees and tells whoever needs to act. Industry 4.0 in practice: real-time operations data and faster decisions, without replacing what already works."
+      "text": "The camera stays the same. What changes is that a model trained by Logikos starts to understand what it sees and notifies whoever needs to act. It is Industry 4.0 in practice: real-time operations data and faster decisions, without replacing what already works, integrating wherever needed to deliver the right information at the right time."
     },
     "fronts": {
       "title": "What we do",
       "items": [
         {
           "name": "Recognition",
-          "text": "Custom models and several readings on the same camera: fire, PPE, quality, counting, ergonomics, hazard zones and workstation presence."
+          "text": "Custom models, with several readings on the same camera the plant already has.",
+          "label": "Readings",
+          "specs": ["Fire and smoke", "PPE", "Quality", "Counting", "Ergonomics", "Hazard zones", "Workstation presence"]
         },
         {
           "name": "Robotics and drones",
-          "text": "The same recognition on the move, where a fixed camera cannot reach. Built per project."
+          "text": "The same recognition on the move, where a fixed camera can’t reach: robotics and embedded computer vision, by project.",
+          "label": "Where it works",
+          "specs": [
+            "Aerial drones",
+            "Humanoid robots",
+            "Aquatic drones",
+            "Embedded computer vision",
+            "Inspection and patrols in hazardous areas"
+          ]
         },
         {
           "name": "Twins",
-          "text": "The digital twin of every part, compared with the design, and a walkable site from a phone.",
+          "text": "Digital twins of parts and of plants: every part compared with its design, and the site navigable from a phone video.",
+          "label": "Connects",
           "specs": [
             "Industrial cameras on the line",
             "Line laser scanner",
@@ -952,23 +960,22 @@
             "Phone to capture the site"
           ]
         }
-      ],
-      "specsLabel": "Connects"
+      ]
     },
     "how": {
       "title": "How we work",
       "items": [
         {
-          "name": "Proof before promise",
-          "text": "We start with your cameras and show what can be recognized before any contract."
+          "name": "Understand before proposing",
+          "text": "We start by mapping the process with your team: what happens, what matters to measure and who decides. With that aligned, the project starts organised, and our project management follows every step."
         },
         {
-          "name": "Guided pilot",
-          "text": "One area first, with our team alongside, until the alert reaches the right person the right way."
+          "name": "Validate, then scale",
+          "text": "First we validate in one area, with our team alongside, until the alert reaches whoever decides the right way. Only then do we take it to the other areas."
         },
         {
-          "name": "Built for your operation",
-          "text": "Readings, alerts and dashboards tuned to your areas, your shifts and your targets."
+          "name": "Made for your operation",
+          "text": "Readings, alerts and panels designed for your routine: your areas, your shifts, your goals and the people who need to know about each thing."
         }
       ],
       "text": "Three steps, always in this order, until the alert reaches the right person the right way."
@@ -980,11 +987,11 @@
       },
       "model": {
         "title": "Logikos proprietary model",
-        "text": "Trained and validated by Logikos for each reading: fire, PPE, quality, counting, ergonomics, hazard zones and workstation presence."
+        "text": "Models created and trained by Logikos to recognise the activities each project expects. We use artificial intelligence, machine learning and deep learning, with continuous learning, for a delivery that scales and stays precise across different settings."
       },
       "processing": {
         "title": "In the cloud or in the plant",
-        "text": "The same alert either way. In the plant it keeps working offline and the images stay with you."
+        "text": "Depending on each operation, the models run in the plant or in the cloud, whichever suits the setting best. In the plant, they keep working without internet and the images stay with you."
       }
     },
     "questions": {
@@ -1463,8 +1470,7 @@
         "name": "Workstation presence",
         "text": "Each workstation’s occupancy across the shift."
       }
-    },
-    "featured": "Our focus now"
+    }
   },
   "caseLabels": {
     "problem": "the problem",
@@ -1525,6 +1531,58 @@
           "text": "A more predictable flow from the gate to the stack, and cargo is released sooner."
         }
       ]
+    },
+    "dash": {
+      "question": "how does it work inside?",
+      "title": "The yard, seen from inside",
+      "text": "An example of how the information reaches the team: the map shows where each container is and the way to it; the panel sums up the day.",
+      "badge": "Example",
+      "gate": "Gate",
+      "blocks": ["Block A", "Block B", "Block C", "Block D"],
+      "mapLabel": "Example yard map: four blocks with container stacks, one container highlighted in block D and the dashed path from the gate to it",
+      "card": {
+        "code": "LGKU 204518-3",
+        "position": "Block D · Row 3 · Tier 2",
+        "inLabel": "In",
+        "inValue": "10/11 · 08:42",
+        "outLabel": "Planned out",
+        "outValue": "14/11"
+      },
+      "panel": {
+        "title": "Yard panel",
+        "kpis": ["In today", "Out today", "Total occupancy"],
+        "barsTitle": "Occupancy by block",
+        "bars": ["A", "B", "C", "D"],
+        "lists": [
+          {
+            "title": "Leaving first",
+            "items": [
+              {
+                "text": "MSKU 778120-4",
+                "meta": "out 13/11"
+              },
+              {
+                "text": "TGHU 315902-6",
+                "meta": "out 13/11"
+              },
+              {
+                "text": "LGKU 204518-3",
+                "meta": "out 14/11"
+              }
+            ]
+          },
+          {
+            "title": "Alerts",
+            "items": [
+              {
+                "text": "Position mismatch · Block B, row 5",
+                "meta": "check",
+                "tone": "alerta"
+              }
+            ]
+          }
+        ]
+      }
     }
   },
   "caseAr": {
@@ -1579,6 +1637,13 @@
           "text": "The camera checks that the item picked is the one in the order before it moves on."
         }
       ]
+    },
+    "scene": {
+      "alt": "Augmented reality example on the tablet: the right box on the shelf highlighted with its SKU, the order in progress, the aisle and level, and the dashed route on the floor to the spot",
+      "sku": "SKU 48213 · Batch L-2611 · 3 pcs",
+      "order": "Order #1042 · item 2 of 5",
+      "where": "Aisle B · Level 2",
+      "badge": "Example"
     }
   },
   "caseOps": {
@@ -1591,56 +1656,113 @@
       "text": "The cameras already watching the process start telling you what is happening at each step, and management sees it all on one panel."
     },
     "problem": {
-      "title": "What happens between one log entry and the next.",
-      "text": "Stops, queues and out-of-sequence steps usually show up only at the end of the shift, when it is too late to act."
+      "title": "What operations control is.",
+      "text": "It is following, while it happens, how work moves through each step of the process: what came in, what is stopped, what got out of order. Without it, stops, queues and out-of-sequence steps usually show up only at the end of the shift, when it is too late to act."
     },
     "scope": {
       "title": "The steps that matter to you.",
       "text": "We understand the process and the indicators management follows. Then we define what each camera reads, who gets each notice and how the data reaches your system."
     },
     "gets": {
-      "title": "What management gets.",
+      "title": "What the manager decides with it.",
       "points": [
         {
-          "title": "Every step followed",
-          "text": "What came in, what stopped and what went out, with the frame as proof."
+          "title": "Where to put people",
+          "text": "Move the team to the step where work is piling up, while there is still time."
         },
         {
-          "title": "A notice while there is time",
-          "text": "When something strays from plan, whoever decides knows right away."
+          "title": "What to tackle first",
+          "text": "The most frequent stops and the causes behind them, with the clip to understand what happened."
         },
         {
-          "title": "Your operation’s indicators",
-          "text": "The numbers you already follow, fed by the cameras."
+          "title": "How to fix the sequence",
+          "text": "Adjust the flow before a skipped step becomes rework."
         }
       ]
     },
     "extra": {
-      "question": "where does it apply?",
-      "title": "Where it applies and what you follow",
+      "question": "where does it apply and what do you see?",
+      "title": "Where it applies and what the manager follows",
       "text": "It fits any operation split into steps the cameras can see: assembly and production lines, shipping and docks, warehouses and distribution centres, yards and maintenance areas.",
       "points": [
         {
-          "title": "Progress by step",
-          "text": "What is at each step now, and what has already gone through it this shift."
+          "title": "Progress by step and by line",
+          "text": "What is at each step now and what has already gone through it this shift, line by line."
         },
         {
-          "title": "Bottlenecks",
-          "text": "Where work is piling up before it becomes a queue."
+          "title": "Bottlenecks and queues",
+          "text": "Where work is piling up, before it becomes a queue."
         },
         {
-          "title": "Stops",
-          "text": "When a step stops, for how long and when it restarted."
+          "title": "Stops with reason and duration",
+          "text": "When a step stops, for how long and why, with the reason logged by whoever fixes it."
+        },
+        {
+          "title": "Out-of-sequence steps",
+          "text": "When something skips a step or arrives too early."
         },
         {
           "title": "Real-time alerts",
-          "text": "Whoever decides is notified on the phone or the panel as soon as something strays from plan."
+          "text": "Whoever fixes it is notified on the phone or the panel as soon as something strays from plan."
         },
         {
           "title": "Shift indicators",
           "text": "The numbers management already follows, updated by the cameras throughout the shift."
+        },
+        {
+          "title": "History with clips",
+          "text": "Every event kept with the clip of the moment, as evidence to talk it through with the team."
         }
       ]
+    },
+    "dash": {
+      "question": "what does the manager see?",
+      "title": "An example panel",
+      "text": "How the operation appears to whoever decides, in real time. The numbers are illustrative.",
+      "badge": "Example",
+      "panel": {
+        "title": "Operations panel · Line 1",
+        "kpis": ["Done this shift", "In progress", "Stopped now"],
+        "barsTitle": "Progress by step (of the shift plan)",
+        "bars": ["Receiving", "Assembly", "Inspection", "Packing", "Shipping"],
+        "lists": [
+          {
+            "title": "Bottlenecks and queues",
+            "items": [
+              {
+                "text": "Queue before Inspection",
+                "meta": "9 parts",
+                "tone": "aviso"
+              }
+            ]
+          },
+          {
+            "title": "Stops and sequence",
+            "items": [
+              {
+                "text": "Assembly stopped · missing material",
+                "meta": "12 min",
+                "tone": "alerta"
+              },
+              {
+                "text": "Packing before Inspection · batch 07",
+                "meta": "out of sequence",
+                "tone": "aviso"
+              }
+            ]
+          },
+          {
+            "title": "Real-time alerts",
+            "items": [
+              {
+                "text": "Line lead notified · Assembly",
+                "meta": "clip 10:14",
+                "tone": "ok"
+              }
+            ]
+          }
+        ]
+      }
     }
   },
   "scenes": {

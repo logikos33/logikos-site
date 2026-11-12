@@ -4,7 +4,7 @@ import Cam from '../components/Cam.astro';
 import LicenseOptions from '../components/LicenseOptions.astro';
 import PageClose from '../components/PageClose.astro';
 import PageHero from '../components/PageHero.astro';
-import Pipeline from '../components/Pipeline.astro';
+import FluxoDecisao from '../components/FluxoDecisao.astro';
 import PointList from '../components/PointList.astro';
 import Section from '../components/Section.astro';
 import { dict } from '../i18n';
@@ -19,10 +19,10 @@ const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.howItWorks;
 const i = p.integrations;
-const integrations = [i.messages, i.panel, i.alarm, i.erp, i.mqtt, i.webhook].map((x) => ({ term: x.title, text: x.text }));
+const integrations = [i.messages, i.panel, i.alarm, i.erp, i.mqtt, i.webhook, i.own, i.data].map((x) => ({ term: x.title, text: x.text }));
 // The project steps that used to live on the integrators' page (rodada soluções): one place, here.
 const pp = t.partnerPoints;
-const project = [pp.brand, pp.pilot, pp.license, pp.support].map((x) => ({ term: x.title, text: x.text }));
+const project = [pp.brand, pp.mapping, pp.pilot, pp.license, pp.support].map((x) => ({ term: x.title, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="howItWorks" title={p.meta.title} description={p.meta.description}>
@@ -34,7 +34,7 @@ const project = [pp.brand, pp.pilot, pp.license, pp.support].map((x) => ({ term:
 
   <!-- The figure this page exists for: camera → processing → verdict → the person who decides. -->
   <Section id="pipeline-title" question={p.hero.question} title={t.home.how.title} wide class="section--perto">
-    <Pipeline locale={locale} long class="after" />
+    <FluxoDecisao locale={locale} />
   </Section>
 
   <Section id="project-title" question={p.project.question} title={p.project.title} text={p.project.text}>

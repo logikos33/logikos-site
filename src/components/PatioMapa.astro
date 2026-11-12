@@ -1,0 +1,263 @@
+---
+// Example logistics map of a container yard (rodada soluções 5, pin 7ukv), drawn in code: four
+// blocks of stacks with lanes between the rows, one container highlighted (block D, row 3) and the
+// dashed path from the gate drawing itself to it. Reduced motion: the whole path, still.
+import type { Locale } from '../i18n/routes';
+import { dict } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const m = dict(locale).caseYard.dash;
+
+const COLS = 6;
+const ROWS = 4;
+const W = 30;
+const H = 22;
+const GX = 6;
+const LANE = 14;
+const BLOCKS = [
+  { x: 84, y: 40 },
+  { x: 404, y: 40 },
+  { x: 84, y: 240 },
+  { x: 404, y: 240 },
+];
+const stack = (b: { x: number; y: number }, c: number, r: number) => ({ x: b.x + 8 + c * (W + GX), y: b.y + 12 + r * (H + LANE) });
+// The highlighted container: block D, row 3, column 4.
+const D = BLOCKS[3] ?? { x: 0, y: 0 };
+const alvo = stack(D, 3, 2);
+const laneY = alvo.y - LANE / 2;
+const AISLE_Y = 212;
+const AISLE_X = 362;
+const caminho = `M34 ${AISLE_Y} H${AISLE_X} V${laneY} H${alvo.x + W / 2} V${alvo.y}`;
+const cells = BLOCKS.flatMap((b, bi) =>
+  Array.from({ length: ROWS * COLS }, (_, i) => ({
+    ...stack(b, i % COLS, Math.floor(i / COLS)),
+    alvo: bi === 3 && i === 2 * COLS + 3,
+    tom: (i * 7 + bi * 3) % 5,
+  })),
+);
+---
+
+<figure class="mapa">
+  <svg viewBox="0 0 640 420" role="img" aria-label={m.mapLabel}>
+    <defs>
+      <mask id="patio-revela">
+        <path class="revela" d={caminho} pathLength="1"></path>
+      </mask>
+    </defs>
+    <rect class="chao" x="2" y="2" width="636" height="416" rx="10"></rect>
+    <rect class="corredor" x="34" y={AISLE_Y - 12} width="600" height="24"></rect>
+    <rect class="corredor" x={AISLE_X - 12} y="20" width="24" height="380"></rect>
+    <!-- gate -->
+    <rect class="portao" x="6" y={AISLE_Y - 24} width="28" height="48" rx="3"></rect>
+    <text class="rotulo" x="6" y={AISLE_Y - 32}>
+      {m.gate}
+    </text>
+    {BLOCKS.map((b, i) => (
+      <text class="rotulo" x={b.x + 8} y={b.y + 4}>
+        {m.blocks[i]}
+      </text>
+    ))}
+    {cells.map((c) => (
+      <rect class:list={['pilha', `pilha--${c.tom}`, { 'pilha--alvo': c.alvo }]} x={c.x} y={c.y} width={W} height={H} rx="2" />
+    ))}
+    <path class="rota" d={caminho} mask="url(#patio-revela)"></path>
+    <circle class="pulso" cx={alvo.x + W / 2} cy={alvo.y + H / 2} r="18"></circle>
+  </svg>
+  <figcaption class="ficha">
+    <span class="ficha__selo mono">{m.badge}</span>
+    <p class="ficha__codigo mono">{m.card.code}</p>
+    <p class="ficha__pos">{m.card.position}</p>
+    <dl>
+      <div>
+        <dt>{m.card.inLabel}</dt>
+        <dd class="mono">{m.card.inValue}</dd>
+      </div>
+      <div>
+        <dt>{m.card.outLabel}</dt>
+        <dd class="mono">{m.card.outValue}</dd>
+      </div>
+    </dl>
+  </figcaption>
+</figure>
+
+<style>
+  .mapa {
+    position: relative;
+    margin: 0;
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #0d1117;
+    border: 1px solid var(--lk-line-strong);
+    border-radius: 10px;
+  }
+
+  .chao {
+    fill: #11161e;
+  }
+
+  .corredor {
+    fill: #1a212b;
+  }
+
+  .portao {
+    fill: none;
+    stroke: #00d4ff;
+    stroke-width: 2;
+  }
+
+  .rotulo {
+    fill: #9aa4b2;
+    font: 600 11px var(--lk-font-mono);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .pilha {
+    fill: #233040;
+    stroke: #2e3d50;
+  }
+
+  .pilha--1 {
+    fill: #27364a;
+  }
+
+  .pilha--2 {
+    fill: #1e2a38;
+  }
+
+  .pilha--3 {
+    fill: #2b3b51;
+  }
+
+  .pilha--alvo {
+    fill: #00d4ff;
+    stroke: #7ff3ff;
+  }
+
+  .rota {
+    fill: none;
+    stroke: #00d4ff;
+    stroke-width: 3;
+    stroke-dasharray: 7 6;
+    stroke-linecap: round;
+  }
+
+  .revela {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 12;
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 1;
+    animation: desenha 6s ease-in-out infinite;
+  }
+
+  .pulso {
+    fill: none;
+    stroke: #00d4ff;
+    stroke-width: 2;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pulso 2s ease-out infinite;
+  }
+
+  @keyframes desenha {
+    0% {
+      stroke-dashoffset: 1;
+    }
+
+    45%,
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes pulso {
+    from {
+      opacity: 0.9;
+      transform: scale(0.6);
+    }
+
+    to {
+      opacity: 0;
+      transform: scale(1.4);
+    }
+  }
+
+  /* The info card of the highlighted container, over the map's lower-right corner on wide screens. */
+  .ficha {
+    display: grid;
+    gap: 0.3rem;
+    margin-top: var(--lk-space-3);
+    padding: var(--lk-space-4);
+    background: #0d1117;
+    border: 1px solid #00d4ff;
+    border-radius: 8px;
+    font-size: 0.875rem;
+  }
+
+  .ficha p {
+    margin: 0;
+  }
+
+  .ficha__selo {
+    justify-self: start;
+    padding: 0.1rem 0.45rem;
+    border: 1px solid #00d4ff;
+    border-radius: 999px;
+    color: #00d4ff;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .ficha__codigo {
+    font-size: 1rem;
+    color: #00d4ff;
+  }
+
+  .ficha__pos {
+    font-weight: 600;
+  }
+
+  .ficha dl {
+    display: flex;
+    gap: var(--lk-space-5);
+    margin: 0.2rem 0 0;
+  }
+
+  .ficha dt {
+    font-size: 0.75rem;
+    color: var(--lk-text-2);
+  }
+
+  .ficha dd {
+    margin: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .revela,
+    .pulso {
+      animation: none;
+    }
+
+    .revela {
+      stroke-dashoffset: 0;
+    }
+
+    .pulso {
+      opacity: 0.6;
+    }
+  }
+
+  :global(html.lk-parado) .mapa * {
+    animation-play-state: paused;
+  }
+</style>

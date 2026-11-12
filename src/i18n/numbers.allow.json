@@ -240,6 +240,82 @@
     "recognition.cases[6].example.time": {
       "values": ["14", "32"],
       "source": "Rodada soluções (12/11/2026): ilustração do card de presença por posto, no mesmo padrão dos outros cards (câmera de exemplo e horário fixo do muro)."
+    },
+    "caseYard.dash.card.code": {
+      "values": ["204518", "3"],
+      "source": "Dado de exemplo de painel/mapa, marcado como \"Exemplo\" na página (pinos da rodada 5, 12/11/2026); não é dado de cliente."
+    },
+    "caseYard.dash.card.position": {
+      "values": ["3", "2"],
+      "source": "Dado de exemplo de painel/mapa, marcado como \"Exemplo\" na página (pinos da rodada 5, 12/11/2026); não é dado de cliente."
+    },
+    "caseYard.dash.card.inValue": {
+      "values": ["10", "11", "08", "42"],
+      "source": "Dado de exemplo de painel/mapa, marcado como \"Exemplo\" na página (pinos da rodada 5, 12/11/2026); não é dado de cliente."
+    },
+    "caseYard.dash.card.outValue": {
+      "values": ["14", "11"],
+      "source": "Dado de exemplo de painel/mapa, marcado como \"Exemplo\" na página (pinos da rodada 5, 12/11/2026); não é dado de cliente."
+    },
+    "caseYard.dash.panel.lists[0].items[0].text": {
+      "values": ["778120", "4"],
+      "source": "Dado de exemplo de painel/mapa, marcado como \"Exemplo\" na página (pinos da rodada 5, 12/11/2026); não é dado de cliente."
+    },
+    "caseYard.dash.panel.lists[0].items[0].meta": {
+      "values": ["13", "11"],
+      "source": "Dado de exemplo de painel/mapa, marcado como \"Exemplo\" na página (pinos da rodada 5, 12/11/2026); não é dado de cliente."
+    },
+    "caseYard.dash.panel.lists[0].items[1].text": {
+      "values": ["315902", "6"],
+      "source": "Dado de exemplo de painel/mapa, marcado como \"Exemplo\" na página (pinos da rodada 5, 12/11/2026); não é dado de cliente."
+    },
+    "caseYard.dash.panel.lists[0].items[1].meta": {
+      "values": ["13", "11"],
+      "source": "Dado de exemplo de painel/mapa, marcado como \"Exemplo\" na página (pinos da rodada 5, 12/11/2026); não é dado de cliente."
+    },
+    "caseYard.dash.panel.lists[0].items[2].text": {
+      "values": ["204518", "3"],
+      "source": "Dado de exemplo de painel/mapa, marcado como \"Exemplo\" na página (pinos da rodada 5, 12/11/2026); não é dado de cliente."
+    },
+    "caseYard.dash.panel.lists[0].items[2].meta": {
+      "values": ["14", "11"],
+      "source": "Dado de exemplo de painel/mapa, marcado como \"Exemplo\" na página (pinos da rodada 5, 12/11/2026); não é dado de cliente."
+    },
+    "caseYard.dash.panel.lists[1].items[0].text": {
+      "values": ["5"],
+      "source": "Dado de exemplo de painel/mapa, marcado como \"Exemplo\" na página (pinos da rodada 5, 12/11/2026); não é dado de cliente."
+    },
+    "caseAr.scene.sku": {
+      "values": ["48213", "2611", "3"],
+      "source": "Dado de exemplo de painel/mapa, marcado como \"Exemplo\" na página (pinos da rodada 5, 12/11/2026); não é dado de cliente."
+    },
+    "caseAr.scene.order": {
+      "values": ["1042", "2", "5"],
+      "source": "Dado de exemplo de painel/mapa, marcado como \"Exemplo\" na página (pinos da rodada 5, 12/11/2026); não é dado de cliente."
+    },
+    "caseAr.scene.where": {
+      "values": ["2"],
+      "source": "Dado de exemplo de painel/mapa, marcado como \"Exemplo\" na página (pinos da rodada 5, 12/11/2026); não é dado de cliente."
+    },
+    "caseOps.dash.panel.title": {
+      "values": ["1"],
+      "source": "Dado de exemplo de painel/mapa, marcado como \"Exemplo\" na página (pinos da rodada 5, 12/11/2026); não é dado de cliente."
+    },
+    "caseOps.dash.panel.lists[0].items[0].meta": {
+      "values": ["9"],
+      "source": "Dado de exemplo de painel/mapa, marcado como \"Exemplo\" na página (pinos da rodada 5, 12/11/2026); não é dado de cliente."
+    },
+    "caseOps.dash.panel.lists[1].items[0].meta": {
+      "values": ["12"],
+      "source": "Dado de exemplo de painel/mapa, marcado como \"Exemplo\" na página (pinos da rodada 5, 12/11/2026); não é dado de cliente."
+    },
+    "caseOps.dash.panel.lists[1].items[1].text": {
+      "values": ["07"],
+      "source": "Dado de exemplo de painel/mapa, marcado como \"Exemplo\" na página (pinos da rodada 5, 12/11/2026); não é dado de cliente."
+    },
+    "caseOps.dash.panel.lists[2].items[0].meta": {
+      "values": ["10", "14"],
+      "source": "Dado de exemplo de painel/mapa, marcado como \"Exemplo\" na página (pinos da rodada 5, 12/11/2026); não é dado de cliente."
     }
   }
 }

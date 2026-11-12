@@ -334,18 +334,9 @@
       "leaves": "sai da planta",
       "stays": "fica na planta",
       "rows": [
-        [
-          "o alerta",
-          "as imagens do dia a dia"
-        ],
-        [
-          "o clipe do evento",
-          "as gravações"
-        ],
-        [
-          "o quadro marcado",
-          "o modelo e o equipamento"
-        ]
+        ["o alerta", "as imagens do dia a dia"],
+        ["o clipe do evento", "as gravações"],
+        ["o quadro marcado", "o modelo e o equipamento"]
       ]
     },
     "faq": {
@@ -385,12 +376,6 @@
       "specialist": "Seu modelo"
     },
     "wa": "Olá! Quero falar com um especialista sobre visão computacional na minha planta.",
-    "pipeline": {
-      "title": "Da câmera à decisão, sem sair da planta.",
-      "wall": "planta",
-      "note": "Só o alerta e o clipe do evento saem da planta.",
-      "cta": "Ver a arquitetura"
-    },
     "next": {
       "title": "Comece com um piloto acompanhado.",
       "plant": {
@@ -430,19 +415,23 @@
   "partnerPoints": {
     "brand": {
       "title": "Você traz o caso",
-      "text": "O que a sua operação precisa ver nas câmeras: a área, o risco, a peça, o indicador."
+      "text": "Você nos conta o que a operação precisa ver nas câmeras: a área, o risco, a peça, o indicador. A gente escuta com calma."
+    },
+    "mapping": {
+      "title": "Mapeamento do processo, juntos",
+      "text": "Com o seu time, entendemos como o processo acontece no dia a dia, alinhamos os objetivos e definimos, com quem contrata, o que realmente importa medir."
     },
     "pilot": {
-      "title": "A Logikos dimensiona e treina",
-      "text": "Definimos câmeras, leituras e onde o processamento acontece, e treinamos o modelo nas suas imagens, com um piloto acompanhado."
+      "title": "Dimensionamos e treinamos juntos",
+      "text": "Definimos com você câmeras, leituras e onde o processamento acontece, e treinamos o modelo nas suas imagens, com um piloto acompanhado pela sua equipe."
     },
     "license": {
       "title": "Entregue para a operação",
       "text": "Na nuvem ou com equipamento na planta, conforme o projeto, com a forma de contratação que fizer sentido para você."
     },
     "support": {
-      "title": "Suporte e evolução",
-      "text": "Treinamento da sua equipe e atualizações do modelo por conta da Logikos."
+      "title": "Suporte e evolução, lado a lado",
+      "text": "Treinamento da sua equipe e atualizações do modelo por conta da Logikos, acompanhando a operação depois da entrega."
     }
   },
   "recognition": {
@@ -639,7 +628,7 @@
     },
     "integrations": {
       "title": "Integrações",
-      "text": "O alerta chega onde a sua operação já trabalha. Quais integrações entram, definimos juntos no dimensionamento.",
+      "text": "O alerta chega onde a sua operação já trabalha, e nos adaptamos ao seu cenário. Quais integrações entram, definimos juntos no dimensionamento.",
       "alarm": {
         "title": "Alarme e sinalização",
         "text": "Saída por contato seco para sirene, sinaleiro ou a central de alarme existente."
@@ -663,6 +652,14 @@
       "webhook": {
         "title": "Webhook",
         "text": "Cada evento enviado por HTTP para o seu sistema."
+      },
+      "own": {
+        "title": "Aplicações próprias do cliente",
+        "text": "Os eventos chegam aos sistemas que a sua equipe desenvolveu, no formato que eles esperam."
+      },
+      "data": {
+        "title": "API, banco de dados e sistemas legados",
+        "text": "Integração por API, gravação direta em banco de dados ou conexão com sistemas mais antigos."
       }
     },
     "license": {
@@ -684,7 +681,7 @@
     "project": {
       "question": "como é o projeto?",
       "title": "Do seu caso ao modelo rodando",
-      "text": "Quatro etapas, sempre nesta ordem, para o modelo chegar certo à sua operação."
+      "text": "Cinco etapas, sempre em conjunto com o seu time, porque cada modelo é um serviço feito sob medida."
     }
   },
   "partners": {
@@ -918,31 +915,42 @@
     "hero": {
       "question": "quem somos?",
       "title": "Razão e visão.",
-      "text": "ΛΟΓΙΚΟΣ: racional, em grego. Somos uma equipe de inovadores natos e apaixonados por tecnologia, fazendo a câmera que a indústria já tem entender o que vê."
+      "text": "ΛΟΓΙΚΟΣ (logikós) vem do grego lógos: razão, palavra, aquilo que dá ordem às coisas. É o que buscamos em cada entrega: entender antes de propor, organizar antes de construir e cuidar de cada detalhe até a solução funcionar na sua operação. Somos uma equipe apaixonada por tecnologia, fazendo a câmera que a indústria já tem entender o que vê."
     },
     "cta": "Solicite seu modelo customizado",
     "manifesto": {
       "title": "Por que existimos",
-      "text": "Toda planta já tem câmeras, e quase ninguém olha para elas na hora que importa. A Logikos existe para transformar essa imagem em um aviso para quem decide: o princípio de incêndio, o EPI esquecido, a peça fora do padrão, com a prova junto."
+      "text": "Toda planta já tem câmeras, e quase ninguém olha para elas na hora que importa. E, quando algo acontece, encontrar o que realmente importa no meio de horas de gravação toma um tempo que a operação não tem. A Logikos existe para transformar essa imagem em um aviso para quem decide: o princípio de incêndio, o EPI esquecido, a peça fora do padrão, com a prova junto."
     },
     "vision": {
       "title": "Visão computacional, sem mistério",
-      "text": "A câmera continua a mesma. O que muda é que um modelo treinado pela Logikos passa a entender o que ela vê e avisa quem precisa agir. É a Indústria 4.0 na prática: dados da operação em tempo real e decisões mais rápidas, sem trocar o que já funciona."
+      "text": "A câmera continua a mesma. O que muda é que um modelo treinado pela Logikos passa a entender o que ela vê e avisa quem precisa agir. É a Indústria 4.0 na prática: dados da operação em tempo real e decisões mais rápidas, sem trocar o que já funciona, integrando onde for necessário para entregar a informação certa, na hora certa."
     },
     "fronts": {
       "title": "O que fazemos",
       "items": [
         {
           "name": "Recognition",
-          "text": "Modelos customizados e várias leituras na mesma câmera: fogo, EPI, qualidade, contagem, ergonomia, zonas de risco e presença por posto de trabalho."
+          "text": "Modelos customizados, com várias leituras na mesma câmera que a planta já tem.",
+          "label": "Leituras",
+          "specs": ["Fogo e fumaça", "EPI", "Qualidade", "Contagem", "Ergonomia", "Zonas de risco", "Presença por posto de trabalho"]
         },
         {
           "name": "Robótica e drones",
-          "text": "O mesmo reconhecimento em movimento, onde a câmera fixa não chega. Sob projeto."
+          "text": "O mesmo reconhecimento em movimento, onde a câmera fixa não chega: robótica e visão computacional embarcada, sob projeto.",
+          "label": "Onde atua",
+          "specs": [
+            "Drones aéreos",
+            "Robôs humanoides",
+            "Drones aquáticos",
+            "Visão computacional embarcada",
+            "Inspeção e rondas em áreas de risco"
+          ]
         },
         {
           "name": "Twins",
-          "text": "O gêmeo digital de cada peça, comparada com o projeto, e o ambiente navegável a partir do celular.",
+          "text": "Gêmeos digitais das peças e das plantas: cada peça comparada com o projeto e o ambiente navegável a partir do celular.",
+          "label": "Conecta",
           "specs": [
             "Câmeras industriais na linha",
             "Scanner a laser de linha",
@@ -952,23 +960,22 @@
             "Celular para capturar o ambiente"
           ]
         }
-      ],
-      "specsLabel": "Conecta"
+      ]
     },
     "how": {
       "title": "Como trabalhamos",
       "items": [
         {
-          "name": "Prova antes da promessa",
-          "text": "Começamos pelas suas câmeras e mostramos o que dá para reconhecer antes de qualquer contrato."
+          "name": "Entender antes de propor",
+          "text": "Começamos mapeando o processo com o seu time: o que acontece, o que importa medir e quem decide. Com isso alinhado, o projeto nasce organizado, e a nossa gestão de projetos acompanha cada etapa."
         },
         {
-          "name": "Piloto acompanhado",
-          "text": "Uma área primeiro, com a nossa equipe junto, até o alerta chegar certo para quem decide."
+          "name": "Validar, depois escalar",
+          "text": "Primeiro validamos numa área, com a nossa equipe junto, até o alerta chegar certo para quem decide. Só então levamos para as outras áreas."
         },
         {
           "name": "Feito para a sua operação",
-          "text": "Leituras, alertas e painéis ajustados às suas áreas, aos seus turnos e às suas metas."
+          "text": "Leituras, alertas e painéis pensados para a sua rotina: as suas áreas, os seus turnos, as suas metas e as pessoas que precisam saber de cada coisa."
         }
       ],
       "text": "Três passos, sempre nesta ordem, até o alerta chegar certo para quem decide."
@@ -980,11 +987,11 @@
       },
       "model": {
         "title": "Modelo proprietário Logikos",
-        "text": "Treinado e validado pela Logikos para cada leitura: fogo, EPI, qualidade, contagem, ergonomia, zonas de risco e presença por posto de trabalho."
+        "text": "Modelos criados e treinados pela Logikos para reconhecer as atividades previstas em cada projeto. Usamos inteligência artificial, machine learning e deep learning, com aprendizado contínuo, para uma entrega escalável e precisa em cenários diversos."
       },
       "processing": {
         "title": "Na nuvem ou na planta",
-        "text": "O mesmo alerta nos dois modos. Na planta, segue funcionando sem internet e as imagens ficam com você."
+        "text": "Conforme a realidade de cada operação, os modelos rodam na planta ou na nuvem, o que for melhor para o cenário. Na planta, seguem funcionando sem internet e as imagens ficam com você."
       }
     },
     "questions": {
@@ -1463,8 +1470,7 @@
         "name": "Presença por posto de trabalho",
         "text": "Ocupação de cada posto ao longo do turno."
       }
-    },
-    "featured": "Prioridade agora"
+    }
   },
   "caseLabels": {
     "problem": "o problema",
@@ -1525,6 +1531,58 @@
           "text": "Fluxo mais previsível do portão à pilha, e a liberação da carga sai mais rápido."
         }
       ]
+    },
+    "dash": {
+      "question": "como funciona por dentro?",
+      "title": "O pátio, visto por dentro",
+      "text": "Um exemplo de como a informação aparece para a equipe: o mapa mostra onde está cada contêiner e o caminho até ele; o painel resume o dia.",
+      "badge": "Exemplo",
+      "gate": "Portão",
+      "blocks": ["Quadra A", "Quadra B", "Quadra C", "Quadra D"],
+      "mapLabel": "Mapa de exemplo do pátio: quatro quadras com pilhas de contêineres, um contêiner destacado na quadra D e o caminho tracejado do portão até ele",
+      "card": {
+        "code": "LGKU 204518-3",
+        "position": "Quadra D · Fila 3 · Nível 2",
+        "inLabel": "Entrada",
+        "inValue": "10/11 · 08:42",
+        "outLabel": "Saída prevista",
+        "outValue": "14/11"
+      },
+      "panel": {
+        "title": "Painel do pátio",
+        "kpis": ["Entradas hoje", "Saídas hoje", "Ocupação total"],
+        "barsTitle": "Ocupação por quadra",
+        "bars": ["A", "B", "C", "D"],
+        "lists": [
+          {
+            "title": "A sair primeiro",
+            "items": [
+              {
+                "text": "MSKU 778120-4",
+                "meta": "saída 13/11"
+              },
+              {
+                "text": "TGHU 315902-6",
+                "meta": "saída 13/11"
+              },
+              {
+                "text": "LGKU 204518-3",
+                "meta": "saída 14/11"
+              }
+            ]
+          },
+          {
+            "title": "Alertas",
+            "items": [
+              {
+                "text": "Posição divergente · Quadra B, fila 5",
+                "meta": "conferir",
+                "tone": "alerta"
+              }
+            ]
+          }
+        ]
+      }
     }
   },
   "caseAr": {
@@ -1579,6 +1637,13 @@
           "text": "A câmera confere se o item pego é o do pedido antes de ele seguir."
         }
       ]
+    },
+    "scene": {
+      "alt": "Exemplo de realidade aumentada no tablet: a caixa certa da estante destacada com o SKU, o pedido em andamento, o corredor e o nível, e a rota tracejada no chão até a posição",
+      "sku": "SKU 48213 · Lote L-2611 · 3 un.",
+      "order": "Pedido #1042 · item 2 de 5",
+      "where": "Corredor B · Nível 2",
+      "badge": "Exemplo"
     }
   },
   "caseOps": {
@@ -1591,56 +1656,113 @@
       "text": "As câmeras que já acompanham o processo passam a dizer o que está acontecendo em cada etapa, e a gestão vê tudo reunido num painel."
     },
     "problem": {
-      "title": "O que acontece entre um apontamento e outro.",
-      "text": "Paradas, filas e etapas fora de sequência costumam aparecer só no fim do turno, quando já não dá para agir."
+      "title": "O que é controle de operação.",
+      "text": "É acompanhar, enquanto acontece, como o trabalho anda em cada etapa do processo: o que entrou, o que está parado, o que ficou fora de ordem. Sem isso, paradas, filas e etapas fora de sequência costumam aparecer só no fim do turno, quando já não dá para agir."
     },
     "scope": {
       "title": "As etapas que importam para você.",
       "text": "Entendemos o processo e os indicadores que a gestão acompanha. Depois definimos o que cada câmera lê, quem recebe cada aviso e como os dados chegam ao seu sistema."
     },
     "gets": {
-      "title": "O que a gestão passa a ter.",
+      "title": "O que o gestor decide com isso.",
       "points": [
         {
-          "title": "Cada etapa acompanhada",
-          "text": "O que entrou, o que parou e o que saiu, com o quadro como prova."
+          "title": "Onde colocar gente",
+          "text": "Remanejar a equipe para a etapa em que o trabalho acumula, enquanto ainda dá tempo."
         },
         {
-          "title": "Aviso enquanto dá tempo",
-          "text": "Quando algo foge do previsto, quem decide fica sabendo na hora."
+          "title": "O que atacar primeiro",
+          "text": "As paradas mais frequentes e as causas por trás delas, com o clipe para entender o que houve."
         },
         {
-          "title": "Indicadores da sua operação",
-          "text": "Os números que você já acompanha, alimentados pelas câmeras."
+          "title": "Como corrigir a sequência",
+          "text": "Ajustar o fluxo antes que uma etapa pulada vire retrabalho."
         }
       ]
     },
     "extra": {
-      "question": "onde se aplica?",
-      "title": "Onde se aplica e o que você acompanha",
+      "question": "onde se aplica e o que você vê?",
+      "title": "Onde se aplica e o que o gestor acompanha",
       "text": "Serve para qualquer operação dividida em etapas que as câmeras conseguem ver: linhas de montagem e de produção, expedição e docas, armazéns e centros de distribuição, pátios e áreas de manutenção.",
       "points": [
         {
-          "title": "Andamento por etapa",
-          "text": "O que está em cada etapa agora, e o que já passou por ela no turno."
+          "title": "Andamento por etapa e por linha",
+          "text": "O que está em cada etapa agora e o que já passou por ela no turno, linha por linha."
         },
         {
-          "title": "Gargalos",
-          "text": "Onde o trabalho está acumulando antes que vire fila."
+          "title": "Gargalos e filas",
+          "text": "Onde o trabalho está acumulando, antes que vire fila."
         },
         {
-          "title": "Paradas",
-          "text": "Quando uma etapa para, por quanto tempo e em que momento voltou."
+          "title": "Paradas com motivo e duração",
+          "text": "Quando uma etapa para, por quanto tempo e por quê, com o motivo registrado por quem resolve."
+        },
+        {
+          "title": "Etapas fora de sequência",
+          "text": "Quando algo pula uma etapa ou chega antes da hora."
         },
         {
           "title": "Alertas em tempo real",
-          "text": "Quem decide é avisado no celular ou no painel assim que algo foge do previsto."
+          "text": "Quem resolve é avisado no celular ou no painel assim que algo foge do previsto."
         },
         {
           "title": "Indicadores do turno",
           "text": "Os números que a gestão já acompanha, atualizados pelas câmeras ao longo do turno."
+        },
+        {
+          "title": "Histórico com clipe",
+          "text": "Cada evento guardado com o clipe do momento, como evidência para conversar com a equipe."
         }
       ]
+    },
+    "dash": {
+      "question": "como aparece para o gestor?",
+      "title": "Um painel de exemplo",
+      "text": "Como a operação aparece para quem decide, em tempo real. Os números são ilustrativos.",
+      "badge": "Exemplo",
+      "panel": {
+        "title": "Painel da operação · Linha 1",
+        "kpis": ["Concluídas no turno", "Em andamento", "Paradas agora"],
+        "barsTitle": "Andamento por etapa (do plano do turno)",
+        "bars": ["Recebimento", "Montagem", "Inspeção", "Embalagem", "Expedição"],
+        "lists": [
+          {
+            "title": "Gargalos e filas",
+            "items": [
+              {
+                "text": "Fila antes da Inspeção",
+                "meta": "9 peças",
+                "tone": "aviso"
+              }
+            ]
+          },
+          {
+            "title": "Paradas e sequência",
+            "items": [
+              {
+                "text": "Montagem parada · falta de material",
+                "meta": "12 min",
+                "tone": "alerta"
+              },
+              {
+                "text": "Embalagem antes da Inspeção · lote 07",
+                "meta": "fora de sequência",
+                "tone": "aviso"
+              }
+            ]
+          },
+          {
+            "title": "Alertas em tempo real",
+            "items": [
+              {
+                "text": "Líder da linha avisado · Montagem",
+                "meta": "clipe 10:14",
+                "tone": "ok"
+              }
+            ]
+          }
+        ]
+      }
     }
   },
   "scenes": {
