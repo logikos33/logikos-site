@@ -90,6 +90,9 @@ const organization = {
     </main>
     <Footer locale={locale} />
     <slot name="after" />
+    <script>
+      import '../scripts/rastreio-crm';
+    </script>
     <!-- LGPD notice; the analytics beacon loads only after "Accept" (Consentimento.astro). -->
     <Consentimento locale={locale} />
   </body>

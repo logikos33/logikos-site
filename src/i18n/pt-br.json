@@ -1096,7 +1096,7 @@
       },
       "cookies": {
         "title": "Cookies e armazenamento local",
-        "text": "Este site não usa cookies. No seu navegador ficam apenas registros de sessão, para não repetir a abertura da página inicial nem a animação do logo na mesma visita; e a sua escolha sobre a medição de audiência (\"lk-consentimento\": aceito ou recusado, com a data). A medição de audiência (Cloudflare Web Analytics) é anônima, não usa cookies e só é carregada se você aceitar. Para mudar a escolha a qualquer momento, use \"Preferências de cookies\" no rodapé de qualquer página."
+        "text": "Este site não usa cookies. No seu navegador ficam apenas registros de sessão, para não repetir a abertura da página inicial nem a animação do logo na mesma visita e, se você chegou por um link de e-mail da Logikos, o código desse e-mail, para avisar uma única vez à nossa equipe que a visita aconteceu (sem nenhum dado pessoal); e a sua escolha sobre a medição de audiência (\"lk-consentimento\": aceito ou recusado, com a data). A medição de audiência (Cloudflare Web Analytics) é anônima, não usa cookies e só é carregada se você aceitar. Para mudar a escolha a qualquer momento, use \"Preferências de cookies\" no rodapé de qualquer página."
       }
     }
   },
