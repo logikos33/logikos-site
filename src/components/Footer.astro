@@ -68,6 +68,9 @@ const LINKS = [
       </span>
       {CONTACT_EMAIL && <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>}
       <a href={pathFor('privacy', locale)}>{t.nav.privacy}</a>
+      <button type="button" class="site-footer__prefs" data-consent-open>
+        {t.consent.prefs}
+      </button>
       <span class="mono">
         © {year} {t.footer.company}. {t.footer.rights}
       </span>
@@ -76,6 +79,18 @@ const LINKS = [
 </footer>
 
 <style>
+  .site-footer__prefs {
+    align-self: start;
+    min-height: 2.25rem;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--lk-link-on-dark, var(--lk-accent));
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
   .selos {
     display: flex;
     flex-wrap: wrap;

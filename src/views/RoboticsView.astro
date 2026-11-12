@@ -22,7 +22,7 @@ const places = p.places.rows.map((x) => ({ term: x.title, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="robotics" title={p.meta.title} description={p.meta.description}>
-  <!-- No generated or maker photos of drones (Vitor, 12/11): a drawn, animated scene in the brand's line. -->
+  <!-- Reserved frame until the Artlist clip arrives (Vitor, 12/11): no generated drone photos, no line-art animation. -->
   <PageHero locale={locale} interest="robotics" id="hero-title" title={p.hero.title} text={p.hero.text}>
     <!-- Final review, item 9: only this page's call. -->
     <Fragment slot="actions">
@@ -31,7 +31,7 @@ const places = p.places.rows.map((x) => ({ term: x.title, text: x.text }));
     <p slot="note">
       <span class="verdict verdict--outline">{p.chip}</span>
     </p>
-    <RoboScene locale={locale} class="robo-heroi" />
+    <RoboScene class="robo-heroi" />
   </PageHero>
 
   <Section id="places-title" question={p.places.question} title={p.places.title} text={p.places.text}>

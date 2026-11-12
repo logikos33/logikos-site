@@ -70,8 +70,8 @@ test('footer pages: real media, the hero CTA pair and the phone-camera close', a
     await expect(page.locator('html'), path).toHaveAttribute('data-theme', 'dark');
     await expect(page.locator('img[src*="/media/posters/"]'), `${path}: generated poster`).toHaveCount(0);
     if (!MEDIA.includes(path)) continue;
-    // Robótica: the drawn drone / quadruped / boat scene (no generated drone photos, Vitor 12/11).
-    const media = path === '/robotica' ? '.ph__media .robo svg' : '.ph__media img[src^="/media/home/"]';
+    // Robótica: a reserved frame until the Artlist clip arrives (Vitor 12/11).
+    const media = path === '/robotica' ? '.ph__media .robo' : '.ph__media img[src^="/media/home/"]';
     await expect(page.locator(media).first(), `${path}: real media`).toBeVisible();
     // Sobre and Robótica keep only their own call (final review, items 5 and 9).
     await expect(page.locator('.ph [data-heroi-acoes] .btn'), `${path}: hero CTAs`).toHaveCount(

@@ -2,11 +2,12 @@
 import inter from '../fonts/inter.woff2?url';
 import spaceGrotesk from '../fonts/space-grotesk.woff2?url';
 import '../styles/global.css';
+import Consentimento from '../components/Consentimento.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { dict } from '../i18n';
 import { alternatesFor, HTML_LANG, OG_LOCALE, pathFor, type Locale, type RouteKey } from '../i18n/routes';
-import { CF_ANALYTICS_TOKEN, COMPANY, CONTACT_EMAIL } from '../lib/site';
+import { COMPANY, CONTACT_EMAIL } from '../lib/site';
 
 interface Props {
   locale: Locale;
@@ -89,13 +90,7 @@ const organization = {
     </main>
     <Footer locale={locale} />
     <slot name="after" />
-    {CF_ANALYTICS_TOKEN && (
-      <script
-        is:inline
-        defer
-        src="https://static.cloudflareinsights.com/beacon.min.js"
-        data-cf-beacon={JSON.stringify({ token: CF_ANALYTICS_TOKEN })}
-      />
-    )}
+    <!-- LGPD notice; the analytics beacon loads only after "Accept" (Consentimento.astro). -->
+    <Consentimento locale={locale} />
   </body>
 </html>

@@ -67,7 +67,7 @@ const GROUPS = [
           <li class:list={{ destaque: c.featured }}>
             <a class="case" href={c.href}>
               {c.key === 'robotics' ? (
-                <RoboScene locale={locale} />
+                <RoboScene />
               ) : c.key === 'presence' ? (
                 <Cam dir="/media/cases" clip="presenca-posto" webm square />
               ) : (

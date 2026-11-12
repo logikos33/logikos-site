@@ -642,6 +642,10 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
         <video data-src={`${M}abertura.mp4`} poster={`${M}abertura-poster.webp`} muted playsinline preload="none"></video>
       </div>
       <div class="abertura__flash"></div>
+      <button type="button" class="abertura__tocar" data-tocar hidden>
+        <Icon name="play" size={40} />
+        <span>{h.opening.play}</span>
+      </button>
       <button type="button" class="abertura__pular" data-pular>
         {h.opening.skip}
       </button>
@@ -654,8 +658,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // ---- Opening: Koda turns on the TV, the camera dives in, the site opens. It plays whole (or until
-  // "Pular", Esc or a tap). Fail-safes: not playable within 8 s, stalled for 3 s mid-clip, or
-  // past its length + 3 s → the site opens at once. The rest of the page is inert meanwhile.
+  // "Pular" or Esc). Fail-safes below; the rest of the page is inert meanwhile.
   const opened = new Promise<void>((resolve) => {
     const ab = document.querySelector<HTMLElement>('[data-abertura]');
     const video = ab?.querySelector('video');
@@ -667,10 +670,8 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     }
     const rest = [...document.body.children].filter((e): e is HTMLElement => e !== ab && e instanceof HTMLElement);
     rest.forEach((e) => (e.inert = true));
-    video.src = video.dataset.src ?? '';
     skip.focus({ focusVisible: false } as FocusOptions);
     let done = false;
-    let playing = false;
     const close = () => {
       root.classList.remove('lk-abre', 'lk-entrando');
       ab.remove();
@@ -695,43 +696,75 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
       window.setTimeout(() => root.classList.add('lk-entrando'), 500);
       window.setTimeout(close, 1200);
     };
-    // The clock starts when the clip can play through, never at page load: a fast page with a cold
-    // cache used to hit the old 1.2 s / 0.6 s fail-safes while the clip was still downloading and
-    // cut the opening. The poster holds the screen meanwhile; "Pular" works the whole time.
+    // Rodada soluções, item A (12/11): the opening sometimes vanished on a first visit.
+    // - Only 'waiting' counts as a stall ('stalled' also fires on a clip already downloaded, with no
+    //   'playing' after it), and a stall closes the opening only if the clock really stopped.
+    // - play() is called at once (muted + playsinline may autoplay): iOS/Safari never download a
+    //   preload='auto' clip that nobody plays. Every clock starts at the first 'playing'.
+    // - A rejected play() (low-power mode, autoplay policy) is retried on 'canplay'; if it fails
+    //   again the poster stays with a big play button instead of skipping.
+    // - Only "Pular" and Esc skip; a tap on the overlay no longer does.
+    let started = false;
+    let attempts = 0;
     let stall = 0;
     let cap = 0;
-    const start = () => {
-      if (playing || done) return;
-      playing = true;
-      window.clearTimeout(boot);
-      video.play().catch(() => finish(true));
-      // Whole clip + 3 s of buffering slack, counted from the first frame.
-      cap = window.setTimeout(() => finish(false), ((video.duration || 5) + 3) * 1000);
+    const play = ab.querySelector<HTMLButtonElement>('[data-tocar]');
+    const tryPlay = () => {
+      attempts += 1;
+      video.play().catch(() => {
+        if (done || started) return;
+        if (attempts < 2 && video.readyState >= 3) tryPlay();
+        else if (attempts >= 2 && play) play.hidden = false;
+      });
     };
-    // Nothing playable after 8 s (very slow network or a broken file): open the site.
-    const boot = window.setTimeout(() => finish(true), 8000);
-    video.addEventListener('playing', () => window.clearTimeout(stall));
-    // Mid-clip stalls wait for data (up to 3 s) instead of cutting the opening.
-    const onStall = () => {
-      if (!playing) return;
+    // Whole clip + 3 s of slack from the first frame; past that, close only if the clip is not
+    // still moving forward (a slow network keeps it open while frames keep coming).
+    const capCheck = (last: number) => {
+      if (video.ended || video.currentTime >= (video.duration || 0) - 0.2) return finish(false);
+      if (video.currentTime > last) cap = window.setTimeout(() => capCheck(video.currentTime), 1000);
+      else finish(false);
+    };
+    video.addEventListener('playing', () => {
       window.clearTimeout(stall);
-      stall = window.setTimeout(() => finish(true), 3000);
-    };
-    video.addEventListener('waiting', onStall);
-    video.addEventListener('stalled', onStall);
+      window.clearTimeout(boot);
+      if (play) play.hidden = true;
+      if (started) return;
+      started = true;
+      cap = window.setTimeout(() => capCheck(video.currentTime), ((video.duration || 5) + 3) * 1000);
+    });
+    video.addEventListener('waiting', () => {
+      if (!started) return;
+      window.clearTimeout(stall);
+      const t0 = video.currentTime;
+      stall = window.setTimeout(() => {
+        if (video.currentTime <= t0 && !video.ended) finish(true);
+      }, 6000);
+    });
+    video.addEventListener('canplay', () => {
+      if (!started && !done && attempts < 2) tryPlay();
+    });
     video.addEventListener('ended', () => {
       window.clearTimeout(cap);
       finish(false);
     });
-    video.addEventListener('canplaythrough', start);
-    video.preload = 'auto';
-    video.load();
-    if (video.readyState >= 4) start();
-    // Only deliberate gestures skip: the button, Esc or a tap on the opening. Scroll and touchmove
-    // no longer do (trackpad inertia right after load was cutting it).
+    // Nothing at all after 15 s (no frame, no rejection: a dead network or a broken file): open the
+    // site. A blocked autoplay never lands here: it waits for the play button.
+    const boot = window.setTimeout(() => {
+      if (!started && (!play || play.hidden)) finish(true);
+    }, 15000);
+    play?.addEventListener('click', () => {
+      video.play().catch(() => finish(true));
+      skip.focus({ focusVisible: false } as FocusOptions);
+    });
     skip.addEventListener('click', () => finish(true));
     ab.addEventListener('keydown', (e) => e.key === 'Escape' && finish(true));
-    ab.addEventListener('pointerdown', (e) => e.target !== skip && finish(true));
+    // Safari honours the autoplay attribute on a muted inline clip even where a scripted play()
+    // without a gesture may be refused; play() below still covers the other browsers.
+    video.muted = true;
+    video.autoplay = true;
+    video.preload = 'auto';
+    video.src = video.dataset.src ?? '';
+    tryPlay();
   });
 
   // ---- Videos: nothing downloads before it is near the screen; off-screen ones pause; reduced
@@ -2177,6 +2210,33 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     animation: flash 0.9s steps(9, end) forwards;
   }
 
+  /* Autoplay refused twice: the poster stays with one big, obvious play button. */
+  .abertura__tocar {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    z-index: 2;
+    display: grid;
+    justify-items: center;
+    gap: var(--lk-space-2);
+    padding: var(--lk-space-5) var(--lk-space-6);
+    background: #000c;
+    border: 2px solid #00d4ff;
+    border-radius: 999px;
+    color: var(--lk-text);
+    font: 600 1rem var(--lk-font-body);
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+  }
+
+  .abertura__tocar[hidden] {
+    display: none;
+  }
+
+  .abertura__tocar :global(svg) {
+    color: #00d4ff;
+  }
+
+  .abertura.mergulha .abertura__tocar,
   .abertura.mergulha .abertura__pular {
     display: none;
   }

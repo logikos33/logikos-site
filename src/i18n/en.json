@@ -140,7 +140,8 @@
     },
     "opening": {
       "label": "Opening: Koda turns on the TV with the Logikos logo and the camera dives into the screen",
-      "skip": "Skip opening"
+      "skip": "Skip opening",
+      "play": "Play the opening"
     },
     "hero": {
       "title": "Computer vision models made for your company.",
@@ -802,7 +803,7 @@
   "robotics": {
     "meta": {
       "title": "Drones and robotics — recognition in the air, on land and on water",
-      "description": "Aerial drones, quadruped robots and aquatic equipment with computer vision, scoped from your need."
+      "description": "Aerial drones, humanoid robots and aquatic drones with computer vision, scoped from your need."
     },
     "hero": {
       "question": "what is it?",
@@ -820,8 +821,8 @@
           "text": "Power line monitoring, inspection of wide or hard-to-reach areas and PPE checks on construction sites."
         },
         {
-          "title": "Land · quadruped robots",
-          "text": "Patrols in hazardous areas, with the same verdict as a fixed camera and without exposing the team."
+          "title": "Land · humanoid robots",
+          "text": "Inspection of panels and machines, instrument reading and patrols in hazardous areas, without exposing the team."
         },
         {
           "title": "Water · aquatic drones",
@@ -844,7 +845,7 @@
         },
         {
           "title": "We pick the platform",
-          "text": "Aerial drone, quadruped robot or aquatic drone: whatever fits the place and the task."
+          "text": "Aerial drone, humanoid robot or aquatic drone: whatever fits the place and the task."
         },
         {
           "title": "We train the model",
@@ -859,13 +860,6 @@
           "text": "A set routine, support and model updates on Logikos."
         }
       ]
-    },
-    "scene": {
-      "alt": "Animation: a drone hovers and its camera finds a worker’s helmet; a quadruped robot walks on land; an autonomous boat sails and measures the water’s bottom",
-      "sky": "sky",
-      "land": "land",
-      "water": "water",
-      "detect": "helmet"
     }
   },
   "compliance": {
@@ -1099,6 +1093,10 @@
       "contact": {
         "title": "How to reach us",
         "text": "By email at {email}."
+      },
+      "cookies": {
+        "title": "Cookies and local storage",
+        "text": "This site uses no cookies. Your browser keeps only session records, so the home opening and the logo animation don’t repeat in the same visit; and your choice about audience measurement (\"lk-consentimento\": accepted or declined, with the date). Audience measurement (Cloudflare Web Analytics) is anonymous, uses no cookies and loads only if you accept. To change your choice at any time, use \"Cookie preferences\" in the footer of any page."
       }
     }
   },
@@ -1250,7 +1248,7 @@
     },
     "robotics": {
       "title": "Robotics",
-      "text": "The same recognition on drones and robots: in the air, on land and on water.",
+      "text": "The same recognition on aerial drones, humanoid robots and aquatic drones.",
       "chip": "By project"
     }
   },
@@ -1418,8 +1416,8 @@
         "text": "Container moves followed by the camera, from the gate to the stack."
       },
       "robotics": {
-        "name": "Drones and robotics",
-        "text": "Aerial, quadruped and aquatic: recognition where a fixed camera can’t reach."
+        "name": "Aerial, humanoid and aquatic drones",
+        "text": "Recognition in the air, on land and on water, where a fixed camera can’t reach."
       },
       "ar": {
         "name": "Augmented reality for logistics",
@@ -1648,5 +1646,13 @@
       }
     },
     "ergonomicsAlt": "Operator bending to lift a box from a pallet, by the conveyor"
+  },
+  "consent": {
+    "label": "Cookie and privacy notice",
+    "text": "This site uses only what it needs to work and, if you accept, an anonymous audience measurement with no cookies. The form keeps only the data you send.",
+    "privacy": "Privacy policy",
+    "accept": "Accept",
+    "decline": "Decline",
+    "prefs": "Cookie preferences"
   }
 }

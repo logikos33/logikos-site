@@ -140,7 +140,8 @@
     },
     "opening": {
       "label": "Abertura: o Koda liga a TV com o logo da Logikos e a câmera entra na tela",
-      "skip": "Pular abertura"
+      "skip": "Pular abertura",
+      "play": "Reproduzir a abertura"
     },
     "hero": {
       "title": "Modelos de visão computacional feitos para a sua empresa.",
@@ -802,7 +803,7 @@
   "robotics": {
     "meta": {
       "title": "Drones e robótica — reconhecimento no ar, em terra e na água",
-      "description": "Drones aéreos, robôs quadrúpedes e equipamentos aquáticos com visão computacional, dimensionados a partir da sua necessidade."
+      "description": "Drones aéreos, robôs humanoides e drones aquáticos com visão computacional, dimensionados a partir da sua necessidade."
     },
     "hero": {
       "question": "o que é?",
@@ -820,8 +821,8 @@
           "text": "Acompanhamento de redes elétricas, inspeção de áreas amplas ou de difícil acesso e conferência de EPI em obras."
         },
         {
-          "title": "Terra · robôs quadrúpedes",
-          "text": "Rondas em áreas de risco, com o mesmo veredito da câmera fixa e sem expor a equipe."
+          "title": "Terra · robôs humanoides",
+          "text": "Inspeção de painéis e máquinas, leitura de instrumentos e rondas em áreas de risco, sem expor a equipe."
         },
         {
           "title": "Água · drones aquáticos",
@@ -844,7 +845,7 @@
         },
         {
           "title": "Escolhemos a plataforma",
-          "text": "Drone aéreo, robô quadrúpede ou drone aquático: o que faz sentido para o lugar e para a tarefa."
+          "text": "Drone aéreo, robô humanoide ou drone aquático: o que faz sentido para o lugar e para a tarefa."
         },
         {
           "title": "Treinamos o modelo",
@@ -859,13 +860,6 @@
           "text": "Rotina definida, suporte e atualizações do modelo por conta da Logikos."
         }
       ]
-    },
-    "scene": {
-      "alt": "Animação: um drone paira e a câmera dele encontra o capacete de um trabalhador; um robô quadrúpede anda em terra; um barco autônomo navega e mede o fundo da água",
-      "sky": "céu",
-      "land": "terra",
-      "water": "água",
-      "detect": "capacete"
     }
   },
   "compliance": {
@@ -1099,6 +1093,10 @@
       "contact": {
         "title": "Como falar com a gente",
         "text": "Pelo e-mail {email}."
+      },
+      "cookies": {
+        "title": "Cookies e armazenamento local",
+        "text": "Este site não usa cookies. No seu navegador ficam apenas registros de sessão, para não repetir a abertura da página inicial nem a animação do logo na mesma visita; e a sua escolha sobre a medição de audiência (\"lk-consentimento\": aceito ou recusado, com a data). A medição de audiência (Cloudflare Web Analytics) é anônima, não usa cookies e só é carregada se você aceitar. Para mudar a escolha a qualquer momento, use \"Preferências de cookies\" no rodapé de qualquer página."
       }
     }
   },
@@ -1250,7 +1248,7 @@
     },
     "robotics": {
       "title": "Robótica",
-      "text": "O mesmo reconhecimento em drones e robôs: no ar, em terra e na água.",
+      "text": "O mesmo reconhecimento em drones aéreos, robôs humanoides e drones aquáticos.",
       "chip": "Sob projeto"
     }
   },
@@ -1418,8 +1416,8 @@
         "text": "Movimentação de contêineres acompanhada pela câmera, do portão à pilha."
       },
       "robotics": {
-        "name": "Drones e robótica",
-        "text": "Aéreos, quadrúpedes e aquáticos: o reconhecimento onde a câmera fixa não chega."
+        "name": "Drones aéreos, humanoides e aquáticos",
+        "text": "O reconhecimento no ar, em terra e na água, onde a câmera fixa não chega."
       },
       "ar": {
         "name": "Realidade aumentada para logística",
@@ -1648,5 +1646,13 @@
       }
     },
     "ergonomicsAlt": "Operador curvado para pegar uma caixa no palete, junto à esteira"
+  },
+  "consent": {
+    "label": "Aviso de cookies e privacidade",
+    "text": "Este site usa só o essencial para funcionar e, se você aceitar, uma medição de audiência anônima, sem cookies. O formulário guarda apenas os dados que você envia.",
+    "privacy": "Política de privacidade",
+    "accept": "Aceitar",
+    "decline": "Recusar",
+    "prefs": "Preferências de cookies"
   }
 }
