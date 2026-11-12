@@ -103,3 +103,56 @@ Verificação: `astro check` 0 erros · ESLint ok · `gate:text` e `gate:i18n` o
 
 11. **Vídeo de presença:** o canto superior direito mostra o texto "HIKVISION", que é a marca d'água da própria câmera. O site já cita Hikvision como câmera compatível, então mantive. Quer uma versão do vídeo sem esse texto (recorte ou desfoque na edição)?
 12. **Animação de robótica:** está numa cena única com os três. Prefere assim ou um carrossel de três quadros (um por ambiente)?
+
+## Rodada 3 (12/11/2026): abertura, aviso LGPD, robótica humanoide
+
+Prévia: https://solucoes.logikos-site.pages.dev · prints `prints/r3-*`.
+
+### A) Abertura (TV)
+
+As 4 causas foram confirmadas no código e corrigidas em `src/views/HomeView.astro`:
+
+1. **`stalled`**: saiu. Só `waiting` conta como travamento, e o timer (6 s) só encerra se o `currentTime` não avançou. Prova: com um `stalled` falso aos 0,8 s, o **código antigo cortava em 3,8 s, sem mergulho** (2 de 2 na prévia antiga). O novo toca **4,63 s de 4,63 s, com mergulho**.
+2. **iOS/Safari**: `play()` logo de saída, mais o atributo `autoplay` (mudo + `playsinline`). O relógio começa no `playing`, não no `canplaythrough`. O limite passou a ser "duração + 3 s a partir do 1º quadro", e só encerra se o vídeo parou de avançar.
+3. **`play()` recusado**: tenta de novo em `canplay`. Se falhar de vez, o pôster fica com um botão grande, "Reproduzir a abertura", em vez de pular.
+4. **Toque no overlay**: não pula mais. Só "Pular" e Esc.
+
+Testes:
+
+- Chromium, cache frio e Fast 4G, na prévia: tocou 4,63/4,63 s, com mergulho.
+- Chromium com `stalled` falso: inteira.
+- WebKit do Playwright: esse navegador de teste recusa qualquer `play()` sem gesto, mesmo mudo e com janela (política do ambiente, não do Safari real). O fallback funcionou: o botão aparece, e um toque toca 4,63/4,63 s com mergulho, a 1440 e a 390.
+- "Pular" e Esc fecham; clique no overlay não fecha.
+- Testes permanentes em `tests/e2e/abertura-consentimento.spec.ts`.
+- ⚠️ Ainda falta conferir num iPhone e num Safari de verdade.
+
+### B) Aviso de cookies e privacidade (LGPD)
+
+- **Componente `Consentimento.astro`, em todas as páginas e nas duas línguas:** barra fixa no rodapé com texto curto e verdadeiro e link para a política. "Aceitar" e "Recusar" têm o mesmo estilo. A escolha fica em `localStorage` (`lk-consentimento`: `{valor: aceito|recusado, data}`).
+- **Nunca por cima da abertura:** a barra espera a classe `lk-abre` sair do `<html>`.
+- **Beacon do Cloudflare Web Analytics só depois de "Aceitar":** saiu do `Base.astro`. Testado com um build com token de teste e a chamada interceptada:
+  - 0 requisições antes da escolha e depois de "Recusar";
+  - 1 requisição depois de "Aceitar";
+  - em cada página nova, só se aceito.
+- **"Preferências de cookies" no rodapé** reabre a barra com o foco em "Aceitar". Depois da escolha, o foco volta ao link.
+- **/privacidade e /en/privacy:** seção nova, "Cookies e armazenamento local". Diz o que fica no navegador (sessão da abertura e do logo, o código do link de e-mail do CRM e a escolha de consentimento), que a medição é anônima, sem cookies e só com aceite, e como mudar a escolha. Nenhum selo novo.
+- **Acessibilidade e layout:**
+  - `role=region` com rótulo; axe 0 violações na barra; Tab chega no link, em "Aceitar" e em "Recusar".
+  - A 360 px, fica **acima** da barra de atalhos da home (não cobre o CTA).
+  - **CLS 0**: posição fixa, e o espaço no fim da página é reservado só enquanto a barra está aberta.
+- ⚠️ Se o Web Analytics estiver ligado no painel da Cloudflare em modo **automático** (injeção pelo Pages), ele não passa por esse aviso. Use só o token por variável (`PUBLIC_CF_ANALYTICS_TOKEN`).
+
+### Drones aéreos, humanoides e aquáticos
+
+- **Textos (PT/EN):** "quadrúpede" virou "robô humanoide" no nome do case (cartão), na meta de /robotica, em "Terra" ("inspeção de painéis e máquinas, leitura de instrumentos e rondas em áreas de risco"), no passo "Escolhemos a plataforma" e em `products.robotics`. Nenhuma ocorrência de "quadrúpede/quadruped" no site gerado.
+- **Animação de traço:** reprovada e removida.
+- **Imagem aprovada** (`humanoide-energia.jpg`, webp 1280 e 480): está no cartão e no hero de /robotica, com zoom lento (1 → 1,04 em 14 s) e brilho do feixe do drone (opacidade 0,15 ↔ 0,45). Fica parada com reduced motion. A home não tem esse case, então não entrou lá.
+
+### Merge com a main (PR #51, rastreio do CRM)
+
+`origin/main` entrou na branch antes do deploy. O `Base.astro` mantém o script `rastreio-crm` e o aviso de cookies. Unit 58/58 (inclui `rastreio-crm.test.ts`) e e2e **101/101**.
+
+### Perguntas novas
+
+13. **O aviso no CRM** (o `?r=OP-…` dos e-mails avisa "site visitado") roda sem esperar o "Aceitar". Ele não manda dado pessoal, só o código do card, e está descrito na política. Quer que ele também dependa do aceite?
+14. **Testar a abertura num iPhone real** (Safari e modo economia de energia) antes de produção: o ambiente de testes não reproduz o autoplay do Safari.
