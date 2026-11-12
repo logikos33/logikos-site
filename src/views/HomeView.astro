@@ -86,24 +86,27 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
 <Base locale={locale} routeKey="home" title={h.meta.title} description={h.meta.description} theme="dark">
   <Fragment slot="head">
     <script is:inline>
-      // Opening: once per session; never with reduced motion, data saver or ?sem-abertura.
-      // Decided before first paint so the page never flashes under the overlay.
+      // Opening: once per session, decided before first paint so the page never flashes under the
+      // overlay. Rodada soluções (12/11): it always plays — no skip for data saver, and blocked storage
+      // plays it (it just may repeat); reduced motion gets the calm version (poster + logo fade).
       (() => {
+        if (/sem-abertura/.test(location.search + location.hash)) return;
+        let seen = false;
         try {
-          const q = location.search + location.hash;
-          const saveData = navigator.connection && navigator.connection.saveData;
-          if (matchMedia('(prefers-reduced-motion: reduce)').matches || saveData || /sem-abertura/.test(q)) return;
-          if (sessionStorage.getItem('lk-abertura') === '1') return;
-          document.documentElement.classList.add('lk-abre');
-          // The overlay's poster is the first thing on screen: fetch it before the body is parsed.
-          const poster = document.createElement('link');
-          poster.rel = 'preload';
-          poster.as = 'image';
-          poster.href = '/media/home/abertura-poster.webp';
-          document.head.append(poster);
+          seen = sessionStorage.getItem('lk-abertura') === '1';
         } catch {
-          // Storage blocked: no opening.
+          // Storage blocked: play it.
         }
+        if (seen) return;
+        const root = document.documentElement;
+        root.classList.add('lk-abre');
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) root.classList.add('lk-abre-calma');
+        // The overlay's poster is the first thing on screen: fetch it before the body is parsed.
+        const poster = document.createElement('link');
+        poster.rel = 'preload';
+        poster.as = 'image';
+        poster.href = '/media/home/abertura-poster.webp';
+        document.head.append(poster);
       })();
     </script>
   </Fragment>
@@ -638,14 +641,21 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     </div>
 
     <div class="abertura" role="dialog" aria-modal="true" aria-label={h.opening.label} data-abertura>
+      <!-- An animated WebP in an image element, never a video one: images are outside every autoplay
+           policy, so it plays on iOS in low-power mode and inside WhatsApp / Instagram browsers too. -->
       <div class="abertura__palco">
-        <video data-src={`${M}abertura.mp4`} poster={`${M}abertura-poster.webp`} muted playsinline preload="none"></video>
+        <img
+          class="abertura__quadro"
+          src={`${M}abertura-poster.webp`}
+          data-anima={`${M}abertura.webp`}
+          data-fim={`${M}abertura-fim.webp`}
+          alt=""
+          width="1280"
+          height="716"
+        />
       </div>
+      <img class="abertura__marca" src={`${M}abertura-lockup.svg`} alt="" width="750" height="164" />
       <div class="abertura__flash"></div>
-      <button type="button" class="abertura__tocar" data-tocar hidden>
-        <Icon name="play" size={40} />
-        <span>{h.opening.play}</span>
-      </button>
       <button type="button" class="abertura__pular" data-pular>
         {h.opening.skip}
       </button>
@@ -657,23 +667,32 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   const root = document.documentElement;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // ---- Opening: Koda turns on the TV, the camera dives in, the site opens. It plays whole (or until
-  // "Pular" or Esc). Fail-safes below; the rest of the page is inert meanwhile.
+  // ---- Opening: Koda turns on the TV, the camera dives in, the site opens. Rodada soluções (12/11):
+  // no <video> any more (iOS low-power mode and in-app browsers refused its autoplay and the opening
+  // vanished). The poster shows first; the animated WebP is decoded off-screen and only then swapped
+  // in, and the clock runs on its known length. If decoding takes over 8 s the poster dives in
+  // instead: never a hard cut. Reduced motion: the poster with the logo fading in, then a fade out.
+  // Only "Pular" and Esc end it early. The rest of the page is inert meanwhile.
+  /** 93 frames × 50 ms (public/media/home/abertura.webp, made from the approved Artlist clip at 20 fps). */
+  const DURACAO = 4650;
+  const CALMA = 1500;
   const opened = new Promise<void>((resolve) => {
     const ab = document.querySelector<HTMLElement>('[data-abertura]');
-    const video = ab?.querySelector('video');
+    const quadro = ab?.querySelector<HTMLImageElement>('.abertura__quadro');
     const skip = ab?.querySelector<HTMLButtonElement>('[data-pular]');
-    if (!root.classList.contains('lk-abre') || !ab || !video || !skip) {
+    if (!root.classList.contains('lk-abre') || !ab || !quadro || !skip) {
       ab?.remove();
       resolve();
       return;
     }
+    const calm = root.classList.contains('lk-abre-calma');
+    const fim = new Image();
     const rest = [...document.body.children].filter((e): e is HTMLElement => e !== ab && e instanceof HTMLElement);
     rest.forEach((e) => (e.inert = true));
     skip.focus({ focusVisible: false } as FocusOptions);
     let done = false;
     const close = () => {
-      root.classList.remove('lk-abre', 'lk-entrando');
+      root.classList.remove('lk-abre', 'lk-abre-calma', 'lk-entrando');
       ab.remove();
       resolve();
     };
@@ -683,88 +702,55 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
       try {
         sessionStorage.setItem('lk-abertura', '1');
       } catch {
-        // Storage blocked: it may play again next load.
+        // Storage blocked: it plays again next load.
       }
       rest.forEach((e) => (e.inert = false));
       // Focus moves to the start of the page either way (never left on <body>).
       document.querySelector<HTMLElement>('.site-header__logo')?.focus({ preventScroll: true, focusVisible: false } as FocusOptions);
-      if (skipped) {
-        close();
+      if (skipped) return close();
+      if (calm) {
+        ab.classList.add('apaga');
+        window.setTimeout(close, 600);
         return;
       }
+      // Freeze on the last frame: WebKit plays a loop-once WebP twice, and the dive must never see
+      // the TV start over.
+      const atual = ab.querySelector<HTMLImageElement>('.abertura__quadro');
+      if (atual && fim.complete && atual.src.endsWith('abertura.webp')) atual.src = fim.src;
       ab.classList.add('mergulha');
       window.setTimeout(() => root.classList.add('lk-entrando'), 500);
       window.setTimeout(close, 1200);
     };
-    // Rodada soluções, item A (12/11): the opening sometimes vanished on a first visit.
-    // - Only 'waiting' counts as a stall ('stalled' also fires on a clip already downloaded, with no
-    //   'playing' after it), and a stall closes the opening only if the clock really stopped.
-    // - play() is called at once (muted + playsinline may autoplay): iOS/Safari never download a
-    //   preload='auto' clip that nobody plays. Every clock starts at the first 'playing'.
-    // - A rejected play() (low-power mode, autoplay policy) is retried on 'canplay'; if it fails
-    //   again the poster stays with a big play button instead of skipping.
-    // - Only "Pular" and Esc skip; a tap on the overlay no longer does.
-    let started = false;
-    let attempts = 0;
-    let stall = 0;
-    let cap = 0;
-    const play = ab.querySelector<HTMLButtonElement>('[data-tocar]');
-    const tryPlay = () => {
-      attempts += 1;
-      video.play().catch(() => {
-        if (done || started) return;
-        if (attempts < 2 && video.readyState >= 3) tryPlay();
-        else if (attempts >= 2 && play) play.hidden = false;
-      });
-    };
-    // Whole clip + 3 s of slack from the first frame; past that, close only if the clip is not
-    // still moving forward (a slow network keeps it open while frames keep coming).
-    const capCheck = (last: number) => {
-      if (video.ended || video.currentTime >= (video.duration || 0) - 0.2) return finish(false);
-      if (video.currentTime > last) cap = window.setTimeout(() => capCheck(video.currentTime), 1000);
-      else finish(false);
-    };
-    video.addEventListener('playing', () => {
-      window.clearTimeout(stall);
-      window.clearTimeout(boot);
-      if (play) play.hidden = true;
-      if (started) return;
-      started = true;
-      cap = window.setTimeout(() => capCheck(video.currentTime), ((video.duration || 5) + 3) * 1000);
-    });
-    video.addEventListener('waiting', () => {
-      if (!started) return;
-      window.clearTimeout(stall);
-      const t0 = video.currentTime;
-      stall = window.setTimeout(() => {
-        if (video.currentTime <= t0 && !video.ended) finish(true);
-      }, 6000);
-    });
-    video.addEventListener('canplay', () => {
-      if (!started && !done && attempts < 2) tryPlay();
-    });
-    video.addEventListener('ended', () => {
-      window.clearTimeout(cap);
-      finish(false);
-    });
-    // Nothing at all after 15 s (no frame, no rejection: a dead network or a broken file): open the
-    // site. A blocked autoplay never lands here: it waits for the play button.
-    const boot = window.setTimeout(() => {
-      if (!started && (!play || play.hidden)) finish(true);
-    }, 15000);
-    play?.addEventListener('click', () => {
-      video.play().catch(() => finish(true));
-      skip.focus({ focusVisible: false } as FocusOptions);
-    });
     skip.addEventListener('click', () => finish(true));
     ab.addEventListener('keydown', (e) => e.key === 'Escape' && finish(true));
-    // Safari honours the autoplay attribute on a muted inline clip even where a scripted play()
-    // without a gesture may be refused; play() below still covers the other browsers.
-    video.muted = true;
-    video.autoplay = true;
-    video.preload = 'auto';
-    video.src = video.dataset.src ?? '';
-    tryPlay();
+    if (calm) {
+      ab.classList.add('calma');
+      window.setTimeout(() => finish(false), CALMA);
+      return;
+    }
+    fim.src = quadro.dataset.fim ?? '';
+    void fim.decode().catch(() => {});
+    const anim = new Image();
+    anim.decoding = 'async';
+    anim.src = quadro.dataset.anima ?? '';
+    const slow = window.setTimeout(() => finish(false), 8000);
+    anim
+      .decode()
+      .then(() => {
+        if (done) return;
+        window.clearTimeout(slow);
+        // The decoded image itself goes on screen: its animation starts when it is first painted.
+        // Same class and Astro scope attribute, so the scoped styles (cover, portrait crop) apply.
+        for (const at of [...quadro.attributes])
+          if (at.name === 'class' || at.name.startsWith('data-astro-cid')) anim.setAttribute(at.name, at.value);
+        anim.alt = '';
+        quadro.replaceWith(anim);
+        window.setTimeout(() => finish(false), DURACAO);
+      })
+      .catch(() => {
+        window.clearTimeout(slow);
+        finish(false);
+      });
   });
 
   // ---- Videos: nothing downloads before it is near the screen; off-screen ones pause; reduced
@@ -2140,6 +2126,37 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   }
 
   /* ---------- Opening ---------- */
+  /* Calm version (reduced motion): the poster dimmed, the logo fading in over ~1.5 s, then the whole
+     overlay fading out. No TV flicker, no dive. Beats the global reduced-motion reset on purpose. */
+  .abertura.calma .abertura__quadro {
+    opacity: 0.35;
+  }
+
+  .abertura.calma .abertura__marca {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    display: block;
+    width: min(70vw, 32rem);
+    height: auto;
+    transform: translate(-50%, -50%);
+    animation: surge 1.5s ease-out both !important;
+  }
+
+  .abertura.calma.apaga {
+    opacity: 0;
+    transition: opacity 0.6s ease !important;
+  }
+
+  @keyframes surge {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
   .abertura {
     display: none;
   }
@@ -2163,17 +2180,22 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     transform-origin: 50% 46%;
   }
 
-  .abertura video {
+  .abertura__quadro {
     width: 100%;
     height: 100%;
     max-width: none;
     object-fit: cover;
   }
 
+  /* The logo of the calm version (reduced motion) only. */
+  .abertura__marca {
+    display: none;
+  }
+
   /* Portrait phones: the whole 16:9 frame (contain), enlarged so TV, Koda and logo fill the
      width instead of a thin strip in the dark; the logo stays inside the visible area. */
   @media (orientation: portrait) {
-    .abertura video {
+    .abertura__quadro {
       object-fit: contain;
       scale: 1.6;
     }
@@ -2210,33 +2232,6 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     animation: flash 0.9s steps(9, end) forwards;
   }
 
-  /* Autoplay refused twice: the poster stays with one big, obvious play button. */
-  .abertura__tocar {
-    position: absolute;
-    inset: 50% auto auto 50%;
-    z-index: 2;
-    display: grid;
-    justify-items: center;
-    gap: var(--lk-space-2);
-    padding: var(--lk-space-5) var(--lk-space-6);
-    background: #000c;
-    border: 2px solid #00d4ff;
-    border-radius: 999px;
-    color: var(--lk-text);
-    font: 600 1rem var(--lk-font-body);
-    transform: translate(-50%, -50%);
-    cursor: pointer;
-  }
-
-  .abertura__tocar[hidden] {
-    display: none;
-  }
-
-  .abertura__tocar :global(svg) {
-    color: #00d4ff;
-  }
-
-  .abertura.mergulha .abertura__tocar,
   .abertura.mergulha .abertura__pular {
     display: none;
   }

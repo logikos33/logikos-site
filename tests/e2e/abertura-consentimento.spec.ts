@@ -3,54 +3,58 @@ import { expect, test } from '@playwright/test';
 // Rodada soluções (Vitor, 12/11): the home opening must play whole on a first visit, and the LGPD
 // notice shows only after it, keeps the choice and loads the analytics beacon only after "Accept".
 
+/** Records when the opening became visible, whether it dove in, and when it closed. */
 const probe = () => {
-  const w = window as unknown as { __ab: { max: number; mergulha: boolean } };
-  w.__ab = { max: 0, mergulha: false };
+  const w = window as unknown as { __ab: { shown: number; mergulha: boolean; closed: number } };
+  w.__ab = { shown: 0, mergulha: false, closed: 0 };
   document.addEventListener('DOMContentLoaded', () => {
     const ab = document.querySelector('[data-abertura]');
-    const v = ab?.querySelector('video');
-    if (!ab || !v) return;
-    v.addEventListener('timeupdate', () => (w.__ab.max = Math.max(w.__ab.max, v.currentTime)));
-    // Chrome and Safari fire 'stalled' on a clip already downloaded: it used to cut the opening at 3 s.
-    v.addEventListener('playing', () => setTimeout(() => v.dispatchEvent(new Event('stalled')), 800), { once: true });
+    if (!ab) return;
+    w.__ab.shown = performance.now();
     new MutationObserver(() => ab.classList.contains('mergulha') && (w.__ab.mergulha = true)).observe(ab, { attributes: true });
+    new MutationObserver(() => {
+      if (!document.documentElement.classList.contains('lk-abre') && !w.__ab.closed) w.__ab.closed = performance.now();
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
   });
 };
+type Ab = { shown: number; mergulha: boolean; closed: number };
 
-test('opening: plays whole despite a spurious "stalled", a tap on it does not skip, "Pular" does', async ({
-  page,
-  browser,
-  browserName,
-}) => {
-  test.skip(browserName !== 'chromium', 'clip codec');
+// Vitor (12/11): on clients' iPhones the opening vanished at once. It must never close before 4 s
+// unless "Pular" was pressed — whatever the autoplay policy says (it is an image now, not a video).
+test('opening: never closes before 4 s without "Pular", even with media autoplay refused; it ends in the dive', async ({ page }) => {
   test.setTimeout(60_000);
+  await page.addInitScript(() => {
+    HTMLMediaElement.prototype.play = () => Promise.reject(new DOMException('blocked', 'NotAllowedError'));
+  });
   await page.addInitScript(probe);
   await page.goto('/');
   await expect(page.locator('html')).toHaveClass(/lk-abre/);
+  // A tap on the overlay is not a skip.
   await page.mouse.click(300, 300);
   await page.waitForFunction(() => !document.documentElement.classList.contains('lk-abre'), null, { timeout: 30_000 });
-  const r = await page.evaluate(() => (window as unknown as { __ab: { max: number; mergulha: boolean } }).__ab);
-  expect(r.max).toBeGreaterThan(4.4);
+  const r = await page.evaluate(() => (window as unknown as { __ab: Ab }).__ab);
+  expect(r.closed - r.shown, 'opening closed before 4 s without "Pular"').toBeGreaterThan(4000);
   expect(r.mergulha).toBe(true);
-
-  const ctx = await browser.newContext();
-  const p2 = await ctx.newPage();
-  await p2.goto(page.url());
-  await expect(p2.locator('html')).toHaveClass(/lk-abre/);
-  await p2.locator('[data-pular]').click();
-  await expect(p2.locator('html')).not.toHaveClass(/lk-abre/);
-  await ctx.close();
 });
 
-test('opening: a refused autoplay keeps the poster with a play button instead of skipping', async ({ page }) => {
-  await page.addInitScript(() => {
-    // A refused autoplay refuses both paths: play() and the autoplay attribute.
-    HTMLMediaElement.prototype.play = () => Promise.reject(new DOMException('blocked', 'NotAllowedError'));
-    Object.defineProperty(HTMLMediaElement.prototype, 'autoplay', { set() {}, get: () => false });
-  });
-  await page.goto('/');
-  await expect(page.locator('[data-tocar]')).toBeVisible({ timeout: 15_000 });
-  await expect(page.locator('html')).toHaveClass(/lk-abre/);
+test('opening: blocked sessionStorage plays it instead of skipping; "Pular" and Esc end it', async ({ browser }) => {
+  for (const how of ['pular', 'esc'] as const) {
+    const ctx = await browser.newContext();
+    await ctx.addInitScript(() => {
+      Object.defineProperty(window, 'sessionStorage', {
+        get() {
+          throw new DOMException('blocked', 'SecurityError');
+        },
+      });
+    });
+    const page = await ctx.newPage();
+    await page.goto('/');
+    await expect(page.locator('html')).toHaveClass(/lk-abre/);
+    if (how === 'pular') await page.locator('[data-pular]').click();
+    else await page.keyboard.press('Escape');
+    await expect(page.locator('html')).not.toHaveClass(/lk-abre/);
+    await ctx.close();
+  }
 });
 
 test('consent: never over the opening; the choice is kept; "Cookie preferences" reopens it', async ({ page }) => {
@@ -103,4 +107,23 @@ test('consent at 360 px: above the shortcut bar, nothing shifts', async ({ brows
   expect(consent.bottom).toBeLessThanOrEqual(shortcut.top + 1);
   expect(await page.evaluate(() => (window as unknown as { __cls: number }).__cls)).toBeLessThan(0.01);
   await ctx.close();
+});
+
+test('CRM visit notice (?r=OP-…): nothing before "Accept"; accepting later in the session sends it once', async ({ page }) => {
+  const avisos: string[] = [];
+  await page.route('**/api/crm/marco', (r) => {
+    avisos.push(r.request().postData() ?? '');
+    return r.fulfill({ status: 204 });
+  });
+  await page.goto('/?sem-abertura&r=OP-0042');
+  await expect(page.locator('[data-consent]')).toBeVisible();
+  await page.goto('/cases');
+  await page.waitForTimeout(500);
+  expect(avisos, 'sent before acceptance').toHaveLength(0);
+  await page.locator('[data-consent-choice="aceito"]').click();
+  await expect.poll(() => avisos.length).toBe(1);
+  expect(avisos[0]).toContain('"op":"OP-0042"');
+  await page.goto('/recognition');
+  await page.waitForTimeout(500);
+  expect(avisos).toHaveLength(1);
 });

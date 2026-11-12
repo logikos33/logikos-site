@@ -102,6 +102,8 @@ const c = t.consent;
         // Storage blocked: the choice holds for this page only.
       }
       if (valor === 'aceito') loadBeacon();
+      // Other scripts that wait for the choice (the CRM visit notice) listen for this.
+      dispatchEvent(new CustomEvent('lk-consentimento', { detail: valor }));
       hide();
     }),
   );

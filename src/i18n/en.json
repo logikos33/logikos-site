@@ -140,8 +140,7 @@
     },
     "opening": {
       "label": "Opening: Koda turns on the TV with the Logikos logo and the camera dives into the screen",
-      "skip": "Skip opening",
-      "play": "Play the opening"
+      "skip": "Skip opening"
     },
     "hero": {
       "title": "Computer vision models made for your company.",
@@ -335,9 +334,18 @@
       "leaves": "leaves the plant",
       "stays": "stays in the plant",
       "rows": [
-        ["the alert", "the day-to-day images"],
-        ["the event clip", "the recordings"],
-        ["the marked frame", "the model and the unit"]
+        [
+          "the alert",
+          "the day-to-day images"
+        ],
+        [
+          "the event clip",
+          "the recordings"
+        ],
+        [
+          "the marked frame",
+          "the model and the unit"
+        ]
       ]
     },
     "faq": {
@@ -1096,7 +1104,7 @@
       },
       "cookies": {
         "title": "Cookies and local storage",
-        "text": "This site uses no cookies. Your browser keeps only session records, so the home opening and the logo animation don’t repeat in the same visit and, if you arrived through a link in a Logikos e-mail, that e-mail’s code, to tell our team once that the visit happened (no personal data); and your choice about audience measurement (\"lk-consentimento\": accepted or declined, with the date). Audience measurement (Cloudflare Web Analytics) is anonymous, uses no cookies and loads only if you accept. To change your choice at any time, use \"Cookie preferences\" in the footer of any page."
+        "text": "This site uses no cookies. Your browser keeps only session records, so the home opening and the logo animation don’t repeat in the same visit and, if you arrived through a link in a Logikos e-mail, that e-mail’s code (no personal data). That code is sent to our team, only once, to record that the visit happened, only if you accept; without acceptance, the code never leaves your browser and is gone when the tab closes. If you accept later in the same visit, it is sent once; and your choice about audience measurement (\"lk-consentimento\": accepted or declined, with the date). Audience measurement (Cloudflare Web Analytics) is anonymous, uses no cookies and loads only if you accept. To change your choice at any time, use \"Cookie preferences\" in the footer of any page."
       }
     }
   },
@@ -1649,7 +1657,7 @@
   },
   "consent": {
     "label": "Cookie and privacy notice",
-    "text": "This site uses only what it needs to work and, if you accept, an anonymous audience measurement with no cookies. The form keeps only the data you send.",
+    "text": "This site uses only what it needs to work. If you accept, we also use an anonymous audience measurement with no cookies and record the visit of people who arrived through one of our e-mails. The form keeps only the data you send.",
     "privacy": "Privacy policy",
     "accept": "Accept",
     "decline": "Decline",

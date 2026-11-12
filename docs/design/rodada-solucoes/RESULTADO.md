@@ -156,3 +156,57 @@ Testes:
 
 13. **O aviso no CRM** (o `?r=OP-…` dos e-mails avisa "site visitado") roda sem esperar o "Aceitar". Ele não manda dado pessoal, só o código do card, e está descrito na política. Quer que ele também dependa do aceite?
 14. **Testar a abertura num iPhone real** (Safari e modo economia de energia) antes de produção: o ambiente de testes não reproduz o autoplay do Safari.
+
+## Rodada 4 (12/11/2026): CRM com aceite e abertura sem vídeo
+
+**CRM (`?r=OP-…`)**
+
+- O aviso agora espera o "Aceitar". Sem aceite, o código fica só na aba (`sessionStorage`) e nada é enviado. Se a pessoa aceitar depois, na mesma sessão e em qualquer página, ele vai uma vez só.
+- O aviso de cookies dispara o evento `lk-consentimento`, que o script do CRM escuta.
+- O texto da barra e a política (PT/EN) dizem isso.
+- Testes: unit 59/59 e e2e com interceptação do `/api/crm/marco` (0 envios antes do aceite, 1 depois, 0 nas páginas seguintes).
+
+**Abertura**
+
+- **Sem `<video>`:** WebP animado num `<img>`, `public/media/home/abertura.webp`.
+  - 93 quadros a 20 fps, 960×538, qualidade 55, method 6, loop 1: **586.736 bytes (573 KiB)**.
+  - Mais `abertura-fim.webp` (último quadro estático, 12 KB).
+  - O `abertura.mp4` e o `scripts/check-abertura.mjs` foram apagados.
+- **Fluxo:**
+  1. Pôster primeiro.
+  2. `new Image()` + `decode()`.
+  3. Troca pelo animado e conta 4,65 s.
+  4. Congela no último quadro, mergulha e abre o site.
+
+  Se o decode passar de 8 s, o pôster mergulha (sem corte seco). Do caminho saíram `play()`, `canplaythrough`, `stalled` e `waiting`.
+
+- **Achado no WebKit:** um WebP com `loop=1` toca **duas vezes** no WebKit (no Chrome, uma). Por isso, no fim, a imagem animada é trocada pelo último quadro estático, já decodificado. O mergulho nunca vê a TV recomeçar.
+- **Regras novas:**
+  - storage bloqueado → toca (pode repetir);
+  - save-data não pula mais;
+  - reduced motion → versão calma (pôster escurecido + logo surgindo em 1,5 s, depois fade, sem TV piscando nem mergulho);
+  - só "Pular" e Esc encerram antes da hora.
+- **Matriz (com autoplay de mídia bloqueado de propósito):**
+
+  | Caso                       | Animação na tela             | Mergulho        | Fechou |
+  | -------------------------- | ---------------------------- | --------------- | ------ |
+  | WebKit headless            | 0,01 s                       | 4,67 s          | 5,87 s |
+  | WebKit com janela          | 0,04 s                       | 4,71 s          | 5,92 s |
+  | iPhone 13 (emulação)       | 0,01 s                       | 4,67 s          | 5,87 s |
+  | Chrome cache frio, Fast 4G | 0,74 s                       | 5,40 s          | 6,60 s |
+  | Chrome cache frio, Slow 3G | — (573 KB não chegam em 8 s) | 8,01 s (pôster) | 9,21 s |
+  | Reduced motion             | —                            | — (calma)       | 2,11 s |
+  | Prévia, Chrome Fast 4G     | —                            | 5,58 s          | 6,79 s |
+  | Prévia, iPhone 13          | —                            | 4,81 s          | 6,04 s |
+
+- **Testes e2e novos:**
+  - a abertura nunca fecha antes de 4 s sem "Pular" (com autoplay recusado e clique no overlay);
+  - storage bloqueado toca;
+  - "Pular" e Esc encerram;
+  - a animação lenta toca inteira;
+  - reduced motion mostra a versão calma, sem mergulho.
+
+  Suíte completa: 101 passaram + 1 que dependia de tempo, corrigido e repetido 30/30.
+
+- **Prints:** `prints/r4-abertura-*`, `prints/r4-previa-*`.
+- ⚠️ **Slow 3G:** quem está numa rede assim vê o pôster mergulhar aos 8 s, sem a TV ligando. Se o Vitor quiser a animação até nessas redes, dá para gerar uma versão mais leve (por exemplo, 640 px).
