@@ -63,7 +63,8 @@ test('items 17 and 25d: licence terms monthly / annual / biennial, biennial high
   for (const path of ['/como-funciona', '/plataforma', '/en/platform']) {
     await page.goto(path);
     const options = page.locator('.licenca .opcao');
-    await expect(options, path).toHaveCount(3);
+    // Rodada soluções: monthly, annual, biennial or purchase.
+    await expect(options, path).toHaveCount(4);
     await expect(page.locator('.licenca .opcao--top'), path).toHaveCount(1);
     await expect(page.locator('.licenca .opcao--top .opcao__selo'), path).toBeVisible();
   }
@@ -111,7 +112,8 @@ test('item 21 and 25c: every demo link is the phone demo on the site, never the 
 test('item 24: six scenario cards with a sample alert and a next step, plus the indicators call', async ({ page }) => {
   await page.goto('/recognition');
   const cards = page.locator('.leitura');
-  await expect(cards).toHaveCount(6);
+  // Rodada soluções: + workstation presence.
+  await expect(cards).toHaveCount(7);
   for (const card of await cards.all()) {
     await expect(card.locator('.leitura__exemplo')).not.toHaveText('');
     await expect(card.locator('.leitura__proximo')).toHaveAttribute('href', /experiencia\/\?cenario=|contato\?interesse=/);
@@ -176,7 +178,7 @@ test('round 5: no email in the page body and no city anywhere visible', async ({
 // Final review (13 points).
 test('final review: app notifications, page CTAs, custom-model partners, demos about computer vision', async ({ page }) => {
   await page.goto('/recognition');
-  await expect(page.locator('.leitura .push')).toHaveCount(6);
+  await expect(page.locator('.leitura .push')).toHaveCount(7);
   await expect(page.locator('.leitura .push--fogo')).toHaveCount(1);
   for (const path of ['/sobre', '/robotica']) {
     await page.goto(path);
@@ -223,10 +225,11 @@ test('final review 14: header — ≥ 40 px before the menu, centred, balanced a
 });
 
 // Final review, round 2 (q1-q5).
-test('final review 2: steps, guarantees, part-twin first, drones and quadrupeds, Twins connections', async ({ page }) => {
+test('final review 2: steps, guarantees, part-twin first, drones and humanoids, Twins connections', async ({ page }) => {
   await page.goto('/sobre');
   await expect(page.locator('section[aria-labelledby="how-title"] .passo')).toHaveCount(3);
-  await expect(page.locator('.frentes .specs li')).toHaveCount(6);
+  // Rodada soluções 5: every front card has its list (readings 7, where it works 5, connects 6).
+  await expect(page.locator('.frentes .specs li')).toHaveCount(18);
   await page.goto('/conformidade');
   await expect(page.locator('.garantia')).toHaveCount(4);
   await expect(page.locator('.garantia svg')).toHaveCount(4);
@@ -238,5 +241,7 @@ test('final review 2: steps, guarantees, part-twin first, drones and quadrupeds,
   await expect(page.locator('.ph')).not.toContainText('celular');
   await expect(page.locator('#phone-title')).toBeVisible();
   await page.goto('/robotica');
-  await expect(page.locator('#how-title')).toHaveText('Drones e robôs quadrúpedes');
+  // Rodada soluções: land, sky and water, then the project process in six steps.
+  await expect(page.locator('#places-title')).toHaveText('Terra, céu e água.');
+  await expect(page.locator('section[aria-labelledby="process-title"] .passo')).toHaveCount(6);
 });

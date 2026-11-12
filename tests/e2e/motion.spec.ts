@@ -22,45 +22,70 @@ test('home opening: once per session, skippable, the rest of the page inert mean
   await expect(page.locator('h1')).toBeVisible();
 });
 
-test('home opening: a clip slower than the page still plays whole (feedback 11/11, item 8)', async ({ page }) => {
-  // The page is ready at once; the clip only arrives 2.5 s later (cold cache on a busy network).
-  await page.route('**/media/home/abertura.mp4', async (route) => {
+test('home opening: an animation slower than the page still plays whole (feedback 11/11, item 8)', async ({ page }) => {
+  // The page is ready at once; the animated WebP only arrives 2.5 s later (cold cache, busy network).
+  await page.route('**/media/home/abertura.webp', async (route) => {
     await new Promise((r) => setTimeout(r, 2500));
     await route.continue();
+  });
+  // Timestamps taken inside the page: when the animation went on screen and when the dive began.
+  await page.addInitScript(() => {
+    const w = window as unknown as { __t: { swap: number; dive: number } };
+    w.__t = { swap: 0, dive: 0 };
+    document.addEventListener('DOMContentLoaded', () => {
+      const ab = document.querySelector('[data-abertura]');
+      if (!ab) return;
+      new MutationObserver(() => {
+        if (!w.__t.swap && ab.querySelector('img.abertura__quadro[src$="/abertura.webp"]')) w.__t.swap = performance.now();
+        if (!w.__t.dive && ab.classList.contains('mergulha')) w.__t.dive = performance.now();
+      }).observe(ab, { attributes: true, childList: true, subtree: true });
+    });
   });
   await page.goto('/');
   const opening = page.locator('[data-abertura]');
   await page.waitForTimeout(2000);
-  await expect(opening, 'still on screen while the clip downloads').toBeVisible();
-  // It hands over only after the clip reached its end.
-  await expect
-    .poll(
-      () =>
-        page.evaluate(() => {
-          const v = document.querySelector<HTMLVideoElement>('[data-abertura] video');
-          return v ? (v.closest('.mergulha') ? v.currentTime >= v.duration - 0.2 : null) : 'gone';
-        }),
-      { timeout: 15_000 },
-    )
-    .toBe(true);
+  await expect(opening, 'still on screen (poster) while the animation downloads').toBeVisible();
+  await page.waitForFunction(() => !document.documentElement.classList.contains('lk-abre'), null, { timeout: 15_000 });
+  const t = await page.evaluate(() => (window as unknown as { __t: { swap: number; dive: number } }).__t);
+  expect(t.swap, 'the animation went on screen').toBeGreaterThan(0);
+  expect(t.dive - t.swap, 'a whole run of the animation before the dive').toBeGreaterThan(4500);
 });
 
-test('home opening: plays to the end, dives in and ends at rest (fail-safe if the video stalls)', async ({ page }) => {
+test('home opening: plays to the end, dives in and ends at rest', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('[data-abertura]')).toBeVisible();
-  // Either the clip ended and the dive ran, or it never started and the 1.2 s fail-safe opened the site.
-  await expect(page.locator('[data-abertura]')).toHaveCount(0, { timeout: 12_000 });
+  await expect(page.locator('[data-abertura]')).toHaveClass(/mergulha/, { timeout: 12_000 });
+  await expect(page.locator('[data-abertura]')).toHaveCount(0, { timeout: 5000 });
   await expect(page.locator('html')).not.toHaveClass(/lk-abre|lk-entrando/);
   await expect(page.locator('h1')).toBeVisible();
 });
 
-test('home under reduced motion: no opening, posters only, no video downloaded, nothing moves', async ({ browser }) => {
+test('home under reduced motion: the calm opening (poster + logo fade), no video downloaded, then nothing moves', async ({ browser }) => {
   const ctx = await browser.newContext({ reducedMotion: 'reduce' });
   const page = await ctx.newPage();
   const videos: string[] = [];
   page.on('request', (r) => isVideo(r.url()) && videos.push(r.url()));
+  // Records, inside the page, whether the calm version ran and whether a dive ever happened.
+  await page.addInitScript(() => {
+    const w = window as unknown as { __c: { calma: boolean; mergulha: boolean } };
+    w.__c = { calma: false, mergulha: false };
+    document.addEventListener('DOMContentLoaded', () => {
+      const ab = document.querySelector('[data-abertura]');
+      if (!ab) return;
+      const look = () => {
+        if (ab.classList.contains('calma')) w.__c.calma = true;
+        if (ab.classList.contains('mergulha')) w.__c.mergulha = true;
+      };
+      look();
+      new MutationObserver(look).observe(ab, { attributes: true });
+    });
+  });
   await page.goto('/');
-  await expect(page.locator('[data-abertura]')).toHaveCount(0);
+  // Rodada soluções (12/11): reduced motion no longer skips it; it gets the calm version.
+  await expect(page.locator('html')).toHaveClass(/lk-abre-calma/);
+  await page.waitForFunction(() => !document.documentElement.classList.contains('lk-abre'), null, { timeout: 5000 });
+  const c = await page.evaluate(() => (window as unknown as { __c: { calma: boolean; mergulha: boolean } }).__c);
+  expect(c).toEqual({ calma: true, mergulha: false });
   await page.locator('#cenarios').scrollIntoViewIfNeeded();
   await page.locator('#prova').scrollIntoViewIfNeeded();
   await page.waitForTimeout(1500);
@@ -68,7 +93,7 @@ test('home under reduced motion: no opening, posters only, no video downloaded, 
   const running = await page.evaluate(() => document.getAnimations().filter((a) => a.playState === 'running').length);
   expect(running).toBe(0);
   // The partner row shows each logo once, still.
-  await expect(page.locator('.logos li')).toHaveCount(3);
+  await expect(page.locator('.logos li')).toHaveCount(4);
   await ctx.close();
 });
 
@@ -225,31 +250,25 @@ test('glitch slices never cross the two O letters (keyhole), at desktop and phon
   }
 });
 
-test('M4: the pipeline is revealed in order, once, and ends at rest; static when reduced motion', async ({ browser }) => {
+test('M4: "from the camera to the decision" lights its steps in order; all lit and still with reduced motion', async ({ browser }) => {
+  // Rodada soluções 5 (pin 2xni): the flow is an animated sequence of four steps.
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
   const page = await ctx.newPage();
   await page.goto('/como-funciona');
-  const pipe = page.locator('[data-pipeline]').first();
-  await expect(pipe).toHaveClass(/pipeline--armed/);
-  await pipe.scrollIntoViewIfNeeded();
-  await expect(pipe).toHaveClass(/is-seen/);
-  const nodes = pipe.locator('.pipeline__node');
-  await expect(nodes).toHaveCount(4);
-  for (let i = 0; i < 4; i++) await expect(nodes.nth(i)).toBeVisible({ timeout: 3000 });
-  await page.waitForTimeout(1500);
-  // The old-TV backdrop (crt-*) and the CAM 07 "waiting" loop (ag-*) are surfaces, not the pipeline.
-  const running = await page.evaluate(
-    () =>
-      document.getAnimations().filter((a) => a.playState === 'running' && !/^(crt|ag)-/.test((a as CSSAnimation).animationName ?? ''))
-        .length,
-  );
-  expect(running).toBe(0);
+  const fluxo = page.locator('[data-fluxo]');
+  await fluxo.scrollIntoViewIfNeeded();
+  const etapas = fluxo.locator('[data-etapa]');
+  await expect(etapas).toHaveCount(4);
+  await expect(etapas.nth(0)).toHaveClass(/acesa/);
+  await expect(etapas.nth(3)).not.toHaveClass(/acesa/);
+  await expect(etapas.nth(1)).toHaveClass(/acesa/, { timeout: 4000 });
+  await expect(etapas.nth(0)).toHaveClass(/feita/);
+  await expect(etapas.nth(3)).toHaveClass(/acesa/, { timeout: 8000 });
   await ctx.close();
 
   const reduced = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 1280, height: 800 } });
   const p2 = await reduced.newPage();
   await p2.goto('/como-funciona');
-  await expect(p2.locator('[data-pipeline]').first()).not.toHaveClass(/pipeline--armed/);
-  await expect(p2.locator('[data-pipeline] .pipeline__node').first()).toBeVisible();
+  await expect(p2.locator('[data-fluxo] [data-etapa].acesa')).toHaveCount(4);
   await reduced.close();
 });

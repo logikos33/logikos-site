@@ -1,0 +1,43 @@
+---
+// The square picture of a case (rodada soluções): a real frame when we have one, otherwise the
+// case's icon on the brand's screen. Never a stand-in photo of something we did not do.
+import type { IconName } from '../lib/icons';
+import Icon from './Icon.astro';
+
+interface Props {
+  /** Poster base path without extension (has `-480.webp`), e.g. /media/home/v-fogo. */
+  poster?: string;
+  /** Any other approved still (used as is). */
+  src?: string;
+  icon: IconName;
+  class?: string;
+}
+
+const { poster, src, icon, class: className } = Astro.props;
+const img = poster ? `${poster}-480.webp` : src;
+---
+
+<div class:list={['tile', { 'tile--icone': !img }, className]} aria-hidden="true">
+  {img ? <img src={img} alt="" width="480" height="480" loading="lazy" /> : <Icon name={icon} size={56} />}
+</div>
+
+<style>
+  .tile {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background:
+      repeating-linear-gradient(0deg, #0000 0 2px, #ffffff08 2px 3px), radial-gradient(ellipse at 50% 45%, #1b1b26 0%, #050508 75%);
+    border: 1px solid var(--lk-line-strong);
+    border-radius: 6px;
+    color: #00d4ff;
+  }
+
+  .tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>

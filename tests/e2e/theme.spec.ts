@@ -2,6 +2,9 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 import { ALL_ROUTES, setTheme, skipOpening } from './helpers.ts';
 
+// Each test walks every page (32 since the Cases round): one minute is not enough.
+test.describe.configure({ timeout: 240_000 });
+
 test.beforeEach(async ({ page }) => {
   await skipOpening(page);
 });

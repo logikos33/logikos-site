@@ -15,7 +15,7 @@ test('mobile: hero text first, the shortcut bar in reach from the start (one pai
   const bar = page.locator('[data-barra]');
   await expect(bar).toBeVisible();
   await expect(page.locator('[data-heroi-acoes]')).toBeHidden();
-  await expect(bar.locator('a').nth(1)).toContainText(/Especialista/);
+  await expect(bar.locator('a').nth(1)).toContainText(/Seu modelo/);
   for (const a of await bar.locator('a').all()) {
     const box = await a.boundingBox();
     expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
@@ -58,7 +58,7 @@ test('mobile: menu opens, lists the pages and closes on Escape, focus-out and ou
   await page.goto('/en/');
   const menu = page.locator('.mobile-nav');
   await page.locator('.mobile-nav summary').click();
-  await expect(page.locator('.mobile-nav__panel a[href="/en/partners"]')).toBeVisible();
+  await expect(page.locator('.mobile-nav__panel a[href="/en/cases"]')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(menu).not.toHaveAttribute('open', '');
   await expect(page.locator('.mobile-nav summary')).toBeFocused();
@@ -70,6 +70,8 @@ test('mobile: menu opens, lists the pages and closes on Escape, focus-out and ou
 });
 
 test('320 px: no horizontal scroll on any page (forms included)', async ({ browser }) => {
+  // 32 pages since the Cases round: one minute is not enough to visit them all.
+  test.setTimeout(150_000);
   const ctx = await browser.newContext({ viewport: { width: 320, height: 720 } });
   const page = await ctx.newPage();
   await skipOpening(page);

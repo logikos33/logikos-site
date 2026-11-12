@@ -10,7 +10,6 @@ import DefList from '../components/DefList.astro';
 import Icon from '../components/Icon.astro';
 import PageClose from '../components/PageClose.astro';
 import PageHero from '../components/PageHero.astro';
-import PointList from '../components/PointList.astro';
 import PushCard from '../components/PushCard.astro';
 import Section from '../components/Section.astro';
 import SpecialistButton from '../components/SpecialistButton.astro';
@@ -33,13 +32,15 @@ const q = p.questions;
 
 // Order and next step of the six scenarios (texts in recognition.cases): the experience has a scene
 // for the first four; ergonomics and zones go to the conversation with Koda.
-const CASES: { icon: IconName; cenario?: string; interest: ChatInterest; tone: 'fogo' | 'atencao' | 'neutro' }[] = [
-  { icon: 'flame', cenario: 'fogo', interest: 'fire', tone: 'fogo' },
-  { icon: 'helmet', cenario: 'epi', interest: 'epi', tone: 'atencao' },
-  { icon: 'ok', cenario: 'qualidade', interest: 'quality', tone: 'atencao' },
-  { icon: 'counter', cenario: 'contagem', interest: 'counting', tone: 'neutro' },
-  { icon: 'posture', interest: 'ergonomics', tone: 'atencao' },
-  { icon: 'zone', interest: 'zones', tone: 'atencao' },
+// `id` is the anchor the Cases page links to (/recognition#fogo …).
+const CASES: { id: string; icon: IconName; cenario?: string; interest: ChatInterest; tone: 'fogo' | 'atencao' | 'neutro' }[] = [
+  { id: 'ergonomia', icon: 'posture', interest: 'ergonomics', tone: 'atencao' },
+  { id: 'fogo', icon: 'flame', cenario: 'fogo', interest: 'fire', tone: 'fogo' },
+  { id: 'epi', icon: 'helmet', cenario: 'epi', interest: 'epi', tone: 'atencao' },
+  { id: 'qualidade', icon: 'ok', cenario: 'qualidade', interest: 'quality', tone: 'atencao' },
+  { id: 'contagem', icon: 'counter', cenario: 'contagem', interest: 'counting', tone: 'neutro' },
+  { id: 'zonas', icon: 'zone', interest: 'zones', tone: 'atencao' },
+  { id: 'presenca', icon: 'clock', interest: 'presence', tone: 'neutro' },
 ];
 const cases = CASES.map((c, i) => {
   const text = p.cases[i];
@@ -47,18 +48,17 @@ const cases = CASES.map((c, i) => {
   return { ...c, ...text };
 });
 const STATES = ['ok', 'alert', 'warn'] as const;
-const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoints.license].map((x) => ({ term: x.title, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="recognition" title={p.meta.title} description={p.meta.description}>
   <PageHero locale={locale} id="page-title" title={p.hero.title} text={p.hero.text}>
-    <Wall locale={locale} clips={['fogo', 'epi', 'qualidade', 'contagem', 'ergonomia']} yours />
+    <Wall locale={locale} clips={['ergonomia', 'fogo', 'epi', 'qualidade', 'contagem']} yours />
   </PageHero>
 
-  <Section question={p.hero.question} title={p.readings.title} id="readings-title" wide>
+  <Section question={p.hero.question} title={p.readings.title} text={p.readings.text} id="readings-title" wide>
     <ul class="leituras" role="list">
       {cases.map((c) => (
-        <li class="leitura folha">
+        <li class="leitura folha" id={c.id}>
           <h3>
             <Icon name={c.icon} size={22} />
             {c.name}
@@ -136,14 +136,6 @@ const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoin
     <CaixaAbrindo locale={locale} />
   </Section>
 
-  <Section question={q.partners} title={p.partners.title} id="partners-title">
-    <a slot="actions" class="btn btn--ghost" href={pathFor('partners', locale)}>
-      {p.partners.cta}
-      <Icon name="arrow" size={18} />
-    </a>
-    <PointList rows={partnerRows} />
-  </Section>
-
   <PageClose locale={locale} />
 </Base>
 
@@ -159,6 +151,7 @@ const partnerRows = [t.partnerPoints.brand, t.partnerPoints.pilot, t.partnerPoin
   }
 
   .leitura {
+    scroll-margin-top: 6rem;
     display: grid;
     grid-template-rows: auto auto 1fr auto;
     gap: var(--lk-space-3);

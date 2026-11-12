@@ -28,6 +28,8 @@ export const ICON_PATHS = {
   sign: '<path d="M4 4h16v10H4z"/><path d="M12 14v6"/><path d="M8 20h8"/>',
   doc: '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6"/><path d="M9 16h6"/>',
   clock: '<path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17z"/><path d="M12 7.5V12l3 2"/>',
+  user: '<path d="M12 3.5a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5z"/><path d="M4.5 20.5v-2a4.5 4.5 0 0 1 4.5-4.5h6a4.5 4.5 0 0 1 4.5 4.5v2"/>',
+  clip: '<path d="M3 5h18v14H3z"/><path d="M3 8.5h18M3 15.5h18"/><path d="M9 12l2 2 4-4"/>',
 } as const;
 
 export type IconName = keyof typeof ICON_PATHS;

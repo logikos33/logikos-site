@@ -31,7 +31,7 @@ test('home v3: sections in the approved order, Koda right after the partners, le
     await expect(page.locator('#contato img')).toHaveCount(0);
     // No lead form on the home any more; the wall's sixth tile is the phone demo.
     await expect(page.locator('main form')).toHaveCount(0);
-    await expect(page.locator('.cam--voce')).toHaveAttribute('href', 'https://logikosvision.com.br/teste-no-seu-celular/?direto=1');
+    await expect(page.locator('.muro .cam--voce')).toHaveAttribute('href', 'https://logikosvision.com.br/teste-no-seu-celular/?direto=1');
   }
 });
 
@@ -41,7 +41,9 @@ test('every "talk to a specialist" opens the conversation with Koda (feedback 11
     const hrefs = await page
       .locator('a')
       .evaluateAll((els) =>
-        els.filter((e) => /especialista|specialist/i.test(e.textContent ?? '')).map((e) => e.getAttribute('href') ?? ''),
+        els
+          .filter((e) => /especialista|specialist|seu modelo|your model/i.test(e.textContent ?? ''))
+          .map((e) => e.getAttribute('href') ?? ''),
       );
     expect(hrefs.length, path).toBeGreaterThanOrEqual(2);
     for (const href of hrefs) expect(href, path).toMatch(/^\/(en\/contact|contato)(\?interesse=[a-z]+)?#conversa$/);
@@ -68,7 +70,9 @@ test('footer pages: real media, the hero CTA pair and the phone-camera close', a
     await expect(page.locator('html'), path).toHaveAttribute('data-theme', 'dark');
     await expect(page.locator('img[src*="/media/posters/"]'), `${path}: generated poster`).toHaveCount(0);
     if (!MEDIA.includes(path)) continue;
-    await expect(page.locator('.ph__media img[src^="/media/home/"]').first(), `${path}: real media`).toBeVisible();
+    // Robótica: a reserved frame until the Artlist clip arrives (Vitor 12/11).
+    const media = path === '/robotica' ? '.ph__media .robo' : '.ph__media img[src^="/media/home/"]';
+    await expect(page.locator(media).first(), `${path}: real media`).toBeVisible();
     // Sobre and Robótica keep only their own call (final review, items 5 and 9).
     await expect(page.locator('.ph [data-heroi-acoes] .btn'), `${path}: hero CTAs`).toHaveCount(
       ['/sobre', '/robotica'].includes(path) ? 1 : 2,
@@ -115,16 +119,17 @@ test('home channels: a real carousel — arrows, ruler and swipe move the slides
   await page.goto('/?sem-abertura');
   const slides = page.locator('[data-slide]');
   const marks = page.locator('[data-ir]');
-  await expect(slides).toHaveCount(6);
+  // Rodada soluções: ergonomics leads (CH1) and workstation presence joins as CH7.
+  await expect(slides).toHaveCount(7);
   await expect(marks.nth(0)).toHaveAttribute('aria-current', 'true');
-  await expect(page.locator('#painel-epi')).toHaveAttribute('inert', '');
+  await expect(page.locator('#painel-fogo')).toHaveAttribute('inert', '');
   await page.locator('[data-proximo]').click();
   await expect(marks.nth(1)).toHaveAttribute('aria-current', 'true');
-  await expect(page.locator('#painel-epi')).not.toHaveAttribute('inert', '');
-  await expect(page.locator('#painel-fogo')).toHaveAttribute('inert', '');
+  await expect(page.locator('#painel-fogo')).not.toHaveAttribute('inert', '');
+  await expect(page.locator('#painel-ergonomia')).toHaveAttribute('inert', '');
   await marks.nth(3).click();
   await expect(marks.nth(3)).toHaveAttribute('aria-current', 'true');
-  await expect(page.locator('#painel-contagem')).toBeInViewport({ ratio: 0.6 });
+  await expect(page.locator('#painel-qualidade')).toBeInViewport({ ratio: 0.6 });
   await page.locator('[data-anterior]').click();
   await expect(marks.nth(2)).toHaveAttribute('aria-current', 'true');
   // A swipe is a native scroll of the track: the slide that settles becomes the current one.
@@ -142,7 +147,7 @@ test('home channels: the carousel advances on its own when its progress rule fil
   // Skip the 7 s timer: finish the running progress animation.
   await page.evaluate(() => document.getAnimations().forEach((a) => (a as CSSAnimation).animationName === 'progresso' && a.finish()));
   await expect(page.locator('[data-ir]').nth(1)).toHaveAttribute('aria-current', 'true');
-  await expect(page.locator('#painel-epi')).toBeInViewport({ ratio: 0.6 });
+  await expect(page.locator('#painel-fogo')).toBeInViewport({ ratio: 0.6 });
 });
 
 test('every HUD figure carries a two-cell caption (machine | person) and the poster already shows the verdict', async ({ page }) => {
@@ -195,7 +200,7 @@ test('buttons: one size, a visible hover (cyan as state), and one pair of CTAs o
 
 // Feedback 11/11, item 15: CATH, BrandSchutz, Visdec in a still row, whole (no mask, nothing past the
 // row's edges), at desktop and phone widths.
-test('partner logos: a still row of three whole logos, no mask', async ({ browser }) => {
+test('partner logos: a still row of four whole logos, no mask', async ({ browser }) => {
   for (const viewport of [
     { width: 1440, height: 900 },
     { width: 390, height: 844 },
@@ -206,11 +211,12 @@ test('partner logos: a still row of three whole logos, no mask', async ({ browse
     await page.goto('/');
     const row = page.locator('.logos');
     await row.scrollIntoViewIfNeeded();
-    await expect(row.locator('img')).toHaveCount(3);
+    await expect(row.locator('img')).toHaveCount(4);
     expect(await row.locator('img').evaluateAll((is) => is.map((i) => i.getAttribute('src')?.split('/').pop()))).toEqual([
       'l-cath-v2.webp',
       'l-brandschutz.webp',
       'l-visdec-v2.webp',
+      'l-infra.webp',
     ]);
     const clipped = await row.evaluate((ul) => {
       const r = ul.getBoundingClientRect();

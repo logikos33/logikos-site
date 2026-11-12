@@ -1,6 +1,7 @@
 ---
-// Licence terms, the same on every page (feedback 11/11, items 17 and 25d): monthly, annual or
-// biennial, side by side, the biennial lit as the recommended one. No prices: the CTA opens the
+// Licence terms, the same on every page (feedback 11/11, items 17 and 25d; rodada soluções: or a
+// purchase, scoped per project): monthly, annual, biennial or purchase, the biennial lit as the
+// recommended one. No prices: the CTA opens the
 // conversation with Koda.
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
@@ -17,6 +18,7 @@ const OPTIONS = [
   { ...l.monthly, top: false },
   { ...l.annual, top: false },
   { ...l.biennial, top: true },
+  { ...l.purchase, top: false },
 ];
 ---
 
@@ -96,7 +98,13 @@ const OPTIONS = [
 
   @media (min-width: 48rem) {
     .licenca__opcoes {
-      grid-template-columns: 1fr 1fr 1.25fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .licenca__opcoes {
+      grid-template-columns: 1fr 1fr 1.25fr 1fr;
       align-items: stretch;
     }
   }

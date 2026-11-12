@@ -1,0 +1,87 @@
+---
+// Aerial, humanoid and aquatic drones: the scene approved by Vitor (12/11, Artlist, 1:1). A light
+// CSS life: a slow zoom (1 → 1.04) and a soft glow in the drone's beam. Still with reduced motion.
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+const M = '/media/cases/robotica-humanoide';
+---
+
+<div class:list={['robo', className]} aria-hidden="true">
+  <div class="robo__palco">
+    <img
+      src={`${M}-480.webp`}
+      srcset={`${M}-480.webp 480w, ${M}.webp 1280w`}
+      sizes="(max-width: 48rem) 100vw, 30rem"
+      alt=""
+      width="480"
+      height="480"
+      loading="lazy"
+    />
+    <span class="robo__feixe"></span>
+  </div>
+</div>
+
+<style>
+  .robo {
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: #0b1424;
+    border: 1px solid var(--lk-line-strong);
+    border-radius: 6px;
+  }
+
+  .robo__palco {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    animation: aproxima 14s ease-in-out infinite alternate;
+  }
+
+  .robo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* The beam from the drone's camera to the ground, traced over the picture (percent of the frame). */
+  .robo__feixe {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(200deg, #7ff3ff 0%, #00d4ff55 45%, #00d4ff00 80%);
+    clip-path: polygon(42.5% 18.5%, 46.5% 18.5%, 44% 41.5%, 25% 32.5%);
+    mix-blend-mode: screen;
+    opacity: 0.15;
+    animation: brilho 3.6s ease-in-out infinite alternate;
+  }
+
+  @keyframes aproxima {
+    from {
+      transform: scale(1);
+    }
+
+    to {
+      transform: scale(1.04);
+    }
+  }
+
+  @keyframes brilho {
+    to {
+      opacity: 0.45;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .robo__palco,
+    .robo__feixe {
+      animation: none;
+    }
+  }
+
+  :global(html.lk-parado) .robo * {
+    animation-play-state: paused;
+  }
+</style>

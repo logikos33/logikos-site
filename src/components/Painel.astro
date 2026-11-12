@@ -1,0 +1,193 @@
+---
+// An example dashboard drawn in code (rodada soluções 5): KPIs, one bar chart and short lists,
+// in the brand's colours, always marked "Example". Used by the container-yard and operations cases.
+interface Item {
+  text: string;
+  meta?: string;
+  tone?: string;
+}
+interface Props {
+  title: string;
+  badge: string;
+  kpis: { label: string; value: string }[];
+  barsTitle: string;
+  bars: { label: string; value: number }[];
+  lists: { title: string; items: Item[] }[];
+}
+
+const { title, badge, kpis, barsTitle, bars, lists } = Astro.props;
+---
+
+<div class="painel">
+  <div class="painel__topo">
+    <p class="painel__titulo">{title}</p>
+    <span class="painel__selo mono">{badge}</span>
+  </div>
+  <dl class="kpis">
+    {kpis.map((k) => (
+      <div>
+        <dt>{k.label}</dt>
+        <dd class="mono">{k.value}</dd>
+      </div>
+    ))}
+  </dl>
+  <div class="barras">
+    <p class="painel__sub">{barsTitle}</p>
+    <ul role="list">
+      {bars.map((b) => (
+        <li>
+          <span class="barras__rotulo">{b.label}</span>
+          <svg class="barras__trilho" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true">
+            <rect width="100" height="8" rx="4" class="barras__fundo"></rect>
+            <rect width={b.value} height="8" rx="4" class="barras__valor"></rect>
+          </svg>
+          <span class="barras__num mono">{b.value}%</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+  {lists.map((l) => (
+    <div class="lista">
+      <p class="painel__sub">{l.title}</p>
+      <ul role="list">
+        {l.items.map((it) => (
+          <li class:list={[it.tone && `tom--${it.tone}`]}>
+            <span>{it.text}</span>
+            {it.meta && <span class="lista__meta mono">{it.meta}</span>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))}
+</div>
+
+<style>
+  .painel {
+    display: grid;
+    gap: var(--lk-space-4);
+    padding: var(--lk-space-5);
+    background: #0d1117;
+    border: 1px solid var(--lk-line-strong);
+    border-radius: 10px;
+    color: var(--lk-text);
+    font-size: 0.875rem;
+  }
+
+  .painel__topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--lk-space-3);
+  }
+
+  .painel__titulo {
+    margin: 0;
+    font: 600 1rem/1.3 var(--lk-font-display);
+  }
+
+  .painel__selo {
+    padding: 0.15rem 0.5rem;
+    border: 1px solid #00d4ff;
+    border-radius: 999px;
+    color: #00d4ff;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .painel__sub {
+    margin: 0 0 var(--lk-space-2);
+    font: 600 0.75rem/1.3 var(--lk-font-body);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--lk-text-2);
+  }
+
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--lk-space-2);
+    margin: 0;
+  }
+
+  .kpis div {
+    padding: var(--lk-space-3);
+    background: #ffffff08;
+    border: 1px solid var(--lk-line);
+    border-radius: 6px;
+  }
+
+  .kpis dt {
+    font-size: 0.75rem;
+    color: var(--lk-text-2);
+  }
+
+  .kpis dd {
+    margin: 0.25rem 0 0;
+    font-size: 1.5rem;
+    color: #00d4ff;
+  }
+
+  .barras ul,
+  .lista ul {
+    display: grid;
+    gap: 0.45rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .barras li {
+    display: grid;
+    grid-template-columns: minmax(5.5rem, auto) 1fr 2.75rem;
+    align-items: center;
+    gap: var(--lk-space-2);
+  }
+
+  .barras__trilho {
+    display: block;
+    width: 100%;
+    height: 0.5rem;
+  }
+
+  .barras__fundo {
+    fill: #ffffff12;
+  }
+
+  .barras__valor {
+    fill: #00d4ff;
+  }
+
+  .barras__num {
+    text-align: right;
+    color: var(--lk-text-2);
+  }
+
+  .lista li {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--lk-space-3);
+    padding: 0.45rem 0.6rem;
+    background: #ffffff06;
+    border-left: 3px solid var(--lk-line-strong);
+    border-radius: 4px;
+  }
+
+  .lista__meta {
+    flex: none;
+    color: var(--lk-text-2);
+    font-size: 0.75rem;
+  }
+
+  .tom--alerta {
+    border-left-color: var(--lk-alert) !important;
+  }
+
+  .tom--aviso {
+    border-left-color: var(--lk-warn) !important;
+  }
+
+  .tom--ok {
+    border-left-color: #00d4ff !important;
+  }
+</style>

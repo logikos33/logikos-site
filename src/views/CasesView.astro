@@ -1,0 +1,165 @@
+---
+// /cases (rodada soluções): the scoped projects first, then the models we start from. One square
+// card per case — picture, one sentence, "See the case" — each with a defined destination: its own
+// page (twins, robotics, the short case pages) or its card on /recognition.
+import CaseTile from '../components/CaseTile.astro';
+import Cam from '../components/Cam.astro';
+import RaScene from '../components/RaScene.astro';
+import RoboScene from '../components/RoboScene.astro';
+import Icon from '../components/Icon.astro';
+import PageClose from '../components/PageClose.astro';
+import PageHero from '../components/PageHero.astro';
+import Section from '../components/Section.astro';
+import { dict } from '../i18n';
+import { pathFor, type Locale, type RouteKey } from '../i18n/routes';
+import Base from '../layouts/Base.astro';
+import type { IconName } from '../lib/icons';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dict(locale);
+const p = t.cases;
+type Key = keyof typeof p.items;
+const M = '/media/home/';
+const rec = (anchor: string) => `${pathFor('recognition', locale)}#${anchor}`;
+
+interface Card {
+  key: Key;
+  href: string;
+  icon: IconName;
+  poster?: string;
+  src?: string;
+  /** Ergonomics is Vitor's priority now (12/11/2026): first, with a cyan frame, same size as the rest. */
+  featured?: boolean;
+}
+const page = (k: RouteKey) => pathFor(k, locale);
+const PROJECTS: Card[] = [
+  { key: 'twins', href: page('twins'), icon: 'chip', poster: `${M}v-gemeo` },
+  { key: 'yard', href: page('caseYard'), icon: 'counter', src: '/media/cases/conteineres-aereo-480.webp' },
+  { key: 'robotics', href: page('robotics'), icon: 'camera' },
+  { key: 'ar', href: page('caseAr'), icon: 'camera' },
+  { key: 'ops', href: page('caseOps'), icon: 'doc', src: '/media/cases/controle-operacao-480.webp' },
+];
+const MODELS: Card[] = [
+  { key: 'ergonomics', href: rec('ergonomia'), icon: 'posture', src: '/media/cases/ergonomia-480.webp', featured: true },
+  { key: 'fire', href: rec('fogo'), icon: 'flame', poster: `${M}v-fogo` },
+  { key: 'epi', href: rec('epi'), icon: 'helmet', poster: `${M}v-epi` },
+  { key: 'quality', href: rec('qualidade'), icon: 'ok', poster: `${M}v-qualidade` },
+  { key: 'counting', href: rec('contagem'), icon: 'counter', poster: `${M}v-contagem` },
+  { key: 'zones', href: rec('zonas'), icon: 'zone', src: '/media/cases/zonas-risco-480.webp' },
+  { key: 'presence', href: rec('presenca'), icon: 'clock' },
+];
+const GROUPS = [
+  { id: 'projects-title', ...p.projects, cards: PROJECTS },
+  { id: 'models-title', ...p.models, cards: MODELS },
+];
+---
+
+<Base locale={locale} routeKey="cases" title={p.meta.title} description={p.meta.description}>
+  <PageHero locale={locale} interest="custom" id="hero-title" title={p.hero.title} text={p.hero.text} />
+
+  {GROUPS.map((g) => (
+    <Section id={g.id} question={g.question} title={g.title} text={g.text} wide>
+      <ul class:list={['cases', `cases--${g.cards.length}`]} role="list">
+        {g.cards.map((c) => (
+          <li class:list={{ destaque: c.featured }}>
+            <a class="case" href={c.href}>
+              {c.key === 'ar' ? (
+                <RaScene locale={locale} square />
+              ) : c.key === 'robotics' ? (
+                <RoboScene />
+              ) : c.key === 'presence' ? (
+                <Cam dir="/media/cases" clip="presenca-posto" webm square />
+              ) : (
+                <CaseTile icon={c.icon} {...(c.poster ? { poster: c.poster } : {})} {...(c.src ? { src: c.src } : {})} />
+              )}
+              <div class="case__txt">
+                <h3>{p.items[c.key].name}</h3>
+                <p>{p.items[c.key].text}</p>
+                <span class="case__ver">
+                  {p.see}
+                  <Icon name="arrow" size={16} />
+                </span>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </Section>
+  ))}
+
+  <PageClose locale={locale} interest="custom" />
+</Base>
+
+<style>
+  .cases {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 10rem), 1fr));
+    gap: var(--lk-space-5) var(--lk-space-3);
+    margin: var(--lk-space-5) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Five projects in one row on desktop; the seven models in rows of four. */
+  @media (min-width: 64rem) {
+    .cases--5 {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .cases--7 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .case {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: var(--lk-space-3);
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* The featured case (ergonomics): same cell as the others, its picture framed in cyan. */
+  .destaque :global(.tile) {
+    border: 2px solid #00d4ff;
+  }
+
+  .case__txt {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: var(--lk-space-2);
+  }
+
+  .case h3 {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+
+  .case p {
+    margin: 0;
+    color: var(--lk-text-lead, var(--lk-text-2));
+  }
+
+  .case__ver {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    font-weight: 600;
+    color: var(--lk-link);
+  }
+
+  .case:hover .case__ver,
+  .case:focus-visible .case__ver {
+    text-decoration: underline;
+  }
+
+  .case:hover :global(.tile) {
+    border-color: #00d4ff;
+  }
+</style>

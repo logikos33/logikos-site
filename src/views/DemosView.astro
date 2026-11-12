@@ -52,6 +52,13 @@ const SEE = [
         </li>
       ))}
     </ul>
+    <!-- Rodada soluções, point 5: the call right under what it shows. -->
+    <div class="btn-row ver__cta">
+      <a class="btn" href={PHONE_DEMO_URL} data-cta="phone-demo">
+        <Icon name="camera" size={18} />
+        {p.see.cta}
+      </a>
+    </div>
   </Section>
 
   <PageClose locale={locale} />
@@ -80,6 +87,10 @@ const SEE = [
     margin: var(--lk-space-5) 0 0;
     padding: 0;
     list-style: none;
+  }
+
+  .ver__cta {
+    margin-top: var(--lk-space-5);
   }
 
   .ver h3 {

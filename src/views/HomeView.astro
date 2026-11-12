@@ -32,11 +32,12 @@ const general = specialist();
 
 const SCENES = (
   [
+    // Ergonomics first: Vitor's priority now (rodada soluções, 12/11/2026).
+    { key: 'ergonomia', cenario: null, alert: true, interest: 'ergonomics' },
     { key: 'fogo', cenario: 'fogo', alert: true, interest: 'fire' },
     { key: 'epi', cenario: 'epi', alert: true, interest: 'epi' },
     { key: 'qualidade', cenario: 'qualidade', alert: false, interest: 'quality' },
     { key: 'contagem', cenario: 'contagem', alert: false, interest: 'counting' },
-    { key: 'ergonomia', cenario: null, alert: true, interest: 'ergonomics' },
   ] as const
 ).map((s, i) => {
   const text = h.scenarios.items[i];
@@ -59,7 +60,16 @@ const TWIN = {
   webm: `${M}v-gemeo.webm`,
   esp: specialist('twins'),
 };
-const CHANNELS = SCENES.length + 1;
+// CH7 (rodada soluções): workstation presence, on the real edited clip (boxes drawn, faces blurred;
+// the client authorised the images and is never named).
+const PRESENCE = {
+  ...h.scenarios.presence,
+  poster: '/media/cases/presenca-posto',
+  video: '/media/cases/presenca-posto.mp4',
+  webm: '/media/cases/presenca-posto.webm',
+  esp: specialist('presence'),
+};
+const CHANNELS = SCENES.length + 2;
 
 // A still row, whole logos, no mask (feedback 11/11, item 15: the old sliding strip faded its
 // edges and showed the Visdec cut as it passed). `k` (tall / medium / wide mark) sets its height for equal visual weight.
@@ -67,6 +77,8 @@ const LOGOS = [
   { k: 'alta', src: '/media/parceiros/l-cath-v2.webp', alt: h.partners.cath, w: 117, h: 48 },
   { k: 'media', src: '/media/parceiros/l-brandschutz.webp', alt: h.partners.bs, w: 143, h: 38 },
   { k: 'larga', src: '/media/parceiros/l-visdec-v2.webp', alt: h.partners.visdec, w: 154, h: 30 },
+  // Rodada soluções: the INFRA mark cut from Infra's "Solução by INFRA" seal (white file).
+  { k: 'larga', src: '/media/parceiros/l-infra.webp', alt: h.partners.infra, w: 107, h: 32 },
 ];
 const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, ${base}.webp 640w`;
 ---
@@ -74,24 +86,27 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
 <Base locale={locale} routeKey="home" title={h.meta.title} description={h.meta.description} theme="dark">
   <Fragment slot="head">
     <script is:inline>
-      // Opening: once per session; never with reduced motion, data saver or ?sem-abertura.
-      // Decided before first paint so the page never flashes under the overlay.
+      // Opening: once per session, decided before first paint so the page never flashes under the
+      // overlay. Rodada soluções (12/11): it always plays — no skip for data saver, and blocked storage
+      // plays it (it just may repeat); reduced motion gets the calm version (poster + logo fade).
       (() => {
+        if (/sem-abertura/.test(location.search + location.hash)) return;
+        let seen = false;
         try {
-          const q = location.search + location.hash;
-          const saveData = navigator.connection && navigator.connection.saveData;
-          if (matchMedia('(prefers-reduced-motion: reduce)').matches || saveData || /sem-abertura/.test(q)) return;
-          if (sessionStorage.getItem('lk-abertura') === '1') return;
-          document.documentElement.classList.add('lk-abre');
-          // The overlay's poster is the first thing on screen: fetch it before the body is parsed.
-          const poster = document.createElement('link');
-          poster.rel = 'preload';
-          poster.as = 'image';
-          poster.href = '/media/home/abertura-poster.webp';
-          document.head.append(poster);
+          seen = sessionStorage.getItem('lk-abertura') === '1';
         } catch {
-          // Storage blocked: no opening.
+          // Storage blocked: play it.
         }
+        if (seen) return;
+        const root = document.documentElement;
+        root.classList.add('lk-abre');
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) root.classList.add('lk-abre-calma');
+        // The overlay's poster is the first thing on screen: fetch it before the body is parsed.
+        const poster = document.createElement('link');
+        poster.rel = 'preload';
+        poster.as = 'image';
+        poster.href = '/media/home/abertura-poster.webp';
+        document.head.append(poster);
       })();
     </script>
   </Fragment>
@@ -102,14 +117,15 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
         <div class="heroi__copy">
           <h1 id="hero-title">{h.hero.title}</h1>
           <p class="lead">{h.hero.sub}</p>
+          <!-- Rodada soluções: "Request your model now" is the site's main call. -->
           <div class="acoes" data-heroi-acoes>
-            <a class="btn" href={EXPERIENCE_URL}>
-              {t.cta.experience}
-              <Icon name="arrow" size={18} />
-            </a>
-            <a class="btn btn--ghost" {...general.attrs}>
+            <a class="btn" {...general.attrs}>
               <Icon name="chat" size={18} />
               {t.cta.specialist}
+            </a>
+            <a class="btn btn--ghost" href={EXPERIENCE_URL}>
+              {t.cta.experience}
+              <Icon name="arrow" size={18} />
             </a>
           </div>
         </div>
@@ -299,6 +315,50 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
                 </a>
               </div>
             </div>
+            <div
+              class="slide"
+              role="group"
+              aria-roledescription={h.scenarios.slideRole}
+              aria-label={`${fill(h.scenarios.slide, { n: String(CHANNELS), total: String(CHANNELS) })}: ${PRESENCE.name}`}
+              id="painel-presenca"
+              data-slide
+              inert
+            >
+              <div>
+                <div class="monitor liga">
+                  <div class="cam">
+                    <img src={`${PRESENCE.poster}.webp`} alt="" width="640" height="360" loading="lazy" />
+                    <video
+                      data-src={PRESENCE.video}
+                      data-webm={PRESENCE.webm}
+                      data-lazy
+                      poster={`${PRESENCE.poster}.webp`}
+                      muted
+                      loop
+                      playsinline
+                      preload="none"
+                      aria-hidden="true"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="ticket">
+                <p class="estado estado--ok">
+                  <Icon name="ok" size={16} />
+                  {PRESENCE.state}
+                </p>
+                <dl class="ticket__twin">
+                  <dt>{h.scenarios.solves}</dt>
+                  <dd>{PRESENCE.solves}</dd>
+                  <dt>{h.scenarios.gets}</dt>
+                  <dd>{PRESENCE.gets}</dd>
+                </dl>
+                <a class="btn" {...PRESENCE.esp.attrs}>
+                  <Icon name="chat" size={18} />
+                  {PRESENCE.cta}
+                </a>
+              </div>
+            </div>
           </div>
           <div class="controles">
             <button type="button" class="seta" data-anterior aria-label={h.scenarios.prev}>
@@ -318,6 +378,13 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
                 <button type="button" data-ir={SCENES.length} aria-controls="painel-gemeo">
                   <span class="regua__ch">{TWIN.tab}</span>
                   <span class="regua__nome">{TWIN.name}</span>
+                  <span class="regua__prog" aria-hidden="true"></span>
+                </button>
+              </li>
+              <li>
+                <button type="button" data-ir={SCENES.length + 1} aria-controls="painel-presenca">
+                  <span class="regua__ch">{PRESENCE.tab}</span>
+                  <span class="regua__nome">{PRESENCE.name}</span>
                   <span class="regua__prog" aria-hidden="true"></span>
                 </button>
               </li>
@@ -341,9 +408,9 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
             <Icon name="camera" size={18} />
             {h.band.cta}
           </a>
-          <a class="btn btn--ghost" {...general.attrs}>
-            <Icon name="chat" size={18} />
-            {t.cta.specialist}
+          <a class="btn btn--ghost" href={pathFor('cases', locale)}>
+            {t.cta.cases}
+            <Icon name="arrow" size={18} />
           </a>
         </div>
       </div>
@@ -532,8 +599,8 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
             <h2 id="contato-title">{h.contact.title}</h2>
             <p class="lead">{h.contact.text}</p>
             <div class="acoes">
-              <a class="btn btn--ghost" href={EXPERIENCE_URL}>
-                {t.cta.experience}
+              <a class="btn btn--ghost" href={pathFor('cases', locale)}>
+                {t.cta.cases}
                 <Icon name="arrow" size={18} />
               </a>
             </div>
@@ -562,11 +629,11 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
 
   <Fragment slot="after">
     <div class="barra" role="region" aria-label={h.bar.label} data-barra>
-      <a class="btn" href={EXPERIENCE_URL}>
+      <a class="btn btn--ghost" href={EXPERIENCE_URL}>
         {t.cta.experience}
         <Icon name="arrow" size={18} />
       </a>
-      <a class="btn btn--ghost barra__esp" {...general.attrs}>
+      <a class="btn barra__esp" {...general.attrs}>
         <Icon name="chat" size={18} />
         <span aria-hidden="true">{h.bar.specialist}</span>
         <span class="visually-hidden">{t.cta.specialist}</span>
@@ -574,9 +641,20 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     </div>
 
     <div class="abertura" role="dialog" aria-modal="true" aria-label={h.opening.label} data-abertura>
+      <!-- An animated WebP in an image element, never a video one: images are outside every autoplay
+           policy, so it plays on iOS in low-power mode and inside WhatsApp / Instagram browsers too. -->
       <div class="abertura__palco">
-        <video data-src={`${M}abertura.mp4`} poster={`${M}abertura-poster.webp`} muted playsinline preload="none"></video>
+        <img
+          class="abertura__quadro"
+          src={`${M}abertura-poster.webp`}
+          data-anima={`${M}abertura.webp`}
+          data-fim={`${M}abertura-fim.webp`}
+          alt=""
+          width="1280"
+          height="716"
+        />
       </div>
+      <img class="abertura__marca" src={`${M}abertura-lockup.svg`} alt="" width="750" height="164" />
       <div class="abertura__flash"></div>
       <button type="button" class="abertura__pular" data-pular>
         {h.opening.skip}
@@ -589,26 +667,32 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   const root = document.documentElement;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // ---- Opening: Koda turns on the TV, the camera dives in, the site opens. It plays whole (or until
-  // "Pular", Esc or a tap). Fail-safes: not playable within 8 s, stalled for 3 s mid-clip, or
-  // past its length + 3 s → the site opens at once. The rest of the page is inert meanwhile.
+  // ---- Opening: Koda turns on the TV, the camera dives in, the site opens. Rodada soluções (12/11):
+  // no <video> any more (iOS low-power mode and in-app browsers refused its autoplay and the opening
+  // vanished). The poster shows first; the animated WebP is decoded off-screen and only then swapped
+  // in, and the clock runs on its known length. If decoding takes over 8 s the poster dives in
+  // instead: never a hard cut. Reduced motion: the poster with the logo fading in, then a fade out.
+  // Only "Pular" and Esc end it early. The rest of the page is inert meanwhile.
+  /** 93 frames × 50 ms (public/media/home/abertura.webp, made from the approved Artlist clip at 20 fps). */
+  const DURACAO = 4650;
+  const CALMA = 1500;
   const opened = new Promise<void>((resolve) => {
     const ab = document.querySelector<HTMLElement>('[data-abertura]');
-    const video = ab?.querySelector('video');
+    const quadro = ab?.querySelector<HTMLImageElement>('.abertura__quadro');
     const skip = ab?.querySelector<HTMLButtonElement>('[data-pular]');
-    if (!root.classList.contains('lk-abre') || !ab || !video || !skip) {
+    if (!root.classList.contains('lk-abre') || !ab || !quadro || !skip) {
       ab?.remove();
       resolve();
       return;
     }
+    const calm = root.classList.contains('lk-abre-calma');
+    const fim = new Image();
     const rest = [...document.body.children].filter((e): e is HTMLElement => e !== ab && e instanceof HTMLElement);
     rest.forEach((e) => (e.inert = true));
-    video.src = video.dataset.src ?? '';
     skip.focus({ focusVisible: false } as FocusOptions);
     let done = false;
-    let playing = false;
     const close = () => {
-      root.classList.remove('lk-abre', 'lk-entrando');
+      root.classList.remove('lk-abre', 'lk-abre-calma', 'lk-entrando');
       ab.remove();
       resolve();
     };
@@ -618,56 +702,55 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
       try {
         sessionStorage.setItem('lk-abertura', '1');
       } catch {
-        // Storage blocked: it may play again next load.
+        // Storage blocked: it plays again next load.
       }
       rest.forEach((e) => (e.inert = false));
       // Focus moves to the start of the page either way (never left on <body>).
       document.querySelector<HTMLElement>('.site-header__logo')?.focus({ preventScroll: true, focusVisible: false } as FocusOptions);
-      if (skipped) {
-        close();
+      if (skipped) return close();
+      if (calm) {
+        ab.classList.add('apaga');
+        window.setTimeout(close, 600);
         return;
       }
+      // Freeze on the last frame: WebKit plays a loop-once WebP twice, and the dive must never see
+      // the TV start over.
+      const atual = ab.querySelector<HTMLImageElement>('.abertura__quadro');
+      if (atual && fim.complete && atual.src.endsWith('abertura.webp')) atual.src = fim.src;
       ab.classList.add('mergulha');
       window.setTimeout(() => root.classList.add('lk-entrando'), 500);
       window.setTimeout(close, 1200);
     };
-    // The clock starts when the clip can play through, never at page load: a fast page with a cold
-    // cache used to hit the old 1.2 s / 0.6 s fail-safes while the clip was still downloading and
-    // cut the opening. The poster holds the screen meanwhile; "Pular" works the whole time.
-    let stall = 0;
-    let cap = 0;
-    const start = () => {
-      if (playing || done) return;
-      playing = true;
-      window.clearTimeout(boot);
-      video.play().catch(() => finish(true));
-      // Whole clip + 3 s of buffering slack, counted from the first frame.
-      cap = window.setTimeout(() => finish(false), ((video.duration || 5) + 3) * 1000);
-    };
-    // Nothing playable after 8 s (very slow network or a broken file): open the site.
-    const boot = window.setTimeout(() => finish(true), 8000);
-    video.addEventListener('playing', () => window.clearTimeout(stall));
-    // Mid-clip stalls wait for data (up to 3 s) instead of cutting the opening.
-    const onStall = () => {
-      if (!playing) return;
-      window.clearTimeout(stall);
-      stall = window.setTimeout(() => finish(true), 3000);
-    };
-    video.addEventListener('waiting', onStall);
-    video.addEventListener('stalled', onStall);
-    video.addEventListener('ended', () => {
-      window.clearTimeout(cap);
-      finish(false);
-    });
-    video.addEventListener('canplaythrough', start);
-    video.preload = 'auto';
-    video.load();
-    if (video.readyState >= 4) start();
-    // Only deliberate gestures skip: the button, Esc or a tap on the opening. Scroll and touchmove
-    // no longer do (trackpad inertia right after load was cutting it).
     skip.addEventListener('click', () => finish(true));
     ab.addEventListener('keydown', (e) => e.key === 'Escape' && finish(true));
-    ab.addEventListener('pointerdown', (e) => e.target !== skip && finish(true));
+    if (calm) {
+      ab.classList.add('calma');
+      window.setTimeout(() => finish(false), CALMA);
+      return;
+    }
+    fim.src = quadro.dataset.fim ?? '';
+    void fim.decode().catch(() => {});
+    const anim = new Image();
+    anim.decoding = 'async';
+    anim.src = quadro.dataset.anima ?? '';
+    const slow = window.setTimeout(() => finish(false), 8000);
+    anim
+      .decode()
+      .then(() => {
+        if (done) return;
+        window.clearTimeout(slow);
+        // The decoded image itself goes on screen: its animation starts when it is first painted.
+        // Same class and Astro scope attribute, so the scoped styles (cover, portrait crop) apply.
+        for (const at of [...quadro.attributes])
+          if (at.name === 'class' || at.name.startsWith('data-astro-cid')) anim.setAttribute(at.name, at.value);
+        anim.alt = '';
+        quadro.replaceWith(anim);
+        window.setTimeout(() => finish(false), DURACAO);
+      })
+      .catch(() => {
+        window.clearTimeout(slow);
+        finish(false);
+      });
   });
 
   // ---- Videos: nothing downloads before it is near the screen; off-screen ones pause; reduced
@@ -1140,11 +1223,12 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     }
   }
 
-  /* From 80rem the column holds both side by side, on one line. */
+  /* From 80rem side by side; the longer main call ("Request your model now") wraps the second
+     button under it when the column is too narrow, instead of running under Koda. */
   @media (min-width: 80rem) {
     .heroi .acoes {
       display: flex;
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
     }
 
     .heroi .acoes .btn {
@@ -1350,7 +1434,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   /* The ruler: one segment per channel, the name under it; the current one fills while it plays. */
   .regua {
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(7, minmax(0, 1fr));
     flex: 1;
     gap: 6px;
     margin: 0;
@@ -2042,6 +2126,37 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   }
 
   /* ---------- Opening ---------- */
+  /* Calm version (reduced motion): the poster dimmed, the logo fading in over ~1.5 s, then the whole
+     overlay fading out. No TV flicker, no dive. Beats the global reduced-motion reset on purpose. */
+  .abertura.calma .abertura__quadro {
+    opacity: 0.35;
+  }
+
+  .abertura.calma .abertura__marca {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    display: block;
+    width: min(70vw, 32rem);
+    height: auto;
+    transform: translate(-50%, -50%);
+    animation: surge 1.5s ease-out both !important;
+  }
+
+  .abertura.calma.apaga {
+    opacity: 0;
+    transition: opacity 0.6s ease !important;
+  }
+
+  @keyframes surge {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
   .abertura {
     display: none;
   }
@@ -2065,17 +2180,22 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     transform-origin: 50% 46%;
   }
 
-  .abertura video {
+  .abertura__quadro {
     width: 100%;
     height: 100%;
     max-width: none;
     object-fit: cover;
   }
 
+  /* The logo of the calm version (reduced motion) only. */
+  .abertura__marca {
+    display: none;
+  }
+
   /* Portrait phones: the whole 16:9 frame (contain), enlarged so TV, Koda and logo fill the
      width instead of a thin strip in the dark; the logo stays inside the visible area. */
   @media (orientation: portrait) {
-    .abertura video {
+    .abertura__quadro {
       object-fit: contain;
       scale: 1.6;
     }

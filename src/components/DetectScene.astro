@@ -1,0 +1,70 @@
+---
+// A still scene with detection boxes drawn in code (rodada soluções): one SVG whose viewBox is the
+// crop, so the same boxes (in source pixels) fit the 16:9 hero and the square card. Boxes that
+// would fall outside the crop are left out. Decorative frame: the page text says what it shows.
+interface Box {
+  label: string;
+  /** x0, y0, x1, y1 in source pixels. */
+  b: [number, number, number, number];
+}
+
+interface Props {
+  src: string;
+  /** Source size. */
+  w: number;
+  h: number;
+  /** Crop in source pixels: x, y, width, height (defaults to the whole image). */
+  crop?: [number, number, number, number];
+  boxes: Box[];
+  label: string;
+  class?: string;
+}
+
+const { src, w, h, crop = [0, 0, w, h], boxes, label, class: className } = Astro.props;
+const [cx, cy, cw, ch] = crop;
+const inside = boxes.filter(({ b }) => b[0] >= cx && b[1] >= cy && b[2] <= cx + cw && b[3] <= cy + ch);
+// Label size relative to the crop, so it reads the same on the card and in the hero.
+const fs = Math.round(cw / 48);
+---
+
+<svg class:list={['cena', className]} viewBox={`${cx} ${cy} ${cw} ${ch}`} role="img" aria-label={label}>
+  <image href={src} x="0" y="0" width={w} height={h} preserveAspectRatio="none" />
+  {inside.map(({ label: l, b: [x0, y0, x1, y1] }) => (
+    <g class="det">
+      <rect x={x0} y={y0} width={x1 - x0} height={y1 - y0} />
+      <rect class="det__tag" x={x0} y={y0 - fs * 1.5} width={l.length * fs * 0.62 + fs} height={fs * 1.5} />
+      <text x={x0 + fs * 0.5} y={y0 - fs * 0.42} font-size={fs}>
+        {l}
+      </text>
+    </g>
+  ))}
+</svg>
+
+<style>
+  .cena {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #050508;
+    border: 1px solid var(--lk-line-strong);
+    border-radius: 6px;
+  }
+
+  .det rect {
+    fill: none;
+    stroke: #00d4ff;
+    stroke-width: 3;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .det .det__tag {
+    fill: #00d4ff;
+    stroke: none;
+  }
+
+  .det text {
+    fill: #0a0a0f;
+    font-family: var(--lk-font-mono);
+    font-weight: 600;
+  }
+</style>

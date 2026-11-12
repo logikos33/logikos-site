@@ -1,0 +1,172 @@
+---
+// Cookie and privacy notice (LGPD), on every page (Vitor, 12/11). True and short: only the essentials
+// plus, if accepted, an anonymous cookieless audience measurement. "Accept" and "Decline" weigh the
+// same. The choice lives in localStorage ('lk-consentimento': {valor, data}); the Cloudflare Web
+// Analytics beacon loads only after "Accept". Fixed at the bottom (no layout shift), never over the
+// home opening, above the phone shortcut bar; "Cookie preferences" in the footer reopens it.
+import { dict } from '../i18n';
+import { pathFor, type Locale } from '../i18n/routes';
+import { CF_ANALYTICS_TOKEN } from '../lib/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dict(locale);
+const c = t.consent;
+---
+
+<section class="consent" role="region" aria-label={c.label} data-consent data-token={CF_ANALYTICS_TOKEN} hidden>
+  <div class="container consent__linha">
+    <p>
+      {c.text} <a href={pathFor('privacy', locale)}>{c.privacy}</a>
+    </p>
+    <div class="consent__botoes">
+      <button type="button" class="btn btn--ghost btn--md" data-consent-choice="aceito">
+        {c.accept}
+      </button>
+      <button type="button" class="btn btn--ghost btn--md" data-consent-choice="recusado">
+        {c.decline}
+      </button>
+    </div>
+  </div>
+</section>
+
+<script>
+  const KEY = 'lk-consentimento';
+  const bar = document.querySelector<HTMLElement>('[data-consent]');
+  const root = document.documentElement;
+
+  type Choice = { valor: 'aceito' | 'recusado'; data: string };
+  const read = (): Choice | null => {
+    try {
+      const v = JSON.parse(localStorage.getItem(KEY) ?? 'null') as Choice | null;
+      return v && (v.valor === 'aceito' || v.valor === 'recusado') ? v : null;
+    } catch {
+      return null;
+    }
+  };
+
+  const loadBeacon = () => {
+    const token = bar?.dataset.token;
+    if (!token || document.querySelector('script[data-cf-beacon]')) return;
+    const s = document.createElement('script');
+    s.defer = true;
+    s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+    s.setAttribute('data-cf-beacon', JSON.stringify({ token }));
+    document.body.append(s);
+  };
+
+  // Keeps the bar above the home's phone shortcut bar and leaves room at the end of the page.
+  const place = () => {
+    if (!bar || bar.hidden) return;
+    const shortcut = document.querySelector<HTMLElement>('[data-barra]');
+    const visible = shortcut && getComputedStyle(shortcut).position === 'fixed' && !shortcut.classList.contains('some');
+    bar.style.bottom = visible ? `${shortcut.offsetHeight}px` : '0px';
+    document.body.style.paddingBottom = `${bar.offsetHeight + (visible ? shortcut.offsetHeight : 0)}px`;
+  };
+
+  let opener: HTMLElement | null = null;
+  const show = (focus: boolean) => {
+    if (!bar) return;
+    const open = () => {
+      bar.hidden = false;
+      place();
+      if (focus) bar.querySelector<HTMLButtonElement>('button')?.focus();
+    };
+    // Never over the opening: wait until the home removes its class.
+    if (!root.classList.contains('lk-abre')) return open();
+    const mo = new MutationObserver(() => {
+      if (root.classList.contains('lk-abre')) return;
+      mo.disconnect();
+      open();
+    });
+    mo.observe(root, { attributes: true, attributeFilter: ['class'] });
+  };
+
+  const hide = () => {
+    if (!bar) return;
+    bar.hidden = true;
+    document.body.style.paddingBottom = '';
+    opener?.focus();
+    opener = null;
+  };
+
+  bar?.querySelectorAll<HTMLButtonElement>('[data-consent-choice]').forEach((b) =>
+    b.addEventListener('click', () => {
+      const valor = b.dataset.consentChoice as Choice['valor'];
+      try {
+        localStorage.setItem(KEY, JSON.stringify({ valor, data: new Date().toISOString() }));
+      } catch {
+        // Storage blocked: the choice holds for this page only.
+      }
+      if (valor === 'aceito') loadBeacon();
+      // Other scripts that wait for the choice (the CRM visit notice) listen for this.
+      dispatchEvent(new CustomEvent('lk-consentimento', { detail: valor }));
+      hide();
+    }),
+  );
+
+  document.querySelectorAll<HTMLButtonElement>('[data-consent-open]').forEach((b) =>
+    b.addEventListener('click', () => {
+      opener = b;
+      show(true);
+    }),
+  );
+
+  addEventListener('resize', place);
+  // The shortcut bar slides away and back while scrolling; follow it.
+  const shortcut = document.querySelector<HTMLElement>('[data-barra]');
+  if (shortcut) new MutationObserver(place).observe(shortcut, { attributes: true, attributeFilter: ['class'] });
+
+  const choice = read();
+  if (choice?.valor === 'aceito') loadBeacon();
+  if (!choice) show(false);
+</script>
+
+<style>
+  .consent {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 60;
+    padding-block: var(--lk-space-3) calc(var(--lk-space-3) + env(safe-area-inset-bottom, 0px));
+    background: var(--lk-surface);
+    border-top: 1px solid var(--lk-line-strong);
+    box-shadow: 0 -12px 32px -24px #000;
+  }
+
+  .consent[hidden] {
+    display: none;
+  }
+
+  .consent__linha {
+    display: grid;
+    gap: var(--lk-space-3);
+    align-items: center;
+  }
+
+  .consent p {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--lk-text);
+  }
+
+  .consent__botoes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--lk-space-2);
+  }
+
+  @media (min-width: 48rem) {
+    .consent__linha {
+      grid-template-columns: 1fr auto;
+      gap: var(--lk-space-5);
+    }
+
+    .consent__botoes {
+      grid-template-columns: auto auto;
+    }
+  }
+</style>

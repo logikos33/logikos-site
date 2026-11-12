@@ -36,11 +36,12 @@ const media = Astro.slots.has('default');
       {!quiet && (
         <div class="btn-row" data-heroi-acoes>
           <slot name="actions">
-            <a class="btn" href={EXPERIENCE_URL} data-cta="experience">
+            <!-- Rodada soluções: "Request your model" is the site's main call; the experience comes second. -->
+            <SpecialistButton locale={locale} {...(interest ? { interest } : {})} />
+            <a class="btn btn--ghost" href={EXPERIENCE_URL} data-cta="experience">
               {t.cta.experience}
               <Icon name="arrow" size={18} />
             </a>
-            <SpecialistButton locale={locale} variant="ghost" {...(interest ? { interest } : {})} />
           </slot>
         </div>
       )}

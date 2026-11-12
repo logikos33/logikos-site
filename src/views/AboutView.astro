@@ -51,9 +51,9 @@ const how = p.how.items.map((x) => ({ title: x.name, text: x.text }));
             <a href={pathFor(fr.key, locale)}>{fr.name}</a>
           </h3>
           <p>{fr.text}</p>
-          {'specs' in fr && fr.specs && (
+          {fr.specs && (
             <div class="specs">
-              <p class="specs__rotulo">{p.fronts.specsLabel}</p>
+              <p class="specs__rotulo">{fr.label}</p>
               <ul role="list">
                 {fr.specs.map((s) => (
                   <li>{s}</li>
@@ -98,9 +98,18 @@ const how = p.how.items.map((x) => ({ title: x.name, text: x.text }));
     list-style: none;
   }
 
+  /* Rodada soluções 5 (pins 8l48, 6giu, m0kf): the three cards built the same way — name, one
+     sentence, a short list — so they balance; larger, calmer type. */
+  .frentes > li {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    align-content: start;
+    padding: var(--lk-space-5) var(--lk-space-5) var(--lk-space-6);
+  }
+
   .frentes h3 {
-    margin: 0 0 var(--lk-space-2);
-    font-size: 1.2rem;
+    margin: 0 0 var(--lk-space-3);
+    font-size: 1.35rem;
   }
 
   .frentes h3 a {
@@ -110,12 +119,14 @@ const how = p.how.items.map((x) => ({ title: x.name, text: x.text }));
 
   .frentes p {
     margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.5;
     color: var(--lk-text-2);
   }
 
   /* Revisão final 2, q5: what Twins connects, short and in topics. */
   .specs {
-    margin-top: var(--lk-space-4);
+    margin-top: var(--lk-space-5);
     padding-top: var(--lk-space-3);
     border-top: 1px solid var(--lk-line);
   }
@@ -156,6 +167,19 @@ const how = p.how.items.map((x) => ({ title: x.name, text: x.text }));
   @media (min-width: 48rem) {
     .frentes {
       grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    /* Title, sentence and list on shared rows, so the three dividers line up. */
+    @supports (grid-template-rows: subgrid) {
+      .frentes {
+        grid-template-rows: auto auto auto;
+      }
+
+      .frentes > li {
+        grid-row: span 3;
+        grid-template-rows: subgrid;
+        row-gap: 0;
+      }
     }
   }
 </style>
