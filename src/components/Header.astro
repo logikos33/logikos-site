@@ -13,8 +13,9 @@ interface Props {
 
 const { locale, routeKey } = Astro.props;
 const t = dict(locale);
-// Six items. Twins and Robotics are secondary (home §6 and footer).
-const NAV: RouteKey[] = ['recognition', 'howItWorks', 'demos', 'platform', 'partners', 'about'];
+// Six items, Cases first (rodada soluções: the cases are what sells). Twins, Robotics and the page for
+// integrators live in the footer and on the Cases page.
+const NAV = ['cases', 'recognition', 'howItWorks', 'demos', 'platform', 'about'] as const satisfies readonly RouteKey[];
 // "Talk to a specialist" opens the conversation with Koda on the contact page (feedback 11/11, item 11).
 const ctaHref = specialistHref(locale);
 ---
@@ -63,7 +64,7 @@ const ctaHref = specialistHref(locale);
       <!-- Button system: specialist = chat icon on the left (ghost), experience = arrow on the right (solid). -->
       <a class="btn btn--ghost btn--md site-header__cta site-header__cta--specialist" href={ctaHref} data-cta="specialist">
         <Icon name="chat" size={18} />
-        <span class="site-header__cta-label">{t.cta.specialist}</span>
+        <span class="site-header__cta-label">{t.cta.specialistShort}</span>
       </a>
       <a class="btn btn--md site-header__cta" href={EXPERIENCE_URL} data-cta="experience">
         {t.cta.experience}

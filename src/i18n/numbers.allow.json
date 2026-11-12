@@ -57,55 +57,55 @@
       "values": ["5"],
       "source": "Número do canal (CH1–CH5) das abas de cenário, esboço v3."
     },
-    "home.scenarios.items[0].cam": {
+    "home.scenarios.items[1].cam": {
       "values": ["03"],
       "source": "Identificação da câmera gravada no OSD do vídeo da home (SCRATCH/esboco/a, rodada 3 aprovada em 11/11/2026)."
     },
-    "home.scenarios.items[1].cam": {
+    "home.scenarios.items[2].cam": {
       "values": ["02"],
       "source": "Identificação da câmera gravada no OSD do vídeo da home (SCRATCH/esboco/a, rodada 3 aprovada em 11/11/2026)."
     },
-    "home.scenarios.items[2].cam": {
+    "home.scenarios.items[3].cam": {
       "values": ["04"],
       "source": "Identificação da câmera gravada no OSD do vídeo da home (SCRATCH/esboco/a, rodada 3 aprovada em 11/11/2026)."
     },
-    "home.scenarios.items[3].cam": {
+    "home.scenarios.items[4].cam": {
       "values": ["05"],
       "source": "Identificação da câmera gravada no OSD do vídeo da home (SCRATCH/esboco/a, rodada 3 aprovada em 11/11/2026)."
     },
-    "home.scenarios.items[4].cam": {
+    "home.scenarios.items[0].cam": {
       "values": ["06"],
       "source": "Identificação da câmera gravada no OSD do vídeo da home (SCRATCH/esboco/a, rodada 3 aprovada em 11/11/2026)."
-    },
-    "home.scenarios.items[0].evidence": {
-      "values": ["8"],
-      "source": "Duração do clipe de evidência do alerta (8 s), esboço v3."
     },
     "home.scenarios.items[1].evidence": {
       "values": ["8"],
       "source": "Duração do clipe de evidência do alerta (8 s), esboço v3."
     },
-    "home.scenarios.items[0].norm": {
+    "home.scenarios.items[2].evidence": {
+      "values": ["8"],
+      "source": "Duração do clipe de evidência do alerta (8 s), esboço v3."
+    },
+    "home.scenarios.items[1].norm": {
       "values": ["23"],
       "source": "NR-23 (Proteção contra incêndios), Norma Regulamentadora do MTE."
     },
-    "home.scenarios.items[1].norm": {
+    "home.scenarios.items[2].norm": {
       "values": ["6"],
       "source": "NR-6 (Equipamento de Proteção Individual), Norma Regulamentadora do MTE."
     },
-    "home.scenarios.items[4].norm": {
+    "home.scenarios.items[0].norm": {
       "values": ["17"],
       "source": "NR-17 (Ergonomia), Norma Regulamentadora do MTE."
     },
-    "home.scenarios.items[2].state": {
+    "home.scenarios.items[3].state": {
       "values": ["1"],
       "source": "Linha 1 mostrada no OSD/HUD do vídeo de qualidade, esboço v3."
     },
-    "home.scenarios.items[3].state": {
+    "home.scenarios.items[4].state": {
       "values": ["07"],
       "source": "Lote 07 mostrado no HUD do vídeo de contagem, esboço v3."
     },
-    "home.scenarios.items[4].state": {
+    "home.scenarios.items[0].state": {
       "values": ["45"],
       "source": "Limiar de flexão de tronco (45°) desenhado no vídeo de ergonomia, esboço v3."
     },
@@ -157,24 +157,12 @@
       "values": ["3"],
       "source": "Ambiente em 3D (nuvem de pontos do Twins), rodada 5 do feedback 11/11."
     },
-    "recognition.cases[0].example.title": {
+    "recognition.cases[1].example.title": {
       "values": ["03"],
       "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
     },
-    "recognition.cases[0].example.body": {
-      "values": ["8"],
-      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
-    },
-    "recognition.cases[0].example.time": {
-      "values": ["14", "32"],
-      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
-    },
-    "recognition.cases[1].example.title": {
-      "values": ["02"],
-      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
-    },
     "recognition.cases[1].example.body": {
-      "values": ["3"],
+      "values": ["8"],
       "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
     },
     "recognition.cases[1].example.time": {
@@ -182,11 +170,11 @@
       "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
     },
     "recognition.cases[2].example.title": {
-      "values": ["04"],
+      "values": ["02"],
       "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
     },
     "recognition.cases[2].example.body": {
-      "values": ["1"],
+      "values": ["3"],
       "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
     },
     "recognition.cases[2].example.time": {
@@ -194,11 +182,11 @@
       "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
     },
     "recognition.cases[3].example.title": {
-      "values": ["05"],
+      "values": ["04"],
       "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
     },
     "recognition.cases[3].example.body": {
-      "values": ["07", "412"],
+      "values": ["1"],
       "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
     },
     "recognition.cases[3].example.time": {
@@ -206,14 +194,26 @@
       "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
     },
     "recognition.cases[4].example.title": {
-      "values": ["06"],
+      "values": ["05"],
       "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
     },
     "recognition.cases[4].example.body": {
-      "values": ["38", "4"],
+      "values": ["07", "412"],
       "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
     },
     "recognition.cases[4].example.time": {
+      "values": ["14", "32"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[0].example.title": {
+      "values": ["06"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[0].example.body": {
+      "values": ["38", "4"],
+      "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
+    },
+    "recognition.cases[0].example.time": {
       "values": ["14", "32"],
       "source": "Exemplo ilustrativo de notificação (câmera, local, horário e números de demonstração), revisão final do Vitor (itens 12 e 13)."
     },
@@ -228,6 +228,22 @@
     "twins.partsPoints[0].title": {
       "values": ["100"],
       "source": "Inspeção de 100 % (todas as peças), pedido do Vitor para o Twins."
+    },
+    "home.scenarios.presence.tab": {
+      "values": ["7"],
+      "source": "Canal CH7 do carrossel da home (presença por posto), rodada soluções 12/11/2026."
+    },
+    "home.scenarios.presence.screen": {
+      "values": ["08"],
+      "source": "Rótulo de câmera de exemplo \"CAM 08\" (01 a 07 já usados), rodada soluções 12/11/2026."
+    },
+    "recognition.cases[6].example.title": {
+      "values": ["08"],
+      "source": "Rodada soluções (12/11/2026): ilustração do card de presença por posto, no mesmo padrão dos outros cards (câmera de exemplo e horário fixo do muro)."
+    },
+    "recognition.cases[6].example.time": {
+      "values": ["14", "32"],
+      "source": "Rodada soluções (12/11/2026): ilustração do card de presença por posto, no mesmo padrão dos outros cards (câmera de exemplo e horário fixo do muro)."
     }
   }
 }

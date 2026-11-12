@@ -68,7 +68,7 @@ test('home under reduced motion: no opening, posters only, no video downloaded, 
   const running = await page.evaluate(() => document.getAnimations().filter((a) => a.playState === 'running').length);
   expect(running).toBe(0);
   // The partner row shows each logo once, still.
-  await expect(page.locator('.logos li')).toHaveCount(3);
+  await expect(page.locator('.logos li')).toHaveCount(4);
   await ctx.close();
 });
 

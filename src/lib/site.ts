@@ -16,7 +16,10 @@ export const COMPANY = {
 /** E.164 digits only, e.g. 5547999999999. Empty -> WhatsApp CTAs fall back to the contact page. */
 export const WHATSAPP_NUMBER: string = (env.PUBLIC_WHATSAPP_NUMBER ?? '').replace(/\D/g, '');
 
-/** Only confirmed mailbox on the domain (published by Logikos on the fire demo). Override via env. */
+/**
+ * The one place the site's e-mail lives (footer, privacy, form fallbacks). Vitor wants a contato@ box
+ * instead of his own; swap it here (or via env) only after the box exists, or mail bounces.
+ */
 export const CONTACT_EMAIL: string = env.PUBLIC_CONTACT_EMAIL || 'vitor@logikosvision.com.br';
 
 /** Base URL for final videos (R2). Empty -> local placeholders under /media. */
@@ -41,6 +44,7 @@ export const CHAT_INTERESTS = [
   'counting',
   'ergonomics',
   'zones',
+  'presence',
   'custom',
   'twins',
   'robotics',

@@ -26,7 +26,7 @@
     "home": "Início",
     "recognition": "Recognition",
     "howItWorks": "Como funciona",
-    "partners": "Integradores",
+    "partners": "Para integradores",
     "twins": "Twins",
     "robotics": "Robótica",
     "compliance": "LGPD",
@@ -35,7 +35,8 @@
     "privacy": "Política de privacidade",
     "demos": "Demos",
     "platform": "Plataforma",
-    "login": "Entrar"
+    "login": "Entrar",
+    "cases": "Cases"
   },
   "lang": {
     "pt-br": "PT",
@@ -57,8 +58,10 @@
     "requestAccess": "Pedir acesso",
     "pilot": "Pedir piloto",
     "seeDemos": "Abrir as demos",
-    "specialist": "Falar com especialista",
-    "experience": "Testar a experiência"
+    "specialist": "Solicite seu modelo agora mesmo",
+    "experience": "Testar a experiência",
+    "specialistShort": "Solicite seu modelo",
+    "cases": "Acompanhe nossos cases"
   },
   "brand": {
     "wordmark": "LOGIKOS",
@@ -132,16 +135,16 @@
   },
   "home": {
     "meta": {
-      "title": "Logikos Vision — visão computacional nas câmeras da sua planta",
-      "description": "Fogo, EPI, qualidade, contagem e ergonomia nas câmeras IP que a planta já tem. Processamento na nuvem ou dentro da planta, e o alerta chega com o clipe do momento."
+      "title": "Logikos Vision — modelos de visão computacional para a sua operação",
+      "description": "A Logikos integra visão computacional à tecnologia de borda para entregar eficiência e segurança aos seus processos: modelos customizados, dimensionados para cada operação."
     },
     "opening": {
       "label": "Abertura: o Koda liga a TV com o logo da Logikos e a câmera entra na tela",
       "skip": "Pular abertura"
     },
     "hero": {
-      "title": "Sua câmera já está na planta. Agora ela entende o que vê.",
-      "sub": "Fogo, EPI, qualidade, contagem e ergonomia nas câmeras IP que você já tem. Processamento na nuvem ou dentro da planta, e o alerta chega com o clipe do momento.",
+      "title": "Modelos de visão computacional feitos para a sua empresa.",
+      "sub": "A Logikos integra visão computacional à tecnologia de borda para entregar eficiência e segurança aos seus processos. Entendemos a sua operação, dimensionamos o projeto e entregamos o modelo pronto, nas câmeras que você já tem.",
       "wallLabel": "Cinco câmeras reconhecendo em tempo real e um convite para testar a sua",
       "yours": {
         "title": "CAM 07 · a sua",
@@ -155,7 +158,8 @@
       "label": "Empresas que confiam no nosso trabalho",
       "bs": "BrandSchutz",
       "visdec": "Visdec",
-      "cath": "CATH Projetos e Segurança"
+      "cath": "CATH Projetos e Segurança",
+      "infra": "Infra Automação"
     },
     "koda": {
       "title": "Conheça o Koda.",
@@ -170,7 +174,7 @@
       "text": "Ninguém assiste a 24 horas de vídeo. A Logikos coloca uma leitura em cada câmera e só chama alguém quando há algo para decidir: uma chama, alguém sem capacete, uma peça fora do padrão, uma caixa a menos, uma postura de risco."
     },
     "scenarios": {
-      "title": "Cinco leituras. As mesmas câmeras.",
+      "title": "Alguns dos nossos modelos personalizados.",
       "text": "Os canais passam sozinhos; arraste ou escolha um canal para ver de perto.",
       "tabsLabel": "Cenários",
       "roledescription": "carrossel",
@@ -187,6 +191,19 @@
       "items": [
         {
           "tab": "CH1",
+          "name": "Ergonomia",
+          "state": "ALERTA · tronco acima de 45°",
+          "cam": "CAM 06 · Armazém",
+          "evidence": "clipe + ângulo do tronco medido",
+          "norm": "NR-17 · ergonomia",
+          "notified": "SESMT, no relatório do turno",
+          "who": "Para SESMT: posturas de risco no levantamento de carga, medidas pelo esqueleto.",
+          "cta": "Solicite seu modelo de ergonomia",
+          "specialist": "Solicite seu modelo de ergonomia",
+          "wa": "Olá! Quero falar com um especialista sobre ergonomia."
+        },
+        {
+          "tab": "CH2",
           "name": "Fogo",
           "state": "ALERTA · fogo detectado",
           "cam": "CAM 03 · Pátio externo",
@@ -195,11 +212,11 @@
           "notified": "brigada e segurança patrimonial, no WhatsApp",
           "who": "Para brigada e patrimonial: o princípio de incêndio é detectado ainda pequeno, com o clipe do momento.",
           "cta": "Testar o cenário Fogo",
-          "specialist": "Falar com especialista em fogo",
+          "specialist": "Solicite seu modelo de fogo",
           "wa": "Olá! Quero falar com um especialista sobre fogo."
         },
         {
-          "tab": "CH2",
+          "tab": "CH3",
           "name": "EPI",
           "state": "ALERTA · sem capacete",
           "cam": "CAM 02 · Armazém",
@@ -208,11 +225,11 @@
           "notified": "técnico de segurança, no WhatsApp",
           "who": "Para EHS: capacete, colete e área restrita, por pessoa.",
           "cta": "Testar o cenário EPI",
-          "specialist": "Falar com especialista em EPI",
+          "specialist": "Solicite seu modelo de EPI",
           "wa": "Olá! Quero falar com um especialista sobre EPI."
         },
         {
-          "tab": "CH3",
+          "tab": "CH4",
           "name": "Qualidade",
           "state": "INSPEÇÃO · linha 1",
           "cam": "CAM 04 · Envase",
@@ -221,11 +238,11 @@
           "notified": "inspetor de qualidade",
           "who": "Para qualidade: cada peça conferida na linha, e a fora do padrão separada.",
           "cta": "Testar o cenário Qualidade",
-          "specialist": "Falar com especialista em qualidade",
+          "specialist": "Solicite seu modelo de qualidade",
           "wa": "Olá! Quero falar com um especialista sobre inspeção de qualidade."
         },
         {
-          "tab": "CH4",
+          "tab": "CH5",
           "name": "Contagem",
           "state": "CONTAGEM · lote 07",
           "cam": "CAM 05 · Expedição",
@@ -234,21 +251,8 @@
           "notified": "painel da expedição",
           "who": "Para operação e logística: contagem na esteira e conferência de carga.",
           "cta": "Testar o cenário Contagem",
-          "specialist": "Falar com especialista em contagem",
+          "specialist": "Solicite seu modelo de contagem",
           "wa": "Olá! Quero falar com um especialista sobre contagem."
-        },
-        {
-          "tab": "CH5",
-          "name": "Ergonomia",
-          "state": "ALERTA · tronco acima de 45°",
-          "cam": "CAM 06 · Armazém",
-          "evidence": "clipe + ângulo do tronco medido",
-          "norm": "NR-17 · ergonomia",
-          "notified": "SESMT, no relatório do turno",
-          "who": "Para SESMT: posturas de risco no levantamento de carga, medidas pelo esqueleto.",
-          "cta": "Falar com especialista em ergonomia",
-          "specialist": "Falar com especialista em ergonomia",
-          "wa": "Olá! Quero falar com um especialista sobre ergonomia."
         }
       ],
       "solves": "o que resolve",
@@ -260,11 +264,21 @@
         "solves": "A planta navegável a partir de um vídeo do celular, para medir e anotar sem ir até lá; e o gêmeo de cada peça, com inspeção de 100 % e o desvio em relação ao projeto visível antes de virar lote.",
         "gets": "O ambiente em 3D para medir e anotar, a rastreabilidade de cada peça e o histórico peça a peça.",
         "cta": "Solicite seu modelo customizado"
+      },
+      "presence": {
+        "tab": "CH7",
+        "name": "Presença no posto",
+        "state": "PRESENÇA · posto por posto",
+        "solves": "Saber se cada posto de trabalho está ocupado, por quanto tempo e quando fica vazio, sem depender de apontamento manual.",
+        "gets": "A ocupação de cada posto ao longo do turno e o aviso quando um posto crítico fica sem ninguém.",
+        "cta": "Solicite seu modelo de presença",
+        "screen": "CAM 08 · posto de trabalho",
+        "screenSub": "modelo dimensionado no seu projeto"
       }
     },
     "band": {
       "title": "Quer ver isso nas suas câmeras?",
-      "text": "Abra a demo no celular, aponte a câmera para o que quiser e veja a detecção na hora, sem cadastro. Para as câmeras da planta, um especialista desenha o piloto com você.",
+      "text": "Abra a demo no celular, aponte a câmera para o que quiser e veja a detecção na hora, sem cadastro. Para ver projetos dimensionados para outras operações, acompanhe nossos cases.",
       "cta": "Teste na câmera do seu celular"
     },
     "how": {
@@ -312,7 +326,7 @@
       "demo": {
         "date": "agora · no seu celular",
         "title": "Teste com a sua câmera",
-        "text": "Aponte para alguém com e sem capacete e veja o alerta na hora.",
+        "text": "Abra no celular, aponte para o que estiver à sua frente e veja a câmera marcar na hora o que reconhece.",
         "cta": "Abrir a demo"
       }
     },
@@ -354,14 +368,14 @@
       "privacy": "Ver a política de privacidade"
     },
     "contact": {
-      "title": "Fale com um especialista.",
-      "text": "O especialista olha as suas câmeras com você, diz o que dá para reconhecer e, se fizer sentido, monta um piloto acompanhado. Se preferir ver antes, a experiência mostra os cenários funcionando.",
+      "title": "Solicite seu modelo agora mesmo.",
+      "text": "Conte o que a sua operação precisa enxergar. Entendemos o cenário, dimensionamos o projeto (modelo, câmeras, equipamento quando fizer sentido e forma de contratação) e voltamos com o próximo passo.",
       "screen": "CAM 07 · aguardando sinal",
       "screenSub": "a sua câmera entra aqui"
     },
     "bar": {
       "label": "Atalhos",
-      "specialist": "Especialista"
+      "specialist": "Seu modelo"
     },
     "wa": "Olá! Quero falar com um especialista sobre visão computacional na minha planta.",
     "pipeline": {
@@ -409,15 +423,15 @@
   "partnerPoints": {
     "brand": {
       "title": "Você traz o caso",
-      "text": "O que o seu cliente precisa ver nas câmeras dele: a área, o risco, a peça, o indicador."
+      "text": "O que a sua operação precisa ver nas câmeras: a área, o risco, a peça, o indicador."
     },
     "pilot": {
-      "title": "A Logikos treina o modelo",
-      "text": "Modelo proprietário treinado e validado nas imagens do cliente, com um piloto acompanhado."
+      "title": "A Logikos dimensiona e treina",
+      "text": "Definimos câmeras, leituras e onde o processamento acontece, e treinamos o modelo nas suas imagens, com um piloto acompanhado."
     },
     "license": {
       "title": "Entregue para a operação",
-      "text": "Na nuvem ou na planta, com licença mensal, anual ou bienal (a bienal é a recomendada)."
+      "text": "Na nuvem ou com equipamento na planta, conforme o projeto, com a forma de contratação que fizer sentido para você."
     },
     "support": {
       "title": "Suporte e evolução",
@@ -426,13 +440,13 @@
   },
   "recognition": {
     "meta": {
-      "title": "Recognition — visão computacional para a indústria",
-      "description": "Fogo e fumaça, EPI por região do corpo, ergonomia, zonas de risco e contagem na mesma câmera. Processamento dentro da planta."
+      "title": "Recognition — modelos customizados de visão computacional",
+      "description": "Modelos customizados e várias leituras na mesma câmera: fogo, EPI, qualidade, contagem, ergonomia, zonas de risco e presença por posto, dimensionados para o seu projeto."
     },
     "hero": {
       "question": "o que é?",
-      "title": "Seis leituras na câmera que já existe.",
-      "text": "Fogo e fumaça, EPI, qualidade, contagem, ergonomia e zonas de risco: um alerta por evento, com o clipe que prova o que aconteceu."
+      "title": "Modelos customizados. Várias leituras na mesma câmera.",
+      "text": "Uma câmera pode ler mais de uma coisa ao mesmo tempo: fogo, EPI, postura, contagem ou o indicador que a sua operação precisar. Quais leituras e em quantas câmeras, definimos depois de entender o seu projeto."
     },
     "epi": {
       "title": "EPI sem alarme falso.",
@@ -467,10 +481,11 @@
       "next": "próximo passo?"
     },
     "readings": {
-      "title": "Uma câmera, seis leituras.",
+      "title": "Modelos de partida, ajustados ao seu projeto.",
       "fires": "O que dispara",
       "receives": "O que a pessoa recebe",
-      "not": "O que não faz"
+      "not": "O que não faz",
+      "text": "Antes de dimensionar, entendemos o que a operação precisa ver, onde estão as câmeras e quem recebe cada aviso. Estes são os modelos de que partimos."
     },
     "alertAnatomy": {
       "title": "O alerta, por dentro.",
@@ -518,6 +533,17 @@
     },
     "cases": [
       {
+        "name": "Ergonomia",
+        "solves": "Postura de risco repetida na mesma tarefa, antes de virar afastamento.",
+        "gets": "O tempo em cada postura por posto, para o SESMT agir.",
+        "example": {
+          "title": "Postura de risco · CAM 06 · Separação",
+          "body": "Tronco curvado em 38 % do turno no posto 4.",
+          "time": "14:32"
+        },
+        "next": "Solicite seu modelo de ergonomia"
+      },
+      {
         "name": "Fogo e fumaça",
         "solves": "Princípio de incêndio visto antes do detector de teto, em pátio, depósito ou galpão aberto.",
         "gets": "Alerta no WhatsApp da brigada, com o clipe e o quadro marcado.",
@@ -562,17 +588,6 @@
         "next": "Testar o cenário Contagem"
       },
       {
-        "name": "Ergonomia",
-        "solves": "Postura de risco repetida na mesma tarefa, antes de virar afastamento.",
-        "gets": "O tempo em cada postura por posto, para o SESMT agir.",
-        "example": {
-          "title": "Postura de risco · CAM 06 · Separação",
-          "body": "Tronco curvado em 38 % do turno no posto 4.",
-          "time": "14:32"
-        },
-        "next": "Falar com especialista em ergonomia"
-      },
-      {
         "name": "Zonas de risco",
         "solves": "Pessoa em área de empilhadeira, prensa ou carga suspensa, no momento em que entra.",
         "gets": "Alerta imediato e o quadro de quem cruzou a faixa.",
@@ -581,7 +596,18 @@
           "body": "Pessoa na faixa da empilhadeira. Líder do turno avisado.",
           "time": "14:32"
         },
-        "next": "Falar com especialista em zonas"
+        "next": "Solicite seu modelo de zonas de risco"
+      },
+      {
+        "name": "Presença por posto de trabalho",
+        "solves": "Posto crítico vazio ou ocupado por tempo demais, visto na hora e sem apontamento manual.",
+        "gets": "A ocupação de cada posto ao longo do turno e o aviso quando um posto fica sem ninguém.",
+        "example": {
+          "title": "Posto vazio · CAM 08 · Montagem",
+          "body": "Posto de solda sem operador. Líder do turno avisado.",
+          "time": "14:32"
+        },
+        "next": "Solicite seu modelo de presença"
       }
     ],
     "custom": {
@@ -593,26 +619,39 @@
   "howItWorks": {
     "meta": {
       "title": "Como funciona — câmera, dispositivo na planta, alerta",
-      "description": "Câmera existente, modelo proprietário Logikos com processamento na nuvem ou na planta, veredito com evidência e integração por contato seco, MQTT ou webhook."
+      "description": "Como a Logikos entende a sua operação, dimensiona o projeto e entrega o modelo: câmeras existentes, nuvem ou equipamento na planta quando fizer sentido, integrações e formas de contratação."
     },
     "hero": {
       "question": "como funciona?",
       "title": "Da câmera que já existe ao alerta com evidência.",
-      "text": "O modelo proprietário Logikos lê as câmeras, decide e guarda a prova, na nuvem ou na planta. Na planta, as imagens ficam com você e só o alerta sai."
+      "text": "Você conta o que precisa enxergar. A Logikos entende a operação, treina o modelo para o que importa nela e define onde ele roda. Você recebe o alerta com a prova do momento e decide o que fazer."
     },
     "offline": {
-      "title": "Na planta, mesmo sem internet",
-      "text": "Se a internet cair, o equipamento continua vigiando e guardando os alertas. Quando a conexão volta, tudo chega ao painel."
+      "title": "Equipamento na planta, quando o projeto pede",
+      "text": "Se as imagens precisam ficar dentro da planta ou a operação não pode depender de internet, o projeto inclui um equipamento Logikos dimensionado para ela: se a internet cair, ele continua vigiando e guardando os alertas. Quando não é necessário, tudo roda na nuvem, sem instalar nada."
     },
     "integrations": {
       "title": "Integrações",
+      "text": "O alerta chega onde a sua operação já trabalha. Quais integrações entram, definimos juntos no dimensionamento.",
       "alarm": {
-        "title": "Central de alarme",
-        "text": "Saída por contato seco para sirene, sinaleiro ou central existente."
+        "title": "Alarme e sinalização",
+        "text": "Saída por contato seco para sirene, sinaleiro ou a central de alarme existente."
+      },
+      "messages": {
+        "title": "WhatsApp e e-mail",
+        "text": "O alerta com o clipe e o quadro marcado, direto para quem decide."
+      },
+      "panel": {
+        "title": "Painel",
+        "text": "Eventos, filtros e histórico por câmera, para acompanhar e auditar."
+      },
+      "erp": {
+        "title": "ERP e MES",
+        "text": "Eventos enviados aos sistemas de gestão e de produção."
       },
       "mqtt": {
-        "title": "ERP e IoT por MQTT",
-        "text": "Eventos publicados em tópicos para o seu sistema consumir."
+        "title": "CLP, sensores e IoT",
+        "text": "Eventos publicados por MQTT ou OPC UA para a automação consumir."
       },
       "webhook": {
         "title": "Webhook",
@@ -634,11 +673,16 @@
       "network": "Cabo de rede",
       "power": "Fonte de energia",
       "caption": "Chega pronto: liga na tomada e na rede da planta."
+    },
+    "project": {
+      "question": "como é o projeto?",
+      "title": "Do seu caso ao modelo rodando",
+      "text": "Quatro etapas, sempre nesta ordem, para o modelo chegar certo à sua operação."
     }
   },
   "partners": {
     "meta": {
-      "title": "Integradores — modelo customizado com a Logikos",
+      "title": "Para integradores — modelo customizado com a Logikos",
       "description": "Você traz o caso do seu cliente; a Logikos treina e entrega o modelo customizado para a operação dele, com suporte."
     },
     "hero": {
@@ -647,8 +691,9 @@
       "text": "Para integradores de segurança eletrônica, automação e TI industrial: você traz o caso, a Logikos treina o modelo e entrega pronto para a operação do cliente."
     },
     "model": {
-      "title": "Como funciona",
-      "text": "Do caso do cliente ao modelo rodando na operação dele."
+      "title": "Como o projeto acontece",
+      "text": "É o mesmo caminho de qualquer projeto da Logikos: entender o caso, dimensionar, treinar e entregar.",
+      "cta": "Ver como funciona"
     },
     "form": {
       "title": "Quero criar um modelo",
@@ -758,41 +803,64 @@
   },
   "robotics": {
     "meta": {
-      "title": "Robótica — reconhecimento em drones e quadrúpedes",
-      "description": "O reconhecimento do Recognition embarcado em drones e robôs quadrúpedes, sob projeto."
+      "title": "Drones e robótica — reconhecimento no ar, em terra e na água",
+      "description": "Drones aéreos, robôs quadrúpedes e equipamentos aquáticos com visão computacional, dimensionados a partir da sua necessidade."
     },
     "hero": {
       "question": "o que é?",
       "title": "O mesmo reconhecimento, em movimento.",
-      "text": "Drones e robôs quadrúpedes levam a câmera até onde a câmera fixa não chega."
+      "text": "Explique a sua necessidade para nós. A Logikos leva a visão computacional para drones e robôs, no ar, em terra ou na água, e dimensiona a solução para o seu cenário."
     },
     "chip": "Sob projeto",
-    "points": {
-      "drones": {
-        "title": "Drones",
-        "text": "Inspeção de áreas amplas e de difícil acesso."
-      },
-      "quadrupeds": {
-        "title": "Robôs quadrúpedes",
-        "text": "Rondas em áreas de risco, com o mesmo veredito da câmera fixa."
-      },
-      "project": {
-        "title": "Sob projeto",
-        "text": "Cada aplicação é dimensionada caso a caso, a partir do seu cenário."
-      },
-      "both": {
-        "title": "Drones e robôs quadrúpedes",
-        "text": "Inspeção de áreas amplas, de difícil acesso ou de risco, com o mesmo veredito da câmera fixa."
-      }
+    "places": {
+      "question": "onde atua?",
+      "title": "Terra, céu e água.",
+      "text": "A Logikos entende a necessidade e o cenário para implantar a solução na sua realidade.",
+      "rows": [
+        {
+          "title": "Céu · drones aéreos",
+          "text": "Acompanhamento de redes elétricas, inspeção de áreas amplas ou de difícil acesso e conferência de EPI em obras."
+        },
+        {
+          "title": "Terra · robôs quadrúpedes",
+          "text": "Rondas em áreas de risco, com o mesmo veredito da câmera fixa e sem expor a equipe."
+        },
+        {
+          "title": "Água · drones aquáticos",
+          "text": "Batimetria e inspeção em rios, represas e reservatórios, onde a equipe não chega com facilidade."
+        }
+      ]
     },
-    "questions": {
-      "what": "o que é?",
-      "how": "para que serve?",
-      "buy": "como se contrata?"
-    },
-    "buy": {
-      "title": "Por projeto.",
-      "text": "Cada aplicação é dimensionada caso a caso, a partir do seu cenário."
+    "process": {
+      "question": "como é o projeto?",
+      "title": "Do seu cenário à solução em campo.",
+      "text": "Cada aplicação é dimensionada sob demanda. Antes de qualquer equipamento, entendemos o que precisa ser visto e em que condições.",
+      "steps": [
+        {
+          "title": "Você explica a necessidade",
+          "text": "O que precisa ser inspecionado, com que frequência e o que acontece quando algo é encontrado."
+        },
+        {
+          "title": "Entendemos o cenário",
+          "text": "Área, acesso, clima, luz e riscos do local, com a sua equipe."
+        },
+        {
+          "title": "Escolhemos a plataforma",
+          "text": "Drone aéreo, robô quadrúpede ou drone aquático: o que faz sentido para o lugar e para a tarefa."
+        },
+        {
+          "title": "Treinamos o modelo",
+          "text": "O modelo aprende com imagens do seu cenário o que precisa reconhecer."
+        },
+        {
+          "title": "Piloto acompanhado",
+          "text": "As primeiras missões com a nossa equipe junto, até o resultado chegar certo."
+        },
+        {
+          "title": "Operação e evolução",
+          "text": "Rotina definida, suporte e atualizações do modelo por conta da Logikos."
+        }
+      ]
     }
   },
   "compliance": {
@@ -859,7 +927,7 @@
       "items": [
         {
           "name": "Recognition",
-          "text": "Seis leituras na câmera que já existe: fogo, EPI, qualidade, contagem, ergonomia e zonas de risco."
+          "text": "Modelos customizados e várias leituras na mesma câmera: fogo, EPI, qualidade, contagem, ergonomia, zonas de risco e presença por posto de trabalho."
         },
         {
           "name": "Robótica e drones",
@@ -905,7 +973,7 @@
       },
       "model": {
         "title": "Modelo proprietário Logikos",
-        "text": "Treinado e validado pela Logikos para cada leitura: fogo, EPI, qualidade, contagem, ergonomia e zonas de risco."
+        "text": "Treinado e validado pela Logikos para cada leitura: fogo, EPI, qualidade, contagem, ergonomia, zonas de risco e presença por posto de trabalho."
       },
       "processing": {
         "title": "Na nuvem ou na planta",
@@ -1066,7 +1134,8 @@
       "robotics": "Robótica",
       "partnership": "Parceria",
       "quality": "Qualidade",
-      "custom": "Modelo sob medida"
+      "custom": "Modelo sob medida",
+      "presence": "Presença por posto"
     },
     "honeypot": "Não preencha este campo",
     "errors": {
@@ -1090,7 +1159,13 @@
   "footer": {
     "company": "Logikos Soluções",
     "cnpjLabel": "CNPJ",
-    "rights": "Todos os direitos reservados."
+    "rights": "Todos os direitos reservados.",
+    "seals": {
+      "label": "Compromissos com os seus dados",
+      "lgpd": "LGPD · política publicada",
+      "cookies": "Sem cookies de rastreamento",
+      "sale": "Não vendemos dados"
+    }
   },
   "notFound": {
     "title": "Página não encontrada",
@@ -1170,7 +1245,7 @@
     },
     "robotics": {
       "title": "Robótica",
-      "text": "O mesmo reconhecimento em drones e quadrúpedes.",
+      "text": "O mesmo reconhecimento em drones e robôs: no ar, em terra e na água.",
       "chip": "Sob projeto"
     }
   },
@@ -1187,7 +1262,8 @@
     "see": {
       "question": "o que aparece?",
       "title": "O que a câmera passa a entender",
-      "text": "Dois exemplos do que a mesma câmera reconhece quando ganha um modelo da Logikos."
+      "text": "Dois exemplos do que a mesma câmera reconhece quando ganha um modelo da Logikos. Clique e teste agora mesmo no seu celular.",
+      "cta": "Teste agora mesmo no seu celular"
     },
     "epi": {
       "title": "EPI",
@@ -1201,12 +1277,12 @@
   "platform": {
     "meta": {
       "title": "Plataforma — na planta ou na nuvem",
-      "description": "Dois modos do Recognition: dispositivo na planta, sem internet, licença mensal, anual ou bienal; ou plataforma na nuvem por mensalidade, com painel e evidências. Sem preço público."
+      "description": "Na nuvem ou com equipamento na planta, conforme a atividade: o mesmo veredito com evidência. Licença ou aquisição, dimensionadas para o projeto. Sem preço público."
     },
     "hero": {
       "question": "na planta ou na nuvem?",
       "title": "Na planta ou na nuvem. O mesmo veredito, com evidência.",
-      "text": "Na planta: um equipamento Logikos na rede, funciona sem internet, licença mensal, anual ou bienal. Na nuvem: painel pelo navegador, mensalidade."
+      "text": "Na nuvem, o painel abre pelo navegador. Na planta, quando a atividade pede, um equipamento Logikos lê as câmeras e segue funcionando sem internet. Se o equipamento entra ou não no projeto, analisamos juntos conforme a sua atividade."
     },
     "questions": {
       "account": "como entro?",
@@ -1231,7 +1307,7 @@
       "rows": [
         {
           "term": "Onde roda",
-          "edge": "Um equipamento Logikos na rede da planta lê as câmeras existentes.",
+          "edge": "Um equipamento Logikos na rede da planta lê as câmeras existentes, quando a atividade pede.",
           "cloud": "Na nuvem da Logikos; as câmeras enviam o vídeo."
         },
         {
@@ -1251,8 +1327,8 @@
         },
         {
           "term": "Contrato",
-          "edge": "Licença mensal, anual ou bienal.",
-          "cloud": "Mensalidade. Sem preço público: a proposta vem da conversa."
+          "edge": "Licença ou aquisição, dimensionadas para o projeto.",
+          "cloud": "Licença dimensionada para o projeto. Sem preço público: a proposta vem da conversa."
         }
       ]
     }
@@ -1286,8 +1362,8 @@
       "screenSub": "a sua câmera entra aqui"
     },
     "license": {
-      "title": "Condições de licença",
-      "text": "Escolha o prazo. Em todas, o modelo, as atualizações e o suporte são da Logikos.",
+      "title": "Dimensionado para a sua operação",
+      "text": "Cada projeto é dimensionado conforme a realidade da planta: quantas câmeras, quais leituras e se há equipamento na planta ou não. A contratação segue o mesmo cuidado: licença ou aquisição, planejada para ser eficiente na sua operação.",
       "monthly": {
         "name": "Mensal",
         "text": "Para começar por uma linha ou um piloto."
@@ -1300,7 +1376,207 @@
         "name": "Bienal",
         "badge": "Recomendada",
         "text": "2 anos sem se preocupar com os seus modelos: atualizações constantes por conta da Logikos."
+      },
+      "purchase": {
+        "name": "Aquisição",
+        "text": "Para quem prefere adquirir: proposta dimensionada para o projeto."
       }
     }
+  },
+  "cases": {
+    "meta": {
+      "title": "Cases — projetos dimensionados pela Logikos",
+      "description": "Gêmeos digitais, pátio de contêineres, drones e robótica, realidade aumentada, controle de operação e os modelos de fogo, EPI, qualidade, contagem, ergonomia, zonas de risco e presença."
+    },
+    "hero": {
+      "title": "Acompanhe nossos cases.",
+      "text": "Cada projeto começa entendendo a operação. Aqui estão os cenários que a Logikos já dimensionou: escolha o mais parecido com o seu e veja como pensamos a solução."
+    },
+    "projects": {
+      "question": "que projetos?",
+      "title": "Projetos dimensionados",
+      "text": "Soluções desenhadas para uma operação específica."
+    },
+    "models": {
+      "question": "que modelos?",
+      "title": "Modelos de visão computacional",
+      "text": "Leituras que já temos prontas para ajustar às suas câmeras e às suas regras."
+    },
+    "see": "Ver o case",
+    "items": {
+      "twins": {
+        "name": "Gêmeos digitais",
+        "text": "Cada peça da linha comparada com o projeto, e o ambiente navegável a partir do celular."
+      },
+      "yard": {
+        "name": "Pátio de contêineres",
+        "text": "Movimentação de contêineres acompanhada pela câmera, do portão à pilha."
+      },
+      "robotics": {
+        "name": "Drones e robótica",
+        "text": "Aéreos, quadrúpedes e aquáticos: o reconhecimento onde a câmera fixa não chega."
+      },
+      "ar": {
+        "name": "Realidade aumentada para logística",
+        "text": "A informação certa sobre o que o operador está vendo, na hora da separação e da conferência."
+      },
+      "ops": {
+        "name": "Controle de operação",
+        "text": "O que acontece em cada etapa do processo, visto pelas câmeras e reunido num painel."
+      },
+      "fire": {
+        "name": "Fogo e fumaça",
+        "text": "Princípio de incêndio visto no vídeo, com o clipe do momento."
+      },
+      "epi": {
+        "name": "EPI",
+        "text": "Capacete, colete e óculos conferidos pessoa por pessoa."
+      },
+      "quality": {
+        "name": "Qualidade",
+        "text": "Peça fora do padrão separada na linha."
+      },
+      "counting": {
+        "name": "Contagem",
+        "text": "Volumes contados na esteira ou na doca."
+      },
+      "ergonomics": {
+        "name": "Ergonomia",
+        "text": "Posturas de risco medidas por posto."
+      },
+      "zones": {
+        "name": "Zonas de risco",
+        "text": "Pessoa em área de risco avisada no momento em que entra."
+      },
+      "presence": {
+        "name": "Presença por posto de trabalho",
+        "text": "Ocupação de cada posto ao longo do turno."
+      }
+    },
+    "featured": "Prioridade agora"
+  },
+  "caseLabels": {
+    "problem": "o problema",
+    "scope": "como dimensionamos?",
+    "gets": "o que você recebe?",
+    "back": "Ver todos os cases"
+  },
+  "caseYard": {
+    "meta": {
+      "title": "Pátio de contêineres — case Logikos",
+      "description": "Visão computacional dimensionada para registrar a entrada, a movimentação e a posição exata de cada contêiner no pátio."
+    },
+    "hero": {
+      "title": "Pátio de contêineres.",
+      "text": "Um depósito de contêineres quer saber, sem depender de anotação manual, quando cada contêiner chega, quando é movido e onde ele está agora. A Logikos está dimensionando a visão computacional para isso."
+    },
+    "chip": "Projeto em levantamento",
+    "problem": {
+      "title": "Onde está cada contêiner?",
+      "text": "Contêineres empilhados, movidos por empilhadeiras e reach stackers, numa operação que pode não parar. Localizar um contêiner à mão toma tempo da equipe e deixa espaço para erro na hora de liberar a carga."
+    },
+    "scope": {
+      "title": "Do portão à pilha.",
+      "text": "Cada contêiner tem um código único, e a câmera lê esse código. No portão, câmeras dedicadas registram a entrada e a saída; no pátio, outras acompanham a movimentação. Quando o pátio ainda não tem câmeras, o projeto especifica e instala."
+    },
+    "gets": {
+      "title": "O que o pátio passa a ter.",
+      "points": [
+        {
+          "title": "Entrada registrada",
+          "text": "A chegada de cada contêiner, com o código lido e o quadro como prova."
+        },
+        {
+          "title": "Movimentação acompanhada",
+          "text": "Quando um contêiner muda de lugar dentro do pátio."
+        },
+        {
+          "title": "Localização exata",
+          "text": "A vaga e o nível na pilha de cada contêiner, num painel com o histórico de cada um."
+        }
+      ]
+    }
+  },
+  "caseAr": {
+    "meta": {
+      "title": "Realidade aumentada para logística — case Logikos",
+      "description": "Visão computacional com realidade aumentada para separação e conferência na logística."
+    },
+    "hero": {
+      "title": "Realidade aumentada para logística.",
+      "text": "A câmera reconhece o que o operador está vendo e a tela mostra, por cima da imagem, a informação de que ele precisa naquele momento."
+    },
+    "problem": {
+      "title": "Procurar, conferir, anotar.",
+      "text": "Na separação e na conferência, boa parte do tempo vai em localizar o item certo e confirmar que é ele. Cada erro vira retrabalho ou devolução."
+    },
+    "scope": {
+      "title": "A informação no lugar certo.",
+      "text": "Entendemos o processo, os itens e o equipamento que a equipe já usa. Depois definimos o que a câmera precisa reconhecer e o que aparece na tela."
+    },
+    "gets": {
+      "title": "O que a operação passa a ter.",
+      "points": [
+        {
+          "title": "O item certo destacado",
+          "text": "O operador vê na tela onde está o que ele procura."
+        },
+        {
+          "title": "Conferência na hora",
+          "text": "A câmera confirma o item antes de ele seguir."
+        },
+        {
+          "title": "Registro de cada etapa",
+          "text": "O que foi separado e conferido, para a gestão acompanhar."
+        }
+      ]
+    }
+  },
+  "caseOps": {
+    "meta": {
+      "title": "Controle de operação — case Logikos",
+      "description": "Visão computacional para acompanhar cada etapa do processo e reunir tudo num painel."
+    },
+    "hero": {
+      "title": "Controle de operação.",
+      "text": "As câmeras que já acompanham o processo passam a dizer o que está acontecendo em cada etapa, e a gestão vê tudo reunido num painel."
+    },
+    "problem": {
+      "title": "O que acontece entre um apontamento e outro.",
+      "text": "Paradas, filas e etapas fora de sequência costumam aparecer só no fim do turno, quando já não dá para agir."
+    },
+    "scope": {
+      "title": "As etapas que importam para você.",
+      "text": "Entendemos o processo e os indicadores que a gestão acompanha. Depois definimos o que cada câmera lê, quem recebe cada aviso e como os dados chegam ao seu sistema."
+    },
+    "gets": {
+      "title": "O que a gestão passa a ter.",
+      "points": [
+        {
+          "title": "Cada etapa acompanhada",
+          "text": "O que entrou, o que parou e o que saiu, com o quadro como prova."
+        },
+        {
+          "title": "Aviso enquanto dá tempo",
+          "text": "Quando algo foge do previsto, quem decide fica sabendo na hora."
+        },
+        {
+          "title": "Indicadores da sua operação",
+          "text": "Os números que você já acompanha, alimentados pelas câmeras."
+        }
+      ]
+    }
+  },
+  "scenes": {
+    "yard": {
+      "alt": "Pátio de contêineres com caixas de detecção: contêiner, empilhadeira, caminhão e pessoa no pátio",
+      "labels": {
+        "container": "contêiner",
+        "reachStacker": "empilhadeira",
+        "truck": "caminhão",
+        "person": "pessoa no pátio"
+      }
+    },
+    "ergonomicsAlt": "Operador curvado para pegar uma caixa no palete, junto à esteira"
   }
 }

@@ -1,0 +1,68 @@
+---
+// Short, honest case page (rodada soluções): problem → how we scope it → what you get → request your
+// model. No numbers, clients or results we cannot show. Each case grows into a full page (like
+// /twins) when its material is ready.
+import CaseTile from '../components/CaseTile.astro';
+import DetectScene from '../components/DetectScene.astro';
+import { YARD } from '../data/scenes';
+import Icon from '../components/Icon.astro';
+import PageClose from '../components/PageClose.astro';
+import PageHero from '../components/PageHero.astro';
+import PointList from '../components/PointList.astro';
+import Section from '../components/Section.astro';
+import { dict } from '../i18n';
+import { pathFor, type Locale } from '../i18n/routes';
+import Base from '../layouts/Base.astro';
+import type { IconName } from '../lib/icons';
+
+interface Props {
+  locale: Locale;
+  routeKey: 'caseYard' | 'caseAr' | 'caseOps';
+  icon: IconName;
+}
+
+const { locale, routeKey, icon } = Astro.props;
+const t = dict(locale);
+const c = t[routeKey];
+const l = t.caseLabels;
+const gets = c.gets.points.map((x) => ({ term: x.title, text: x.text }));
+const chip = 'chip' in c ? c.chip : undefined;
+const sc = t.scenes.yard;
+const yardBoxes = YARD.boxes.map((x) => ({ label: sc.labels[x.k], b: x.b }));
+---
+
+<Base locale={locale} routeKey={routeKey} title={c.meta.title} description={c.meta.description}>
+  <PageHero locale={locale} interest="custom" id="hero-title" title={c.hero.title} text={c.hero.text}>
+    {chip && (
+      <p slot="note">
+        <span class="verdict verdict--outline">{chip}</span>
+      </p>
+    )}
+    {routeKey === 'caseYard' ? (
+      <DetectScene src={YARD.src} w={YARD.w} h={YARD.h} boxes={yardBoxes} label={sc.alt} />
+    ) : (
+      <CaseTile icon={icon} class="heroi-tile" />
+    )}
+  </PageHero>
+
+  <Section id="problem-title" question={l.problem} title={c.problem.title} text={c.problem.text} />
+
+  <Section id="scope-title" question={l.scope} title={c.scope.title} text={c.scope.text} />
+
+  <Section id="gets-title" question={l.gets} title={c.gets.title}>
+    <a slot="actions" class="btn btn--ghost" href={pathFor('cases', locale)}>
+      {l.back}
+      <Icon name="arrow" size={18} />
+    </a>
+    <PointList rows={gets} />
+  </Section>
+
+  <PageClose locale={locale} interest="custom" />
+</Base>
+
+<style>
+  :global(.heroi-tile) {
+    max-width: 22rem;
+    margin-inline: auto;
+  }
+</style>

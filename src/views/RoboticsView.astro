@@ -1,6 +1,7 @@
 ---
 import DefList from '../components/DefList.astro';
 import Koda from '../components/Koda.astro';
+import Passos from '../components/Passos.astro';
 import SpecialistButton from '../components/SpecialistButton.astro';
 import PageClose from '../components/PageClose.astro';
 import PageHero from '../components/PageHero.astro';
@@ -16,8 +17,8 @@ interface Props {
 const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.robotics;
-const pts = p.points;
-const uses = [pts.drones, pts.quadrupeds, pts.project].map((x) => ({ term: x.title, text: x.text }));
+// Rodada soluções: land, sky and water, each with the situations it serves.
+const places = p.places.rows.map((x) => ({ term: x.title, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="robotics" title={p.meta.title} description={p.meta.description}>
@@ -33,11 +34,13 @@ const uses = [pts.drones, pts.quadrupeds, pts.project].map((x) => ({ term: x.tit
     <Koda locale={locale} pose="apontando" />
   </PageHero>
 
-  <Section id="how-title" question={p.questions.how} title={pts.both.title} text={pts.both.text}>
-    <DefList rows={uses} />
+  <Section id="places-title" question={p.places.question} title={p.places.title} text={p.places.text}>
+    <DefList rows={places} />
   </Section>
 
-  <Section id="buy-title" question={p.questions.buy} title={p.buy.title} text={p.buy.text} />
+  <Section id="process-title" question={p.process.question} title={p.process.title} text={p.process.text} wide class="section--perto">
+    <Passos steps={p.process.steps} />
+  </Section>
 
   <PageClose locale={locale} interest="robotics" />
 </Base>

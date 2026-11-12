@@ -32,11 +32,12 @@ const general = specialist();
 
 const SCENES = (
   [
+    // Ergonomics first: Vitor's priority now (rodada soluções, 12/11/2026).
+    { key: 'ergonomia', cenario: null, alert: true, interest: 'ergonomics' },
     { key: 'fogo', cenario: 'fogo', alert: true, interest: 'fire' },
     { key: 'epi', cenario: 'epi', alert: true, interest: 'epi' },
     { key: 'qualidade', cenario: 'qualidade', alert: false, interest: 'quality' },
     { key: 'contagem', cenario: 'contagem', alert: false, interest: 'counting' },
-    { key: 'ergonomia', cenario: null, alert: true, interest: 'ergonomics' },
   ] as const
 ).map((s, i) => {
   const text = h.scenarios.items[i];
@@ -59,7 +60,10 @@ const TWIN = {
   webm: `${M}v-gemeo.webm`,
   esp: specialist('twins'),
 };
-const CHANNELS = SCENES.length + 1;
+// CH7 (rodada soluções): workstation presence. No footage of our own to publish yet, so its monitor
+// waits for signal like CAM 07 instead of showing someone else's clip.
+const PRESENCE = { ...h.scenarios.presence, esp: specialist('presence') };
+const CHANNELS = SCENES.length + 2;
 
 // A still row, whole logos, no mask (feedback 11/11, item 15: the old sliding strip faded its
 // edges and showed the Visdec cut as it passed). `k` (tall / medium / wide mark) sets its height for equal visual weight.
@@ -67,6 +71,8 @@ const LOGOS = [
   { k: 'alta', src: '/media/parceiros/l-cath-v2.webp', alt: h.partners.cath, w: 117, h: 48 },
   { k: 'media', src: '/media/parceiros/l-brandschutz.webp', alt: h.partners.bs, w: 143, h: 38 },
   { k: 'larga', src: '/media/parceiros/l-visdec-v2.webp', alt: h.partners.visdec, w: 154, h: 30 },
+  // Rodada soluções: the INFRA mark cut from Infra's "Solução by INFRA" seal (white file).
+  { k: 'larga', src: '/media/parceiros/l-infra.webp', alt: h.partners.infra, w: 107, h: 32 },
 ];
 const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, ${base}.webp 640w`;
 ---
@@ -102,14 +108,15 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
         <div class="heroi__copy">
           <h1 id="hero-title">{h.hero.title}</h1>
           <p class="lead">{h.hero.sub}</p>
+          <!-- Rodada soluções: "Request your model now" is the site's main call. -->
           <div class="acoes" data-heroi-acoes>
-            <a class="btn" href={EXPERIENCE_URL}>
-              {t.cta.experience}
-              <Icon name="arrow" size={18} />
-            </a>
-            <a class="btn btn--ghost" {...general.attrs}>
+            <a class="btn" {...general.attrs}>
               <Icon name="chat" size={18} />
               {t.cta.specialist}
+            </a>
+            <a class="btn btn--ghost" href={EXPERIENCE_URL}>
+              {t.cta.experience}
+              <Icon name="arrow" size={18} />
             </a>
           </div>
         </div>
@@ -299,6 +306,43 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
                 </a>
               </div>
             </div>
+            <div
+              class="slide"
+              role="group"
+              aria-roledescription={h.scenarios.slideRole}
+              aria-label={`${fill(h.scenarios.slide, { n: String(CHANNELS), total: String(CHANNELS) })}: ${PRESENCE.name}`}
+              id="painel-presenca"
+              data-slide
+              inert
+            >
+              <div>
+                <div class="monitor liga">
+                  <div class="cam cam--voce">
+                    <Aguardando locale={locale} />
+                    <span>
+                      <b>{PRESENCE.screen}</b>
+                      {PRESENCE.screenSub}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="ticket">
+                <p class="estado estado--ok">
+                  <Icon name="ok" size={16} />
+                  {PRESENCE.state}
+                </p>
+                <dl class="ticket__twin">
+                  <dt>{h.scenarios.solves}</dt>
+                  <dd>{PRESENCE.solves}</dd>
+                  <dt>{h.scenarios.gets}</dt>
+                  <dd>{PRESENCE.gets}</dd>
+                </dl>
+                <a class="btn" {...PRESENCE.esp.attrs}>
+                  <Icon name="chat" size={18} />
+                  {PRESENCE.cta}
+                </a>
+              </div>
+            </div>
           </div>
           <div class="controles">
             <button type="button" class="seta" data-anterior aria-label={h.scenarios.prev}>
@@ -318,6 +362,13 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
                 <button type="button" data-ir={SCENES.length} aria-controls="painel-gemeo">
                   <span class="regua__ch">{TWIN.tab}</span>
                   <span class="regua__nome">{TWIN.name}</span>
+                  <span class="regua__prog" aria-hidden="true"></span>
+                </button>
+              </li>
+              <li>
+                <button type="button" data-ir={SCENES.length + 1} aria-controls="painel-presenca">
+                  <span class="regua__ch">{PRESENCE.tab}</span>
+                  <span class="regua__nome">{PRESENCE.name}</span>
                   <span class="regua__prog" aria-hidden="true"></span>
                 </button>
               </li>
@@ -341,9 +392,9 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
             <Icon name="camera" size={18} />
             {h.band.cta}
           </a>
-          <a class="btn btn--ghost" {...general.attrs}>
-            <Icon name="chat" size={18} />
-            {t.cta.specialist}
+          <a class="btn btn--ghost" href={pathFor('cases', locale)}>
+            {t.cta.cases}
+            <Icon name="arrow" size={18} />
           </a>
         </div>
       </div>
@@ -532,8 +583,8 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
             <h2 id="contato-title">{h.contact.title}</h2>
             <p class="lead">{h.contact.text}</p>
             <div class="acoes">
-              <a class="btn btn--ghost" href={EXPERIENCE_URL}>
-                {t.cta.experience}
+              <a class="btn btn--ghost" href={pathFor('cases', locale)}>
+                {t.cta.cases}
                 <Icon name="arrow" size={18} />
               </a>
             </div>
@@ -562,11 +613,11 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
 
   <Fragment slot="after">
     <div class="barra" role="region" aria-label={h.bar.label} data-barra>
-      <a class="btn" href={EXPERIENCE_URL}>
+      <a class="btn btn--ghost" href={EXPERIENCE_URL}>
         {t.cta.experience}
         <Icon name="arrow" size={18} />
       </a>
-      <a class="btn btn--ghost barra__esp" {...general.attrs}>
+      <a class="btn barra__esp" {...general.attrs}>
         <Icon name="chat" size={18} />
         <span aria-hidden="true">{h.bar.specialist}</span>
         <span class="visually-hidden">{t.cta.specialist}</span>
@@ -1140,11 +1191,12 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
     }
   }
 
-  /* From 80rem the column holds both side by side, on one line. */
+  /* From 80rem side by side; the longer main call ("Request your model now") wraps the second
+     button under it when the column is too narrow, instead of running under Koda. */
   @media (min-width: 80rem) {
     .heroi .acoes {
       display: flex;
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
     }
 
     .heroi .acoes .btn {
@@ -1350,7 +1402,7 @@ const srcset = (base: string) => `${base}-320.webp 320w, ${base}-480.webp 480w, 
   /* The ruler: one segment per channel, the name under it; the current one fills while it plays. */
   .regua {
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(7, minmax(0, 1fr));
     flex: 1;
     gap: 6px;
     margin: 0;

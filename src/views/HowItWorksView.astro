@@ -19,7 +19,10 @@ const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.howItWorks;
 const i = p.integrations;
-const integrations = [i.alarm, i.mqtt, i.webhook].map((x) => ({ term: x.title, text: x.text }));
+const integrations = [i.messages, i.panel, i.alarm, i.erp, i.mqtt, i.webhook].map((x) => ({ term: x.title, text: x.text }));
+// The project steps that used to live on the integrators' page (rodada soluções): one place, here.
+const pp = t.partnerPoints;
+const project = [pp.brand, pp.pilot, pp.license, pp.support].map((x) => ({ term: x.title, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="howItWorks" title={p.meta.title} description={p.meta.description}>
@@ -34,12 +37,16 @@ const integrations = [i.alarm, i.mqtt, i.webhook].map((x) => ({ term: x.title, t
     <Pipeline locale={locale} long class="after" />
   </Section>
 
+  <Section id="project-title" question={p.project.question} title={p.project.title} text={p.project.text}>
+    <PointList rows={project} class="after" />
+  </Section>
+
   <!-- Item 16: the Logikos box opens beside the text (once, on first sight). -->
   <Section id="offline-title" question={p.questions.offline} title={p.offline.title} text={p.offline.text}>
     <CaixaAbrindo locale={locale} />
   </Section>
 
-  <Section id="integrations-title" question={p.questions.integrations} title={p.integrations.title}>
+  <Section id="integrations-title" question={p.questions.integrations} title={p.integrations.title} text={p.integrations.text}>
     <PointList rows={integrations} class="after" />
   </Section>
 

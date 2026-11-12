@@ -6,8 +6,8 @@ test.beforeEach(async ({ page }) => {
   await skipOpening(page);
 });
 
-test('the route map has 12 pages per language', () => {
-  expect(ALL_ROUTES).toHaveLength(24);
+test('the route map has 16 pages per language', () => {
+  expect(ALL_ROUTES).toHaveLength(32);
 });
 
 for (const { key, locale, path } of ALL_ROUTES) {

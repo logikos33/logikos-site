@@ -3,9 +3,9 @@ import Icon from '../components/Icon.astro';
 import CrmForm from '../components/CrmForm.astro';
 import PageClose from '../components/PageClose.astro';
 import PageHero from '../components/PageHero.astro';
-import PointList from '../components/PointList.astro';
 import Section from '../components/Section.astro';
 import Wall from '../components/Wall.astro';
+import { pathFor } from '../i18n/routes';
 import SpecialistButton from '../components/SpecialistButton.astro';
 import { dict } from '../i18n';
 import type { Locale } from '../i18n/routes';
@@ -18,8 +18,6 @@ interface Props {
 const { locale } = Astro.props;
 const t = dict(locale);
 const p = t.partners;
-const pp = t.partnerPoints;
-const points = [pp.brand, pp.pilot, pp.license, pp.support].map((x) => ({ term: x.title, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="partners" title={p.meta.title} description={p.meta.description}>
@@ -35,8 +33,12 @@ const points = [pp.brand, pp.pilot, pp.license, pp.support].map((x) => ({ term: 
     <Wall locale={locale} clips={['fogo', 'epi', 'qualidade', 'contagem']} />
   </PageHero>
 
+  <!-- Rodada soluções: out of the main menu; the project steps live on How it works (no duplicate). -->
   <Section id="model-title" question={p.questions.model} title={p.model.title} text={p.model.text}>
-    <PointList rows={points} class="after" />
+    <a slot="actions" class="btn btn--ghost" href={pathFor('howItWorks', locale)}>
+      {p.model.cta}
+      <Icon name="arrow" size={18} />
+    </a>
   </Section>
 
   <Section id="partner-form-title" question={p.questions.form} title={p.form.title} text={p.form.text}>
@@ -45,9 +47,3 @@ const points = [pp.brand, pp.pilot, pp.license, pp.support].map((x) => ({ term: 
 
   <PageClose locale={locale} interest="partnership" />
 </Base>
-
-<style>
-  .after {
-    margin-top: var(--lk-space-6);
-  }
-</style>
