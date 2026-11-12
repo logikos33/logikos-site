@@ -89,6 +89,9 @@ const organization = {
     </main>
     <Footer locale={locale} />
     <slot name="after" />
+    <script>
+      import '../scripts/rastreio-crm';
+    </script>
     {CF_ANALYTICS_TOKEN && (
       <script
         is:inline
