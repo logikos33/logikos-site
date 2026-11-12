@@ -1,0 +1,346 @@
+---
+// Drones and robotics, drawn (rodada soluções, 12/11/2026): no generated or maker photos, so one
+// line-art scene in the brand's cyan over the site's TV texture — sky (a drone hovering, its camera
+// sweeping until a detection box locks on a worker's helmet), land (a quadruped walking in place) and
+// water (an autonomous boat on the waves, sonar pinging the bottom). No brand or model names.
+// Reduced motion: a still frame with the detection box shown. Only transform/opacity animate.
+import { dict } from '../i18n';
+import type { Locale } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+  class?: string;
+}
+
+const { locale, class: className } = Astro.props;
+const t = dict(locale);
+const s = t.robotics.scene;
+---
+
+<div class:list={['robo', className]}>
+  <svg viewBox="0 0 400 400" role="img" aria-label={s.alt}>
+    <!-- zone labels -->
+    <text class="zona" x="16" y="28">
+      {s.sky}
+    </text>
+    <text class="zona" x="16" y="290">
+      {s.land}
+    </text>
+    <text class="zona" x="200" y="372">
+      {s.water}
+    </text>
+
+    <!-- ground (land), shore and water surface -->
+    <path class="chao" d="M0 262 H228 L262 304"></path>
+    <path class="chao chao--passos" d="M8 270 H220"></path>
+
+    <!-- worker with helmet (the drone's target) -->
+    <g class="pessoa">
+      <circle cx="206" cy="232" r="6"></circle>
+      <path d="M199 229 a7 6 0 0 1 14 0 Z" class="capacete"></path>
+      <path d="M206 238 V250 M206 242 L199 248 M206 242 L213 248 M206 250 L201 261 M206 250 L211 261"></path>
+    </g>
+
+    <!-- drone: hover + camera sweep + detection -->
+    <g class="drone">
+      <g class="cone">
+        <path class="cone__luz" d="M150 104 L112 256 L200 256 Z"></path>
+      </g>
+      <path d="M118 84 H182 M126 84 V78 M174 84 V78"></path>
+      <ellipse class="rotor" cx="126" cy="76" rx="16" ry="2.5"></ellipse>
+      <ellipse class="rotor rotor--b" cx="174" cy="76" rx="16" ry="2.5"></ellipse>
+      <rect x="136" y="82" width="28" height="12" rx="4"></rect>
+      <path d="M150 94 V100"></path>
+      <circle cx="150" cy="103" r="3.5"></circle>
+    </g>
+    <g class="deteccao">
+      <rect x="193" y="220" width="27" height="44"></rect>
+      <rect class="deteccao__tag" x="193" y="209" width={s.detect.length * 6.4 + 10} height="11"></rect>
+      <text x="198" y="218">
+        {s.detect}
+      </text>
+    </g>
+
+    <!-- quadruped walking in place -->
+    <g class="quad">
+      <g class="quad__corpo">
+        <rect x="44" y="214" width="70" height="20" rx="6"></rect>
+        <path d="M114 220 L130 212 L138 218 L128 226 Z"></path>
+        <circle cx="132" cy="217" r="1.6" class="olho"></circle>
+      </g>
+      <path class="perna perna--a" d="M54 232 L50 248 L56 262"></path>
+      <path class="perna perna--b" d="M66 232 L70 248 L64 262"></path>
+      <path class="perna perna--b" d="M94 232 L90 248 L96 262"></path>
+      <path class="perna perna--a" d="M106 232 L110 248 L104 262"></path>
+    </g>
+
+    <!-- water: two wave lines drifting, the boat bobbing, sonar pings -->
+    <g class="agua">
+      <path class="onda" d="M200 312 q12 -6 24 0 t24 0 t24 0 t24 0 t24 0 t24 0 t24 0 t24 0 t24 0 t24 0"></path>
+      <path class="onda onda--b" d="M176 332 q12 -6 24 0 t24 0 t24 0 t24 0 t24 0 t24 0 t24 0 t24 0 t24 0 t24 0"></path>
+    </g>
+    <g class="barco">
+      <path d="M296 300 H372 L360 314 H306 Z"></path>
+      <path d="M318 300 V288 H344 V300 M330 288 V280"></path>
+      <circle cx="330" cy="278" r="2.5"></circle>
+    </g>
+    <g class="sonar">
+      <path class="ping" d="M312 330 a20 12 0 0 0 40 0"></path>
+      <path class="ping ping--b" d="M312 330 a20 12 0 0 0 40 0"></path>
+    </g>
+    <path class="fundo" d="M250 392 q30 -14 60 -6 t70 -4"></path>
+  </svg>
+</div>
+
+<style>
+  .robo {
+    aspect-ratio: 1;
+    overflow: hidden;
+    background:
+      repeating-linear-gradient(0deg, #0000 0 2px, #ffffff08 2px 3px), radial-gradient(ellipse at 50% 45%, #1b1b26 0%, #050508 75%);
+    border: 1px solid var(--lk-line-strong);
+    border-radius: 6px;
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  svg :is(path, rect, circle, ellipse) {
+    fill: none;
+    stroke: #00d4ff;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  svg * {
+    transform-box: fill-box;
+  }
+
+  .zona {
+    fill: #00d4ff;
+    opacity: 0.6;
+    font: 500 11px var(--lk-font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .chao--passos {
+    stroke-dasharray: 3 9;
+    opacity: 0.55;
+    animation: passos 0.9s linear infinite;
+  }
+
+  .pessoa :is(path, circle) {
+    stroke: #c9d2dc;
+  }
+
+  .pessoa .capacete {
+    fill: #00d4ff;
+    stroke: #00d4ff;
+  }
+
+  .drone {
+    animation: paira 3.2s ease-in-out infinite;
+  }
+
+  .rotor {
+    animation: gira 0.18s linear infinite;
+    transform-origin: center;
+  }
+
+  .rotor--b {
+    animation-delay: -0.09s;
+  }
+
+  .cone {
+    transform-origin: 50% 0%;
+    animation: varre 4s ease-in-out infinite;
+  }
+
+  .cone .cone__luz {
+    fill: #00d4ff;
+    fill-opacity: 0.12;
+    stroke-opacity: 0.35;
+    stroke-dasharray: 4 4;
+  }
+
+  .deteccao {
+    opacity: 0;
+    animation: trava 4s ease-in-out infinite;
+  }
+
+  .deteccao .deteccao__tag {
+    fill: #00d4ff;
+    stroke: none;
+  }
+
+  .deteccao text {
+    fill: #0a0a0f;
+    font: 600 9px var(--lk-font-mono);
+  }
+
+  .quad__corpo {
+    animation: trota 0.45s ease-in-out infinite alternate;
+  }
+
+  .quad .olho {
+    fill: #00d4ff;
+  }
+
+  .perna {
+    transform-origin: 50% 0%;
+    animation: passo 0.9s ease-in-out infinite alternate;
+  }
+
+  .perna--b {
+    animation-delay: -0.45s;
+  }
+
+  .onda {
+    opacity: 0.8;
+    animation: mar 2.4s linear infinite;
+  }
+
+  .onda--b {
+    opacity: 0.45;
+    animation-duration: 3.6s;
+  }
+
+  .barco {
+    transform-origin: 50% 100%;
+    animation: balanca 2.8s ease-in-out infinite;
+  }
+
+  .ping {
+    transform-origin: 50% 0%;
+    opacity: 0;
+    animation: ping 2.4s ease-out infinite;
+  }
+
+  .ping--b {
+    animation-delay: -1.2s;
+  }
+
+  .fundo {
+    opacity: 0.5;
+    stroke-dasharray: 2 6;
+  }
+
+  @keyframes paira {
+    50% {
+      transform: translateY(6px);
+    }
+  }
+
+  @keyframes gira {
+    to {
+      transform: scaleX(-1);
+    }
+  }
+
+  @keyframes varre {
+    0%,
+    100% {
+      transform: rotate(18deg);
+    }
+
+    50%,
+    70% {
+      transform: rotate(-8deg);
+    }
+  }
+
+  /* The box locks on while the cone sits over the worker (50–70 % of the sweep). */
+  @keyframes trava {
+    0%,
+    45%,
+    90%,
+    100% {
+      opacity: 0;
+    }
+
+    52%,
+    82% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes trota {
+    to {
+      transform: translateY(-2px);
+    }
+  }
+
+  @keyframes passo {
+    from {
+      transform: rotate(-14deg);
+    }
+
+    to {
+      transform: rotate(14deg);
+    }
+  }
+
+  @keyframes passos {
+    to {
+      stroke-dashoffset: 12;
+    }
+  }
+
+  @keyframes mar {
+    to {
+      transform: translateX(-48px);
+    }
+  }
+
+  @keyframes balanca {
+    0%,
+    100% {
+      transform: rotate(-3deg) translateY(0);
+    }
+
+    50% {
+      transform: rotate(3deg) translateY(2px);
+    }
+  }
+
+  @keyframes ping {
+    0% {
+      opacity: 0.9;
+      transform: scale(0.4);
+    }
+
+    100% {
+      opacity: 0;
+      transform: scale(2.4);
+    }
+  }
+
+  /* Still frame: everything parked, the detection shown. */
+  @media (prefers-reduced-motion: reduce) {
+    .robo * {
+      animation: none !important;
+    }
+
+    .deteccao {
+      opacity: 1;
+    }
+
+    .cone {
+      transform: rotate(-8deg);
+    }
+
+    .ping {
+      opacity: 0.6;
+      transform: scale(1.4);
+    }
+  }
+
+  :global(html.lk-parado) .robo * {
+    animation-play-state: paused;
+  }
+</style>

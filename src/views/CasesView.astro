@@ -3,8 +3,8 @@
 // card per case — picture, one sentence, "See the case" — each with a defined destination: its own
 // page (twins, robotics, the short case pages) or its card on /recognition.
 import CaseTile from '../components/CaseTile.astro';
-import DetectScene from '../components/DetectScene.astro';
-import { YARD } from '../data/scenes';
+import Cam from '../components/Cam.astro';
+import RoboScene from '../components/RoboScene.astro';
 import Icon from '../components/Icon.astro';
 import PageClose from '../components/PageClose.astro';
 import PageHero from '../components/PageHero.astro';
@@ -34,15 +34,13 @@ interface Card {
   /** Ergonomics is Vitor's priority now (12/11/2026): first and wider, with a seal. */
   featured?: boolean;
 }
-const sc = t.scenes.yard;
-const yardBoxes = YARD.boxes.map((x) => ({ label: sc.labels[x.k], b: x.b }));
 const page = (k: RouteKey) => pathFor(k, locale);
 const PROJECTS: Card[] = [
   { key: 'twins', href: page('twins'), icon: 'chip', poster: `${M}v-gemeo` },
-  { key: 'yard', href: page('caseYard'), icon: 'counter' },
-  { key: 'robotics', href: page('robotics'), icon: 'camera', src: `${M}koda-apontando.webp` },
-  { key: 'ar', href: page('caseAr'), icon: 'camera' },
-  { key: 'ops', href: page('caseOps'), icon: 'doc' },
+  { key: 'yard', href: page('caseYard'), icon: 'counter', src: '/media/cases/conteineres-aereo-480.webp' },
+  { key: 'robotics', href: page('robotics'), icon: 'camera' },
+  { key: 'ar', href: page('caseAr'), icon: 'camera', src: '/media/cases/ra-logistica-480.webp' },
+  { key: 'ops', href: page('caseOps'), icon: 'doc', src: '/media/cases/controle-operacao-480.webp' },
 ];
 const MODELS: Card[] = [
   { key: 'ergonomics', href: rec('ergonomia'), icon: 'posture', src: '/media/cases/ergonomia-480.webp', featured: true },
@@ -50,7 +48,7 @@ const MODELS: Card[] = [
   { key: 'epi', href: rec('epi'), icon: 'helmet', poster: `${M}v-epi` },
   { key: 'quality', href: rec('qualidade'), icon: 'ok', poster: `${M}v-qualidade` },
   { key: 'counting', href: rec('contagem'), icon: 'counter', poster: `${M}v-contagem` },
-  { key: 'zones', href: rec('zonas'), icon: 'zone' },
+  { key: 'zones', href: rec('zonas'), icon: 'zone', src: '/media/cases/zonas-risco-480.webp' },
   { key: 'presence', href: rec('presenca'), icon: 'clock' },
 ];
 const GROUPS = [
@@ -68,8 +66,10 @@ const GROUPS = [
         {g.cards.map((c) => (
           <li class:list={{ destaque: c.featured }}>
             <a class="case" href={c.href}>
-              {c.key === 'yard' ? (
-                <DetectScene src={YARD.src} w={YARD.w} h={YARD.h} crop={YARD.square} boxes={yardBoxes} label={sc.alt} />
+              {c.key === 'robotics' ? (
+                <RoboScene locale={locale} />
+              ) : c.key === 'presence' ? (
+                <Cam dir="/media/cases" clip="presenca-posto" webm square />
               ) : (
                 <CaseTile icon={c.icon} {...(c.poster ? { poster: c.poster } : {})} {...(c.src ? { src: c.src } : {})} />
               )}

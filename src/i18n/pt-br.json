@@ -271,9 +271,7 @@
         "state": "PRESENÇA · posto por posto",
         "solves": "Saber se cada posto de trabalho está ocupado, por quanto tempo e quando fica vazio, sem depender de apontamento manual.",
         "gets": "A ocupação de cada posto ao longo do turno e o aviso quando um posto crítico fica sem ninguém.",
-        "cta": "Solicite seu modelo de presença",
-        "screen": "CAM 08 · posto de trabalho",
-        "screenSub": "modelo dimensionado no seu projeto"
+        "cta": "Solicite seu modelo de presença"
       }
     },
     "band": {
@@ -861,6 +859,13 @@
           "text": "Rotina definida, suporte e atualizações do modelo por conta da Logikos."
         }
       ]
+    },
+    "scene": {
+      "alt": "Animação: um drone paira e a câmera dele encontra o capacete de um trabalhador; um robô quadrúpede anda em terra; um barco autônomo navega e mede o fundo da água",
+      "sky": "céu",
+      "land": "terra",
+      "water": "água",
+      "detect": "capacete"
     }
   },
   "compliance": {
@@ -1468,9 +1473,9 @@
     },
     "hero": {
       "title": "Pátio de contêineres.",
-      "text": "Um depósito de contêineres quer saber, sem depender de anotação manual, quando cada contêiner chega, quando é movido e onde ele está agora. A Logikos está dimensionando a visão computacional para isso."
+      "text": "Um depósito de contêineres quer saber, sem depender de anotação manual, quando cada contêiner chega, quando é movido e onde ele está agora. A Logikos dimensionou a visão computacional para isso."
     },
-    "chip": "Projeto em levantamento",
+    "chip": "Projeto",
     "problem": {
       "title": "Onde está cada contêiner?",
       "text": "Contêineres empilhados, movidos por empilhadeiras e reach stackers, numa operação que pode não parar. Localizar um contêiner à mão toma tempo da equipe e deixa espaço para erro na hora de liberar a carga."
@@ -1493,6 +1498,25 @@
         {
           "title": "Localização exata",
           "text": "A vaga e o nível na pilha de cada contêiner, num painel com o histórico de cada um."
+        }
+      ]
+    },
+    "extra": {
+      "question": "e a logística do pátio?",
+      "title": "Operações logísticas",
+      "text": "Saber onde está cada contêiner é o primeiro passo. O segundo é decidir onde ele deve ficar: alocar as cargas conforme a entrada e a saída, para que o que sai primeiro fique mais acessível.",
+      "points": [
+        {
+          "title": "Alocação pela ordem de saída",
+          "text": "Cada contêiner que chega recebe uma posição pensada para quando ele vai sair, sem precisar remexer a pilha."
+        },
+        {
+          "title": "Menos movimentos",
+          "text": "Menos manobras para tirar um contêiner de baixo de outros: o equipamento trabalha no que importa."
+        },
+        {
+          "title": "Pátio mais ágil",
+          "text": "Fluxo mais previsível do portão à pilha, e a liberação da carga sai mais rápido."
         }
       ]
     }
@@ -1530,6 +1554,25 @@
           "text": "O que foi separado e conferido, para a gestão acompanhar."
         }
       ]
+    },
+    "extra": {
+      "question": "como fica na logística?",
+      "title": "Separação guiada no armazém",
+      "text": "Com o pedido em mãos, o operador não precisa procurar. A tela mostra onde está cada produto e qual a melhor rota pelo armazém para buscar tudo o que o pedido pede.",
+      "points": [
+        {
+          "title": "Onde está o produto",
+          "text": "O item do pedido aparece destacado na prateleira certa."
+        },
+        {
+          "title": "A melhor rota",
+          "text": "A ordem de coleta segue o caminho mais curto pelo armazém, conforme o pedido."
+        },
+        {
+          "title": "Confirmação na hora",
+          "text": "A câmera confere se o item pego é o do pedido antes de ele seguir."
+        }
+      ]
     }
   },
   "caseOps": {
@@ -1563,6 +1606,33 @@
         {
           "title": "Indicadores da sua operação",
           "text": "Os números que você já acompanha, alimentados pelas câmeras."
+        }
+      ]
+    },
+    "extra": {
+      "question": "onde se aplica?",
+      "title": "Onde se aplica e o que você acompanha",
+      "text": "Serve para qualquer operação dividida em etapas que as câmeras conseguem ver: linhas de montagem e de produção, expedição e docas, armazéns e centros de distribuição, pátios e áreas de manutenção.",
+      "points": [
+        {
+          "title": "Andamento por etapa",
+          "text": "O que está em cada etapa agora, e o que já passou por ela no turno."
+        },
+        {
+          "title": "Gargalos",
+          "text": "Onde o trabalho está acumulando antes que vire fila."
+        },
+        {
+          "title": "Paradas",
+          "text": "Quando uma etapa para, por quanto tempo e em que momento voltou."
+        },
+        {
+          "title": "Alertas em tempo real",
+          "text": "Quem decide é avisado no celular ou no painel assim que algo foge do previsto."
+        },
+        {
+          "title": "Indicadores do turno",
+          "text": "Os números que a gestão já acompanha, atualizados pelas câmeras ao longo do turno."
         }
       ]
     }

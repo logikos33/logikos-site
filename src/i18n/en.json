@@ -271,9 +271,7 @@
         "state": "PRESENCE · station by station",
         "solves": "Know whether each workstation is staffed, for how long and when it is left empty, without manual logging.",
         "gets": "Each station’s occupancy across the shift and a notice when a critical station is left empty.",
-        "cta": "Request your presence model",
-        "screen": "CAM 08 · workstation",
-        "screenSub": "model scoped in your project"
+        "cta": "Request your presence model"
       }
     },
     "band": {
@@ -861,6 +859,13 @@
           "text": "A set routine, support and model updates on Logikos."
         }
       ]
+    },
+    "scene": {
+      "alt": "Animation: a drone hovers and its camera finds a worker’s helmet; a quadruped robot walks on land; an autonomous boat sails and measures the water’s bottom",
+      "sky": "sky",
+      "land": "land",
+      "water": "water",
+      "detect": "helmet"
     }
   },
   "compliance": {
@@ -1468,9 +1473,9 @@
     },
     "hero": {
       "title": "Container yard.",
-      "text": "A container depot wants to know, without manual logging, when each container arrives, when it is moved and where it is right now. Logikos is scoping the computer vision for it."
+      "text": "A container depot wants to know, without manual logging, when each container arrives, when it is moved and where it is right now. Logikos scoped the computer vision for it."
     },
-    "chip": "Project in discovery",
+    "chip": "Project",
     "problem": {
       "title": "Where is each container?",
       "text": "Stacked containers, moved by forklifts and reach stackers, in an operation that may never stop. Finding a container by hand takes the team’s time and leaves room for error when releasing the cargo."
@@ -1493,6 +1498,25 @@
         {
           "title": "Exact location",
           "text": "Each container’s slot and level in the stack, on a panel with its history."
+        }
+      ]
+    },
+    "extra": {
+      "question": "and the yard’s logistics?",
+      "title": "Logistics operations",
+      "text": "Knowing where each container is comes first. Next is deciding where it should go: placing loads by arrival and departure, so what leaves first stays easiest to reach.",
+      "points": [
+        {
+          "title": "Placement by departure order",
+          "text": "Each incoming container gets a position planned for when it will leave, with no reshuffling of the stack."
+        },
+        {
+          "title": "Fewer moves",
+          "text": "Fewer manoeuvres to pull a container from under others: the equipment works on what matters."
+        },
+        {
+          "title": "A faster yard",
+          "text": "A more predictable flow from the gate to the stack, and cargo is released sooner."
         }
       ]
     }
@@ -1530,6 +1554,25 @@
           "text": "What was picked and checked, for management to follow."
         }
       ]
+    },
+    "extra": {
+      "question": "what does it look like in logistics?",
+      "title": "Guided picking in the warehouse",
+      "text": "With the order in hand, the operator doesn’t have to search. The screen shows where each product is and the best route through the warehouse to collect everything the order asks for.",
+      "points": [
+        {
+          "title": "Where the product is",
+          "text": "The order’s item is highlighted on the right shelf."
+        },
+        {
+          "title": "The best route",
+          "text": "Pick order follows the shortest path through the warehouse, based on the order."
+        },
+        {
+          "title": "Instant confirmation",
+          "text": "The camera checks that the item picked is the one in the order before it moves on."
+        }
+      ]
     }
   },
   "caseOps": {
@@ -1563,6 +1606,33 @@
         {
           "title": "Your operation’s indicators",
           "text": "The numbers you already follow, fed by the cameras."
+        }
+      ]
+    },
+    "extra": {
+      "question": "where does it apply?",
+      "title": "Where it applies and what you follow",
+      "text": "It fits any operation split into steps the cameras can see: assembly and production lines, shipping and docks, warehouses and distribution centres, yards and maintenance areas.",
+      "points": [
+        {
+          "title": "Progress by step",
+          "text": "What is at each step now, and what has already gone through it this shift."
+        },
+        {
+          "title": "Bottlenecks",
+          "text": "Where work is piling up before it becomes a queue."
+        },
+        {
+          "title": "Stops",
+          "text": "When a step stops, for how long and when it restarted."
+        },
+        {
+          "title": "Real-time alerts",
+          "text": "Whoever decides is notified on the phone or the panel as soon as something strays from plan."
+        },
+        {
+          "title": "Shift indicators",
+          "text": "The numbers management already follows, updated by the cameras throughout the shift."
         }
       ]
     }

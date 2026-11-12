@@ -4,8 +4,6 @@ export const YARD = {
   src: '/media/cases/conteineres.webp',
   w: 1280,
   h: 720,
-  /** Square crop for the case card: the lane with the reach stacker, the truck and the person. */
-  square: [280, 0, 720, 720] as [number, number, number, number],
   boxes: [
     { k: 'container', b: [284, 124, 378, 308] },
     { k: 'container', b: [878, 138, 1132, 318] },

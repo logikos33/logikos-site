@@ -233,10 +233,6 @@
       "values": ["7"],
       "source": "Canal CH7 do carrossel da home (presença por posto), rodada soluções 12/11/2026."
     },
-    "home.scenarios.presence.screen": {
-      "values": ["08"],
-      "source": "Rótulo de câmera de exemplo \"CAM 08\" (01 a 07 já usados), rodada soluções 12/11/2026."
-    },
     "recognition.cases[6].example.title": {
       "values": ["08"],
       "source": "Rodada soluções (12/11/2026): ilustração do card de presença por posto, no mesmo padrão dos outros cards (câmera de exemplo e horário fixo do muro)."

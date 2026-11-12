@@ -27,6 +27,14 @@ const c = t[routeKey];
 const l = t.caseLabels;
 const gets = c.gets.points.map((x) => ({ term: x.title, text: x.text }));
 const chip = 'chip' in c ? c.chip : undefined;
+// Rodada soluções 2: the application each case was missing (yard logistics, guided picking, where
+// operations control applies), and the Artlist scenes approved by Vitor in the hero.
+const extra = c.extra.points.map((x) => ({ term: x.title, text: x.text }));
+const HERO: Partial<Record<typeof routeKey, string>> = {
+  caseAr: '/media/cases/ra-logistica.webp',
+  caseOps: '/media/cases/controle-operacao.webp',
+};
+const hero = HERO[routeKey];
 const sc = t.scenes.yard;
 const yardBoxes = YARD.boxes.map((x) => ({ label: sc.labels[x.k], b: x.b }));
 ---
@@ -40,6 +48,8 @@ const yardBoxes = YARD.boxes.map((x) => ({ label: sc.labels[x.k], b: x.b }));
     )}
     {routeKey === 'caseYard' ? (
       <DetectScene src={YARD.src} w={YARD.w} h={YARD.h} boxes={yardBoxes} label={sc.alt} />
+    ) : hero ? (
+      <img class="heroi-img" src={hero} alt="" width="1280" height="720" />
     ) : (
       <CaseTile icon={icon} class="heroi-tile" />
     )}
@@ -48,6 +58,10 @@ const yardBoxes = YARD.boxes.map((x) => ({ label: sc.labels[x.k], b: x.b }));
   <Section id="problem-title" question={l.problem} title={c.problem.title} text={c.problem.text} />
 
   <Section id="scope-title" question={l.scope} title={c.scope.title} text={c.scope.text} />
+
+  <Section id="extra-title" question={c.extra.question} title={c.extra.title} text={c.extra.text}>
+    <PointList rows={extra} />
+  </Section>
 
   <Section id="gets-title" question={l.gets} title={c.gets.title}>
     <a slot="actions" class="btn btn--ghost" href={pathFor('cases', locale)}>
@@ -61,6 +75,14 @@ const yardBoxes = YARD.boxes.map((x) => ({ label: sc.labels[x.k], b: x.b }));
 </Base>
 
 <style>
+  .heroi-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--lk-line-strong);
+    border-radius: 6px;
+  }
+
   :global(.heroi-tile) {
     max-width: 22rem;
     margin-inline: auto;

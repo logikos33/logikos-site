@@ -1,6 +1,6 @@
 ---
 import DefList from '../components/DefList.astro';
-import Koda from '../components/Koda.astro';
+import RoboScene from '../components/RoboScene.astro';
 import Passos from '../components/Passos.astro';
 import SpecialistButton from '../components/SpecialistButton.astro';
 import PageClose from '../components/PageClose.astro';
@@ -22,7 +22,7 @@ const places = p.places.rows.map((x) => ({ term: x.title, text: x.text }));
 ---
 
 <Base locale={locale} routeKey="robotics" title={p.meta.title} description={p.meta.description}>
-  <!-- No robot footage of our own yet: Koda carries the hero instead of a mock clip (feedback 11/11, item 5). -->
+  <!-- No generated or maker photos of drones (Vitor, 12/11): a drawn, animated scene in the brand's line. -->
   <PageHero locale={locale} interest="robotics" id="hero-title" title={p.hero.title} text={p.hero.text}>
     <!-- Final review, item 9: only this page's call. -->
     <Fragment slot="actions">
@@ -31,7 +31,7 @@ const places = p.places.rows.map((x) => ({ term: x.title, text: x.text }));
     <p slot="note">
       <span class="verdict verdict--outline">{p.chip}</span>
     </p>
-    <Koda locale={locale} pose="apontando" />
+    <RoboScene locale={locale} class="robo-heroi" />
   </PageHero>
 
   <Section id="places-title" question={p.places.question} title={p.places.title} text={p.places.text}>
@@ -44,3 +44,10 @@ const places = p.places.rows.map((x) => ({ term: x.title, text: x.text }));
 
   <PageClose locale={locale} interest="robotics" />
 </Base>
+
+<style>
+  :global(.robo-heroi) {
+    max-width: 30rem;
+    margin-inline: auto;
+  }
+</style>
