@@ -1428,7 +1428,7 @@
       },
       "yard": {
         "name": "Pátio de contêineres",
-        "text": "Movimentação de contêineres acompanhada pela câmera, do portão à pilha."
+        "text": "Movimentação de contêineres acompanhada pela câmera, do portão à pilha, integrada ao WMS."
       },
       "robotics": {
         "name": "Drones aéreos, humanoides e aquáticos",
@@ -1481,7 +1481,7 @@
   "caseYard": {
     "meta": {
       "title": "Pátio de contêineres — case Logikos",
-      "description": "Visão computacional dimensionada para registrar a entrada, a movimentação e a posição exata de cada contêiner no pátio."
+      "description": "Visão computacional dimensionada para registrar a entrada, a movimentação e a posição exata de cada contêiner no pátio, integrada ao WMS, ou com um WMS próprio construído pela Logikos."
     },
     "hero": {
       "title": "Pátio de contêineres.",
@@ -1494,7 +1494,7 @@
     },
     "scope": {
       "title": "Do portão à pilha.",
-      "text": "Cada contêiner tem um código único, e a câmera lê esse código. No portão, câmeras dedicadas registram a entrada e a saída; no pátio, outras acompanham a movimentação. Quando o pátio ainda não tem câmeras, o projeto especifica e instala."
+      "text": "Cada contêiner tem um código único, e a câmera lê esse código. No portão, câmeras dedicadas registram a entrada e a saída; no pátio, outras acompanham a movimentação. Quando o pátio ainda não tem câmeras, o projeto especifica e instala. Tudo o que a câmera registra entra no WMS do pátio."
     },
     "gets": {
       "title": "O que o pátio passa a ter.",
@@ -1510,6 +1510,10 @@
         {
           "title": "Localização exata",
           "text": "A vaga e o nível na pilha de cada contêiner, num painel com o histórico de cada um."
+        },
+        {
+          "title": "Integração com o WMS",
+          "text": "Entradas, movimentações e posições chegam direto ao WMS que o pátio já usa, sem digitação."
         }
       ]
     },
@@ -1529,6 +1533,10 @@
         {
           "title": "Pátio mais ágil",
           "text": "Fluxo mais previsível do portão à pilha, e a liberação da carga sai mais rápido."
+        },
+        {
+          "title": "WMS próprio, com migração de dados",
+          "text": "Quando o sistema atual não acompanha a operação, a Logikos constrói um WMS proprietário para o pátio e migra os dados do sistema antigo, sem perder o histórico."
         }
       ]
     },
