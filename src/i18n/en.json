@@ -1428,7 +1428,7 @@
       },
       "yard": {
         "name": "Container yard",
-        "text": "Container moves followed by the camera, from the gate to the stack."
+        "text": "Container moves followed by the camera, from the gate to the stack, integrated with the WMS."
       },
       "robotics": {
         "name": "Aerial, humanoid and aquatic drones",
@@ -1481,7 +1481,7 @@
   "caseYard": {
     "meta": {
       "title": "Container yard — a Logikos case",
-      "description": "Computer vision scoped to record the arrival, the moves and the exact position of each container in the yard."
+      "description": "Computer vision scoped to record the arrival, the moves and the exact position of each container in the yard, integrated with the WMS, or with a proprietary WMS built by Logikos."
     },
     "hero": {
       "title": "Container yard.",
@@ -1494,7 +1494,7 @@
     },
     "scope": {
       "title": "From the gate to the stack.",
-      "text": "Every container has a unique code, and the camera reads it. At the gate, dedicated cameras record arrivals and departures; in the yard, others follow the moves. When the yard has no cameras yet, the project specifies and installs them."
+      "text": "Every container has a unique code, and the camera reads it. At the gate, dedicated cameras record arrivals and departures; in the yard, others follow the moves. When the yard has no cameras yet, the project specifies and installs them. Everything the camera records goes into the yard’s WMS."
     },
     "gets": {
       "title": "What the yard gets.",
@@ -1510,6 +1510,10 @@
         {
           "title": "Exact location",
           "text": "Each container’s slot and level in the stack, on a panel with its history."
+        },
+        {
+          "title": "WMS integration",
+          "text": "Arrivals, moves and positions go straight into the WMS the yard already uses, with no typing."
         }
       ]
     },
@@ -1529,6 +1533,10 @@
         {
           "title": "A faster yard",
           "text": "A more predictable flow from the gate to the stack, and cargo is released sooner."
+        },
+        {
+          "title": "A proprietary WMS, with data migration",
+          "text": "When the current system can’t keep up with the operation, Logikos builds a proprietary WMS for the yard and migrates the data from the old system, keeping the history."
         }
       ]
     },
