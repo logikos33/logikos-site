@@ -271,6 +271,7 @@
         "state": "PRESENCE · station by station",
         "solves": "Know whether each workstation is staffed, for how long and when it is left empty, without manual logging.",
         "gets": "Each station’s occupancy across the shift and a notice when a critical station is left empty.",
+        "try": "Try the Workstations scenario",
         "cta": "Request your presence model"
       }
     },

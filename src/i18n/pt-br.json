@@ -271,6 +271,7 @@
         "state": "PRESENÇA · posto por posto",
         "solves": "Saber se cada posto de trabalho está ocupado, por quanto tempo e quando fica vazio, sem depender de apontamento manual.",
         "gets": "A ocupação de cada posto ao longo do turno e o aviso quando um posto crítico fica sem ninguém.",
+        "try": "Testar o cenário Postos",
         "cta": "Solicite seu modelo de presença"
       }
     },
